@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<OutputPath>C:\ACE\Mods\$(AssemblyName)</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove=".template.config\**" />
+	  <EmbeddedResource Remove=".template.config\**" />
+	  <None Remove=".template.config\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Lib.Harmony" Version="2.2.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="ACE.Entity">
+	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.Entity.dll</HintPath>
+	  </Reference>
+	  <Reference Include="ACE.Mod">
+	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.Mod.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="ACE.Server">
+	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.Server.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Meta.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+</Project>
