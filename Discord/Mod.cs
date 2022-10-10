@@ -1,12 +1,14 @@
-﻿namespace SimpleMod
+﻿using ACE.Server.Network.GameMessages.Messages;
+
+namespace Discord
 {
     public class Mod : IHarmonyMod
     {
         //Todo: think about non-Windows environments
         //If Harmony is set to debug it creates a log on Desktop
         public const bool DEBUGGING = true;
-        public const string ModPath = @"C:\ACE\Mods\SimpleMod";
-        const string ID = "com.ACE.ACEmulator.BaseMod";
+        public const string ModPath = @"C:\ACE\Mods\Discord";
+        const string ID = "com.ACE.ACEmulator.Discord";
 
         private Harmony _harmony;
         private bool disposedValue;
@@ -25,23 +27,23 @@
 
             try
             {
-                PatchClass.Start();
+                DiscordRelay.Initialize();
 
-                //Patch GetDeathMessage explicitly
-                var dmMethod = AccessTools.FirstMethod(typeof(Creature), method => method.Name.Contains("GetDeathMessage"));
+                //Patch GameMessageTurbineChat
+                var chatConstructor = AccessTools.FirstConstructor(typeof(GameMessageTurbineChat), constructor => true);
 
                 const int spacing = -40;
-                var sb = new StringBuilder($"Method {dmMethod.Name} found:\r\n{"Name",spacing}{"Type",spacing}{"Default",spacing}");
+                var sb = new StringBuilder($"Constructor {chatConstructor.Name} found:\r\n{"Name",spacing}{"Type",spacing}{"Default",spacing}");
 
-                foreach (var param in dmMethod.GetParameters())
+                foreach (var param in chatConstructor.GetParameters())
                     sb.AppendLine($"{param.Name,spacing}{param.ParameterType,spacing}{param.DefaultValue,spacing}");
                 ModManager.Log(sb.ToString());
 
-                var statsPrefix = SymbolExtensions.GetMethodInfo(() => PatchClass.CountKills);
-                Harmony.Patch(dmMethod, new HarmonyMethod(statsPrefix));
+                var statsPrefix = SymbolExtensions.GetMethodInfo(() => PatchClass.Prefix);
+                Harmony.Patch(chatConstructor, new HarmonyMethod(statsPrefix));
 
                 //Patch everything in the mod with Harmony attributes
-                Harmony.PatchAll();
+                //Harmony.PatchAll();
             }
             catch (Exception ex)
             {
@@ -62,7 +64,7 @@
                     if (DEBUGGING)
                         ModManager.Log($"Disposing {ID}...");
 
-                    PatchClass.Shutdown();
+                    DiscordRelay.Shutdown();
 
                     //CustomCommands.Unregister();
                     Harmony.UnpatchAll(ID);

@@ -18,7 +18,11 @@ Verbs are:
 * `toggle|t [name]`
 
 
-Two samples are included which split the functionality of the template:
+Three samples are included which split the functionality of the template:
 
 * `CritOverride` loads/creates `Settings.json` in its directory when it starts.  It uses the value in that and a Harmony attribute to overriding weapon crit chance.
 * `KillCount` tracks kill count by-player-by-monster and lets you set an XP multipler that will trigger every *n*th kill.
+* `Discord` is a rework of [Discord Relay](https://github.com/aquafir/ACE/wiki/Discord-Relay).  
+  It requires [creating a bot](https://github.com/aquafir/ACE/wiki/Discord-Relay#your-bot) and supplying a channel ID and bot token to `Settings.json`.  
+  You also need to add [Discord.Net.Websocket](https://www.nuget.org/packages/Discord.Net.WebSocket) *to the server*.  Probably better ways of doing this.
+  Currently it isn't relaying messages from Discord to ACE.  ACE to Discord works.

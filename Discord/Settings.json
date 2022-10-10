@@ -1,0 +1,7 @@
+{
+  "RELAY_CHANNEL_ID": 9000000000000000,
+  "BOT_TOKEN": "<your token: https://github.com/aquafir/ACE/wiki/Discord-Relay#your-bot >",
+  "MAX_MESSAGE_LENGTH": 10000,
+  "MESSAGE_INTERVAL": 10000,
+  "PREFIX": "~"
+}

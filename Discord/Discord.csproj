@@ -16,6 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Discord.Net.WebSocket" Version="3.8.1" />
 	  <PackageReference Include="Lib.Harmony" Version="2.2.2" />
 	</ItemGroup>
 
@@ -35,6 +36,9 @@
 
 	<ItemGroup>
 	  <None Update="Meta.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Settings.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
