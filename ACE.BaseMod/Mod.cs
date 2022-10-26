@@ -27,18 +27,18 @@ public class Mod : IHarmonyMod
         {
             PatchClass.Start();
 
-            //Patch GetDeathMessage explicitly
-            var dmMethod = AccessTools.FirstMethod(typeof(Creature), method => method.Name.Contains("GetDeathMessage"));
+            //Patch explicitly
+            //var dmMethod = AccessTools.FirstMethod(typeof(Creature), method => method.Name.Contains("GetDeathMessage"));
 
-            const int spacing = -40;
-            var sb = new StringBuilder($"Method {dmMethod.Name} found:\r\n{"Name",spacing}{"Type",spacing}{"Default",spacing}");
+            //const int spacing = -40;
+            //var sb = new StringBuilder($"Method {dmMethod.Name} found:\r\n{"Name",spacing}{"Type",spacing}{"Default",spacing}");
 
-            foreach (var param in dmMethod.GetParameters())
-                sb.AppendLine($"{param.Name,spacing}{param.ParameterType,spacing}{param.DefaultValue,spacing}");
-            ModManager.Log(sb.ToString());
+            //foreach (var param in dmMethod.GetParameters())
+            //    sb.AppendLine($"{param.Name,spacing}{param.ParameterType,spacing}{param.DefaultValue,spacing}");
+            //ModManager.Log(sb.ToString());
 
-            var statsPrefix = SymbolExtensions.GetMethodInfo(() => PatchClass.CountKills);
-            Harmony.Patch(dmMethod, new HarmonyMethod(statsPrefix));
+            //var statsPrefix = SymbolExtensions.GetMethodInfo(() => PatchClass.PrefixDeathMessage);
+            //Harmony.Patch(dmMethod, new HarmonyMethod(statsPrefix));
 
             //Patch everything in the mod with Harmony attributes
             Harmony.PatchAll();

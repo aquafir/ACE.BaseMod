@@ -1,12 +1,12 @@
-﻿namespace CritOverride
+﻿namespace CleaveTranspiler
 {
     public class Mod : IHarmonyMod
     {
         //Todo: think about non-Windows environments
         //If Harmony is set to debug it creates a log on Desktop
         public const bool DEBUGGING = true;
-        public const string ModPath = @"C:\ACE\Mods\CritOverride";
-        const string ID = "com.ACE.ACEmulator.CritOverride";
+        public const string ModPath = @"C:\ACE\Mods\CleaveTranspiler";
+        const string ID = "com.ACE.ACEmulator.CleaveTranspiler";
 
         private Harmony _harmony;
         private bool disposedValue;
@@ -26,20 +26,6 @@
             try
             {
                 PatchClass.Start();
-
-                //Patch explicitly
-                //var mcMethod = AccessTools.FirstMethod(typeof(WorldObject), method => method.Name.Contains("GetWeaponMagicCritFrequency"));
-
-                //const int spacing = -40;
-                //var sb = new StringBuilder($"Method {mcMethod.Name} found:\r\n{"Name",spacing}{"Type",spacing}{"Default",spacing}");
-
-                //foreach (var param in mcMethod.GetParameters())
-                //    sb.AppendLine($"{param.Name,spacing}{param.ParameterType,spacing}{param.DefaultValue,spacing}");
-                //ModManager.Log(sb.ToString());
-
-                //var mcPrefix = SymbolExtensions.GetMethodInfo(() => PatchClass.MagicCritPrefix);
-                //Harmony.Patch(mcMethod, prefix: new HarmonyMethod(mcPrefix));
-
 
                 //Patch everything in the mod with Harmony attributes
                 Harmony.PatchAll();
