@@ -3,9 +3,8 @@
 [HarmonyPatch]
 public class PatchClass
 {
-    public static float CRIT_CHANCE = 100f;
-    private static Statistics _stats = new();
-    private static string filePath = Path.Combine(Mod.ModPath, "Stats.json");
+    private static Settings _settings = new();
+    private static string filePath = Path.Combine(Mod.ModPath, "Settings.json");
 
     public static void Start()
     {
@@ -15,35 +14,36 @@ public class PatchClass
             {
                 ModManager.Log($"Loading from {filePath}");
                 var jsonString = File.ReadAllText(filePath);
-                _stats = JsonSerializer.Deserialize<Statistics>(jsonString);
+                _settings = JsonSerializer.Deserialize<Settings>(jsonString);
             }
             catch (Exception ex)
             {
                 ModManager.Log($"Failed to deserialize from {filePath}");
-                _stats = new Statistics();
+                _settings = new Settings();
                 return;
             }
         }
         else
         {
             ModManager.Log($"Creating {filePath}");
-            string jsonString = JsonSerializer.Serialize(_stats);
+            string jsonString = JsonSerializer.Serialize(_settings);
             File.WriteAllText(filePath, jsonString);
         }
     }
     public static void Shutdown()
     {
-        string jsonString = JsonSerializer.Serialize(_stats);
+        string jsonString = JsonSerializer.Serialize(_settings);
         File.WriteAllText(filePath, jsonString);
     }
 
-
+    //Use Harmony attributes to override Player-on-NP crit chance using Settings
+    [HarmonyPrefix]
     [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.GetWeaponCriticalChance), new Type[] { typeof(WorldObject), typeof(Creature), typeof(CreatureSkill), typeof(Creature) })]
     public static bool Prefix(WorldObject weapon, Creature wielder, CreatureSkill skill, Creature target, ref float __result)
     {
         if (target is not Player)
         {
-            __result = CRIT_CHANCE;
+            __result = _settings.CritOverride;
             return false;
         }
 
@@ -51,50 +51,12 @@ public class PatchClass
         return true;
     }
 
-    public static void CountKills(DamageHistoryInfo lastDamagerInfo, DamageType damageType, bool criticalHit, ref Creature __instance)
+    //Explicitly patch this in Mod.cs as a prefix for GetDeathMessage
+    public static void PrefixDeathMessage(DamageHistoryInfo lastDamagerInfo, DamageType damageType, bool criticalHit, ref Creature __instance)
     {
         if (lastDamagerInfo.IsPlayer)
         {
-            //Add player to kill stats if they don't exist
-            var name = lastDamagerInfo.Name;
-            if (!_stats.Kills.ContainsKey(name))
-            {
-                ModManager.Log($"Creating kill stats for {lastDamagerInfo.Name}...");
-                _stats.Kills.Add(name, new Dictionary<string, uint>());
-            }
-
-            if (!_stats.Kills.TryGetValue(name, out var kills))
-            {
-                ModManager.Log($"Still can't find kills?");
-                //_stats.Kills.Add(name, new Dictionary<string, uint>());
-            }
-            else
-            {
-                var cName = __instance.Name;
-
-                if (!kills.TryGetValue(cName, out var count))
-                {
-                    ModManager.Log($"Tracking {name} kills of {cName}");
-                    kills.Add(cName, 1);
-                }
-                else
-                {
-                    kills[cName] = ++count;
-                    ModManager.Log($"{name} has killed {count} {cName}");
-
-                    if (count % 5 == 0)
-                    {
-                        ModManager.Message(name, $"Bonus XP for killing your {count}th {cName}: {__instance.XpOverride}-->{__instance.XpOverride *= 10}");
-                    }
-                    else
-                        ModManager.Message(name, $"You've killed {count} {cName}.");
-                }
-            }
         }
     }
 }
 
-public class Statistics
-{
-    public Dictionary<string, Dictionary<string, uint>> Kills { get; set; } = new();
-}

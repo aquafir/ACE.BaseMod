@@ -26,3 +26,10 @@ Three samples are included which split the functionality of the template:
   It requires [creating a bot](https://github.com/aquafir/ACE/wiki/Discord-Relay#your-bot) and supplying a channel ID and bot token to `Settings.json`.  
   You also need to add [Discord.Net.Websocket](https://www.nuget.org/packages/Discord.Net.WebSocket) *to the server*.  Probably better ways of doing this.
   Currently it isn't relaying messages from Discord to ACE.  ACE to Discord works.
+* `CleaveTranspiler` is an example of using Harmony transpilers to directly change CIL to modify the angle, range, and max targets for cleaving.  [See here](https://github.com/aquafir/ACE.BaseMod/tree/master/CleaveTranspiler) for details.
+* `Spells` adds three things with a few options:
+  * A pool of spell IDs that trigger on UA attack.
+    * The pool defaults to rings.
+  * A static remapping of spells in landblocks that *have a dungeon* that uses the landblock ID to shift a spell to another in its group.
+  * A random remapping each cast to another in its group.
+  * The above two can be limited to only the `PlayerSpellTable`, to replace before/after a cast (e.g., change animation), and to create groups that are more loosely related.

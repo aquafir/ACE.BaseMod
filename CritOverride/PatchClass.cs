@@ -7,6 +7,30 @@
         private static Settings _settings = new();
         private static string filePath = Path.Combine(Mod.ModPath, "Settings.json");
 
+        [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.GetWeaponCriticalChance), new Type[] { typeof(WorldObject), typeof(Creature), typeof(CreatureSkill), typeof(Creature) })]
+        public static bool Prefix(WorldObject weapon, Creature wielder, CreatureSkill skill, Creature target, ref float __result)
+        {
+            //if (target is not Player)
+            //{
+            //    //ModManager.Log($"Player was found");
+            //    __result = critChance;
+            //    __result = 100f;
+            //    return false;
+            //}
+
+            ////Don't skip if not handled
+            return true;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.GetWeaponMagicCritFrequency), new Type[] { typeof(WorldObject), typeof(Creature), typeof(CreatureSkill), typeof(Creature) })]
+        public static bool MagicCritPrefix(WorldObject weapon, Creature wielder, CreatureSkill skill, Creature target, double __state, ref float __result)
+        {
+            ModManager.Log("Override mCrit");
+            __result = _settings.MagicCritChance;
+            return false;
+        }
+
         public static void Start()
         {
             if (File.Exists(filePath))
@@ -32,29 +56,12 @@
                 File.WriteAllText(filePath, jsonString);
             }
         }
+
         public static void Shutdown()
         {
-            string jsonString = JsonSerializer.Serialize(_settings);
-            File.WriteAllText(filePath, jsonString);
+            //Reloading settings would save on shutdown, making it harder to edit Settings.json-->reload
+            //string jsonString = JsonSerializer.Serialize(_settings);
+            //File.WriteAllText(filePath, jsonString);
         }
-
-        [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.GetWeaponCriticalChance), new Type[] { typeof(WorldObject), typeof(Creature), typeof(CreatureSkill), typeof(Creature) })]
-        public static bool Prefix(WorldObject weapon, Creature wielder, CreatureSkill skill, Creature target, ref float __result)
-        {
-            if (target is not Player)
-            {
-                //ModManager.Log($"Player was found");
-                __result = critChance;
-                return false;
-            }
-
-            //Don't skip if not handled
-            return true;
-        }
-    }
-
-    public class Settings
-    {
-        public float CritChance { get; set; } = 50f;
     }
 }
