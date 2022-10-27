@@ -71,6 +71,11 @@ namespace Spells
             if (!(Settings.DifferentInDungeon || Settings.RandomizeSpells))
                 return true;
 
+            if (spell.School == MagicSchool.CreatureEnchantment && __instance.Skills[Skill.CreatureEnchantment].AdvancementClass == SkillAdvancementClass.Specialized)
+            {
+                ModManager.Log("Splashing debuff");
+            }
+
             //Get the current spell's group
             var comps = Settings.UseComparable ? spell.GetComparableSpells() : spell.GetRelatedSpells();
 
@@ -113,19 +118,25 @@ namespace Spells
             if (!Settings.FistMagic)
                 return;
 
-            if (__instance is not Player)
-                return;
-
-            //Todo: fix checking attack type instead of equipped?  de.AttackType = AttackType.Punches
+            //Todo: fix checking attack type instead of equipped?  //__instance?.AttackType == AttackType.Punches
             if (__instance.GetEquippedWeapon() is not null)
                 return;
 
+            //On quick attacks sometimes __result was null?
+            if (__result is null)
+                return;
+
+            //Add ring cast if you hit the right height/power
             var randomId = Settings.FistPool[gen.Next(Settings.FistPool.Length)];
             var spell = new Spell(randomId);
-            __instance.TryCastSpell_WithRedirects(spell, target);
-            
-            //__instance?.AttackHeight
-            //__instance?.AttackType == AttackType.Punches
+
+            var powerResult = (int)(__instance.GetPowerAccuracyBar() * Settings.FistBuckets);
+            var heightResult = ((int)__result.AttackHeight - 1) * Settings.FistBuckets;
+            var attackBucket = powerResult + heightResult;
+
+            ModManager.Log($"Attacked bucket {attackBucket} ({powerResult} + {heightResult}), target {target.WeenieClassId % Settings.TotalBuckets}");
+            if (target.WeenieClassId % Settings.TotalBuckets == attackBucket)
+                __instance.TryCastSpell_WithRedirects(spell, target);
         }
 
         public static void Start()

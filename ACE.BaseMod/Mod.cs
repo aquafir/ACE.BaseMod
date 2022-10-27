@@ -4,7 +4,7 @@ public class Mod : IHarmonyMod
 {
     //Todo: think about non-Windows environments
     //If Harmony is set to debug it creates a log on Desktop
-    public const bool DEBUGGING = true;
+    public const bool DEBUGGING = false;
     public const string ModPath = @"C:\ACE\Mods\$safeprojectname$";
     const string ID = "com.ACE.ACEmulator.$safeprojectname$";
 

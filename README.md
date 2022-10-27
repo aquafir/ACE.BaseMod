@@ -28,7 +28,8 @@ Three samples are included which split the functionality of the template:
   Currently it isn't relaying messages from Discord to ACE.  ACE to Discord works.
 * `CleaveTranspiler` is an example of using Harmony transpilers to directly change CIL to modify the angle, range, and max targets for cleaving.  [See here](https://github.com/aquafir/ACE.BaseMod/tree/master/CleaveTranspiler) for details.
 * `Spells` adds three things with a few options:
-  * A pool of spell IDs that trigger on UA attack.
+  * A pool of spell IDs that trigger on UA attack if the right combination of height/power is used.
+    * Control number of buckets slider is divided into.
     * The pool defaults to rings.
   * A static remapping of spells in landblocks that *have a dungeon* that uses the landblock ID to shift a spell to another in its group.
   * A random remapping each cast to another in its group.

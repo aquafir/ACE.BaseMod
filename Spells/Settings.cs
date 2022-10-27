@@ -15,7 +15,9 @@
         public bool RandomizeSpells { get; set; } = true;       //If a spell isn't changed by being in a dungeon with the above enabled, this will randomize it
 
         public bool FistMagic { get; set; } = true;             //UA casts from the pool
-        public uint[] FistPool { get; set; } =              
+        public uint[] FistPool { get; set; } =                  //Rings
             { 1781, 1782, 1783, 1784, 1785, 1786, 1787, 1788, 1789 };
+        public uint FistBuckets { get; set; } = 6;              //"Buckets" per power/acc slider, default based on increment of keyboard change
+        public uint TotalBuckets => FistBuckets * 3;            //One for each heights
     }
 }
