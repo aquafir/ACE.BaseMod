@@ -1,8 +1,9 @@
 {
-  "Name": "KillCount",
+  "Name": "ACE.SimpleMod",
   "Author": "",
   "Description": "This is an example metadata file for a non-existent mod.",
   "Version": "1.0",
-  "Enabled":  true,
-  "ACEVersion": "0.0",
+  "Enabled": true,
+  "RegisterCommands": true,
+  "ACEVersion": "0.0"
 }

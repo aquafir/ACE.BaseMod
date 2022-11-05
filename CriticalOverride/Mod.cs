@@ -1,17 +1,23 @@
-﻿namespace CritOverride
+﻿namespace CriticalOverride
 {
     public class Mod : IHarmonyMod
     {
-        //Todo: think about non-Windows environments
         //If Harmony is set to debug it creates a log on Desktop
-        public const bool DEBUGGING = true;
-        public const string ModPath = @"C:\ACE\Mods\CritOverride";
-        const string ID = "com.ACE.ACEmulator.CritOverride";
+        public const bool DEBUGGING = false;
+        //Point to your mod directory
+        public const string ModPath = @"C:\ACE\Mods\CriticalOverride";
 
-        private Harmony _harmony;
+        //IDs are used by Harmony to separate multiple patches
+        const string ID = "com.ACE.ACEmulator.CriticalOverride";
+        private Harmony Harmony { get; set; } = new(ID);
+        public static ModContainer Container { get; private set; }
+
         private bool disposedValue;
 
-        public Harmony Harmony => _harmony;
+        //Reload on changes in Settings.json
+        private FileSystemWatcher _settingsWatcher;
+        private DateTime _lastChange = DateTime.Now;
+        private readonly TimeSpan _reloadInterval = TimeSpan.FromSeconds(2);
 
         public void Initialize()
         {
@@ -21,25 +27,22 @@
                 ModManager.Log($"Initializing {ID}...");
             }
 
-            _harmony = new Harmony(ID);
+            Container = ModManager.GetModContainerByPath(ModPath);
+
+            _settingsWatcher = new FileSystemWatcher()
+            {
+                Path = ModPath,
+                Filter = $"Settings.json",
+                EnableRaisingEvents = true,
+                NotifyFilter = NotifyFilters.LastWrite
+            };
+
+            _settingsWatcher.Changed += Settings_Changed;
+            _settingsWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName;
 
             try
             {
                 PatchClass.Start();
-
-                //Patch explicitly
-                //var mcMethod = AccessTools.FirstMethod(typeof(WorldObject), method => method.Name.Contains("GetWeaponMagicCritFrequency"));
-
-                //const int spacing = -40;
-                //var sb = new StringBuilder($"Method {mcMethod.Name} found:\r\n{"Name",spacing}{"Type",spacing}{"Default",spacing}");
-
-                //foreach (var param in mcMethod.GetParameters())
-                //    sb.AppendLine($"{param.Name,spacing}{param.ParameterType,spacing}{param.DefaultValue,spacing}");
-                //ModManager.Log(sb.ToString());
-
-                //var mcPrefix = SymbolExtensions.GetMethodInfo(() => PatchClass.MagicCritPrefix);
-                //Harmony.Patch(mcMethod, prefix: new HarmonyMethod(mcPrefix));
-
 
                 //Patch everything in the mod with Harmony attributes
                 Harmony.PatchAll();
@@ -47,7 +50,8 @@
             catch (Exception ex)
             {
                 ModManager.Log($"Failed to start.  Unpatching {ID}: {ex.Message}");
-                Dispose();
+                Container?.Shutdown();
+                //Dispose();
             }
         }
 
@@ -67,6 +71,8 @@
 
                     //CustomCommands.Unregister();
                     Harmony.UnpatchAll(ID);
+
+                    _settingsWatcher.Changed -= Settings_Changed;
 
                     if (DEBUGGING)
                         ModManager.Log($"Unpatched {ID}...");
@@ -111,20 +117,18 @@
         #endregion
         #endregion
 
+        private void Settings_Changed(object sender, FileSystemEventArgs e)
+        {
+            var delta = DateTime.Now - _lastChange;
+            if (delta < _reloadInterval)
+                return;
+            _lastChange = DateTime.Now;
 
-
-        //public void Shutdown() => Dispose();
-
-        //public void Dispose()
-        //{
-        //    if (DEBUGGING)
-        //        ModManager.Log($"Disposing {ID}...");
-
-        //    //CustomCommands.Unregister();
-        //    Harmony.UnpatchAll(ID);
-
-        //    if (DEBUGGING)
-        //        ModManager.Log($"Unpatched {ID}...");
-        //}
+            //An alternative would be to reload through the ModContainer
+            ModManager.Log($"Settings changed, reloading after {delta.TotalSeconds} seconds...");
+            Dispose();
+            Initialize();
+            ModManager.Log($"Setting reloaded.");
+        }
     }
 }

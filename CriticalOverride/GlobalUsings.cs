@@ -1,5 +1,4 @@
 ﻿global using ACE.Entity.Enum;
-global using ACE.Mod;
 global using ACE.Server.Command;
 global using ACE.Server.Entity;
 global using ACE.Server.Mod;

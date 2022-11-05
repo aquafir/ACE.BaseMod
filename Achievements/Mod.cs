@@ -1,14 +1,14 @@
-﻿namespace CleaveTranspiler
+﻿namespace Achievements
 {
     public class Mod : IHarmonyMod
     {
         //If Harmony is set to debug it creates a log on Desktop
         public const bool DEBUGGING = false;
         //Point to your mod directory
-        public const string ModPath = @"C:\ACE\Mods\CleaveTranspiler";
+        public const string ModPath = @"C:\ACE\Mods\Achievements";
 
         //IDs are used by Harmony to separate multiple patches
-        const string ID = "com.ACE.ACEmulator.CleaveTranspiler";
+        const string ID = "com.ACE.ACEmulator.Achievements";
         private Harmony Harmony { get; set; } = new(ID);
         public static ModContainer Container { get; private set; }
 
@@ -43,6 +43,11 @@
             try
             {
                 PatchClass.Start();
+
+                //Patch something using it's Type and Method name explicitly...
+                //var dmMethod = AccessTools.FirstMethod(typeof(Creature), method => method.Name.Contains("GetDeathMessage"));
+                //var statsPrefix = SymbolExtensions.GetMethodInfo(() => PatchClass.PrefixDeathMessage);
+                //Harmony.Patch(dmMethod, new HarmonyMethod(statsPrefix));
 
                 //Patch everything in the mod with Harmony attributes
                 Harmony.PatchAll();

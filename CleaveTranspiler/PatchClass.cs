@@ -1,13 +1,56 @@
 ﻿using System.Reflection.Emit;
+using System.Text.Json.Serialization;
 
 namespace CleaveTranspiler
 {
     [HarmonyPatch]
     public class PatchClass
     {
-        private static Settings _settings = new();
+        #region Settings
+        public static Settings Settings = new();
         private static string filePath = Path.Combine(Mod.ModPath, "Settings.json");
+        private static JsonSerializerOptions _serializeOptions = new()
+        {
+            WriteIndented = true,
+            AllowTrailingCommas = true,
+            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+        };
 
+        private static void SaveSettings()
+        {
+            string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
+            File.WriteAllText(filePath, jsonString);
+        }
+
+        private static void LoadSettings()
+        {
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    ModManager.Log($"Loading Settings from {filePath}...");
+                    var jsonString = File.ReadAllText(filePath);
+                    Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
+                }
+                catch (Exception ex)
+                {
+                    ModManager.Log($"Failed to deserialize from {filePath}, creating new Settings.json and restarting...");
+                    Settings = new Settings();
+                    SaveSettings();
+
+                    Mod.Container?.Restart();
+                    return;
+                }
+            }
+            else
+            {
+                ModManager.Log($"Creating {filePath}...");
+                SaveSettings();
+            }
+        }
+        #endregion
+
+        #region Patches
         [HarmonyPrefix]
         [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.IsCleaving), MethodType.Getter)]
         public static bool IsCleaving(WorldObject __instance, ref bool __result)
@@ -23,7 +66,7 @@ namespace CleaveTranspiler
         [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.CleaveTargets), MethodType.Getter)]
         public static bool CleaveNumber(WorldObject __instance, ref int __result)
         {
-            __result = _settings.CleaveTargets;
+            __result = Settings.CleaveTargets;
             return false;
         }
 
@@ -41,48 +84,31 @@ namespace CleaveTranspiler
             {
                 if (codes[i].LoadsField(f_cleaveAngle))
                 {
-                    //ModManager.Log($"Replace cleave angle with modded value: {_settings.CleaveAngle}");
-                    codes[i] = new CodeInstruction(OpCodes.Ldc_R4, _settings.CleaveAngle);
+                    //ModManager.Log($"Replace cleave angle with modded value: {Settings.CleaveAngle}");
+                    codes[i] = new CodeInstruction(OpCodes.Ldc_R4, Settings.CleaveAngle);
                 }
-                if(codes[i].LoadsField(f_cleaveCylDistance))
+                if (codes[i].LoadsField(f_cleaveCylDistance))
                 {
-                    //ModManager.Log($"Replace cleave angle with modded value: {_settings.CleaveCylRange}");
-                    codes[i] = new CodeInstruction(OpCodes.Ldc_R4, _settings.CleaveCylRange);
+                    //ModManager.Log($"Replace cleave angle with modded value: {Settings.CleaveCylRange}");
+                    codes[i] = new CodeInstruction(OpCodes.Ldc_R4, Settings.CleaveCylRange);
                 }
             }
 
             return codes.AsEnumerable();
         }
+        #endregion
 
-
+        #region Start/Shutdown
         public static void Start()
         {
-            if (File.Exists(filePath))
-            {
-                try
-                {
-                    ModManager.Log($"Loading from {filePath}");
-                    var jsonString = File.ReadAllText(filePath);
-                    _settings = JsonSerializer.Deserialize<Settings>(jsonString);
-                }
-                catch (Exception ex)
-                {
-                    ModManager.Log($"Failed to deserialize from {filePath}");
-                    _settings = new Settings();
-                    return;
-                }
-            }
-            else
-            {
-                ModManager.Log($"Creating {filePath}");
-                string jsonString = JsonSerializer.Serialize(_settings);
-                File.WriteAllText(filePath, jsonString);
-            }
+            LoadSettings();
         }
+
         public static void Shutdown()
         {
-            //string jsonString = JsonSerializer.Serialize(_settings);
-            //File.WriteAllText(filePath, jsonString);
+            //Clean up what you need to...
+            //SaveSettings();
         }
+        #endregion
     }
 }

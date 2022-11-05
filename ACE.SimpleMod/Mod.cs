@@ -1,19 +1,19 @@
-﻿using ACE.Server.Network.GameMessages.Messages;
+﻿using ACE.Server.Mod;
+using HarmonyLib;
 
-namespace Discord
+namespace ACE.SimpleMod
 {
     public class Mod : IHarmonyMod
     {
-        //Todo: think about non-Windows environments
-        //If Harmony is set to debug it creates a log on Desktop
-        public const bool DEBUGGING = true;
-        public const string ModPath = @"C:\ACE\Mods\Discord";
-        const string ID = "com.ACE.ACEmulator.Discord";
+        public const bool DEBUGGING = false;
+        public const string ModPath = @"C:\ACE\Mods\ACE.SimpleMod";
 
-        private Harmony _harmony;
+        //IDs are used by Harmony to separate multiple patches
+        const string ID = "com.ACE.ACEmulator.ACE.SimpleMod";
+        private Harmony Harmony { get; set; } = new(ID);
+        public static ModContainer Container { get; private set; }
+
         private bool disposedValue;
-
-        public Harmony Harmony => _harmony;
 
         public void Initialize()
         {
@@ -23,32 +23,19 @@ namespace Discord
                 ModManager.Log($"Initializing {ID}...");
             }
 
-            _harmony = new Harmony(ID);
+            Container = ModManager.GetModContainerByPath(ModPath);
 
             try
             {
-                DiscordRelay.Initialize();
-
-                //Patch GameMessageTurbineChat
-                var chatConstructor = AccessTools.FirstConstructor(typeof(GameMessageTurbineChat), constructor => true);
-
-                const int spacing = -40;
-                var sb = new StringBuilder($"Constructor {chatConstructor.Name} found:\r\n{"Name",spacing}{"Type",spacing}{"Default",spacing}");
-
-                foreach (var param in chatConstructor.GetParameters())
-                    sb.AppendLine($"{param.Name,spacing}{param.ParameterType,spacing}{param.DefaultValue,spacing}");
-                ModManager.Log(sb.ToString());
-
-                var statsPrefix = SymbolExtensions.GetMethodInfo(() => PatchClass.Prefix);
-                Harmony.Patch(chatConstructor, new HarmonyMethod(statsPrefix));
+                PatchClass.Start();
 
                 //Patch everything in the mod with Harmony attributes
-                //Harmony.PatchAll();
+                Harmony.PatchAll();
             }
             catch (Exception ex)
             {
                 ModManager.Log($"Failed to start.  Unpatching {ID}: {ex.Message}");
-                Dispose();
+                Container?.Shutdown();
             }
         }
 
@@ -64,7 +51,7 @@ namespace Discord
                     if (DEBUGGING)
                         ModManager.Log($"Disposing {ID}...");
 
-                    DiscordRelay.Shutdown();
+                    PatchClass.Shutdown();
 
                     //CustomCommands.Unregister();
                     Harmony.UnpatchAll(ID);
@@ -111,21 +98,5 @@ namespace Discord
         //}
         #endregion
         #endregion
-
-
-
-        //public void Shutdown() => Dispose();
-
-        //public void Dispose()
-        //{
-        //    if (DEBUGGING)
-        //        ModManager.Log($"Disposing {ID}...");
-
-        //    //CustomCommands.Unregister();
-        //    Harmony.UnpatchAll(ID);
-
-        //    if (DEBUGGING)
-        //        ModManager.Log($"Unpatched {ID}...");
-        //}
     }
 }

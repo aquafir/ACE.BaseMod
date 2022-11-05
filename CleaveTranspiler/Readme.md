@@ -1,4 +1,6 @@
-﻿`GetCleaveTarget` uses some readonly fields to check for valid targets by angle and distance:
+﻿# $safeprojectname$
+
+`GetCleaveTarget` uses some readonly fields to check for valid targets by angle and distance:
 
 ```c#
     public static readonly float CleaveAngle = 180.0f;
@@ -39,4 +41,3 @@ In the transpiler patch the `CodeInstruction`'s are looped through.  If an instr
             return codes.AsEnumerable();
         }
 ```
-

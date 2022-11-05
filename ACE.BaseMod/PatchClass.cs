@@ -3,39 +3,51 @@
 [HarmonyPatch]
 public class PatchClass
 {
-    private static Settings _settings = new();
+    #region Settings
+    public static Settings Settings = new();
     private static string filePath = Path.Combine(Mod.ModPath, "Settings.json");
+    private static JsonSerializerOptions _serializeOptions = new()
+    {
+        WriteIndented = true,
+        AllowTrailingCommas = true,
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+    };
 
-    public static void Start()
+    private static void SaveSettings()
+    {
+        string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
+        File.WriteAllText(filePath, jsonString);
+    }
+
+    private static void LoadSettings()
     {
         if (File.Exists(filePath))
         {
             try
             {
-                ModManager.Log($"Loading from {filePath}");
+                ModManager.Log($"Loading Settings from {filePath}...");
                 var jsonString = File.ReadAllText(filePath);
-                _settings = JsonSerializer.Deserialize<Settings>(jsonString);
+                Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
             }
             catch (Exception ex)
             {
-                ModManager.Log($"Failed to deserialize from {filePath}");
-                _settings = new Settings();
+                ModManager.Log($"Failed to deserialize from {filePath}, creating new Settings.json and restarting...");
+                Settings = new Settings();
+                SaveSettings();
+
+                Mod.Container?.Restart();
                 return;
             }
         }
         else
         {
-            ModManager.Log($"Creating {filePath}");
-            string jsonString = JsonSerializer.Serialize(_settings);
-            File.WriteAllText(filePath, jsonString);
+            ModManager.Log($"Creating {filePath}...");
+            SaveSettings();
         }
     }
-    public static void Shutdown()
-    {
-        string jsonString = JsonSerializer.Serialize(_settings);
-        File.WriteAllText(filePath, jsonString);
-    }
+    #endregion
 
+    #region Patches
     //Use Harmony attributes to override Player-on-NP crit chance using Settings
     [HarmonyPrefix]
     [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.GetWeaponCriticalChance), new Type[] { typeof(WorldObject), typeof(Creature), typeof(CreatureSkill), typeof(Creature) })]
@@ -43,20 +55,26 @@ public class PatchClass
     {
         if (target is not Player)
         {
-            __result = _settings.CritOverride;
+            __result = 100;
             return false;
         }
 
         //Don't skip if not handled
         return true;
     }
+    #endregion
 
-    //Explicitly patch this in Mod.cs as a prefix for GetDeathMessage
-    public static void PrefixDeathMessage(DamageHistoryInfo lastDamagerInfo, DamageType damageType, bool criticalHit, ref Creature __instance)
+    #region Start/Shutdown
+    public static void Start()
     {
-        if (lastDamagerInfo.IsPlayer)
-        {
-        }
+        LoadSettings();
     }
+
+    public static void Shutdown()
+    {
+        //Clean up what you need to...
+        //SaveSettings();
+    }
+    #endregion
 }
 

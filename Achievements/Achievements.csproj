@@ -20,11 +20,24 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Reference Include="ACE.Adapter">
+	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.Adapter.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="ACE.Common">
+	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.Common.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="ACE.Database">
+	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.Database.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="ACE.DatLoader">
+	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.DatLoader.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
 	  <Reference Include="ACE.Entity">
 	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.Entity.dll</HintPath>
-	  </Reference>
-	  <Reference Include="ACE.Mod">
-	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.Mod.dll</HintPath>
 	    <Private>False</Private>
 	  </Reference>
 	  <Reference Include="ACE.Server">

@@ -34,3 +34,15 @@ Three samples are included which split the functionality of the template:
   * A static remapping of spells in landblocks that *have a dungeon* that uses the landblock ID to shift a spell to another in its group.
   * A random remapping each cast to another in its group.
   * The above two can be limited to only the `PlayerSpellTable`, to replace before/after a cast (e.g., change animation), and to create groups that are more loosely related.
+
+
+
+
+
+### Todo
+
+* Look at using [Reverse patches](https://harmony.pardeike.net/articles/reverse-patching.html) to snapshot/restore any patched methods.
+* Good example for using [Finalizer patches](https://harmony.pardeike.net/articles/patching-finalizer.html) to eat tricky and inconsequential exceptions.
+* Exposing capabilities of mods to other mods
+  * `ModContainer`-based dependencies / incompatibilities.
+* Threading

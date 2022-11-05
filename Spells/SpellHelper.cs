@@ -1,8 +1,4 @@
-﻿using ACE.DatLoader;
-using ACE.DatLoader.FileTypes;
-using ACE.Server.Entity;
-
-namespace Spells;
+﻿namespace Spells;
 
 public static class SpellHelper
 {
@@ -10,16 +6,14 @@ public static class SpellHelper
     private const char SD = '\t';   //Spell ID delimeter
 
     //Comparable spells are the matches in everything but level.  e.g., Cold Bolt 1-8 are a group
-    static Dictionary<uint, uint> _comparableSpells { get; set; } = new();
+    static Dictionary<uint, uint> _comparableSpells { get; set; } //= new();
 
     //Related spells are loose fits.  e.g., All offensive War
-    static Dictionary<uint, uint> _relatedSpells { get; set; } = new();
+    static Dictionary<uint, uint> _relatedSpells { get; set; } //= new();
 
     //Groups use an index that points to their set of spell IDs
-    static Dictionary<uint, List<uint>> _groups { get; set; } = new();
+    static Dictionary<uint, List<uint>> _groups { get; set; } //= new();
 
-    //static string _comparablePath = Path.Combine(Mod.ModPath, "Comparable.csv");
-    //static string _relatedPath = Path.Combine(Mod.ModPath, "Related.csv");
     static string _groupPath = Path.Combine(Mod.ModPath, "Groups.csv");
 
     public static bool TryInitializeSpellGroups()
@@ -30,11 +24,16 @@ public static class SpellHelper
             return false;
         }
 
+        //Initialize after reload
+        _groups = new();
+        _relatedSpells = new();
+        _comparableSpells = new();
+
         //Todo: clean this up and verify
         try
         {
             //Load comparable map
-            if (File.Exists(_groupPath))
+            if (File.Exists(_groupPath) && PatchClass.Settings.LastGenerated == PatchClass.Settings.GroupType)
             {
                 //Skip header, tab-separated list
                 foreach (var line in File.ReadAllLines(_groupPath).Skip(1).Select(x => x.Split(CD)))
@@ -43,13 +42,16 @@ public static class SpellHelper
                     switch (line[2])
                     {
                         case "G":
-                            _groups.Add(uint.Parse(line[0]), new List<uint>(line[1].Split(SD).Select(x => uint.Parse(x))));
+                            if (!_groups.TryAdd(uint.Parse(line[0]), new List<uint>(line[1].Split(SD).Select(x => uint.Parse(x)))))
+                                ModManager.Log($"Duplicate found: {line}");
                             break;
                         case "C":
-                            _comparableSpells.Add(uint.Parse(line[0]), uint.Parse(line[1]));
+                            if (!_comparableSpells.TryAdd(uint.Parse(line[0]), uint.Parse(line[1])))
+                                ModManager.Log($"Duplicate found: {line}");
                             break;
                         case "R":
-                            _relatedSpells.Add(uint.Parse(line[0]), uint.Parse(line[1]));
+                            if (!_relatedSpells.TryAdd(uint.Parse(line[0]), uint.Parse(line[1])))
+                                ModManager.Log($"Duplicate found: {line}");
                             break;
                     }
                 }
@@ -69,11 +71,15 @@ public static class SpellHelper
                 output.AppendLine(string.Join(System.Environment.NewLine, _groups.OrderBy(x => x.Key).Select(kvp => $"{kvp.Key}{CD}{string.Join(SD, kvp.Value)}{CD}G")));
 
                 File.WriteAllText(_groupPath, output.ToString());
+
+                PatchClass.Settings.LastGenerated = PatchClass.Settings.GroupType;
+                PatchClass.SaveSettings();
             }
         }
         catch (Exception ex)
         {
             ModManager.Log($"Failed to load or create groups: {ex.Message}");
+            Debugger.Break();
             return false;
         }
 
@@ -85,7 +91,7 @@ public static class SpellHelper
     private static void CreateComparableSpellGroups()
     {
         var portalDat = new PortalDatDatabase(PatchClass.Settings.PortalDatPath, false);
-            
+
         var spells = !PatchClass.Settings.OnlyPlayerSpells ?
             portalDat.SpellTable.Spells :
             //Restrict SpellTable to player spells.  PlayerSpellTable is sorted for binary search
