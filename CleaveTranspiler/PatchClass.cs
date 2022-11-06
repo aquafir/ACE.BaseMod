@@ -1,4 +1,5 @@
-﻿using System.Reflection.Emit;
+﻿using HarmonyLib;
+using System.Reflection.Emit;
 using System.Text.Json.Serialization;
 
 namespace CleaveTranspiler
@@ -55,11 +56,13 @@ namespace CleaveTranspiler
         [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.IsCleaving), MethodType.Getter)]
         public static bool IsCleaving(WorldObject __instance, ref bool __result)
         {
-            //All melee weapons are cleaving
-            __result = __instance is MeleeWeapon;
+            if (Settings.AllMeleeCleaves)
+            {
+                __result = __instance is MeleeWeapon;
+                return false;
+            }
 
-            //Override IsCleaving
-            return false;
+            return true;
         }
 
         [HarmonyPrefix]
@@ -106,8 +109,6 @@ namespace CleaveTranspiler
 
         public static void Shutdown()
         {
-            //Clean up what you need to...
-            //SaveSettings();
         }
         #endregion
     }

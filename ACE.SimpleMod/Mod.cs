@@ -9,8 +9,8 @@ namespace ACE.SimpleMod
         public const string ModPath = @"C:\ACE\Mods\$safeprojectname$";
 
         //IDs are used by Harmony to separate multiple patches
-        const string ID = "com.ACE.ACEmulator.$safeprojectname$";
-        private Harmony Harmony { get; set; } = new(ID);
+        public const string ID = "com.ACE.ACEmulator.$safeprojectname$";
+        public static Harmony Harmony { get; set; } = new(ID);
         public static ModContainer Container { get; private set; }
 
         private bool disposedValue;

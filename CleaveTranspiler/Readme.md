@@ -1,4 +1,10 @@
-﻿# $safeprojectname$
+﻿#  CleaveTranspiler
+
+`CleaveTranspiler` is an example of using [Harmony transpilers](https://harmony.pardeike.net/articles/patching-transpiler.html) to directly change CIL to modify the angle and range of cleaving.
+
+It also sets the number of cleave targets by changing the `Getter` of `WorldObject.CleaveNumber` and patches `WorldObject.IsCleaving` to enable cleave for all melee weapons.
+
+---
 
 `GetCleaveTarget` uses some readonly fields to check for valid targets by angle and distance:
 

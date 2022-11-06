@@ -1,3 +1,1 @@
-﻿# $safeprojectname$
-
-*Add mod description and usage*
+﻿*Add mod description and usage*

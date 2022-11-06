@@ -9,7 +9,7 @@
 
         //IDs are used by Harmony to separate multiple patches
         const string ID = "com.ACE.ACEmulator.CleaveTranspiler";
-        private Harmony Harmony { get; set; } = new(ID);
+        Harmony Harmony { get; set; } = new(ID);
         public static ModContainer Container { get; private set; }
 
         private bool disposedValue;
