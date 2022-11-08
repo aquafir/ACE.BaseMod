@@ -1,11 +1,14 @@
-﻿namespace ACE.BaseMod;
+﻿using System.Threading;
+
+namespace ACE.BaseMod;
 
 [HarmonyPatch]
 public class PatchClass
 {
     #region Settings
+    private static bool _loadError = true;
     public static Settings Settings = new();
-    private static string filePath = Path.Combine(Mod.ModPath, "Settings.json");
+    private static string settingsPath = Path.Combine(Mod.ModPath, "Settings.json");
     private static JsonSerializerOptions _serializeOptions = new()
     {
         WriteIndented = true,
@@ -16,34 +19,37 @@ public class PatchClass
     private static void SaveSettings()
     {
         string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
-        File.WriteAllText(filePath, jsonString);
+        File.WriteAllText(settingsPath, jsonString);
     }
 
-    private static void LoadSettings()
+    private static async Task LoadSettingsAsync()
     {
-        if (File.Exists(filePath))
+        if (File.Exists(settingsPath))
         {
             try
             {
-                ModManager.Log($"Loading Settings from {filePath}...");
-                var jsonString = File.ReadAllText(filePath);
+                ModManager.Log($"Loading Settings from {settingsPath}...");
+
+                using var fs = new FileStream(settingsPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using var sr = new StreamReader(fs);
+
+                string jsonString = await sr.ReadToEndAsync().WaitAsync(TIMEOUT);
                 Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
             }
             catch (Exception ex)
             {
-                ModManager.Log($"Failed to deserialize from {filePath}, creating new Settings.json and restarting...");
-                Settings = new Settings();
-                SaveSettings();
+                ModManager.Log($"Failed to deserialize from {settingsPath}...");
 
-                Mod.Container?.Restart();
+                _loadError = true;
                 return;
             }
         }
         else
         {
-            ModManager.Log($"Creating {filePath}...");
+            ModManager.Log($"Creating {settingsPath}...");
             SaveSettings();
         }
+        _loadError = false;
     }
     #endregion
 
@@ -65,13 +71,24 @@ public class PatchClass
     #endregion
 
     #region Start/Shutdown
-    public static void Start()
+    public static async Task StartAsync()
     {
-        LoadSettings();
+        await LoadSettingsAsync();
+
+        if (_loadError)
+            Mod.Container?.Shutdown();
     }
+
 
     public static void Shutdown()
     {
+        if (_loadError)
+        {
+            ModManager.Log($"Improper shutdown.", ModManager.LogLevel.Fatal);
+            return;
+
+        }
+
         //Clean up what you need to...
         //SaveSettings();
     }

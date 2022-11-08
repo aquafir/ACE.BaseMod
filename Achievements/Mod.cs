@@ -42,7 +42,7 @@
 
             try
             {
-                PatchClass.Start();
+                PatchClass.StartAsync();
 
                 //Patch something using it's Type and Method name explicitly...
                 //var dmMethod = AccessTools.FirstMethod(typeof(Creature), method => method.Name.Contains("GetDeathMessage"));
