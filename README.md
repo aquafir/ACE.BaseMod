@@ -1,4 +1,4 @@
-*Early stages, hobbyist dev.  Happy to get advice/feedback*
+*Hobbyist dev,  Happy to get advice/feedback*
 
 
 

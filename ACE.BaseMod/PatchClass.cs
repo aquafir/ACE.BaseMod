@@ -1,97 +1,99 @@
-﻿using System.Threading;
-
-namespace ACE.BaseMod;
+﻿namespace ACE.BaseMod;
 
 [HarmonyPatch]
 public class PatchClass
 {
     #region Settings
-    private static bool _loadError = true;
+    //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);
+    const int RETRIES = 10;
+
     public static Settings Settings = new();
     private static string settingsPath = Path.Combine(Mod.ModPath, "Settings.json");
+    private static FileInfo settingsInfo = new(settingsPath);
+
     private static JsonSerializerOptions _serializeOptions = new()
     {
         WriteIndented = true,
         AllowTrailingCommas = true,
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+
     };
 
     private static void SaveSettings()
     {
         string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
-        File.WriteAllText(settingsPath, jsonString);
+
+        if (!settingsInfo.RetryWrite(jsonString, RETRIES))
+        {
+            ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
+            Mod.State = ModState.Error;
+        }
     }
 
-    private static async Task LoadSettingsAsync()
+    private static void LoadSettings()
     {
-        if (File.Exists(settingsPath))
+        if (settingsInfo.Exists)
         {
+            ModManager.Log($"Loading settings from {settingsPath}...");
+
+            if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
+            {
+                Mod.State = ModState.Error;
+                return;
+            }
+
             try
             {
-                ModManager.Log($"Loading Settings from {settingsPath}...");
-
-                using var fs = new FileStream(settingsPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                using var sr = new StreamReader(fs);
-
-                string jsonString = await sr.ReadToEndAsync().WaitAsync(TIMEOUT);
                 Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ModManager.Log($"Failed to deserialize from {settingsPath}...");
-
-                _loadError = true;
+                ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
+                Mod.State = ModState.Error;
                 return;
             }
         }
         else
         {
-            ModManager.Log($"Creating {settingsPath}...");
+            ModManager.Log($"Creating {settingsInfo}...");
             SaveSettings();
         }
-        _loadError = false;
-    }
-    #endregion
-
-    #region Patches
-    //Use Harmony attributes to override Player-on-NP crit chance using Settings
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.GetWeaponCriticalChance), new Type[] { typeof(WorldObject), typeof(Creature), typeof(CreatureSkill), typeof(Creature) })]
-    public static bool Prefix(WorldObject weapon, Creature wielder, CreatureSkill skill, Creature target, ref float __result)
-    {
-        if (target is not Player)
-        {
-            __result = 100;
-            return false;
-        }
-
-        //Don't skip if not handled
-        return true;
     }
     #endregion
 
     #region Start/Shutdown
-    public static async Task StartAsync()
+    public static void Start()
     {
-        await LoadSettingsAsync();
+        //Need to decide on async use
+        Mod.State = ModState.Loading;
+        LoadSettings();
 
-        if (_loadError)
-            Mod.Container?.Shutdown();
+        if (Mod.State == ModState.Error)
+        {
+            ModManager.DisableModByPath(Mod.ModPath);
+            return;
+        }
+
+        Mod.State = ModState.Running;
     }
-
 
     public static void Shutdown()
     {
-        if (_loadError)
-        {
-            ModManager.Log($"Improper shutdown.", ModManager.LogLevel.Fatal);
-            return;
+        //if (Mod.State == ModState.Running)
+        // Shut down enabled mod...
 
-        }
-
-        //Clean up what you need to...
-        //SaveSettings();
+        if (Mod.State == ModState.Error)
+            ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
     }
+    #endregion
+
+    #region Patches
+    //[HarmonyPrefix]
+    //[HarmonyPatch(typeof(Creature), nameof(Creature.GetDeathMessage), new Type[] { typeof(DamageHistoryInfo), typeof(DamageType), typeof(bool) })]
+    //public static void PreDeathMessage(DamageHistoryInfo lastDamagerInfo, DamageType damageType, bool criticalHit, ref Creature __instance)
+    //{
+    //  ...
+    //}
     #endregion
 }
 

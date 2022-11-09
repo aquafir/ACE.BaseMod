@@ -8,17 +8,20 @@ public class Mod : IHarmonyMod
     public const string ModPath = @"C:\ACE\Mods\$safeprojectname$";
 
     //IDs are used by Harmony to separate multiple patches
-    public const string ID = "com.ACE.ACEmulator.$safeprojectname$";
-    public static Harmony Harmony { get; set; } = new(ID);
-    public static ModContainer Container { get; private set; }
+    const string ID = "com.ACE.ACEmulator.$safeprojectname$";
+    protected static Harmony Harmony { get; set; } = new(ID);
 
     private bool disposedValue;
+    public static Mod Instance { get; private set; }
 
     //Reload on changes in Settings.json
     private FileSystemWatcher _settingsWatcher;
     private DateTime _lastChange = DateTime.Now;
-    private readonly TimeSpan _reloadInterval = TimeSpan.FromSeconds(2);
+    private readonly TimeSpan _reloadInterval = TimeSpan.FromSeconds(1);
 
+    public static ModState State = ModState.None;
+
+    #region Initialize / Dispose (called by ACE)
     public void Initialize()
     {
         if (DEBUGGING)
@@ -27,7 +30,7 @@ public class Mod : IHarmonyMod
             ModManager.Log($"Initializing {ID}...");
         }
 
-        Container = ModManager.GetModContainerByPath(ModPath);
+        Instance = this;
 
         _settingsWatcher = new FileSystemWatcher()
         {
@@ -40,22 +43,9 @@ public class Mod : IHarmonyMod
         _settingsWatcher.Changed += Settings_Changed;
         _settingsWatcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName;
 
-        try
-        {
-            PatchClass.Start();
-
-            //Patch everything in the mod with Harmony attributes
-            Harmony.PatchAll();
-        }
-        catch (Exception ex)
-        {
-            ModManager.Log($"Failed to start.  Unpatching {ID}: {ex.Message}");
-            Container?.Shutdown();
-            //Dispose();
-        }
+        Start();
     }
 
-    #region Dispose
     //https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-dispose
     protected virtual void Dispose(bool disposing)
     {
@@ -63,19 +53,9 @@ public class Mod : IHarmonyMod
         {
             if (disposing)
             {
-                // TODO: dispose managed state (managed objects)
-                if (DEBUGGING)
-                    ModManager.Log($"Disposing {ID}...");
-
-                PatchClass.Shutdown();
-
-                //CustomCommands.Unregister();
-                Harmony.UnpatchAll(ID);
+                Stop();
 
                 _settingsWatcher.Changed -= Settings_Changed;
-
-                if (DEBUGGING)
-                    ModManager.Log($"Unpatched {ID}...");
             }
 
             // TODO: free unmanaged resources (unmanaged objects) and override finalizer
@@ -117,17 +97,57 @@ public class Mod : IHarmonyMod
     #endregion
     #endregion
 
+    #region Start / Stop (control the patches internally)
+    private void Start()
+    {
+        try
+        {
+            //Patch everything in the mod with Harmony attributes
+            Harmony.PatchAll();
+
+            PatchClass.Start();
+        }
+        catch (Exception ex)
+        {
+            ModManager.Log($"Failed to start.  Unpatching {ID}: {ex.Message}");
+            ModManager.DisableModByPath(ModPath);
+            //Dispose();
+        }
+    }
+
+    private void Stop()
+    {
+        // TODO: dispose managed state (managed objects)
+        PatchClass.Shutdown();
+
+        //CustomCommands.Unregister();
+        Harmony.UnpatchAll(ID);
+    }
+    #endregion
+
     private void Settings_Changed(object sender, FileSystemEventArgs e)
     {
+        //Only reload if currently running
+        if (State != ModState.Running)
+            return;
+
         var delta = DateTime.Now - _lastChange;
         if (delta < _reloadInterval)
             return;
         _lastChange = DateTime.Now;
 
         //An alternative would be to reload through the ModContainer
-        ModManager.Log($"Settings changed, reloading after {delta.TotalSeconds} seconds...");
-        Dispose();
-        Initialize();
-        ModManager.Log($"Setting reloaded.");
+        //ModManager.Log($"Settings changed, reloading after {delta.TotalSeconds} seconds...");
+        Stop();
+        Start();
+        ModManager.Log($"Settings reloaded.");
     }
+}
+
+public enum ModState
+{
+    None,       // Mod instance freshly created
+    Loading,    // Patch class has been started
+    Error,      // An error has occurred (loading/saving/etc.)
+    Running     // Mod successfully started
 }

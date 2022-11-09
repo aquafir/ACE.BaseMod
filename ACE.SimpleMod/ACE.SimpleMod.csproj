@@ -21,27 +21,27 @@
 
 	<ItemGroup>
 	  <Reference Include="ACE.Adapter">
-	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.Adapter.dll</HintPath>
+	    <HintPath>C:\ACE\Server\ACE.Adapter.dll</HintPath>
 	    <Private>False</Private>
 	  </Reference>
 	  <Reference Include="ACE.Common">
-	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.Common.dll</HintPath>
+	    <HintPath>C:\ACE\Server\ACE.Common.dll</HintPath>
 	    <Private>False</Private>
 	  </Reference>
 	  <Reference Include="ACE.Database">
-	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.Database.dll</HintPath>
+	    <HintPath>C:\ACE\Server\ACE.Database.dll</HintPath>
 	    <Private>False</Private>
 	  </Reference>
 	  <Reference Include="ACE.DatLoader">
-	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.DatLoader.dll</HintPath>
+	    <HintPath>C:\ACE\Server\ACE.DatLoader.dll</HintPath>
 	    <Private>False</Private>
 	  </Reference>
 	  <Reference Include="ACE.Entity">
-	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.Entity.dll</HintPath>
+	    <HintPath>C:\ACE\Server\ACE.Entity.dll</HintPath>
 	    <Private>False</Private>
 	  </Reference>
 	  <Reference Include="ACE.Server">
-	    <HintPath>..\..\AC\ACE\Source\ACE.Server\bin\x64\Debug\net6.0\ACE.Server.dll</HintPath>
+	    <HintPath>C:\ACE\Server\ACE.Server.dll</HintPath>
 	    <Private>False</Private>
 	  </Reference>
 	</ItemGroup>
