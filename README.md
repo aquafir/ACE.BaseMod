@@ -14,7 +14,7 @@ Included `Samples` have their own `Readme` and all except `CriticalOverride` hav
 
 Mods are made using [Harmony](https://harmony.pardeike.net/articles/intro.html#how-harmony-works) and require the `feat_mods` [branch of ACE](https://github.com/aquafir/ACE/tree/feat_mods).  Currently this is designed around a Windows environment with the standard installation path.
 
-Here's an example of creating a `PostFix` that overrides the nether debuff rating bonus.
+Here's an example of [creating](https://user-images.githubusercontent.com/83029060/200917023-1ebe4b19-231f-495a-b1d6-c87415bd7690.mp4) and [using](https://user-images.githubusercontent.com/83029060/200917047-62b9cf09-e57a-4926-b5e1-a925a1ec3c0b.mp4)  a `PostFix` that overrides the nether debuff rating bonus:
 
 #### Overview
 
