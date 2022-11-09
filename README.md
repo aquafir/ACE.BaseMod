@@ -62,8 +62,11 @@ To create ACE mods either import the templates or:
 The template defaults to building to `C:\ACE\Mods` which is where the `feat_mods` [branch](https://github.com/aquafir/ACE/tree/feat_mods) will look when starting.  That may be adjusted in ACE's `Config.js`:
 
 >...
+>
 >"DatFilesDirectory": "c:\\ACE\\Dats\\",
+>
 >"ModsDirectory": "c:\\ACE\\Mods\\", 
+>
 >...
 
 
