@@ -49,7 +49,7 @@ Two templates exist:
   * `Meta.json` is used to control whether a mod is enabled, used for chat commands, or displayed
 * `ACE.BaseMod` has:
   * Example `HarmonyPatch` in `PatchClass`
-  * ``Settings` class that saves readable JSON to `Settings.json` and hot-reloads when saved
+  * `Settings` class that saves readable JSON to `Settings.json` and hot-reloads when saved
   * `Global usings` to keep some boilerplate includes out of the way
 
 To create ACE mods either import the templates or:
