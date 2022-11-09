@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Samples/Balance/Balance.csproj
+/Samples/SerializePlayer/SerializePlayer.csproj
+/Samples/Store/Store.csproj
+/Samples/SerializePlayer
+/Samples/Store
+/Samples/Balance

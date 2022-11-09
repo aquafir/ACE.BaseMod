@@ -32,31 +32,29 @@ public class PatchClass
 
     private static void LoadSettings()
     {
-        if (settingsInfo.Exists)
-        {
-            ModManager.Log($"Loading settings from {settingsPath}...");
-
-            if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
-            {
-                Mod.State = ModState.Error;
-                return;
-            }
-
-            try
-            {
-                Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
-            }
-            catch (Exception)
-            {
-                ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
-                Mod.State = ModState.Error;
-                return;
-            }
-        }
-        else
+        if (!settingsInfo.Exists)
         {
             ModManager.Log($"Creating {settingsInfo}...");
             SaveSettings();
+        }
+        else
+            ModManager.Log($"Loading settings from {settingsPath}...");
+
+        if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
+        {
+            Mod.State = ModState.Error;
+            return;
+        }
+
+        try
+        {
+            Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
+        }
+        catch (Exception)
+        {
+            ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
+            Mod.State = ModState.Error;
+            return;
         }
     }
     #endregion

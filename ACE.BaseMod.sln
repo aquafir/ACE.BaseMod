@@ -7,19 +7,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACE.BaseMod", "ACE.BaseMod\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{B26E1345-5594-4F16-828C-C4994FD6AC02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleaveTranspiler", "Samples\CleaveTranspiler\CleaveTranspiler.csproj", "{9E76EE46-768D-45E3-BB99-61239A81E11A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleaveTranspiler", "Samples\CleaveTranspiler\CleaveTranspiler.csproj", "{9E76EE46-768D-45E3-BB99-61239A81E11A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CriticalOverride", "Samples\CriticalOverride\CriticalOverride.csproj", "{E1FBF550-9A8C-4CDE-B2AB-75939C0086A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CriticalOverride", "Samples\CriticalOverride\CriticalOverride.csproj", "{E1FBF550-9A8C-4CDE-B2AB-75939C0086A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordPlus", "Samples\DiscordPlus\DiscordPlus.csproj", "{28D087A0-3342-47E9-AFF7-71CFE1B77D36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscordPlus", "Samples\DiscordPlus\DiscordPlus.csproj", "{28D087A0-3342-47E9-AFF7-71CFE1B77D36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spells", "Samples\Spells\Spells.csproj", "{7DFCFF84-5FBA-45C4-9771-BEBB7DEC6266}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spells", "Samples\Spells\Spells.csproj", "{7DFCFF84-5FBA-45C4-9771-BEBB7DEC6266}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloCommand", "Samples\HelloCommand\HelloCommand.csproj", "{6848B00C-F0DB-4133-9C53-AF347B052E09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloCommand", "Samples\HelloCommand\HelloCommand.csproj", "{6848B00C-F0DB-4133-9C53-AF347B052E09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Achievements", "Samples\Achievements\Achievements.csproj", "{52C4D74A-299D-465E-8A10-C3B548C4E7DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Achievements", "Samples\Achievements\Achievements.csproj", "{52C4D74A-299D-465E-8A10-C3B548C4E7DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACE.SimpleMod", "ACE.SimpleMod\ACE.SimpleMod.csproj", "{81A57CA3-E9CD-46FB-9267-BA0642D0E158}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACE.SimpleMod", "ACE.SimpleMod\ACE.SimpleMod.csproj", "{81A57CA3-E9CD-46FB-9267-BA0642D0E158}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Balance", "Samples\Balance\Balance.csproj", "{1F9F454A-1CC8-4C39-B688-96F29721E542}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store", "Samples\Store\Store.csproj", "{123BAAE3-298B-4753-999E-3422274B10DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerializePlayer", "Samples\SerializePlayer\SerializePlayer.csproj", "{C34740BF-3880-420A-80C2-E4AF5C18444B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +63,18 @@ Global
 		{81A57CA3-E9CD-46FB-9267-BA0642D0E158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{81A57CA3-E9CD-46FB-9267-BA0642D0E158}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81A57CA3-E9CD-46FB-9267-BA0642D0E158}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F9F454A-1CC8-4C39-B688-96F29721E542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F9F454A-1CC8-4C39-B688-96F29721E542}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F9F454A-1CC8-4C39-B688-96F29721E542}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F9F454A-1CC8-4C39-B688-96F29721E542}.Release|Any CPU.Build.0 = Release|Any CPU
+		{123BAAE3-298B-4753-999E-3422274B10DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{123BAAE3-298B-4753-999E-3422274B10DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{123BAAE3-298B-4753-999E-3422274B10DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{123BAAE3-298B-4753-999E-3422274B10DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C34740BF-3880-420A-80C2-E4AF5C18444B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C34740BF-3880-420A-80C2-E4AF5C18444B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C34740BF-3880-420A-80C2-E4AF5C18444B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C34740BF-3880-420A-80C2-E4AF5C18444B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +86,9 @@ Global
 		{7DFCFF84-5FBA-45C4-9771-BEBB7DEC6266} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
 		{6848B00C-F0DB-4133-9C53-AF347B052E09} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
 		{52C4D74A-299D-465E-8A10-C3B548C4E7DA} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
+		{1F9F454A-1CC8-4C39-B688-96F29721E542} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
+		{123BAAE3-298B-4753-999E-3422274B10DF} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
+		{C34740BF-3880-420A-80C2-E4AF5C18444B} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78F97B66-6E9E-4329-A0FE-1E02A2C50967}

@@ -14,13 +14,17 @@ Included `Samples` have their own `Readme` and all except `CriticalOverride` hav
 
 Mods are made using [Harmony](https://harmony.pardeike.net/articles/intro.html#how-harmony-works) and require the `feat_mods` [branch of ACE](https://github.com/aquafir/ACE/tree/feat_mods).  Currently this is designed around a Windows environment with the standard installation path.
 
+Here's an example of creating a `PostFix` that overrides the nether debuff rating bonus.
+
 #### Overview
 
 * Mods contain [patches](https://harmony.pardeike.net/articles/patching.html) to existing code.  
+* Mods can be built outside of ACE (faster building) and be controlled while the server is live.
 * Patches may be added and removed, and in the future ordered.  They can be added explicitly or using [attributes](https://harmony.pardeike.net/articles/annotations.html) describing the signature of what they're patching.
 * They may appear before (prefix), after (postfix), or work by directly alter the instructions of a method as shown with the `CleaveTranspiler`.
 * Since patches directly alter CIL instructions instead of using reflection they shouldn't cause a hit to performance.
-* Harmony requires a static class to create patches, and has a few
+* Harmony requires a static class to create patches.
+* Some patches are easier than others.  If all logic can be done before (or instead of) or after a method, that's a great target.
 
 #### Commands
 
