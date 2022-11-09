@@ -68,9 +68,11 @@ namespace Spells
         #region Start/Shutdown
         public static void Start()
         {
-            //Need to decide on async use
             Mod.State = ModState.Loading;
             LoadSettings();
+
+            if (!SpellHelper.TryInitializeSpellGroups())
+                Mod.State = ModState.Error;
 
             if (Mod.State == ModState.Error)
             {
