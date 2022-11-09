@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloCommand", "Samples\Hel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Achievements", "Samples\Achievements\Achievements.csproj", "{52C4D74A-299D-465E-8A10-C3B548C4E7DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACE.SimpleMod", "ACE.SimpleMod\ACE.SimpleMod.csproj", "{81A57CA3-E9CD-46FB-9267-BA0642D0E158}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{52C4D74A-299D-465E-8A10-C3B548C4E7DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52C4D74A-299D-465E-8A10-C3B548C4E7DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52C4D74A-299D-465E-8A10-C3B548C4E7DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81A57CA3-E9CD-46FB-9267-BA0642D0E158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81A57CA3-E9CD-46FB-9267-BA0642D0E158}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81A57CA3-E9CD-46FB-9267-BA0642D0E158}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81A57CA3-E9CD-46FB-9267-BA0642D0E158}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
