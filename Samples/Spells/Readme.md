@@ -18,3 +18,23 @@ For the last two, some options are:
 * Create groups that are more or less similar
   * **C**omparable would be Fire 1-->Fire 1 to 8
   * **R**elated would be Fire 1-->Any War with similar targets
+  
+  
+### Examples
+
+#### Fist Sweetspots
+
+https://user-images.githubusercontent.com/83029060/200747153-65b42854-d1a8-4d57-a79f-7289b3eb30a4.mp4
+
+
+
+#### Remapping Consistently
+  
+https://user-images.githubusercontent.com/83029060/200746579-5069413b-3620-43c6-a089-50e75050feaa.mp4
+
+
+
+#### Random Before/After Animation
+
+https://user-images.githubusercontent.com/83029060/200746717-b2f87fb0-e597-4f01-a3ba-e8777634a7a4.mp4
+
