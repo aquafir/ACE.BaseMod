@@ -53,7 +53,7 @@ Two templates exist:
   * `Meta.json` is used to control whether a mod is enabled, used for chat commands, or displayed
 * `ACE.BaseMod` has:
   * Example `HarmonyPatch` in `PatchClass`
-  * ``Settings` class that saves readable JSON to `Settings.json` and hot-reloads when saved
+  * `Settings` class that saves readable JSON to `Settings.json` and hot-reloads when saved
   * `Global usings` to keep some boilerplate includes out of the way
 
 To create ACE mods either import the templates or:
@@ -66,8 +66,11 @@ To create ACE mods either import the templates or:
 The template defaults to building to `C:\ACE\Mods` which is where the `feat_mods` [branch](https://github.com/aquafir/ACE/tree/feat_mods) will look when starting.  That may be adjusted in ACE's `Config.js`:
 
 >...
+>
 >"DatFilesDirectory": "c:\\ACE\\Dats\\",
+>
 >"ModsDirectory": "c:\\ACE\\Mods\\", 
+>
 >...
 
 
