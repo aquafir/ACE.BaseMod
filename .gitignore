@@ -367,3 +367,5 @@ FodyWeavers.xsd
 /Samples/SerializePlayer
 /Samples/Store
 /Samples/Balance
+/Samples/Balance/Balance.csproj
+/Samples/Respawn
