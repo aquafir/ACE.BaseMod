@@ -17,7 +17,7 @@
         //Reload on changes in Settings.json
         private FileSystemWatcher _settingsWatcher;
         private DateTime _lastChange = DateTime.Now;
-        private readonly TimeSpan _reloadInterval = TimeSpan.FromSeconds(1);
+        private readonly TimeSpan _reloadInterval = TimeSpan.FromSeconds(3);
 
         public static ModState State = ModState.None;
 

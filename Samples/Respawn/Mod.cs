@@ -1,14 +1,14 @@
-﻿namespace CriticalOverride
+﻿namespace Respawn
 {
     public class Mod : IHarmonyMod
     {
         //If Harmony is set to debug it creates a log on Desktop
         public const bool DEBUGGING = false;
         //Point to your mod directory
-        public const string ModPath = @"C:\ACE\Mods\CriticalOverride";
+        public const string ModPath = @"C:\ACE\Mods\Respawn";
 
         //IDs are used by Harmony to separate multiple patches
-        const string ID = "com.ACE.ACEmulator.CriticalOverride";
+        const string ID = "com.ACE.ACEmulator.Respawn";
         protected static Harmony Harmony { get; set; } = new(ID);
 
         private bool disposedValue;
@@ -138,6 +138,7 @@
 
             //An alternative would be to reload through the ModContainer
             //ModManager.Log($"Settings changed, reloading after {delta.TotalSeconds} seconds...");
+
             Stop();
             Start();
             ModManager.Log($"Settings reloaded.");
