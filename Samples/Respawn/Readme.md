@@ -12,16 +12,8 @@ If that percentage dips below the `RespawnTreshold` it will cause the the landbl
 
 If `RewardLastKill` is enabled the mod will also manually patch a method to keep a record of the player with the most recent kill in each landblock.  When a respawn is triggered, the player will be given `RewardAmount`xp.  If `SpamPlayer` is on they will be informed after every kill of the number remaining.
 
+There's still probably some bugs and things to decide about cacheing or how to handle other landblock types.
 
-
-#### Demo
-
-<div align="left">
-      <a href="https://www.youtube.com/watch?v=rFaNTf0FbgE">
-         <img src="https://img.youtube.com/vi/rFaNTf0FbgE/0.jpg" style="width:80%;">
-      </a>
-</div>
-
-
+[Demo video](https://www.youtube.com/watch?v=rFaNTf0FbgE)
 
 
