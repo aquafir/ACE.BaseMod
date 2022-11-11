@@ -16,9 +16,11 @@ If `RewardLastKill` is enabled the mod will also manually patch a method to keep
 
 #### Demo
 
-[![Respawn demo](https://img.youtube.com/vi/rFaNTf0FbgE/0.jpg)](https://www.youtube.com/watch?v=rFaNTf0FbgE "Respawn Demo")
-
-
+<div align="left">
+      <a href="https://www.youtube.com/watch?v=rFaNTf0FbgE">
+         <img src="https://img.youtube.com/vi/rFaNTf0FbgE/0.jpg" style="width:80%;">
+      </a>
+</div>
 
 
 
