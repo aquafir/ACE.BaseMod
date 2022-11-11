@@ -9,7 +9,7 @@
 
         //IDs are used by Harmony to separate multiple patches
         const string ID = "com.ACE.ACEmulator.Respawn";
-        protected static Harmony Harmony { get; set; } = new(ID);
+        public static Harmony Harmony { get; set; } = new(ID);
 
         private bool disposedValue;
         public static Mod Instance { get; private set; }
@@ -104,7 +104,7 @@
             {
                 //Patch everything in the mod with Harmony attributes
                 Harmony.PatchAll();
-
+                
                 PatchClass.Start();
             }
             catch (Exception ex)
