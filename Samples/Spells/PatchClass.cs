@@ -1,4 +1,7 @@
-﻿using static ACE.Server.WorldObjects.Player;
+﻿using ACE.Entity;
+using ACE.Entity.Enum;
+using ACE.Server.Network;
+using static ACE.Server.WorldObjects.Player;
 
 namespace Spells
 {
@@ -92,6 +95,104 @@ namespace Spells
                 ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
         }
         #endregion
+
+        #region Commands
+        [CommandHandler("splash", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, -1)]
+        public static void HandleSplash(Session session, params string[] parameters)
+        {
+            var player = session.Player;
+
+            
+            if (player.CurrentAppraisalTarget is null)
+                return;
+
+            var targetGuid = new ObjectGuid(player.CurrentAppraisalTarget.Value);
+            var selection = session.Player.CurrentLandblock?.GetObject(targetGuid);
+
+            //var targets = player.GetSplashTargets(5, 20f);
+            var targets = player.GetSplashTargets(selection, Settings.SplashCount, Settings.SplashRange);
+
+            var sb = new StringBuilder($"\nSplash Targets:");
+
+            foreach (var target in targets)
+            {
+                sb.Append($"\n  {target?.Name} - {target?.GetDistance(selection)}");
+            }
+
+            player.SendMessage(sb.ToString());
+
+        }
+        #endregion
+
+
+        //Players last splash / split
+        private static readonly Dictionary<Player, DateTime> _lastSplash = new();
+        private static readonly Dictionary<Player, DateTime> _lastSplit = new();
+        //[HarmonyPrefix]
+        //[HarmonyPatch(typeof(WorldObject), nameof(WorldObject.TryCastSpell_WithRedirects), new Type[] { 
+        //    typeof(Spell), typeof(WorldObject),typeof(WorldObject),typeof(WorldObject), typeof(bool), typeof(bool), typeof(bool)})]
+        //public static void TryCast_WithRedirects(Spell spell, WorldObject target, WorldObject itemCaster = null, WorldObject weapon = null, bool isWeaponSpell = false, bool fromProc = false, bool tryResist = true)
+        //{
+        //    Debugger.Break();
+        //}
+
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(WorldObject), "HandleCastSpell", new Type[] {
+            typeof(Spell), typeof(WorldObject),typeof(WorldObject),typeof(WorldObject), typeof(bool), typeof(bool), typeof(bool)})]
+        public static void HandleCastSpell(Spell spell, WorldObject target, WorldObject itemCaster = null, WorldObject weapon = null, bool isWeaponSpell = false, bool fromProc = false, bool equip = false, WorldObject __instance = null)
+        {
+            //Should rework this to not patch the method if not enabled
+            if (!Settings.SplitSpells)
+                return;
+
+            //Only players split
+            if (__instance is not Player)
+                return;
+
+            //Non-null player
+            var player = __instance as Player;
+            if (player is null)
+                return;
+
+            //Gate by cooldown
+            if (!_lastSplit.TryGetValue(player, out var time)) {
+                time = DateTime.MinValue;
+                _lastSplit.Add(player,time);
+            }
+
+            var delta = DateTime.Now - time;
+            if (delta < Settings.SplitCooldown)
+                return;
+
+            //Only projectiles?
+            if (!spell.IsProjectile)
+                return;
+
+            var targets = player.GetSplashTargets(target, Settings.SplitCount, Settings.SplitRange);
+
+            if (targets.Count < 1)
+                return;
+
+            //Splitting is going to occur, so set the cooldown
+            _lastSplit[player] = DateTime.Now;
+
+            //Bit of debug
+            var sb = new StringBuilder($"\nSplash Targets:");
+            foreach (var t in targets)
+                sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
+            player.SendMessage(sb.ToString());
+
+            //Debugger.Break();
+            var splitTo = Math.Min(Settings.SplitCount, targets.Count);          
+            for (var i = 0; i < splitTo; i++)
+            {
+                __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
+                //HandleCastSpell(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc, equip);
+            }
+        }
+        
+
 
         #region Patches
         //Player public bool CreatePlayerSpell(WorldObject target, TargetCategory targetCategory, uint spellId, WorldObject casterItem)

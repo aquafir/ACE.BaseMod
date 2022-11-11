@@ -1,6 +1,6 @@
 ﻿# Spells
 
-`Spells` adds three things with a few options:
+`Spells` adds four things with a few options:
 
 - A pool of spell IDs that trigger on UA attack if the right combination of height/power is used.
   - Control number of buckets slider is divided into.
@@ -8,6 +8,7 @@
 - A static remapping of spells in landblocks that *have a dungeon* that uses the landblock ID to shift a spell to another in its group.
   - Adds a learning curve for the landblock.
 - A random remapping each cast to another in its group.
+- Settings to control spells splitting multiple targets sorted by closeness to the original target.
 
 
 
@@ -29,7 +30,7 @@ https://user-images.githubusercontent.com/83029060/200747153-65b42854-d1a8-4d57-
 
 
 #### Remapping Consistently
-  
+
 https://user-images.githubusercontent.com/83029060/200746579-5069413b-3620-43c6-a089-50e75050feaa.mp4
 
 

@@ -17,6 +17,10 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Lib.Harmony" Version="2.2.2" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
