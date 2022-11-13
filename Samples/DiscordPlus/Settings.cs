@@ -8,5 +8,7 @@
         public int MAX_MESSAGE_LENGTH { get; set; } = 10000;
         public double MESSAGE_INTERVAL { get; set; } = 10000;
         public string PREFIX { get; set; } = "~";
+
+        public List<ulong> DevIds { get; set; } = new ();
     }
 }

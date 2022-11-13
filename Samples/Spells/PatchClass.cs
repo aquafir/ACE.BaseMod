@@ -124,18 +124,9 @@ namespace Spells
         }
         #endregion
 
-
         //Players last splash / split
         private static readonly Dictionary<Player, DateTime> _lastSplash = new();
         private static readonly Dictionary<Player, DateTime> _lastSplit = new();
-        //[HarmonyPrefix]
-        //[HarmonyPatch(typeof(WorldObject), nameof(WorldObject.TryCastSpell_WithRedirects), new Type[] { 
-        //    typeof(Spell), typeof(WorldObject),typeof(WorldObject),typeof(WorldObject), typeof(bool), typeof(bool), typeof(bool)})]
-        //public static void TryCast_WithRedirects(Spell spell, WorldObject target, WorldObject itemCaster = null, WorldObject weapon = null, bool isWeaponSpell = false, bool fromProc = false, bool tryResist = true)
-        //{
-        //    Debugger.Break();
-        //}
-
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(WorldObject), "HandleCastSpell", new Type[] {

@@ -30,7 +30,7 @@
         public bool SplitSpells { get; set; } = true;
         public int SplitCount { get; set; } = 5;
         public float SplitRange { get; set; } = 35.0f;
-        public TimeSpan SplitCooldown { get; set; } = TimeSpan.FromSeconds(8);
+        public TimeSpan SplitCooldown { get; set; } = TimeSpan.FromSeconds(2);
     }
 
 

@@ -14,7 +14,6 @@ namespace Spells
         /// </summary>
         public static List<PhysicsObj> GetVisibleCreaturesByDistance(this Player origin) => origin.GetVisibleCreaturesByDistance(origin);
 
-
         /// <summary>
         /// Gets a list of PhysicsObj sorted by distance from a WorldObject using objects visible to a reference Player
         /// </summary>
@@ -33,6 +32,7 @@ namespace Spells
             return visible;
         }
 
+        //Todo: implement on per-landblock level if reference approach doesn't work.  Maybe look at spatial hashing
         /// <summary>
         /// Gets a list of PhysicsObj visible to a WorldObject sorted by distance
         /// </summary>
@@ -41,9 +41,7 @@ namespace Spells
         //    var visible = origin.PhysicsObj.ObjMaint.GetVisibleObjectsValuesWhere(o =>
         //    o.WeenieObj.WorldObject.WeenieType == WeenieType.Creature &&    //Restrict to creature weenies here for speed?
         //    o.WeenieObj.WorldObject != null);
-
-
-
+        //
         //    visible.Sort((x, y) => origin.Location.SquaredDistanceTo(x.WeenieObj.WorldObject.Location)
         //                .CompareTo(origin.Location.SquaredDistanceTo(y.WeenieObj.WorldObject.Location)));
 
