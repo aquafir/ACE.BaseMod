@@ -1,12 +1,26 @@
 ﻿# DiscordPlus
 
-`DiscordPlus` is a rework of [Discord Relay](https://github.com/aquafir/ACE/wiki/Discord-Relay).
+`DiscordPlus` supports 2-way relay of chat and private messages from Discord to ACE and ACE to Discord.
 
-Setup:
+It also supports commands for a list of approved Discord IDs:
 
-*  [Creating a bot](https://github.com/aquafir/ACE/wiki/Discord-Relay#your-bot) 
-* Supplying channel ID and bot token to `Settings.json`
-* Add [Discord.Net.Websocket](https://www.nuget.org/packages/Discord.Net.WebSocket) *to the server*
+* `!runas "OnlinePlayerName" "Command"` (`!runas "Aqua" "smite all"`)
+* `!run "Command"` (`!run "shutdown Shutting down from Discord"")
 
-https://user-images.githubusercontent.com/83029060/200214182-cd7965e7-2fb7-486d-8485-55e9a8259572.mp4
+
+#### Commands Example
+
+https://user-images.githubusercontent.com/83029060/201540531-ab809516-f49e-4e4a-bd06-5dc4210bb7bf.mp4
+
+#### Chat Example
+
+https://user-images.githubusercontent.com/83029060/201540615-3cf3c4c3-59d2-468d-a9f0-bab624857d6f.mp4
+
+
+### Setup
+
+*  [Create a bot](https://github.com/aquafir/ACE/wiki/Discord-Relay#your-bot)
+* Add the bot to your Discord guild
+* Supplying a channel ID to use for chat and the bot token to `Settings.json`
+* Add [Discord.Net](https://www.nuget.org/packages/Discord.Net) *to the server*
 
