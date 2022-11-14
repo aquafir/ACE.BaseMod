@@ -1,6 +1,7 @@
 ﻿using ACE.Entity;
 using ACE.Entity.Enum;
 using ACE.Server.Network;
+using System.Runtime.Serialization.Formatters.Binary;
 using static ACE.Server.WorldObjects.Player;
 
 namespace Spells
@@ -97,19 +98,36 @@ namespace Spells
         #endregion
 
         #region Commands
+        [CommandHandler("meta", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 1)]
+        public static void HandleMeta(Session session, params string[] parameters)
+        {
+            //Get some scale to adjust spells by
+            if (!double.TryParse(parameters[0], out var metaScale))
+                return;
+
+            var player = session.Player;
+
+            if (!_metaScale.ContainsKey(player))
+            {
+                _metaScale.Add(player, metaScale);
+            }
+            _metaScale[player] = metaScale;
+
+            player.SendMessage($"Scaling spells by {metaScale}");
+        }
+
         [CommandHandler("splash", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, -1)]
         public static void HandleSplash(Session session, params string[] parameters)
         {
             var player = session.Player;
 
-            
+
             if (player.CurrentAppraisalTarget is null)
                 return;
 
             var targetGuid = new ObjectGuid(player.CurrentAppraisalTarget.Value);
             var selection = session.Player.CurrentLandblock?.GetObject(targetGuid);
 
-            //var targets = player.GetSplashTargets(5, 20f);
             var targets = player.GetSplashTargets(selection, Settings.SplashCount, Settings.SplashRange);
 
             var sb = new StringBuilder($"\nSplash Targets:");
@@ -120,14 +138,50 @@ namespace Spells
             }
 
             player.SendMessage(sb.ToString());
-
         }
         #endregion
+
+        #region Patches
+        //Meta scale of cost/damage made with /meta command
+        private static readonly Dictionary<Player, double> _metaScale = new();
+        private static readonly Dictionary<(Player, Spell), Spell> _playerSpell = new();
+
+        /// <summary>
+        /// Adjust spell at creation using /meta
+        /// </summary>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Player), nameof(Player.DoCastSpell), new Type[] {
+            typeof(Spell), typeof(WorldObject),typeof(uint),typeof(uint), typeof(WorldObject), typeof(CastingPreCheckStatus), typeof(bool)})]
+        public static void DoCastSpell(ref Spell spell, WorldObject caster, ref uint magicSkill, ref uint manaUsed, WorldObject target, CastingPreCheckStatus castingPreCheckStatus, bool checkAngle = true, Player __instance = null)
+        {            
+            if(Settings.MetaEnabled && _metaScale.TryGetValue(__instance, out var metaScale))
+            {
+                //Adjusting _spell adjusts ALL spell uses of that type, so create a shallow copy?
+                //Might want to cache
+                //if(_playerSpell.TryGetValue((__instance, spell), out var _spell))
+                //{
+                //    _spell = spell._spell.CopyObject<Spell>();
+                //    _playerSpell.Add((__instance, spell), _spell);
+                //}
+
+                var s = spell._spell.Clone();
+
+                spell._spell = s;
+                spell._spell.BaseIntensity = (int)(metaScale * spell._spell.BaseIntensity);
+                magicSkill = (uint)(metaScale * magicSkill);
+                manaUsed = (uint)(metaScale * manaUsed);
+
+                __instance.SendMessage($"Scaling {spell.Name} from S{magicSkill} C{manaUsed} I{spell._spell.BaseIntensity}");
+            }
+        }
 
         //Players last splash / split
         private static readonly Dictionary<Player, DateTime> _lastSplash = new();
         private static readonly Dictionary<Player, DateTime> _lastSplit = new();
 
+        /// <summary>
+        /// Splits or splashes a spell
+        /// </summary>
         [HarmonyPrefix]
         [HarmonyPatch(typeof(WorldObject), "HandleCastSpell", new Type[] {
             typeof(Spell), typeof(WorldObject),typeof(WorldObject),typeof(WorldObject), typeof(bool), typeof(bool), typeof(bool)})]
@@ -146,48 +200,78 @@ namespace Spells
             if (player is null)
                 return;
 
-            //Gate by cooldown
-            if (!_lastSplit.TryGetValue(player, out var time)) {
-                time = DateTime.MinValue;
-                _lastSplit.Add(player,time);
-            }
-
-            var delta = DateTime.Now - time;
-            if (delta < Settings.SplitCooldown)
-                return;
-
-            //Only projectiles?
-            if (!spell.IsProjectile)
-                return;
-
-            var targets = player.GetSplashTargets(target, Settings.SplitCount, Settings.SplitRange);
-
-            if (targets.Count < 1)
-                return;
-
-            //Splitting is going to occur, so set the cooldown
-            _lastSplit[player] = DateTime.Now;
-
-            //Bit of debug
-            var sb = new StringBuilder($"\nSplash Targets:");
-            foreach (var t in targets)
-                sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
-            player.SendMessage(sb.ToString());
-
-            //Debugger.Break();
-            var splitTo = Math.Min(Settings.SplitCount, targets.Count);          
-            for (var i = 0; i < splitTo; i++)
+            //Check split projectiles
+            if (spell.IsProjectile)
             {
-                __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
-                //HandleCastSpell(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc, equip);
+                //Gate by cooldown
+                if (!_lastSplit.TryGetValue(player, out var time))
+                {
+                    time = DateTime.MinValue;
+                    _lastSplit.Add(player, time);
+                }
+
+                var delta = DateTime.Now - time;
+                if (delta < Settings.SplitCooldown)
+                    return;
+
+                var targets = player.GetSplashTargets(target, Settings.SplitCount, Settings.SplitRange);
+
+                if (targets.Count < 1)
+                    return;
+
+                //Splitting is going to occur, so set the cooldown
+                _lastSplit[player] = DateTime.Now;
+
+                //Bit of debug
+                var sb = new StringBuilder($"\nSplit Targets:");
+                foreach (var t in targets)
+                    sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
+                player.SendMessage(sb.ToString());
+
+                //var splitTo = Math.Min(Settings.SplitCount, targets.Count);
+                for (var i = 0; i < targets.Count; i++)
+                {
+                    __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
+                }
+            }
+            //Non-profile but harmful splashes
+            else if (spell.IsHarmful)
+            {
+                //Gate by cooldown
+                if (!_lastSplash.TryGetValue(player, out var time))
+                {
+                    time = DateTime.MinValue;
+                    _lastSplash.Add(player, time);
+                }
+
+                var delta = DateTime.Now - time;
+                if (delta < Settings.SplashCooldown)
+                    return;
+
+                var targets = player.GetSplashTargets(target, Settings.SplashCount, Settings.SplashRange);
+
+                if (targets.Count < 1)
+                    return;
+
+                //Splashing is going to occur, so set the cooldown
+                _lastSplash[player] = DateTime.Now;
+
+                //Bit of debug
+                var sb = new StringBuilder($"\nSplash Targets:");
+                foreach (var t in targets)
+                    sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
+                player.SendMessage(sb.ToString());
+
+                for (var i = 0; i < targets.Count; i++)
+                {
+                    __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
+                }
             }
         }
-        
 
-
-        #region Patches
-        //Player public bool CreatePlayerSpell(WorldObject target, TargetCategory targetCategory, uint spellId, WorldObject casterItem)
-        //[HarmonyPrefix]
+        /// <summary>
+        /// Adjust a spell before animations
+        /// </summary>
         [HarmonyPrefix]
         [HarmonyPatch(typeof(Player), nameof(Player.CreatePlayerSpell), new Type[] { typeof(WorldObject), typeof(TargetCategory), typeof(uint), typeof(WorldObject) })]
         private static bool CreatePlayerSpell(WorldObject target, TargetCategory targetCategory, ref uint spellId, WorldObject casterItem, ref Player __instance)
@@ -232,7 +316,9 @@ namespace Spells
             return true;
         }
 
-        //DoCastSpell_Inner(Spell spell, WorldObject casterItem, uint manaUsed, WorldObject target, CastingPreCheckStatus castingPreCheckStatus, bool finishCast = true)
+        /// <summary>
+        /// Adjust a spell after animations
+        /// </summary>
         [HarmonyPrefix]
         [HarmonyPatch(typeof(Player), nameof(Player.DoCastSpell_Inner), new Type[] { typeof(Spell), typeof(WorldObject), typeof(uint), typeof(WorldObject), typeof(CastingPreCheckStatus), typeof(bool), })]
         public static bool DoCastSpell_Inner(ref Spell spell, WorldObject casterItem, uint manaUsed, WorldObject target, CastingPreCheckStatus castingPreCheckStatus, bool finishCast, ref Player __instance)
@@ -284,9 +370,11 @@ namespace Spells
             return true;
         }
 
-        //Player DamageTarget(Creature target, WorldObject damageSource)
+        /// <summary>
+        /// Checks Power/Accuracy bar and height to trigger a spell on UA
+        /// </summary>
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(Player), nameof(Player.DamageTarget), new Type[] { typeof(Creature), typeof(WorldObject) })]
+        [HarmonyPatch(typeof(Player), nameof(Player.DamageTarget), new Type[] { typeof(Creature), typeof(WorldObject) })]        
         public static void AfterDamage(Creature target, WorldObject damageSource, ref Player __instance, ref DamageEvent __result)
         {
             if (!Settings.FistMagic)

@@ -2,14 +2,14 @@
 
 `Spells` adds four things with a few options:
 
+- Settings to control spells splitting multiple targets sorted by closeness to the original target.
+- Partial implementation of a `/meta [scale]` command that adjusts spell intensity, cost, and difficulty.
 - A pool of spell IDs that trigger on UA attack if the right combination of height/power is used.
   - Control number of buckets slider is divided into.
   - The pool defaults to rings.
 - A static remapping of spells in landblocks that *have a dungeon* that uses the landblock ID to shift a spell to another in its group.
   - Adds a learning curve for the landblock.
 - A random remapping each cast to another in its group.
-- Settings to control spells splitting multiple targets sorted by closeness to the original target.
-
 
 
 For the last two, some options are:

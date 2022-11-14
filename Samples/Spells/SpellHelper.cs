@@ -1,4 +1,6 @@
-﻿namespace Spells;
+﻿using System.Runtime.Serialization.Formatters.Binary;
+
+namespace Spells;
 
 public static class SpellHelper
 {
@@ -249,4 +251,11 @@ public static class SpellHelper
         SpellFlags.FastCast
         );
     #endregion
+
+
+    public static T Clone<T>(this T source)
+    {
+        var serialized = JsonSerializer.Serialize(source);
+        return JsonSerializer.Deserialize<T>(serialized);
+    }
 }

@@ -31,6 +31,9 @@
         public int SplitCount { get; set; } = 5;
         public float SplitRange { get; set; } = 35.0f;
         public TimeSpan SplitCooldown { get; set; } = TimeSpan.FromSeconds(2);
+
+        public bool MetaEnabled { get; set; } = true;
+        public double MetaScale { get; set; } = 1;
     }
 
 

@@ -369,3 +369,9 @@ FodyWeavers.xsd
 /Samples/Balance
 /Samples/Balance/Balance.csproj
 /Samples/Respawn
+/Samples/AccessDb/AccessDb.csproj
+/Samples/AccessDb/Readme.md
+/Samples/AccessDb/PatchClass.cs
+/Samples/AccessDb/Mod.cs
+/Samples/AccessDb/Meta.json
+/Samples/AccessDb/GlobalUsings.cs
