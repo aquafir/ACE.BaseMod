@@ -6,6 +6,8 @@
   - Set number of targets .
   - Set distance of the original target to look for targets.
   - Set the number of seconds between triggers.
+  - Should perform as well as cleave.  
+  *It uses the casting player's visible objects as a reference, so there may be a situation where the target is far enough away that it misses targets visible to it but not the player.  An  option would check distance from reference player to target, and fall back to using something like the landblock's creature list.*
 - A pool of spell IDs that trigger on UA attack if the right combination of height/power is used.
   - Control number of buckets slider is divided into.
   - The pool defaults to rings.
