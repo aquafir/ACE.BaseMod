@@ -1,6 +1,9 @@
-﻿using ACE.Entity;
+﻿using ACE.DatLoader.Entity;
+using ACE.Entity;
 using ACE.Entity.Enum;
 using ACE.Server.Network;
+using ACE.Server.WorldObjects;
+using System.Numerics;
 using System.Runtime.Serialization.Formatters.Binary;
 using static ACE.Server.WorldObjects.Player;
 
@@ -24,7 +27,6 @@ namespace Spells
             WriteIndented = true,
             AllowTrailingCommas = true,
             Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
-
         };
 
         public static void SaveSettings()
@@ -111,6 +113,13 @@ namespace Spells
             {
                 _metaScale.Add(player, metaScale);
             }
+            //Clear if modified spells (if the scale is changing?)
+            if (_playerSpells.ContainsKey(player))
+                _playerSpells[player] = new();
+            if (_playerSpellBases.ContainsKey(player))
+                _playerSpellBases[player] = new();
+
+
             _metaScale[player] = metaScale;
 
             player.SendMessage($"Scaling spells by {metaScale}");
@@ -141,39 +150,228 @@ namespace Spells
         }
         #endregion
 
-        #region Patches
+        //Todo: Clean up cached player spells on logout / disconnect
+
+        #region Meta Spells
         //Meta scale of cost/damage made with /meta command
         private static readonly Dictionary<Player, double> _metaScale = new();
-        private static readonly Dictionary<(Player, Spell), Spell> _playerSpell = new();
+        //Tuple for a players cloned copy of a spell/base
+        private static readonly Dictionary<Player, Dictionary<Spell, ACE.Database.Models.World.Spell>> _playerSpells = new();
+        private static readonly Dictionary<Player, Dictionary<Spell, ACE.DatLoader.Entity.SpellBase>> _playerSpellBases = new();
 
         /// <summary>
-        /// Adjust spell at creation using /meta
+        /// Filters which spells are adjusted with /meta
         /// </summary>
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(Player), nameof(Player.DoCastSpell), new Type[] {
-            typeof(Spell), typeof(WorldObject),typeof(uint),typeof(uint), typeof(WorldObject), typeof(CastingPreCheckStatus), typeof(bool)})]
-        public static void DoCastSpell(ref Spell spell, WorldObject caster, ref uint magicSkill, ref uint manaUsed, WorldObject target, CastingPreCheckStatus castingPreCheckStatus, bool checkAngle = true, Player __instance = null)
-        {            
-            if(Settings.MetaEnabled && _metaScale.TryGetValue(__instance, out var metaScale))
+        private static bool IsModifiable(Spell spell)
+        {
+            //if (!spell.IsProjectile)
+            //    return false;
+
+            return true;
+        }
+        /// <summary>
+        /// Creates or finds a collection of modified Spell/SpellBase for a player
+        /// </summary>
+        private static bool TryGetPlayerCustomSpells(Player player, out Dictionary<Spell, ACE.Database.Models.World.Spell> dbSpells, out Dictionary<Spell, SpellBase> spellBases)
+        {
+            //Track tracking a players variations
+            if (!_playerSpells.TryGetValue(player, out dbSpells))
             {
-                //Adjusting _spell adjusts ALL spell uses of that type, so create a shallow copy?
-                //Might want to cache
-                //if(_playerSpell.TryGetValue((__instance, spell), out var _spell))
-                //{
-                //    _spell = spell._spell.CopyObject<Spell>();
-                //    _playerSpell.Add((__instance, spell), _spell);
-                //}
+                player.SendMessage($"Tracking custom variations of spells for you...");
+                dbSpells = new();
+                _playerSpells.Add(player, dbSpells);
+            }
+            if (!_playerSpellBases.TryGetValue(player, out spellBases))
+            {
+                spellBases = new();
+                _playerSpellBases.Add(player, spellBases);
+            }
 
-                var s = spell._spell.Clone();
+            //May want to make this fail on a throw?
+            return true;
+        }
+        /// <summary>
+        /// Creates or finds a variant of a spell for a player
+        /// </summary>
+        private static bool TryMakeSpellVariant(Spell spell, Player player, out ACE.Database.Models.World.Spell dbSpell, double metaScale = 1)
+        {
+            dbSpell = null;
 
-                spell._spell = s;
-                spell._spell.BaseIntensity = (int)(metaScale * spell._spell.BaseIntensity);
-                magicSkill = (uint)(metaScale * magicSkill);
-                manaUsed = (uint)(metaScale * manaUsed);
+            if (!_playerSpells.TryGetValue(player, out var dbSpells))
+                return false;
 
-                __instance.SendMessage($"Scaling {spell.Name} from S{magicSkill} C{manaUsed} I{spell._spell.BaseIntensity}");
+            //Adjusting _spell adjusts ALL spell uses of that type, so create a shallow copy of the DB's Spell and SpellBase?
+            if (!dbSpells.TryGetValue(spell, out dbSpell))
+            {
+                player.SendMessage($"Created a custom variation of {spell.Name} - {spell.Id}...");
+
+                //Set modified properties for DB Spell
+                dbSpell = spell._spell.Clone();
+
+                dbSpells.Add(spell, dbSpell);
+            }
+
+            ModifySpellCopy(spell, dbSpell, metaScale);
+
+            //May want to make this fail or switch to null checking
+            return true;
+        }
+        /// <summary>
+        /// Mutates a database template for a spell
+        /// </summary>
+        private static void ModifySpellCopy(Spell spell, ACE.Database.Models.World.Spell dbSpell, double metaScale)
+        {
+            //Do stuff for projectiles                    
+            if (spell.IsProjectile)
+            {
+                dbSpell.BaseIntensity = (int)(metaScale * spell._spell.BaseIntensity ?? 1);
+
+                var pType = SpellProjectile.GetProjectileSpellType(dbSpell.Id);
+                if (dbSpell.NumProjectiles is not null)
+                    dbSpell.NumProjectiles = pType switch
+                    {
+                        ProjectileSpellType.Blast => (int)(metaScale * spell._spell.NumProjectiles),
+                        ProjectileSpellType.Volley => (int)(metaScale * spell._spell.NumProjectiles),
+                        ProjectileSpellType.Wall => (int)(metaScale * spell._spell.NumProjectiles),
+                        ProjectileSpellType.Ring => (int)(metaScale * spell._spell.NumProjectiles),
+                        ProjectileSpellType.Strike => (int)(metaScale * spell._spell.NumProjectiles),
+                        _ => 1
+                    };
+
+                if (dbSpell.SpreadAngle is not null)
+                    dbSpell.SpreadAngle = 360f;
+                if (dbSpell.PaddingOriginY is not null)
+                    dbSpell.PaddingOriginY = (float)(metaScale * spell._spell.PaddingOriginY);
+                if (dbSpell.PaddingOriginX is not null)
+                    dbSpell.PaddingOriginX = (float)(metaScale * spell._spell.PaddingOriginX);
+                if (dbSpell.PaddingOriginZ is not null)
+                    dbSpell.PaddingOriginZ = (float)(metaScale * spell._spell.PaddingOriginZ);
             }
         }
+        /// <summary>
+        /// Creates or finds a variant of a spell for a player
+        /// </summary>
+        private static bool TryMakeBaseVariant(Spell spell, Player player, out SpellBase spellbase, double metaScale = 1)
+        {
+            spellbase = null;
+
+            if (!_playerSpellBases.TryGetValue(player, out var spellbases))
+                return false;
+
+            //Adjusting _spell adjusts ALL spell uses of that type, so create a shallow copy of the DB's Spell and SpellBase?
+            if (!spellbases.TryGetValue(spell, out spellbase))
+            {
+                player.SendMessage($"Created a custom SpellBase variation of {spell.Name} - {spell.Id}...");
+
+                //Set modified properties for DB Spell
+                spellbase = spell._spellBase.DeepClone();
+
+                spellbases.Add(spell, spellbase);
+            }
+
+            ModifySpellBaseCopy(spell, spellbase, metaScale);
+
+            //May want to make this fail
+            return true;
+        }
+        /// <summary>
+        /// Mutates a database template for a spell
+        /// </summary>
+        private static void ModifySpellBaseCopy(Spell spell, SpellBase spellbase, double metaScale)
+        {
+            //Spellbase has private setters so Traverse is used to access
+            var trav = Traverse.Create(spellbase);
+
+            //SpellBase PowerMod returns Power or a max of 25 and is used for mana costs
+            trav.Property(nameof(SpellBase.Power)).SetValue(Math.Max(25,(uint)(metaScale * spell._spellBase.Power * 25)));
+            trav.Property(nameof(SpellBase.Name)).SetValue($"{spell._spellBase.Name} ({metaScale})");
+        }
+        /// <summary>
+        /// Replaces a spell with a player's personalized variant of that spell if applicable
+        /// </summary>
+        private static void MetaSpellSwap(Spell spell, Player __instance)
+        {
+            if (Settings.MetaEnabled && _metaScale.TryGetValue(__instance, out var metaScale))
+            {
+                //Filter out spells you don't do anything with
+                if (!IsModifiable(spell))
+                    return;
+
+                if (!TryGetPlayerCustomSpells(__instance, out var playerSpells, out var playerSpellBases))
+                    return;
+
+                if (!TryMakeSpellVariant(spell, __instance, out var metaSpell, metaScale))
+                    return;
+
+                if (!TryMakeBaseVariant(spell, __instance, out var metaSpellBase, metaScale))
+                    return;
+
+                //Swap regular copy for cached variant
+                spell._spell = metaSpell;
+                spell._spellBase = metaSpellBase;
+            }
+        }
+        #endregion
+
+        #region Patches
+        //[HarmonyPrefix]
+        //[HarmonyPatch(typeof(WorldObject), "HandleCastSpell", 
+        //    new Type[] { typeof(Spell), typeof(WorldObject), typeof(WorldObject), typeof(WorldObject), typeof(bool), typeof(bool), typeof(bool) })]
+        //public static void MetaCast_HandleCastSpell(ref Spell spell, WorldObject target, WorldObject itemCaster = null, WorldObject weapon = null, bool isWeaponSpell = false, bool fromProc = false, bool equip = false, WorldObject __instance = null)
+        //{
+        //    var player = __instance as Player;
+        //    if (player is not null)
+        //    {
+        //        MetaSpellSwap(spell, player);
+        //        player.SendMessage($"{spell._spellBase.Power} power");
+        //    }
+
+        //}
+        
+        ///// <summary>
+        ///// Adjust spell at creation using /meta
+        ///// </summary>
+        //[HarmonyPrefix]
+        //[HarmonyPatch(typeof(Player), nameof(Player.DoCastSpell_Inner), new Type[] { typeof(Spell), typeof(WorldObject), typeof(uint), typeof(WorldObject), typeof(CastingPreCheckStatus), typeof(bool), })]
+        //public static void MetaCast_DoCastSpell_Inner(ref Spell spell, WorldObject casterItem, uint manaUsed, WorldObject target, CastingPreCheckStatus castingPreCheckStatus, bool finishCast, ref Player __instance)
+        //{
+        //    MetaSpellSwap(spell, __instance);
+        //    __instance.SendMessage($"{spell._spellBase.Power} power - {spell.Power} - {spell.PowerMod}");
+        //}
+
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Player), nameof(Player.GetCastingPreCheckStatus), new Type[] { typeof(Spell), typeof(uint), typeof(bool) })]
+        public static void PreGetCastingPreCheckStatus(Spell spell, uint magicSkill, bool isWeaponSpell, ref Player __instance)
+        {
+            MetaSpellSwap(spell, __instance);
+            //Debugger.Break();
+        }
+
+        //[HarmonyPostfix]
+        //[HarmonyPatch(typeof(Player), nameof(Player.GetCastingPreCheckStatus), new Type[] { typeof(Spell), typeof(uint), typeof(bool) })]
+        //public static void GetCastingPreCheckStatus(Spell spell, uint magicSkill, bool isWeaponSpell)
+        //{
+        //    Debugger.Break();
+        //}
+
+        //[HarmonyPrefix]
+        //[HarmonyPatch(typeof(Proficiency), nameof(Proficiency.OnSuccessUse), new Type[] {
+        //    typeof(Player), typeof(CreatureSkill),typeof(uint)})]
+        //public static void OnSuccessUse(Player player, CreatureSkill skill, uint difficulty)
+        //{
+        //   // Debugger.Break();
+        //}
+
+
+        //[HarmonyPostfix]
+        //[HarmonyPatch(typeof(WorldObject), nameof(WorldObject.CalculateProjectileOrigins), new Type[] {
+        //    typeof(Spell), typeof(ProjectileSpellType),typeof(WorldObject)})]
+        //public static void CalculateProjectileOrigins(Spell spell, ProjectileSpellType spellType, WorldObject target, ref List<Vector3> __result)
+        //{
+        //    //Debugger.Break();
+        //}
+
 
         //Players last splash / split
         private static readonly Dictionary<Player, DateTime> _lastSplash = new();
@@ -374,7 +572,7 @@ namespace Spells
         /// Checks Power/Accuracy bar and height to trigger a spell on UA
         /// </summary>
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(Player), nameof(Player.DamageTarget), new Type[] { typeof(Creature), typeof(WorldObject) })]        
+        [HarmonyPatch(typeof(Player), nameof(Player.DamageTarget), new Type[] { typeof(Creature), typeof(WorldObject) })]
         public static void AfterDamage(Creature target, WorldObject damageSource, ref Player __instance, ref DamageEvent __result)
         {
             if (!Settings.FistMagic)
