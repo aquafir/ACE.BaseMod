@@ -247,7 +247,10 @@ namespace Spells
                 if (dbSpell.PaddingOriginZ is not null)
                     dbSpell.PaddingOriginZ = (float)(metaScale * spell._spell.PaddingOriginZ);
             }
+
+
         }
+
         /// <summary>
         /// Creates or finds a variant of a spell for a player
         /// </summary>
@@ -288,6 +291,11 @@ namespace Spells
             //SpellBase PowerMod returns Power or a max of 25 and is used for mana costs
             trav.Property(nameof(SpellBase.Power)).SetValue(Math.Max(25,(uint)(metaScale * 25)));
             trav.Property(nameof(SpellBase.Name)).SetValue($"{spell._spellBase.Name} ({metaScale})");
+
+            var pType = SpellProjectile.GetProjectileSpellType(spell.Id);
+            if (pType == ProjectileSpellType.Ring)  
+                //This will fail if not cast to a single
+                trav.Property(nameof(SpellBase.BaseRangeConstant)).SetValue((float)Math.Sqrt(metaScale * spell._spellBase.BaseRangeConstant));
 
             //Debugger.Break();
         }
