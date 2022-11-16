@@ -2,7 +2,7 @@
 
 `Spells` adds four things with a few options:
 
-- Partial implementation of `/meta [scale]` that adjusts cost, intensity, and difficulty of spells.  Inefficient and not checking skill.
+- WIP implementation of `/meta [scale]` that creates per-person per-spell copies of a `Spell` and `SpellBase`
 - Settings to control splitting projectile or splashing debuffs.
   - Set number of targets .
   - Set distance of the original target to look for targets.
@@ -29,26 +29,31 @@ For the last two, some options are:
   
 ### Examples
 
-#### Splash and Split
-
-https://user-images.githubusercontent.com/83029060/201587184-88a86dd8-eef2-4804-a494-e7920dba14e8.mp4
-
-
-
-
-#### Fist Sweetspots
-
-https://user-images.githubusercontent.com/83029060/200747153-65b42854-d1a8-4d57-a79f-7289b3eb30a4.mp4
+<details><summary>Meta Spells</summary>
+<video src="https://user-images.githubusercontent.com/83029060/202056553-bad9fd90-f169-40c6-802b-87f991f1eb67.mp4"></video>
+</details>
 
 
 
-#### Remapping Consistently
+<details><summary>Splash and Split</summary>
+<video src="https://user-images.githubusercontent.com/83029060/201587184-88a86dd8-eef2-4804-a494-e7920dba14e8.mp4"></video>
+</details>
 
-https://user-images.githubusercontent.com/83029060/200746579-5069413b-3620-43c6-a089-50e75050feaa.mp4
+
+
+<details><summary>Fist Sweetspots</summary>
+<video src="https://user-images.githubusercontent.com/83029060/200747153-65b42854-d1a8-4d57-a79f-7289b3eb30a4.mp4"></video>
+</details>
 
 
 
-#### Random Before/After Animation
+<details><summary>Remapping Consistently</summary>
+<video src="https://user-images.githubusercontent.com/83029060/200746579-5069413b-3620-43c6-a089-50e75050feaa.mp4"></video>
+</details>
 
-https://user-images.githubusercontent.com/83029060/200746717-b2f87fb0-e597-4f01-a3ba-e8777634a7a4.mp4
+
+
+<details><summary>Random Before/After Animation</summary>
+<video src="https://user-images.githubusercontent.com/83029060/200746717-b2f87fb0-e597-4f01-a3ba-e8777634a7a4.mp4"></video>
+</details>
 
