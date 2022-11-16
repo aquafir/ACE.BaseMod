@@ -33,27 +33,22 @@ For the last two, some options are:
 <video src="https://user-images.githubusercontent.com/83029060/202056553-bad9fd90-f169-40c6-802b-87f991f1eb67.mp4"></video>
 </details>
 
-
+<details><summary>Range with Meta</summary>
+<video src="https://user-images.githubusercontent.com/83029060/202063827-95c79946-f71a-4721-bd8a-dd0250e5a18c.mp4"></video>
+</details>
 
 <details><summary>Splash and Split</summary>
 <video src="https://user-images.githubusercontent.com/83029060/201587184-88a86dd8-eef2-4804-a494-e7920dba14e8.mp4"></video>
 </details>
 
-
-
 <details><summary>Fist Sweetspots</summary>
 <video src="https://user-images.githubusercontent.com/83029060/200747153-65b42854-d1a8-4d57-a79f-7289b3eb30a4.mp4"></video>
 </details>
-
-
 
 <details><summary>Remapping Consistently</summary>
 <video src="https://user-images.githubusercontent.com/83029060/200746579-5069413b-3620-43c6-a089-50e75050feaa.mp4"></video>
 </details>
 
-
-
 <details><summary>Random Before/After Animation</summary>
 <video src="https://user-images.githubusercontent.com/83029060/200746717-b2f87fb0-e597-4f01-a3ba-e8777634a7a4.mp4"></video>
 </details>
-
