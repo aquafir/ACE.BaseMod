@@ -345,7 +345,7 @@ public static class SpellHelper
             //if (j < spellBase.Formula.Count)
             //    writer.Write(spellBase.Formula[j]);
             //else
-                writer.Write(1u);
+                writer.Write(0u);
         }
 
         writer.Write((uint)spellBase.CasterEffect);

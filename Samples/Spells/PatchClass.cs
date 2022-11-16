@@ -282,9 +282,14 @@ namespace Spells
             //Spellbase has private setters so Traverse is used to access
             var trav = Traverse.Create(spellbase);
 
+            //Todo: Think about spell components.  If spellWords field is set I don't think it's an issue?
+            trav.Field("spellWords").SetValue($"Abracazoop ({spell._spellBase.GetSpellWords(DatManager.PortalDat.SpellComponentsTable)})");
+
             //SpellBase PowerMod returns Power or a max of 25 and is used for mana costs
-            trav.Property(nameof(SpellBase.Power)).SetValue(Math.Max(25,(uint)(metaScale * spell._spellBase.Power * 25)));
+            trav.Property(nameof(SpellBase.Power)).SetValue(Math.Max(25,(uint)(metaScale * 25)));
             trav.Property(nameof(SpellBase.Name)).SetValue($"{spell._spellBase.Name} ({metaScale})");
+
+            //Debugger.Break();
         }
         /// <summary>
         /// Replaces a spell with a player's personalized variant of that spell if applicable
@@ -314,6 +319,15 @@ namespace Spells
         #endregion
 
         #region Patches
+        //This is probably where a pre-cast random should happen to effect difficulty?
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Player), nameof(Player.GetCastingPreCheckStatus), new Type[] { typeof(Spell), typeof(uint), typeof(bool) })]
+        public static void PreGetCastingPreCheckStatus(Spell spell, uint magicSkill, bool isWeaponSpell, ref Player __instance)
+        {
+            MetaSpellSwap(spell, __instance);
+            //Debugger.Break();
+        }
+        #region Unused Meta Targets
         //[HarmonyPrefix]
         //[HarmonyPatch(typeof(WorldObject), "HandleCastSpell", 
         //    new Type[] { typeof(Spell), typeof(WorldObject), typeof(WorldObject), typeof(WorldObject), typeof(bool), typeof(bool), typeof(bool) })]
@@ -327,7 +341,7 @@ namespace Spells
         //    }
 
         //}
-        
+
         ///// <summary>
         ///// Adjust spell at creation using /meta
         ///// </summary>
@@ -338,15 +352,6 @@ namespace Spells
         //    MetaSpellSwap(spell, __instance);
         //    __instance.SendMessage($"{spell._spellBase.Power} power - {spell.Power} - {spell.PowerMod}");
         //}
-
-
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(Player), nameof(Player.GetCastingPreCheckStatus), new Type[] { typeof(Spell), typeof(uint), typeof(bool) })]
-        public static void PreGetCastingPreCheckStatus(Spell spell, uint magicSkill, bool isWeaponSpell, ref Player __instance)
-        {
-            MetaSpellSwap(spell, __instance);
-            //Debugger.Break();
-        }
 
         //[HarmonyPostfix]
         //[HarmonyPatch(typeof(Player), nameof(Player.GetCastingPreCheckStatus), new Type[] { typeof(Spell), typeof(uint), typeof(bool) })]
@@ -363,15 +368,14 @@ namespace Spells
         //   // Debugger.Break();
         //}
 
-
         //[HarmonyPostfix]
         //[HarmonyPatch(typeof(WorldObject), nameof(WorldObject.CalculateProjectileOrigins), new Type[] {
         //    typeof(Spell), typeof(ProjectileSpellType),typeof(WorldObject)})]
         //public static void CalculateProjectileOrigins(Spell spell, ProjectileSpellType spellType, WorldObject target, ref List<Vector3> __result)
         //{
         //    //Debugger.Break();
-        //}
-
+        //} 
+        #endregion
 
         //Players last splash / split
         private static readonly Dictionary<Player, DateTime> _lastSplash = new();
