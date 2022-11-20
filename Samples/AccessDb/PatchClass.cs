@@ -90,12 +90,11 @@ namespace AccessDb
                 ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
         }
         #endregion
-
         [CommandHandler("do", AccessLevel.Admin, CommandHandlerFlag.None, -1)]
         public static void Do(Session session, params string[] parameters)
         {
-            DoShardStuff();
-            DoWorldStuff();
+            //DoShardStuff();
+            //DoWorldStuff();
         }
 
         private static void DoWorldStuff()

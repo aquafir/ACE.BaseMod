@@ -44,6 +44,9 @@
 	    <HintPath>C:\ACE\Server\ACE.Server.dll</HintPath>
 	    <Private>False</Private>
 	  </Reference>
+	  <Reference Include="Lifestoned.DataModel">
+	    <HintPath>C:\ACE\Server\Lifestoned.DataModel.dll</HintPath>
+	  </Reference>
 	  <Reference Include="Microsoft.EntityFrameworkCore">
 	    <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.dll</HintPath>
 	  </Reference>
