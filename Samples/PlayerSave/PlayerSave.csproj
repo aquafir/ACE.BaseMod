@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -13,6 +13,10 @@
 	  <Compile Remove=".template.config\**" />
 	  <EmbeddedResource Remove=".template.config\**" />
 	  <None Remove=".template.config\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="NonEphemeralProperties.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

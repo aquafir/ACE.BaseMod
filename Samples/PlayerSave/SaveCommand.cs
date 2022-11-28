@@ -9,6 +9,7 @@ using ACE.Database.Models.Auth;
 using ACE.DatLoader;
 using ACE.Server.Network.Enum;
 using ACE.Server.Network;
+using PlayerSave.Helpers;
 
 namespace PlayerSave;
 
@@ -193,7 +194,7 @@ internal class SaveCommand
     /// <summary>
     /// Create a GZipped save of a player from their Character, Biota, and possessions
     /// </summary>
-    private static void DoSave(Character character, ACE.Database.Models.Shard.Biota playerBiota, PossessedBiotas possessions, string saveName = null)
+    private static void DoSave(Character character, ACE.Database.Models.Shard.Biota playerBiota, PossessedBiotas possessions, string savePath = null)
     {
         var jsonOptions = new JsonSerializerOptions
         {
@@ -211,21 +212,48 @@ internal class SaveCommand
             Inventory = possessions.Inventory,
         };
 
-        if (String.IsNullOrEmpty(saveName))
-            saveName = $"{character.Name} - {DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")}";
-        saveName += Settings.Extension;
+        if (String.IsNullOrEmpty(savePath))
+            savePath = Path.Combine(Mod.ModPath, "Saves", $"{character.Name} - {DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")}");
+        else
+            savePath = Path.Combine(Mod.ModPath, "Saves", savePath);
 
-        var filePath = Path.Combine(PatchClass.Settings.SaveDirectory, saveName);
+        var sb = new StringBuilder("\r\n");
+        var watch = Stopwatch.StartNew();
+        var jsonPath = $"{savePath}.json";
         var saveJson = JsonSerializer.Serialize(save, jsonOptions);
+        watch.Stop();
+        sb.AppendLine($"\r\nJSON size (kb): {Encoding.Unicode.GetByteCount(saveJson)/1024,-20}Time (ms):{watch.ElapsedMilliseconds}");
+
+        watch = Stopwatch.StartNew();
+        var gzipPath = $"{savePath}{Settings.Extension}";
         var saveGZip = saveJson.ToGZip();
+        watch.Stop();
+        sb.AppendLine($"GZIP size (kb): {saveGZip.Length / 1024,-20}Time (ms):{watch.ElapsedMilliseconds}");
+
+        watch = Stopwatch.StartNew();
+        var binaryPath = $"{savePath}.bin";
+        var saveBinary = PlayerHelpers.CreateBinarySave(character, playerBiota, possessions);
+        watch.Stop();
+        sb.AppendLine($"BIN  size (kb): {saveBinary.Length / 1024,-20}Time (ms):{watch.ElapsedMilliseconds}");
+
+        watch = Stopwatch.StartNew();
+        var gzipBinPath = $"{savePath}.gzbin";
+        var gzipSaveBinary = Compression.CompressGzip(saveBinary);
+        watch.Stop();
+        sb.AppendLine($"ZBIN size (kb): {gzipSaveBinary.Length / 1024,-20}Time (ms):{watch.ElapsedMilliseconds}");
+        
+        ModManager.Log(sb.ToString());
 
         try
         {
-            File.WriteAllBytes(filePath, saveGZip);
+            File.WriteAllText(jsonPath, saveJson);
+            File.WriteAllBytes(gzipPath, saveGZip);
+            File.WriteAllBytes(binaryPath, saveBinary);
+            File.WriteAllBytes(gzipBinPath, gzipSaveBinary);
         }
         catch (Exception ex)
         {
-            ModManager.Log($"Failed to save {character.Name} to:\n{filePath}", ModManager.LogLevel.Error);
+            ModManager.Log($"Failed to save {character.Name} to:\n{savePath}", ModManager.LogLevel.Error);
         }
     }
 

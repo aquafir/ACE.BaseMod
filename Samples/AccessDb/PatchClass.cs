@@ -1,8 +1,6 @@
 ﻿using ACE.Database.Models.Shard;
 using ACE.Database.Models.World;
 using ACE.Entity.Enum.Properties;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using System.Text.RegularExpressions;
 
 namespace AccessDb
 {
@@ -93,6 +91,7 @@ namespace AccessDb
         [CommandHandler("do", AccessLevel.Admin, CommandHandlerFlag.None, -1)]
         public static void Do(Session session, params string[] parameters)
         {
+
             //DoShardStuff();
             //DoWorldStuff();
         }

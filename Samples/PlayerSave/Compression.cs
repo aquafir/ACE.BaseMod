@@ -19,19 +19,24 @@ public static class Compression
     }
 
     public static string GZipToString(this byte[] bytes) => Encoding.UTF8.GetString(DecompressGzip(bytes));
+    public static string GZipToString(this MemoryStream memoryStream) => Encoding.UTF8.GetString(DecompressGzip(memoryStream));
+    //Decompress GZipped bytes to a stream
     public static byte[] DecompressGzip(byte[] bytes)
     {
         using (var memoryStream = new MemoryStream(bytes))
         {
-
-            using (var outputStream = new MemoryStream())
+            return DecompressGzip(memoryStream);
+        }
+    }
+    private static byte[] DecompressGzip(MemoryStream memoryStream)
+    {
+        using (var outputStream = new MemoryStream())
+        {
+            using (var decompressStream = new GZipStream(memoryStream, CompressionMode.Decompress))
             {
-                using (var decompressStream = new GZipStream(memoryStream, CompressionMode.Decompress))
-                {
-                    decompressStream.CopyTo(outputStream);
-                }
-                return outputStream.ToArray();
+                decompressStream.CopyTo(outputStream);
             }
+            return outputStream.ToArray();
         }
     }
 

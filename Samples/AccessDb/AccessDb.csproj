@@ -20,6 +20,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\PlayerSave\PlayerSave.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Reference Include="ACE.Adapter">
 	    <HintPath>C:\ACE\Server\ACE.Adapter.dll</HintPath>
 	    <Private>False</Private>
