@@ -1,4 +1,10 @@
-﻿namespace Achievements;
+﻿using ACE.Database.Entity;
+using ACE.Database.Models.Shard;
+using ACE.Server.Entity;
+using ACE.Server.Managers;
+using System.Collections.Generic;
+
+namespace Achievements;
 
 [HarmonyPatch]
 public class PatchClass
@@ -104,6 +110,8 @@ public class PatchClass
         }
     }
 
+    private static AdventurerTracker tracker = new();
+
     #region Start/Shutdown
     public static void Start()
     {
@@ -120,6 +128,8 @@ public class PatchClass
             return;
         }
 
+        tracker.Initialize();
+
         Mod.State = ModState.Running;
     }
 
@@ -134,7 +144,55 @@ public class PatchClass
     }
     #endregion
 
+    #region Player Enters / Exits World
+
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Player), nameof(Player.PlayerEnterWorld), new Type[] { })]
+    public static void PlayerEnterWorld(Player __instance)
+    {
+        ModManager.Log("Logged in!");
+        tracker.TrackOrAddAdventurer(__instance);
+    }
+
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Player), "LogOut_Final", new Type[] { typeof(bool) })]
+    public static void LogOut_Final(bool skipAnimations)
+    {
+        ModManager.Log("Logged out!");
+    }
+    #endregion
+
+
     #region Patches
+    //Last portal time
+    static double last = 0;
+
+    //Used to loop through landblocks
+    static List<LandblockGroup> landblockGroups = Traverse.Create(typeof(LandblockManager)).Field<List<LandblockGroup>>("landblockGroups").Value;
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(LandblockManager), nameof(LandblockManager.Tick), new Type[] { typeof(double) })]
+    public static void LandblockTick(double portalYearTicks)
+    {
+        //Only run periodically
+        if (portalYearTicks - last < Settings.Interval)
+            return;
+
+        last = portalYearTicks;
+        //ModManager.Log($"Respawn tick @ {last}");
+
+        foreach (var landblockGroup in landblockGroups)
+        {
+            foreach (var lb in landblockGroup.Where(lb => lb.HasDungeon))
+            {
+
+            }
+        }
+    }
+
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Creature), nameof(Creature.GetDeathMessage), new Type[] { typeof(DamageHistoryInfo), typeof(DamageType), typeof(bool) })]
     public static void CountKills(DamageHistoryInfo lastDamagerInfo, DamageType damageType, bool criticalHit, ref Creature __instance)

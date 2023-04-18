@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccessDb", "Samples\AccessD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayerSave", "Samples\PlayerSave\PlayerSave.csproj", "{F15920DD-D448-4BA9-8110-1C3E6AA12CE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayerSaveTests", "Samples\PlayerSaveTests\PlayerSaveTests.csproj", "{8A19F1E0-755B-4D10-B217-A795EF62865E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayerSaveTests", "Samples\PlayerSaveTests\PlayerSaveTests.csproj", "{8A19F1E0-755B-4D10-B217-A795EF62865E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +60,7 @@ Global
 		{6848B00C-F0DB-4133-9C53-AF347B052E09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6848B00C-F0DB-4133-9C53-AF347B052E09}.Release|Any CPU.Build.0 = Release|Any CPU
 		{52C4D74A-299D-465E-8A10-C3B548C4E7DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52C4D74A-299D-465E-8A10-C3B548C4E7DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52C4D74A-299D-465E-8A10-C3B548C4E7DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52C4D74A-299D-465E-8A10-C3B548C4E7DA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{81A57CA3-E9CD-46FB-9267-BA0642D0E158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

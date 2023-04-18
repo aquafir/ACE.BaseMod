@@ -18,11 +18,14 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Lib.Harmony" Version="2.2.2" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.11">
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.11">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -49,6 +52,27 @@
 	  <Reference Include="ACE.Server">
 	    <HintPath>C:\ACE\Server\ACE.Server.dll</HintPath>
 	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="Microsoft.EntityFrameworkCore">
+	    <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
+	    <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Microsoft.EntityFrameworkCore.Relational">
+	    <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+	  </Reference>
+	  <Reference Include="MySql.Data">
+	    <HintPath>C:\ACE\Server\MySql.Data.dll</HintPath>
+	  </Reference>
+	  <Reference Include="MySqlConnector">
+	    <HintPath>C:\ACE\Server\MySqlConnector.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Pomelo.EntityFrameworkCore.MySql">
+	    <HintPath>C:\ACE\Server\Pomelo.EntityFrameworkCore.MySql.dll</HintPath>
+	  </Reference>
+	  <Reference Include="System.Linq.Async">
+	    <HintPath>C:\ACE\Server\System.Linq.Async.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 

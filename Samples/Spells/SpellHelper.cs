@@ -157,20 +157,42 @@ public static class SpellHelper
     private static void CreateRelatedSpellGroups()
     {
         var portalDat = new PortalDatDatabase(PatchClass.Settings.PortalDatPath, false);
+            
+        //var spells = !PatchClass.Settings.OnlyPlayerSpells ?
+        //    portalDat.SpellTable.Spells :
+        //    //Restrict SpellTable to player spells.  PlayerSpellTable is sorted for binary search
+        //    portalDat.SpellTable.Spells.Where(c => Array.BinarySearch(Player.PlayerSpellTable, c.Key) >= 0);
 
-        var spells = !PatchClass.Settings.OnlyPlayerSpells ?
-            portalDat.SpellTable.Spells :
-            //Restrict SpellTable to player spells.  PlayerSpellTable is sorted for binary search
-            portalDat.SpellTable.Spells.Where(c => Array.BinarySearch(Player.PlayerSpellTable, c.Key) >= 0);
+        //Just player spells
+        var spells = new Dictionary<uint, SpellBase>();
+        foreach (uint i in Player.PlayerSpellTable) {
+            var spell = new Spell(i);
+            var sBase = portalDat.SpellTable.Spells[i];
+            if(spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.Beneficial) && !spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.SelfTargeted)
+                //Require researchable for any < 6
+                && (spell.Level > 6 || !spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.NotResearchable))
+                && (sBase.MetaSpellType == SpellType.Enchantment))
+            spells.Add(i, sBase);
+        }
 
+        //var groups = spells.OrderBy(s => new Spell(s.Key).Level).GroupBy(x => new
+        ////Create similar categories.  Might be a bit off
+        //{
+        //    MaskedFlags = x.Value.Bitfield & RELATED_MASK,            
+        //    //x.Value.NonComponentTargetType,             //Blood Drinker vs Spirit Drinker
+        //    x.Value.School,                             //Nether Blast same category as Flame Blast
+        //                                                //Unique group if Portal<Sending|Recall|Summon|Link> and FellowPortalSending
+        //    IsPortal = (x.Value.MetaSpellType.ToString().Contains("Portal") ? x.Key : 0)
+        //});
+
+        //Yonneh request
         var groups = spells.OrderBy(s => new Spell(s.Key).Level).GroupBy(x => new
         //Create similar categories.  Might be a bit off
         {
-            MaskedFlags = x.Value.Bitfield & RELATED_MASK,
-            //x.Value.NonComponentTargetType,             //Blood Drinker vs Spirit Drinker
-            x.Value.School,                             //Nether Blast same category as Flame Blast
-                                                        //Unique group if Portal<Sending|Recall|Summon|Link> and FellowPortalSending
-            IsPortal = (x.Value.MetaSpellType.ToString().Contains("Portal") ? x.Key : 0)
+            //Split groups by level
+            new Spell(x.Key).Level,
+            //Split by buff type
+            //IsBuff = x.Value.MetaSpellType == SpellType.Boost || x.Value.MetaSpellType == SpellType.Enchantment,
         });
 
         uint groupIndex = (uint)_groups.Count;
@@ -194,17 +216,34 @@ public static class SpellHelper
         watch.Start();
         var sb = new StringBuilder();
         int gNum = 1;
+
+        //Header
+        //sb.AppendLine($"Group\tID\tName\tBits\tLevel\t");
+        //foreach (var g in groups)
+        //{
+        //    //sb.AppendLine($"Group {gNum++} ({g.Count()}):");
+        //    foreach (var s in g)
+        //    {
+        //        sb.AppendLine($"{gNum++}\t{s.Key}\t{s.Value.Name}\t{(s.Value.Bitfield & RELATED_MASK):X8}\t{new Spell(s.Key).Level}");
+        //        //sb.AppendLine($"  {s.Key}\t{s.Value.Name}\t{(s.Value.Bitfield & RELATED_MASK):X8}\t");
+        //    }
+        //}
+        sb.AppendLine($"Group,ID,Name,Bits,Level");
+
         foreach (var g in groups)
         {
-            sb.AppendLine($"Group {gNum++} ({g.Count()}):");
+            //sb.AppendLine($"Group {gNum++} ({g.Count()}):");
             foreach (var s in g)
             {
-                sb.AppendLine($"  {s.Key}\t{s.Value.Name}\t{(s.Value.Bitfield & RELATED_MASK):X8}\t");
+                sb.AppendLine($"{gNum},{s.Key},{s.Value.Name},{(s.Value.Bitfield & RELATED_MASK):X8},{new Spell(s.Key).Level}");
+                //sb.AppendLine($"  {s.Key},{s.Value.Name},{(s.Value.Bitfield & RELATED_MASK):X8},");
             }
+            gNum++;
         }
         watch.Stop();
-        sb.Insert(0, $"{watch.ElapsedMilliseconds} ms\r\n\r\n");
-        File.WriteAllText(Path.Combine(Mod.ModPath, "Related Spell Dump.txt"), sb.ToString());
+        //sb.Insert(0, $"{watch.ElapsedMilliseconds} ms\r\n\r\n");
+        //File.WriteAllText(Path.Combine(Mod.ModPath, "Related Spell Dump.txt"), sb.ToString());
+        File.WriteAllText(Path.Combine(Mod.ModPath, "Related Spell Dump.csv"), sb.ToString());
         #endregion Group Dump
     }
 
@@ -258,6 +297,13 @@ public static class SpellHelper
         SpellFlags.IgnoresManaConversion |
         SpellFlags.FellowshipSpell |
         SpellFlags.FastCast
+        );
+
+    const uint YONNEH_MASK = (uint)~(
+        SpellFlags.CreatureSpell | SpellFlags.DamageOverTime | SpellFlags.ExcludedFromItemDescriptions | SpellFlags.FastCast
+        | SpellFlags.FellowshipSpell | SpellFlags.IgnoresManaConversion | SpellFlags.IndoorLongRange | SpellFlags.NonTrackingProjectile
+        | SpellFlags.NotIndoor | SpellFlags.NotOutdoor | SpellFlags.NotResearchable | SpellFlags.PKSensitive | SpellFlags.Projectile | SpellFlags.Resistable
+        | SpellFlags.Reversed
         );
     #endregion
 
