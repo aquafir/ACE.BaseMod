@@ -361,17 +361,10 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/Samples/Balance/Balance.csproj
-/Samples/SerializePlayer/SerializePlayer.csproj
-/Samples/Store/Store.csproj
+
+# Not ready
 /Samples/SerializePlayer
 /Samples/Store
-/Samples/Balance
-/Samples/Balance/Balance.csproj
+#/Samples/Balance
 /Samples/Respawn
-/Samples/AccessDb/AccessDb.csproj
-/Samples/AccessDb/Readme.md
-/Samples/AccessDb/PatchClass.cs
-/Samples/AccessDb/Mod.cs
-/Samples/AccessDb/Meta.json
-/Samples/AccessDb/GlobalUsings.cs
+/Samples/AccessDb
