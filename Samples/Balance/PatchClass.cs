@@ -73,6 +73,8 @@ namespace Balance
             Mod.State = ModState.Loading;
             LoadSettings();
 
+            LevelingPatches.Start();
+
             if (Mod.State == ModState.Error)
             {
                 ModManager.DisableModByPath(Mod.ModPath);
@@ -86,6 +88,7 @@ namespace Balance
         {
             //if (Mod.State == ModState.Running)
             // Shut down enabled mod...
+            LevelingPatches.Shutdown();
 
             if (Mod.State == ModState.Error)
                 ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);

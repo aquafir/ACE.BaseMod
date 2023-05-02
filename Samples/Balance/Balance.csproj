@@ -17,6 +17,8 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Lib.Harmony" Version="2.2.2" />
+	  <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
+	  <PackageReference Include="MathNet.Symbolics" Version="0.24.0" />
 	</ItemGroup>
 
 	<ItemGroup>
