@@ -8,6 +8,7 @@ using ACE.Server.Physics.Animation;
 using MathNet.Numerics.Interpolation;
 using ACE.DatLoader.FileTypes;
 using ACE.Database.Models.Auth;
+using ACE.Server.Network;
 
 namespace Balance;
 
@@ -138,11 +139,11 @@ public static class LevelingPatches
 
         var sb = new StringBuilder("Level costs: \n");
 
-        uint max = Math.Min(GetMaxLevel(), high);
+        uint max = Math.Min(GetMaxLevel(session.Player), high);
         for (uint i = low; i < max; i++)
         {
             var credits = GetLevelSkillCredits(session.Player, (int)i);
-            sb.Append($"  {i}: {LevelCost(i),-20:N0}{TotalLevelCost(i),-20:N0}  {(credits > 0 ? credits + " credit" : "")}\n");
+            sb.Append($"  {i}: {LevelCost(session.Player, i),-20:N0}{TotalLevelCost(session.Player, i),-20:N0}  {(credits > 0 ? credits + " credit" : "")}\n");
         }
         session?.Player?.SendMessage(sb.ToString());
     }
@@ -166,10 +167,10 @@ public static class LevelingPatches
     /// <summary>
     /// Cost for a given level
     /// </summary>
-    static long LevelCost(uint level)
+    static long LevelCost(Player player, uint level)
     {
         ulong cost = 0;
-        if (level < 0 || level > GetMaxLevel())
+        if (level < 0 || level > GetMaxLevel(player))
             return long.MaxValue;
 
         if (function is not null)
@@ -191,9 +192,9 @@ public static class LevelingPatches
     /// <summary>
     /// Total cost to reach a given level
     /// </summary>
-    static ulong TotalLevelCost(uint level)
+    static ulong TotalLevelCost(Player player, uint level)
     {
-        if (level < 0 || level > GetMaxLevel())
+        if (level < 0 || level > GetMaxLevel(player))
             return 0;
 
         //Todo: Better ways to implement this, but this should work with just LevelCost implemented?
@@ -204,7 +205,7 @@ public static class LevelingPatches
         ulong cost = 0;
         for (uint i = 1; i <= level; i++)
         {
-            cost += (ulong)LevelCost(i);
+            cost += (ulong)LevelCost(player, i);
             totalCosts.TryAdd(i, cost);
         }
         return cost;
@@ -213,8 +214,8 @@ public static class LevelingPatches
     /// <summary>
     /// Remaining experience a given player needs to reach a given level
     /// </summary>
-    static long CostToLevel(Player player, uint level) => LevelCost(level) - player.TotalExperience.Value;
-    static uint GetMaxLevel() => PatchClass.Settings.MaxLevel;
+    static long CostToLevel(Player player, uint level) => LevelCost(player, level) - player.TotalExperience.Value;
+    static uint GetMaxLevel(Player player) => PatchClass.Settings.MaxLevel;
     static uint GetLevelSkillCredits(Player player) => GetLevelSkillCredits(player, player.Level ?? 0);
     static uint GetLevelSkillCredits(Player player, int level)
     {
@@ -232,8 +233,8 @@ public static class LevelingPatches
     [HarmonyPatch(typeof(Player), "UpdateXpAndLevel", new Type[] { typeof(long), typeof(XpType) })]
     public static bool PreUpdateXpAndLevel(long amount, XpType xpType, ref Player __instance)
     {
-        var maxLevel = GetMaxLevel();
-        var maxLevelXp = LevelCost(maxLevel); ;
+        var maxLevel = GetMaxLevel(__instance);
+        var maxLevelXp = LevelCost(__instance, maxLevel); ;
 
         if (__instance.Level != maxLevel)
         {
@@ -272,7 +273,7 @@ public static class LevelingPatches
     [HarmonyPatch(typeof(Player), nameof(Player.GetMaxLevel))]
     public static bool PreGetMaxLevel(ref Player __instance, ref uint __result)
     {
-        __result = GetMaxLevel();
+        __result = GetMaxLevel(__instance);
 
         //Return false to override
         return false;
@@ -285,7 +286,7 @@ public static class LevelingPatches
     [HarmonyPatch(typeof(Player), nameof(Player.GetRemainingXP), new Type[] { typeof(uint) })]
     public static bool PreGetRemainingXP(uint level, ref Player __instance, ref long? __result)
     {
-        var maxLevel = GetMaxLevel();
+        var maxLevel = GetMaxLevel(__instance);
         if (level < 1 || level > maxLevel)
             __result = null;
         else
@@ -303,7 +304,7 @@ public static class LevelingPatches
     public static bool PreGetRemainingXP(ref Player __instance, ref ulong __result)
     {
         uint level = (uint)(__instance.Level ?? 0);
-        __result = __instance.Level >= GetMaxLevel() ? 0 :
+        __result = __instance.Level >= GetMaxLevel(__instance) ? 0 :
             (ulong)CostToLevel(__instance, level + 1);
 
         //Return false to override
@@ -317,7 +318,7 @@ public static class LevelingPatches
     [HarmonyPatch(typeof(Player), nameof(Player.GetTotalXP), new Type[] { typeof(int) })]
     public static bool PreGetTotalXP(int level, ref Player __instance, ref ulong __result)
     {
-        __result = TotalLevelCost((uint)level);
+        __result = TotalLevelCost(__instance, (uint)level);
 
         //Return false to override
         return false;
@@ -330,7 +331,7 @@ public static class LevelingPatches
     [HarmonyPatch(typeof(Player), nameof(Player.MaxLevelXP), MethodType.Getter)]
     public static bool PreGet_MaxLevelXP(ref Player __instance, ref long __result)
     {
-        __result = (long)TotalLevelCost(GetMaxLevel());
+        __result = (long)TotalLevelCost(__instance, GetMaxLevel(__instance));
 
         //Return false to override
         return false;
@@ -344,13 +345,13 @@ public static class LevelingPatches
     public static bool PreGetXPBetweenLevels(int levelA, int levelB, ref Player __instance, ref ulong __result)
     {
         // special case for max level
-        var maxLevel = (int)GetMaxLevel();
+        var maxLevel = (int)GetMaxLevel(__instance);
 
         levelA = Math.Clamp(levelA, 1, maxLevel - 1);
         levelB = Math.Clamp(levelB, 1, maxLevel);
 
-        var levelA_totalXP = TotalLevelCost((uint)levelA);
-        var levelB_totalXP = TotalLevelCost((uint)levelB);
+        var levelA_totalXP = TotalLevelCost(__instance, (uint)levelA);
+        var levelB_totalXP = TotalLevelCost(__instance, (uint)levelB);
 
         __result = levelB_totalXP - levelA_totalXP;
 
@@ -365,7 +366,7 @@ public static class LevelingPatches
     [HarmonyPatch(typeof(Player), "CheckForLevelup")]
     public static bool PreCheckForLevelup(ref Player __instance)
     {
-        var maxLevel = GetMaxLevel();
+        var maxLevel = GetMaxLevel(__instance);
 
         if (__instance.Level >= maxLevel) return false;
 
@@ -373,7 +374,7 @@ public static class LevelingPatches
         bool creditEarned = false;
 
         // increases until the correct level is found
-        while ((ulong)(__instance.TotalExperience ?? 0) >= TotalLevelCost((uint)(__instance.Level ?? 0) + 1))
+        while ((ulong)(__instance.TotalExperience ?? 0) >= TotalLevelCost(__instance, (uint)(__instance.Level ?? 0) + 1))
         {
             __instance.Level++;
 
