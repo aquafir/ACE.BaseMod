@@ -1,14 +1,20 @@
 ﻿using ACE.Entity.Enum.Properties;
 using ACE.Server.Network.GameMessages.Messages;
 using System.Linq.Expressions;
+using ACE.Server.Physics.Animation;
 using MathNet.Symbolics;
 using Expr = MathNet.Symbolics.SymbolicExpression;
 using MathNet.Numerics;
-using ACE.Server.Physics.Animation;
 using MathNet.Numerics.Interpolation;
 using ACE.DatLoader.FileTypes;
 using ACE.Database.Models.Auth;
 using ACE.Server.Network;
+using ACE.Database.Models.World;
+using AngouriMath;
+using AngouriMath.Extensions;
+using static AngouriMath.MathS;
+using static AngouriMath.Entity;
+using ACE.Server.Network.GameAction.Actions;
 
 namespace Balance;
 
@@ -17,7 +23,8 @@ public static class LevelingPatches
 {
     #region Fields / Props
     //Function compiled from a string
-    static Func<double, double>? function;
+    //static Func<double, double>? function;
+    static Func<long, int>? function;
     //Function interpolating based on Dat Xp costs
     static Barycentric? interpolation;
 
@@ -50,10 +57,14 @@ public static class LevelingPatches
         //Try to parse a custom formula for level costs
         try
         {
-            var level = Expr.Variable("x");
-            var formula = PatchClass.Settings.CostPerLevelFormula;
-            var expr = Expr.Parse(formula);
-            function = expr.Compile("x");
+            //MathNet Symbolics approach
+            //var level = Expr.Variable("x");
+            //var formula = PatchClass.Settings.CostPerLevelFormula;
+            //var expr = Expr.Parse(formula);
+            //function = expr.Compile("x");
+
+            //AngouriMath approach
+            function = PatchClass.Settings.CostPerLevelFormula.Compile<long, int>("x");
         }
         catch (Exception ex)
         {
@@ -162,7 +173,7 @@ public static class LevelingPatches
         session.Network.EnqueueSend(xp, totalXp, level);
     }
     #endregion
-    
+
     //Most important thing to implement
     /// <summary>
     /// Cost for a given level
@@ -175,7 +186,8 @@ public static class LevelingPatches
 
         if (function is not null)
         {
-            cost = (ulong)function((double)level);
+            //cost = (ulong)function((double)level);
+            cost = (ulong)function((int)level);
         }
         else if (interpolation is not null)
         {
