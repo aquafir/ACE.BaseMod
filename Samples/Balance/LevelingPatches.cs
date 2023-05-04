@@ -1,20 +1,4 @@
-﻿using ACE.Entity.Enum.Properties;
-using ACE.Server.Network.GameMessages.Messages;
-using System.Linq.Expressions;
-using ACE.Server.Physics.Animation;
-using MathNet.Symbolics;
-using Expr = MathNet.Symbolics.SymbolicExpression;
-using MathNet.Numerics;
-using MathNet.Numerics.Interpolation;
-using ACE.DatLoader.FileTypes;
-using ACE.Database.Models.Auth;
-using ACE.Server.Network;
-using ACE.Database.Models.World;
-using AngouriMath;
-using AngouriMath.Extensions;
-using static AngouriMath.MathS;
-using static AngouriMath.Entity;
-using ACE.Server.Network.GameAction.Actions;
+﻿using HarmonyLib;
 
 namespace Balance;
 
@@ -28,23 +12,21 @@ public static class LevelingPatches
     //Function interpolating based on Dat Xp costs
     static Barycentric? interpolation;
 
-    static List<ulong> originalXpTable;
-    static List<uint> originalCreditTable;
+    //static List<ulong> originalXpTable;
+    //static List<uint> originalCreditTable;
 
-    //Todo: Could use an array sized to max level?
-    //Keeps 
+    //todo: Use an array sized to max level?
     static Dictionary<uint, ulong> totalCosts = new();
 
-    //Example of accessing a private method instead of replacing
     static MethodInfo updateXpVitaeMethod;
     #endregion
 
     #region Start / Stop
     public static void Start()
     {
-        totalCosts = new();
+        totalCosts.Clear();
 
-        //Get a reference to an inaccessible private Player method
+        //Example of getting reference to an inaccessible private method in Player instead of replacing
         try
         {
             updateXpVitaeMethod = AccessTools.Method(typeof(Player), "UpdateXpVitae", new Type[] { typeof(long) });
@@ -64,12 +46,11 @@ public static class LevelingPatches
             //function = expr.Compile("x");
 
             //AngouriMath approach
-            function = PatchClass.Settings.CostPerLevelFormula.Compile<long, int>("x");
+            function = PatchClass.Settings.CostPerLevelFormula.CompileFriendly().Compile<long, int>("x");
         }
         catch (Exception ex)
         {
             ModManager.Log("Invalid formula for cost-per-level: " + PatchClass.Settings.CostPerLevelFormula);
-            function = null;
         }
 
         //Interpolate level costs from dats
@@ -77,7 +58,7 @@ public static class LevelingPatches
         {
             var ydata = DatManager.PortalDat.XpTable.CharacterLevelXPList.Skip(1).Select(x => (double)x).ToArray(); //Skip 1 for the double level 0
             var xdata = Enumerable.Range(1, ydata.Length).Select(x => (double)x).ToArray();
-            interpolation = MathNet.Numerics.Interpolation.Barycentric.InterpolateRationalFloaterHormannSorted(xdata, ydata);
+            interpolation = Barycentric.InterpolateRationalFloaterHormannSorted(xdata, ydata);
         }
         catch (Exception ex)
         {
@@ -85,12 +66,12 @@ public static class LevelingPatches
         }
 
         //Backup and replace XpTable
-        originalXpTable = new();
-        originalXpTable.AddRange(DatManager.PortalDat.XpTable.CharacterLevelXPList);
-        originalCreditTable = new();
-        originalCreditTable.AddRange(DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList);
-        DatManager.PortalDat.XpTable.CharacterLevelXPList.Clear();
-        DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList.Clear();
+        //originalXpTable = new();
+        //originalXpTable.AddRange(DatManager.PortalDat.XpTable.CharacterLevelXPList);
+        //originalCreditTable = new();
+        //originalCreditTable.AddRange(DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList);
+        //DatManager.PortalDat.XpTable.CharacterLevelXPList.Clear();
+        //DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList.Clear();
 
         //Replace level costs.  Doesn't require replacing anything with this approach
         //var table = DatManager.PortalDat.XpTable;
@@ -108,11 +89,11 @@ public static class LevelingPatches
     public static void Shutdown()
     {
         //Clear to make sure nothing but the original tables are added
-        DatManager.PortalDat.XpTable.CharacterLevelXPList.Clear();
-        DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList.Clear();
+        //DatManager.PortalDat.XpTable.CharacterLevelXPList.Clear();
+        //DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList.Clear();
 
-        DatManager.PortalDat.XpTable.CharacterLevelXPList.AddRange(originalXpTable);
-        DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList.AddRange(originalCreditTable);
+        //DatManager.PortalDat.XpTable.CharacterLevelXPList.AddRange(originalXpTable);
+        //DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList.AddRange(originalCreditTable);
     }
     #endregion
 
@@ -147,7 +128,7 @@ public static class LevelingPatches
             return;
         if (parameters.Length < 2 || !uint.TryParse(parameters[1], out var high))
             return;
-
+        
         var sb = new StringBuilder("Level costs: \n");
 
         uint max = Math.Min(GetMaxLevel(session.Player), high);
@@ -180,7 +161,7 @@ public static class LevelingPatches
     /// </summary>
     static long LevelCost(Player player, uint level)
     {
-        ulong cost = 0;
+        ulong cost = long.MaxValue;
         if (level < 0 || level > GetMaxLevel(player))
             return long.MaxValue;
 
@@ -193,10 +174,6 @@ public static class LevelingPatches
         {
             cost = (ulong)interpolation.Interpolate((double)level);
         }
-        else
-        {
-            cost = PatchClass.Settings.CostPerLevel * level;
-        }
 
         return cost > long.MaxValue ? long.MaxValue : (long)cost;
     }
@@ -207,9 +184,9 @@ public static class LevelingPatches
     static ulong TotalLevelCost(Player player, uint level)
     {
         if (level < 0 || level > GetMaxLevel(player))
-            return 0;
+            return ulong.MaxValue;
 
-        //Todo: Better ways to implement this, but this should work with just LevelCost implemented?
+        //Todo: Better ways to implement this (closed-form), but this should work with just LevelCost implemented?
         if (totalCosts.ContainsKey(level))
             return totalCosts[level];
 
@@ -246,7 +223,7 @@ public static class LevelingPatches
     public static bool PreUpdateXpAndLevel(long amount, XpType xpType, ref Player __instance)
     {
         var maxLevel = GetMaxLevel(__instance);
-        var maxLevelXp = LevelCost(__instance, maxLevel); ;
+        var maxLevelXp = TotalLevelCost(__instance, maxLevel);
 
         if (__instance.Level != maxLevel)
         {
