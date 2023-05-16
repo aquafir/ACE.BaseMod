@@ -1,11 +1,15 @@
 ﻿using HarmonyLib;
 
-namespace Balance;
+namespace Balance.Patches;
 
 [HarmonyPatch]
-public static class LevelingPatches
+public class LevelingPatches : AngouriMathPatch
 {
     #region Fields / Props
+    public uint MaxLevel { get; set; } = 275;
+    //x = level
+    public string CostPerLevelFormula { get; set; } = "1000 * x^3/2";
+
     //Function compiled from a string
     //static Func<double, double>? function;
     static Func<long, int>? function;
@@ -128,7 +132,7 @@ public static class LevelingPatches
             return;
         if (parameters.Length < 2 || !uint.TryParse(parameters[1], out var high))
             return;
-        
+
         var sb = new StringBuilder("Level costs: \n");
 
         uint max = Math.Min(GetMaxLevel(session.Player), high);
@@ -172,7 +176,7 @@ public static class LevelingPatches
         }
         else if (interpolation is not null)
         {
-            cost = (ulong)interpolation.Interpolate((double)level);
+            cost = (ulong)interpolation.Interpolate(level);
         }
 
         return cost > long.MaxValue ? long.MaxValue : (long)cost;
@@ -217,6 +221,16 @@ public static class LevelingPatches
         return level % 10 == 0 ? 1u : 0;
     }
 
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Player), nameof(Player.IsMaxLevel), MethodType.Getter)]
+    public static bool PreGet_IsMaxLevel(ref Player __instance, ref bool __result)
+    {
+        __result = __instance.Level >= GetMaxLevel(__instance);
+
+        //Return false to override
+        return false;
+    }
+
     #region Replacement
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Player), "UpdateXpAndLevel", new Type[] { typeof(long), typeof(XpType) })]
@@ -249,7 +263,7 @@ public static class LevelingPatches
 
         if (__instance.HasVitae && xpType != XpType.Allegiance)
             updateXpVitaeMethod?.Invoke(__instance, new object[] { amount });
-            //UpdateXpVitae(amount);
+        //UpdateXpVitae(amount);
 
         //Return false to override
         return false;
@@ -385,9 +399,9 @@ public static class LevelingPatches
 
         if (__instance.Level > startingLevel)
         {
-            var message = (__instance.Level == maxLevel) ? $"You have reached the maximum level of {__instance.Level}!" : $"You are now level {__instance.Level}!";
+            var message = __instance.Level == maxLevel ? $"You have reached the maximum level of {__instance.Level}!" : $"You are now level {__instance.Level}!";
 
-            message += (__instance.AvailableSkillCredits > 0) ? $"\nYou have {__instance.AvailableExperience:#,###0} experience points and {__instance.AvailableSkillCredits} skill credits available to raise skills and attributes." : $"\nYou have {__instance.AvailableExperience:#,###0} experience points available to raise skills and attributes.";
+            message += __instance.AvailableSkillCredits > 0 ? $"\nYou have {__instance.AvailableExperience:#,###0} experience points and {__instance.AvailableSkillCredits} skill credits available to raise skills and attributes." : $"\nYou have {__instance.AvailableExperience:#,###0} experience points available to raise skills and attributes.";
 
             var levelUp = new GameMessagePrivateUpdatePropertyInt(__instance, PropertyInt.Level, __instance.Level ?? 1);
             var currentCredits = new GameMessagePrivateUpdatePropertyInt(__instance, PropertyInt.AvailableSkillCredits, __instance.AvailableSkillCredits ?? 0);

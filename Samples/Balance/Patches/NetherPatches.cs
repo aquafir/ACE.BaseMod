@@ -1,13 +1,10 @@
-﻿using ACE.Server.WorldObjects.Managers;
-using AngouriMath.Extensions;
-
-namespace Balance;
+﻿namespace Balance.Patches;
 
 [HarmonyPatch]
-public static class NetherPatches
+public class NetherPatches : AngouriMathPatch
 {
     #region Fields / Props
-    static Func<double, int, int>? func; //x = regular rating, n = number of debuffs
+///    static Func<double, int, int>? func; //x = regular rating, n = number of debuffs
 
     #endregion
 
@@ -16,10 +13,11 @@ public static class NetherPatches
     {
         try
         {
-            func = PatchClass.Settings.NetherRatingFormula.Compile<double, int, int>("x", "n");
-        }catch(Exception e)
+            func = PatchClass.Settings.JumpFormula.CompileFriendly().Compile<double, int, int>("x", "n");
+        }
+        catch (Exception e)
         {
-            ModManager.Log("Failed to parse equation: " + PatchClass.Settings.NetherRatingFormula, ModManager.LogLevel.Error);
+            ModManager.Log("Failed to parse equation: " + PatchClass.Settings.JumpFormula, ModManager.LogLevel.Error);
         }
     }
     public static void Shutdown()
@@ -31,7 +29,7 @@ public static class NetherPatches
     [HarmonyPatch(typeof(EnchantmentManager), nameof(EnchantmentManager.GetNetherDotDamageRating), new Type[] { })]
     public static bool PreGetNetherDotDamageRating(ref EnchantmentManager __instance, ref int __result)
     {
-        if (!PatchClass.Settings.NetherRatingOverride || func is null)
+        if (func is null)
             return true;
 
         var type = EnchantmentTypeFlags.Int | EnchantmentTypeFlags.SingleStat | EnchantmentTypeFlags.Additive;
@@ -55,23 +53,4 @@ public static class NetherPatches
         //Override
         return false;
     }
-
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(EnchantmentManager), nameof(EnchantmentManager.GetNetherDotDamageRating), new Type[] { })]
-    public static void VoidCap(EnchantmentManager __instance, ref int __result)
-    {
-        //Repeated work, but it will be cached and probably not a huge performance issue
-        var type = EnchantmentTypeFlags.Int | EnchantmentTypeFlags.SingleStat | EnchantmentTypeFlags.Additive;
-        var numDebuffs = __instance.GetEnchantments_TopLayer(type, (uint)PropertyInt.NetherOverTime).Count;
-
-
-
-        var cap = Math.Min(PatchClass.Settings.NetherRatingFormula, Settings.NetherPerDebuffCap * numDebuffs);
-
-        ModManager.Log($"{__result} capped to {Settings.NetherRatingCap} or {numDebuffs} * {Settings.NetherPerDebuffCap}");
-
-        __result = Math.Min(cap, __result);
-    }
-
 }

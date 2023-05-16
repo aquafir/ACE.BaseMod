@@ -1,9 +1,7 @@
-﻿using ACE.DatLoader.FileTypes;
-using ACE.Entity.Enum.Properties;
-using ACE.Entity.Models;
-using ACE.Server.Managers;
-using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.WorldObjects.Managers;
+﻿
+
+using Balance.Patches;
+using System.Text.Json;
 
 namespace Balance
 {
@@ -22,14 +20,16 @@ namespace Balance
         {
             WriteIndented = true,
             AllowTrailingCommas = true,
-            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
-
+            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+            //ReferenceHandler = ReferenceHandler.Preserve,
+            //MaxDepth = 60,
+            //IncludeFields = true,
         };
 
         private static void SaveSettings()
         {
             string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
-
+            Debugger.Break();
             if (!settingsInfo.RetryWrite(jsonString, RETRIES))
             {
                 ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
@@ -39,7 +39,7 @@ namespace Balance
 
         private static void LoadSettings()
         {
-            if (!settingsInfo.Exists)
+            if (!File.Exists(settingsInfo.FullName))
             {
                 ModManager.Log($"Creating {settingsInfo}...");
                 SaveSettings();
@@ -71,9 +71,22 @@ namespace Balance
         {
             //Need to decide on async use
             Mod.State = ModState.Loading;
+
+            var p = new GrantExperience();
+            var a = new List<GrantExperience>(){ 
+                p 
+            };
+            var j1 = JsonSerializer.Serialize(p, _serializeOptions);
+            var j2 = JsonSerializer.Serialize(a, _serializeOptions);
+            var j3 = JsonSerializer.Serialize(Settings, _serializeOptions);
+            Debugger.Break();
             LoadSettings();
 
-            LevelingPatches.Start();
+            foreach (var patch in Settings.Formulas)
+            {
+                if (patch.Enabled)
+                    patch.Start();
+            }
 
             if (Mod.State == ModState.Error)
             {
@@ -87,8 +100,14 @@ namespace Balance
         public static void Shutdown()
         {
             //if (Mod.State == ModState.Running)
-            // Shut down enabled mod...
-            LevelingPatches.Shutdown();
+
+            //Shutdown/unpatch everything on settings change to support repatching by category
+            foreach (var patch in Settings.Formulas)
+            {
+                if (patch.Enabled)
+                    patch.Shutdown();
+            }
+            Mod.Harmony.UnpatchAll();
 
             if (Mod.State == ModState.Error)
                 ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
