@@ -1,30 +1,46 @@
 ﻿namespace Balance.Patches;
 
 [HarmonyPatch]
-public class NetherPatches : AngouriMathPatch
+[HarmonyPatchCategory(nameof(NetherRating))]
+public class NetherRating : AngouriMathPatch
 {
-    #region Fields / Props
-///    static Func<double, int, int>? func; //x = regular rating, n = number of debuffs
+    #region Fields / Props   
+    //Named property used to indicate patch and enable in settings
+    //[JsonPropertyName($"{nameof(NetherRating)} Enabled")]
+    public override bool Enabled { get; set; } = true;
 
+    //x = regular rating, n = number of debuffs
+    [JsonPropertyName($"Formula")]
+    public override string Formula { get; set; } = "P(60 if x > 60, x)";
+    [JsonInclude]
+    public override Dictionary<string, MType> Variables { get; } = new()
+    {
+        ["x"] = MType.Double,
+        ["n"] = MType.Int,
+    };
+
+    //Function parsed from formula used in patches
+    static Func<double, int, int> func;
     #endregion
 
     #region Start / Stop
-    public static void Start()
+    public override void Start()
     {
-        try
-        {
-            func = PatchClass.Settings.JumpFormula.CompileFriendly().Compile<double, int, int>("x", "n");
-        }
-        catch (Exception e)
-        {
-            ModManager.Log("Failed to parse equation: " + PatchClass.Settings.JumpFormula, ModManager.LogLevel.Error);
-        }
+        //If you can parse the formulas patch the corresponding category
+        if (Formula.TryGetFunction<double, int, int>(out func, Variables.TypesAndNames()))
+            Mod.Harmony.PatchCategory(nameof(NetherRating));
+        else
+            throw new Exception($"Failure parsing formula: {Formula}");
+
     }
-    public static void Shutdown()
+
+    public override void Shutdown()
     {
+        func = null;
     }
     #endregion
 
+    #region Patches
     [HarmonyPrefix]
     [HarmonyPatch(typeof(EnchantmentManager), nameof(EnchantmentManager.GetNetherDotDamageRating), new Type[] { })]
     public static bool PreGetNetherDotDamageRating(ref EnchantmentManager __instance, ref int __result)
@@ -53,4 +69,5 @@ public class NetherPatches : AngouriMathPatch
         //Override
         return false;
     }
+    #endregion
 }

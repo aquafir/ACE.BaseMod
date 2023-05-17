@@ -6,7 +6,6 @@ public abstract class AngouriMathPatch : IPatchable
 {
     #region Fields / Props
     //Named property used to indicate patch and enable in settings
-    [JsonPropertyName($"{nameof(AngouriMathPatch)} Enable")]
     public virtual bool Enabled { get; set; } = true;
 
     public virtual string Formula { get; set; } = "x";

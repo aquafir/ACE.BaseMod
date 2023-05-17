@@ -1,34 +1,43 @@
-﻿using HarmonyLib;
-
-namespace Balance.Patches;
+﻿namespace Balance.Patches;
 
 [HarmonyPatch]
-public class LevelingPatches : AngouriMathPatch
+[HarmonyPatchCategory(nameof(LevelCost))]
+public class LevelCost : AngouriMathPatch
 {
-    #region Fields / Props
-    public uint MaxLevel { get; set; } = 275;
-    //x = level
-    public string CostPerLevelFormula { get; set; } = "1000 * x^3/2";
+    #region Fields / Props   
+    //Named property used to indicate patch and enable in settings
+    //[JsonPropertyName($"{nameof(LevelCost)} Enabled")]
+    public override bool Enabled { get; set; } = true;
 
-    //Function compiled from a string
-    //static Func<double, double>? function;
-    static Func<long, int>? function;
-    //Function interpolating based on Dat Xp costs
-    static Barycentric? interpolation;
+    //Formula and the variables used
+    //x = Xp amount, t = type, n = number of active connections
+    [JsonPropertyName($"Formula")]
+    public override string Formula { get; set; } = "1000 * x^3/2";
+    [JsonInclude]
+    public override Dictionary<string, MType> Variables { get; } = new()
+    {
+        ["x"] = MType.Int,
+    };
 
-    //static List<ulong> originalXpTable;
-    //static List<uint> originalCreditTable;
-
-    //todo: Use an array sized to max level?
+    //Function parsed from formula used in patches
+    static Func<long, int> func;
+    //Approach using Math.Net that can interpolate from existing costs
+    //static Barycentric interpolation;
+    //Todo: Use an array sized to max level?
     static Dictionary<uint, ulong> totalCosts = new();
-
     static MethodInfo updateXpVitaeMethod;
     #endregion
 
     #region Start / Stop
-    public static void Start()
+    public override void Start()
     {
-        totalCosts.Clear();
+        //If you can parse the formulas patch the corresponding category
+        if (Formula.TryGetFunction<long, int>(out func, Variables.TypesAndNames()))
+        {
+            Mod.Harmony.PatchCategory(nameof(LevelCost));
+        }
+        else
+            throw new Exception($"Failure parsing formula: {Formula}");
 
         //Example of getting reference to an inaccessible private method in Player instead of replacing
         try
@@ -40,34 +49,21 @@ public class LevelingPatches : AngouriMathPatch
             ModManager.Log("Error accessing private Player method 'UpdateXpVitae'");
         }
 
-        //Try to parse a custom formula for level costs
-        try
-        {
-            //MathNet Symbolics approach
-            //var level = Expr.Variable("x");
-            //var formula = PatchClass.Settings.CostPerLevelFormula;
-            //var expr = Expr.Parse(formula);
-            //function = expr.Compile("x");
-
-            //AngouriMath approach
-            function = PatchClass.Settings.CostPerLevelFormula.CompileFriendly().Compile<long, int>("x");
-        }
-        catch (Exception ex)
-        {
-            ModManager.Log("Invalid formula for cost-per-level: " + PatchClass.Settings.CostPerLevelFormula);
-        }
+        //Reset total cost cache
+        totalCosts.Clear();
 
         //Interpolate level costs from dats
-        try
-        {
-            var ydata = DatManager.PortalDat.XpTable.CharacterLevelXPList.Skip(1).Select(x => (double)x).ToArray(); //Skip 1 for the double level 0
-            var xdata = Enumerable.Range(1, ydata.Length).Select(x => (double)x).ToArray();
-            interpolation = Barycentric.InterpolateRationalFloaterHormannSorted(xdata, ydata);
-        }
-        catch (Exception ex)
-        {
-            ModManager.Log("Error interpolating from present XP table values: " + ex.Message);
-        }
+        //try
+        //{
+        //    var ydata = DatManager.PortalDat.XpTable.CharacterLevelXPList.Skip(1).Select(x => (double)x).ToArray(); //Skip 1 for the double level 0
+        //    var xdata = Enumerable.Range(1, ydata.Length).Select(x => (double)x).ToArray();
+        //    interpolation = Barycentric.InterpolateRationalFloaterHormannSorted(xdata, ydata);
+        //}
+        //catch (Exception ex)
+        //{
+        //    ModManager.Log("Error interpolating from present XP table values: " + ex.Message);
+        //}
+
 
         //Backup and replace XpTable
         //originalXpTable = new();
@@ -90,8 +86,11 @@ public class LevelingPatches : AngouriMathPatch
         //        skills.Add(i % 10 == 0 ? 1u : 0);
         //}
     }
-    public static void Shutdown()
+
+    public override void Shutdown()
     {
+        func = null;
+
         //Clear to make sure nothing but the original tables are added
         //DatManager.PortalDat.XpTable.CharacterLevelXPList.Clear();
         //DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList.Clear();
@@ -124,22 +123,22 @@ public class LevelingPatches : AngouriMathPatch
     //    }
     //}
 
-    [CommandHandler("costs", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 2, "Print level information in a range.", "/costs startLvl stopLvl")]
+    [CommandHandler("costs", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 2, "Print level information in a range.", "/costs startLvl numLevels")]
     public static void HandleCosts(Session session, params string[] parameters)
     {
         //Try to parse first param for max level
         if (parameters.Length < 1 || !uint.TryParse(parameters[0], out var low))
             return;
-        if (parameters.Length < 2 || !uint.TryParse(parameters[1], out var high))
+        if (parameters.Length < 2 || !uint.TryParse(parameters[1], out var range))
             return;
 
         var sb = new StringBuilder("Level costs: \n");
 
-        uint max = Math.Min(GetMaxLevel(session.Player), high);
+        uint max = Math.Min(GetMaxLevel(session.Player), low+ range);
         for (uint i = low; i < max; i++)
         {
             var credits = GetLevelSkillCredits(session.Player, (int)i);
-            sb.Append($"  {i}: {LevelCost(session.Player, i),-20:N0}{TotalLevelCost(session.Player, i),-20:N0}  {(credits > 0 ? credits + " credit" : "")}\n");
+            sb.Append($"  {i}: {CostOfLevel(session.Player, i),-20:N0}{TotalLevelCost(session.Player, i),-20:N0}  {(credits > 0 ? credits + " credit" : "")}\n");
         }
         session?.Player?.SendMessage(sb.ToString());
     }
@@ -159,25 +158,26 @@ public class LevelingPatches : AngouriMathPatch
     }
     #endregion
 
+    #region Logic
     //Most important thing to implement
     /// <summary>
     /// Cost for a given level
     /// </summary>
-    static long LevelCost(Player player, uint level)
+    static long CostOfLevel(Player player, uint level)
     {
         ulong cost = long.MaxValue;
         if (level < 0 || level > GetMaxLevel(player))
             return long.MaxValue;
 
-        if (function is not null)
+        if (func is not null)
         {
-            //cost = (ulong)function((double)level);
-            cost = (ulong)function((int)level);
+            //cost = (ulong)func((double)level);
+            cost = (ulong)func((int)level);
         }
-        else if (interpolation is not null)
-        {
-            cost = (ulong)interpolation.Interpolate(level);
-        }
+        //else if (interpolation is not null)
+        //{
+        //    cost = (ulong)interpolation.Interpolate(level);
+        //}
 
         return cost > long.MaxValue ? long.MaxValue : (long)cost;
     }
@@ -198,7 +198,7 @@ public class LevelingPatches : AngouriMathPatch
         ulong cost = 0;
         for (uint i = 1; i <= level; i++)
         {
-            cost += (ulong)LevelCost(player, i);
+            cost += (ulong)CostOfLevel(player, i);
             totalCosts.TryAdd(i, cost);
         }
         return cost;
@@ -207,7 +207,7 @@ public class LevelingPatches : AngouriMathPatch
     /// <summary>
     /// Remaining experience a given player needs to reach a given level
     /// </summary>
-    static long CostToLevel(Player player, uint level) => LevelCost(player, level) - player.TotalExperience.Value;
+    static long CostToLevel(Player player, uint level) => CostOfLevel(player, level) - player.TotalExperience.Value;
     static uint GetMaxLevel(Player player) => PatchClass.Settings.MaxLevel;
     static uint GetLevelSkillCredits(Player player) => GetLevelSkillCredits(player, player.Level ?? 0);
     static uint GetLevelSkillCredits(Player player, int level)
@@ -221,6 +221,9 @@ public class LevelingPatches : AngouriMathPatch
         return level % 10 == 0 ? 1u : 0;
     }
 
+    #endregion
+
+    #region Patches
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Player), nameof(Player.IsMaxLevel), MethodType.Getter)]
     public static bool PreGet_IsMaxLevel(ref Player __instance, ref bool __result)
@@ -231,7 +234,6 @@ public class LevelingPatches : AngouriMathPatch
         return false;
     }
 
-    #region Replacement
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Player), "UpdateXpAndLevel", new Type[] { typeof(long), typeof(XpType) })]
     public static bool PreUpdateXpAndLevel(long amount, XpType xpType, ref Player __instance)
@@ -276,6 +278,7 @@ public class LevelingPatches : AngouriMathPatch
     [HarmonyPatch(typeof(Player), nameof(Player.GetMaxLevel))]
     public static bool PreGetMaxLevel(ref Player __instance, ref uint __result)
     {
+        Debugger.Break();
         __result = GetMaxLevel(__instance);
 
         //Return false to override
@@ -440,9 +443,11 @@ public class LevelingPatches : AngouriMathPatch
         //Return false to override
         return false;
     }
-    #endregion
 
-    #region XpTable Getter Swap
+
+
+
+    #region XpTable Getter Swap Approach
     //[HarmonyPrefix]
     //[HarmonyPatch(typeof(PortalDatDatabase), nameof(PortalDatDatabase.XpTable), MethodType.Getter)]
     //public static bool Get_XpTable(ref XpTable __result)
@@ -463,4 +468,5 @@ public class LevelingPatches : AngouriMathPatch
     //    return false;
     //}
     #endregion
+    #endregion   
 }

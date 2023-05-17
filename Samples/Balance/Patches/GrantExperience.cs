@@ -6,7 +6,7 @@ public class GrantExperience : AngouriMathPatch
 {
     #region Fields / Props   
     //Named property used to indicate patch and enable in settings
-    [JsonPropertyName($"{nameof(GrantExperience)} Enable")]
+    //[JsonPropertyName($"{nameof(GrantExperience)} Enable")]
     public override bool Enabled { get; set; } = true;
 
     //Formula and the variables used

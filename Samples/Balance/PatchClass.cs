@@ -29,7 +29,6 @@ namespace Balance
         private static void SaveSettings()
         {
             string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
-            Debugger.Break();
             if (!settingsInfo.RetryWrite(jsonString, RETRIES))
             {
                 ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
@@ -71,18 +70,10 @@ namespace Balance
         {
             //Need to decide on async use
             Mod.State = ModState.Loading;
-
-            var p = new GrantExperience();
-            var a = new List<GrantExperience>(){ 
-                p 
-            };
-            var j1 = JsonSerializer.Serialize(p, _serializeOptions);
-            var j2 = JsonSerializer.Serialize(a, _serializeOptions);
-            var j3 = JsonSerializer.Serialize(Settings, _serializeOptions);
             Debugger.Break();
             LoadSettings();
 
-            foreach (var patch in Settings.Formulas)
+            foreach (var patch in Settings.Formulas.Values)
             {
                 if (patch.Enabled)
                     patch.Start();
@@ -102,7 +93,7 @@ namespace Balance
             //if (Mod.State == ModState.Running)
 
             //Shutdown/unpatch everything on settings change to support repatching by category
-            foreach (var patch in Settings.Formulas)
+            foreach (var patch in Settings.Formulas.Values)
             {
                 if (patch.Enabled)
                     patch.Shutdown();

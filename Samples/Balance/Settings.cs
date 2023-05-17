@@ -3,15 +3,16 @@
 public class Settings
 {
     //Patches will involve a single formula and variable definitions
-    public List<AngouriMathPatch> Formulas { get; set; } = new()
+    public Dictionary<string, AngouriMathPatch> Formulas { get; set; } = new()
     {
-        new GrantExperience(),
-        //new LevelingPatches(),
-        //new NetherPatches(),
+        //Hate doing it this way.  Custom property names with nameof weren't being picked up.
+        ["Grant Experience"] = new GrantExperience(),
+        ["Level Cost"] = new LevelCost(),
+        ["Nether Rating"] = new NetherRating(),
         //new MovementPatches(),
     };
 
     //Additional settings for patches.
     //Per-patch settings was considered but would require custom JSON converters that don't seem worth it
-
+    public uint MaxLevel { get; set; } = 275;
 }
