@@ -15,8 +15,8 @@ public class PatchClass
     {
         WriteIndented = true,
         AllowTrailingCommas = true,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
-
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
     private static void SaveSettings()
