@@ -2,7 +2,7 @@
 
 [HarmonyPatch]
 [HarmonyPatchCategory(nameof(AngouriMathPatch))]
-public abstract class AngouriMathPatch : IPatchable
+public class AngouriMathPatch : IPatchable
 {
     #region Fields / Props
     //Named property used to indicate patch and enable in settings
@@ -16,6 +16,7 @@ public abstract class AngouriMathPatch : IPatchable
 
     //static Func<double, int> func;
     #endregion
+
 
     #region Start/Stop
     public virtual void Start()

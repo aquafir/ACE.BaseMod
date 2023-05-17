@@ -1,4 +1,5 @@
-﻿using AngouriMath.Core.Compilation.IntoLinq;
+﻿using ACE.Server.Managers;
+using AngouriMath.Core.Compilation.IntoLinq;
 using AngouriMath.Extensions;
 using System.ComponentModel;
 using static AngouriMath.Entity;
@@ -7,9 +8,11 @@ using static AngouriMath.Entity.Number;
 namespace Balance;
 
 public static class NetworkHelpers
-{
-    //Todo: null checks, confirm this works?
+{    
+    //Todo: Replace with future change in PlayerManager.GetAccountPlayers(uint accountId):
+    //https://github.com/ACEmulator/ACE/pull/3966/commits/21452aa104c5626a44eb9adf0cb06d8a6fe62b5e#diff-f2109a463411c50402627d6e21e48b693db349b7b986ef9d6f5ddee66a263dc0R230
     public static int ActiveConnections(this Player player) => NetworkManager.GetSessionEndpointTotalByAddressCount(player.Session.EndPoint.Address);
+    //public static int ActiveConnections(Player player) => NetworkManager.GetSessionEndpointTotalByAddressCount(player.Session.EndPoint.Address);
 }
 
 

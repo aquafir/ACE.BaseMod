@@ -7,8 +7,10 @@ public class Settings
     {
         //Hate doing it this way.  Custom property names with nameof weren't being picked up.
         ["Grant Experience"] = new GrantExperience(),
-        ["Level Cost"] = new LevelCost(),
         ["Nether Rating"] = new NetherRating(),
+        ["Melee Attribute Damage"] = new MeleeAttributeDamage(),
+        ["Missile Attribute Damage"] = new MissileAttributeDamage(),
+        //["Level Cost"] = new LevelCost(),
         //new MovementPatches(),
     };
 

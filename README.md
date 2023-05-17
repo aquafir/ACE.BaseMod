@@ -75,6 +75,17 @@ The template defaults to building to `C:\ACE\Mods` which is where the `feat_mods
 
 
 
+### Limitations
+
+* Patch methods must be static.
+* Extension methods don't appear to work if used from a Harmony patch
+  * This fails:
+    `public static int ActiveConnections(this Player player) => 1;` 
+  * This works, when used by a patch initializing itself:
+    `private static string CompileFriendly(this string formula) => formula.Replace(" if ", " provided ").Replace("P(", "piecewise(");`
+
+
+
 ### Todo
 
 * More samples and a list of methods that might be interesting to patch.

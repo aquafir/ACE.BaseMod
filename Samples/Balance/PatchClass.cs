@@ -1,6 +1,7 @@
 ﻿
 
 using Balance.Patches;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace Balance
@@ -21,9 +22,7 @@ namespace Balance
             WriteIndented = true,
             AllowTrailingCommas = true,
             Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-            //ReferenceHandler = ReferenceHandler.Preserve,
-            //MaxDepth = 60,
-            //IncludeFields = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         };
 
         private static void SaveSettings()
@@ -70,13 +69,20 @@ namespace Balance
         {
             //Need to decide on async use
             Mod.State = ModState.Loading;
-            Debugger.Break();
+
             LoadSettings();
 
-            foreach (var patch in Settings.Formulas.Values)
+            foreach (var kvp in Settings.Formulas)
             {
-                if (patch.Enabled)
-                    patch.Start();
+                var patch = kvp.Value;
+                try
+                {
+                    if (patch.Enabled)
+                        patch.Start();
+                }catch(Exception ex)
+                {
+                    ModManager.Log($"Failed to patch {kvp.Key}: {ex.Message}");
+                }
             }
 
             if (Mod.State == ModState.Error)

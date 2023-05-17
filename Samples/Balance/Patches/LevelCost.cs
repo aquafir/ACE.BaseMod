@@ -1,4 +1,8 @@
-﻿namespace Balance.Patches;
+﻿using ACE.Common;
+using HarmonyLib;
+using static AngouriMath.Entity;
+
+namespace Balance.Patches;
 
 [HarmonyPatch]
 [HarmonyPatchCategory(nameof(LevelCost))]
@@ -7,16 +11,16 @@ public class LevelCost : AngouriMathPatch
     #region Fields / Props   
     //Named property used to indicate patch and enable in settings
     //[JsonPropertyName($"{nameof(LevelCost)} Enabled")]
-    public override bool Enabled { get; set; } = true;
+    public override bool Enabled { get; set; } = false;
 
     //Formula and the variables used
     //x = Xp amount, t = type, n = number of active connections
     [JsonPropertyName($"Formula")]
-    public override string Formula { get; set; } = "1000 * x^3/2";
+    public override string Formula { get; set; } = "1000x^(3/2)";
     [JsonInclude]
     public override Dictionary<string, MType> Variables { get; } = new()
     {
-        ["x"] = MType.Int,
+        ["x"] = MType.Long,
     };
 
     //Function parsed from formula used in patches
@@ -63,7 +67,6 @@ public class LevelCost : AngouriMathPatch
         //{
         //    ModManager.Log("Error interpolating from present XP table values: " + ex.Message);
         //}
-
 
         //Backup and replace XpTable
         //originalXpTable = new();
@@ -208,7 +211,8 @@ public class LevelCost : AngouriMathPatch
     /// Remaining experience a given player needs to reach a given level
     /// </summary>
     static long CostToLevel(Player player, uint level) => CostOfLevel(player, level) - player.TotalExperience.Value;
-    static uint GetMaxLevel(Player player) => PatchClass.Settings.MaxLevel;
+    //GetMaxLevel is static and is nulled when called for proficiency.  Would require some thought for per-player max levels
+    static uint GetMaxLevel(Player player) => player is null ? PatchClass.Settings.MaxLevel : PatchClass.Settings.MaxLevel;
     static uint GetLevelSkillCredits(Player player) => GetLevelSkillCredits(player, player.Level ?? 0);
     static uint GetLevelSkillCredits(Player player, int level)
     {
@@ -276,10 +280,11 @@ public class LevelCost : AngouriMathPatch
     /// </summary>
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Player), nameof(Player.GetMaxLevel))]
-    public static bool PreGetMaxLevel(ref Player __instance, ref uint __result)
+    public static bool PreGetMaxLevel(ref uint __result)
     {
-        Debugger.Break();
-        __result = GetMaxLevel(__instance);
+        //Proficiency.OnSuccessUse would need a rewrite
+        //__result = __instance is null ? GetMaxLevel(null) : GetMaxLevel(__instance);
+        __result = GetMaxLevel(null);
 
         //Return false to override
         return false;
@@ -444,8 +449,102 @@ public class LevelCost : AngouriMathPatch
         return false;
     }
 
+    #region Proficiency OnSuccessUse override for allowing player injection of MaxLevel
+    //[HarmonyPrefix]
+    //[HarmonyPatch(typeof(Proficiency), nameof(Proficiency.OnSuccessUse), new Type[] { typeof(Player), typeof(CreatureSkill), typeof(uint) })]
+    //public static bool PreOnSuccessUse(Player player, CreatureSkill skill, uint difficulty, ref Proficiency __instance)
+    //{
+    //    if (player.IsOlthoiPlayer)
+    //        return false;
 
+    //    // ensure skill is at least trained
+    //    if (skill.AdvancementClass < SkillAdvancementClass.Trained)
+    //        return false;
 
+    //    var last_difficulty = skill.PropertiesSkill.ResistanceAtLastCheck;
+    //    var last_used_time = skill.PropertiesSkill.LastUsedTime;
+
+    //    var currentTime = Time.GetUnixTime();
+
+    //    var timeDiff = currentTime - last_used_time;
+
+    //    if (timeDiff < 0)
+    //    {
+    //        // can happen if server clock is rewound back in time
+    //        ModManager.Log($"Proficiency.OnSuccessUse({player.Name}, {skill.Skill}, {difficulty}) - timeDiff: {timeDiff}", ModManager.LogLevel.Warn);
+    //        skill.PropertiesSkill.LastUsedTime = currentTime;       // update to prevent log spam
+    //        return false;
+    //    }
+
+    //    var difficulty_check = difficulty > last_difficulty;
+    //    var time_check = timeDiff >= Proficiency.FullTime.TotalSeconds;
+
+    //    if (difficulty_check || time_check)
+    //    {
+    //        // todo: not independent variables?
+    //        // always scale if timeDiff < FullTime?
+    //        var timeScale = 1.0f;
+    //        if (!time_check)
+    //        {
+    //            // 10 mins elapsed from 15 min FullTime:
+    //            // 0.66f timeScale
+    //            timeScale = (float)(timeDiff / Proficiency.FullTime.TotalSeconds);
+
+    //            // any rng involved?
+    //        }
+
+    //        skill.PropertiesSkill.ResistanceAtLastCheck = difficulty;
+    //        skill.PropertiesSkill.LastUsedTime = currentTime;
+
+    //        player.ChangesDetected = true;
+
+    //        if (player.IsMaxLevel) return false;
+
+    //        var pp = (uint)Math.Round(difficulty * timeScale);
+    //        var totalXPGranted = (long)Math.Round(pp * 1.1f);   // give additional 10% of proficiency XP to unassigned XP
+
+    //        if (totalXPGranted > 10000)
+    //        {
+    //            ModManager.Log($"Proficiency.OnSuccessUse({player.Name}, {skill.Skill}, {difficulty}) - totalXPGranted: {totalXPGranted:N0}", ModManager.LogLevel.Warn);
+    //        }
+
+    //        var maxLevel = Player.GetMaxLevel();
+    //        var remainingXP = player.GetRemainingXP(maxLevel).Value;
+
+    //        if (totalXPGranted > remainingXP)
+    //        {
+    //            // checks and balances:
+    //            // total xp = pp * 1.1
+    //            // pp = total xp / 1.1
+
+    //            totalXPGranted = remainingXP;
+    //            pp = (uint)Math.Round(totalXPGranted / 1.1f);
+    //        }
+
+    //        // if skill is maxed out, but player is below MaxLevel,
+    //        // not sure if retail granted 0%, 10%, or 110% of the pp to TotalExperience here
+    //        // since pp is such a miniscule system at the higher levels,
+    //        // going to just naturally add it to TotalXP for now..
+
+    //        pp = Math.Min(pp, skill.ExperienceLeft);
+
+    //        //Console.WriteLine($"Earned {pp} PP ({skill.Skill})");
+
+    //        // send CP to player as unassigned XP
+    //        player.GrantXP(totalXPGranted, XpType.Proficiency, ShareType.None);
+
+    //        // send PP to player as skill XP, which gets spent from the CP sent
+    //        if (pp > 0)
+    //        {
+    //            player.HandleActionRaiseSkill(skill.Skill, pp);
+    //        }
+    //    }
+
+    //    //Return false to override
+    //    return false;
+    //}
+
+    #endregion
 
     #region XpTable Getter Swap Approach
     //[HarmonyPrefix]
@@ -468,5 +567,5 @@ public class LevelCost : AngouriMathPatch
     //    return false;
     //}
     #endregion
-    #endregion   
+    #endregion
 }
