@@ -1,3 +1,7 @@
+An [extension](https://github.com/aquafir/HarmonyExtension/) has been created for Visual Studio for creating patches.
+
+
+
 ### Samples
 
 Included `Samples` have their own `Readme` and all except `CriticalOverride` have a short video demonstration:
@@ -78,7 +82,7 @@ The template defaults to building to `C:\ACE\Mods` which is where the `feat_mods
 ### Limitations
 
 * Patch methods must be static.
-* 
+* NuGet packages currently also need to be added to ACE.
 
 
 
