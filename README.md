@@ -1,4 +1,5 @@
-An [extension](https://github.com/aquafir/HarmonyExtension/) has been created for Visual Studio for creating patches.
+An [extension](https://github.com/aquafir/HarmonyExtension/) has been created for Visual Studio for [creating patches](https://github.com/aquafir/ACE.BaseMod/assets/83029060/09f1cb0e-d758-4854-8f14-eb7588b1a8e1).
+
 
 
 
@@ -6,7 +7,7 @@ An [extension](https://github.com/aquafir/HarmonyExtension/) has been created fo
 
 Included `Samples` have their own `Readme` and all except `CriticalOverride` have a short video demonstration:
 
-* CriticalOverride and [HelloCommand](https://github.com/aquafir/ACE.BaseMod/tree/master/Samples/HelloCommand) are the simplest examples of patching or adding chat commands.
+* [CriticalOverride](https://github.com/aquafir/ACE.BaseMod/tree/master/Samples/CriticalOverride) and [HelloCommand](https://github.com/aquafir/ACE.BaseMod/tree/master/Samples/HelloCommand) are the simplest examples of patching or adding chat commands.
 * [Spells](https://github.com/aquafir/ACE.BaseMod/tree/master/Samples/Spells) is a more sophisticated example (the most fun one), doing a handful of things with spells or UA combat.
 * [Achievements](https://github.com/aquafir/ACE.BaseMod/tree/master/Samples/Achievements) currently just keeps a record of kills-by-id-by-player and gives a bonus every *n*th.  Eventually it'll be an example of persisting data without json.
 * [CleaveTranspiler](https://github.com/aquafir/ACE.BaseMod/tree/master/Samples/CleaveTranspiler) is an example of modifying CIL
