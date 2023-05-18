@@ -21,6 +21,8 @@ public class AngouriMathPatch : IPatchable
     #region Start/Stop
     public virtual void Start()
     {
+        throw new NotImplementedException();
+
         //If you can parse the formulas patch the corresponding category
         //var formula = Formula;
         //if (formula.TryGetFunction<double, int>(out func, Variables.TypesAndNames()))

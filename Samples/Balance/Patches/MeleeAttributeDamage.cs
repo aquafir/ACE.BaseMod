@@ -30,7 +30,6 @@
                 Mod.Harmony.PatchCategory(nameof(MeleeAttributeDamage));
             else
                 throw new Exception($"Failure parsing formula: {Formula}");
-
         }
 
         public override void Shutdown()

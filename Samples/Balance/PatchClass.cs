@@ -72,18 +72,23 @@ namespace Balance
 
             LoadSettings();
 
+            var sb = new StringBuilder("\n");
             foreach (var kvp in Settings.Formulas)
             {
                 var patch = kvp.Value;
                 try
                 {
+                    Debugger.Break();
                     if (patch.Enabled)
                         patch.Start();
+                    sb.AppendLine($"{kvp.Key} patched with:\n  {patch.Formula}");
                 }catch(Exception ex)
                 {
-                    ModManager.Log($"Failed to patch {kvp.Key}: {ex.Message}");
+                    ModManager.Log($"Failed to patch {kvp.Key}: {ex.Message}", ModManager.LogLevel.Error);
+                    sb.AppendLine($"Failed to patch {kvp.Key}:\n  {patch.Formula}");
                 }
             }
+            ModManager.Log(sb.ToString());
 
             if (Mod.State == ModState.Error)
             {

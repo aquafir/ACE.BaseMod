@@ -3,13 +3,13 @@
 public class Settings
 {
     //Patches will involve a single formula and variable definitions
-    public Dictionary<string, AngouriMathPatch> Formulas { get; set; } = new()
+    public Dictionary<PatchType, AngouriPatchSettings> Formulas { get; set; } = new()
     {
         //Hate doing it this way.  Custom property names with nameof weren't being picked up.
-        ["Grant Experience"] = new GrantExperience(),
-        ["Nether Rating"] = new NetherRating(),
-        ["Melee Attribute Damage"] = new MeleeAttributeDamage(),
-        ["Missile Attribute Damage"] = new MissileAttributeDamage(),
+        [PatchType.GrantExperience] = new (),
+        [PatchType.NetherRating] = new (),
+        [PatchType.MeleeAttributeDamage] = new (),
+        [PatchType.MissileAttributeDamage] = new (),
         //["Level Cost"] = new LevelCost(),
         //new MovementPatches(),
     };
