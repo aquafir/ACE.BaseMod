@@ -5,12 +5,12 @@
 public class MissileAttributeDamage : AngouriMathPatch
 {
     #region Fields / Props   
-    //x = skill, n = number of connections  -- Originally Math.Max(1.0f + (currentSkill - 55) * .008, 1.0f)
+    //Originally Math.Max(1.0f + (currentSkill - 55) * .008, 1.0f)
     public override string Formula { get; set; } = "P(1 if x < 55, 1+.008(x-55))";
     protected override Dictionary<string, MType> Variables { get; } = new()
     {
-        ["x"] = MType.Int,
-        ["n"] = MType.Int,
+        ["x"] = MType.Int,  // skill
+        ["n"] = MType.Int,  // # connections
     };
 
     static Func<int, int, float> func;

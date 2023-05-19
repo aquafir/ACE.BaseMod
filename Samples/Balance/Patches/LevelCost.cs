@@ -5,11 +5,10 @@
 public class LevelCost : AngouriMathPatch
 {
     #region Fields / Props   
-    //x = Xp amount, t = type, n = number of active connections
     public override string Formula { get; set; } = "1000x^(3/2)";
     protected override Dictionary<string, MType> Variables { get; } = new()
     {
-        ["x"] = MType.Long,
+        ["x"] = MType.Long, // level
     };
 
     //Function parsed from formula used in patches

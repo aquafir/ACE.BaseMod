@@ -9,9 +9,9 @@ public class GrantExperience : AngouriMathPatch
     public override string Formula { get; set; } = "P(0 if t = 0, x * 3/n)";
     protected override Dictionary<string, MType>  Variables { get; } = new()
     {
-        ["x"] = MType.Long,
-        ["t"] = MType.Int,
-        ["n"] = MType.Int,
+        ["x"] = MType.Long, // xp amount
+        ["t"] = MType.Int,  // type
+        ["n"] = MType.Int,  // # connections
     };
 
     //Function parsed from formula used in patches
