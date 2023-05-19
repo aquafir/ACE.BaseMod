@@ -1,24 +1,13 @@
-﻿using ACE.Common;
-using HarmonyLib;
-using static AngouriMath.Entity;
-
-namespace Balance.Patches;
+﻿namespace Balance.Patches;
 
 [HarmonyPatch]
 [HarmonyPatchCategory(nameof(LevelCost))]
 public class LevelCost : AngouriMathPatch
 {
     #region Fields / Props   
-    //Named property used to indicate patch and enable in settings
-    //[JsonPropertyName($"{nameof(LevelCost)} Enabled")]
-    public override bool Enabled { get; set; } = false;
-
-    //Formula and the variables used
     //x = Xp amount, t = type, n = number of active connections
-    [JsonPropertyName($"Formula")]
     public override string Formula { get; set; } = "1000x^(3/2)";
-    [JsonInclude]
-    public override Dictionary<string, MType> Variables { get; } = new()
+    protected override Dictionary<string, MType> Variables { get; } = new()
     {
         ["x"] = MType.Long,
     };
@@ -92,7 +81,7 @@ public class LevelCost : AngouriMathPatch
 
     public override void Shutdown()
     {
-        func = null;
+        //func = null;
 
         //Clear to make sure nothing but the original tables are added
         //DatManager.PortalDat.XpTable.CharacterLevelXPList.Clear();

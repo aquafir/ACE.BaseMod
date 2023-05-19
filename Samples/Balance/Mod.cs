@@ -103,7 +103,7 @@
             try
             {
                 //Patch everything in the mod with Harmony attributes
-                Harmony.PatchAll();
+                Harmony.PatchAllUncategorized();
 
                 PatchClass.Start();
             }

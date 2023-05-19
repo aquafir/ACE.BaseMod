@@ -22,6 +22,7 @@ global using System.Reflection.Metadata.Ecma335;
 global using System.Runtime.ExceptionServices;
 global using System.Runtime.Versioning;
 global using System.Text;
+global using System.Text.Encodings.Web;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
 

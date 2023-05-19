@@ -5,15 +5,9 @@
 public class NetherRating : AngouriMathPatch
 {
     #region Fields / Props   
-    //Named property used to indicate patch and enable in settings
-    //[JsonPropertyName($"{nameof(NetherRating)} Enabled")]
-    public override bool Enabled { get; set; } = true;
-
     //x = regular rating, n = number of debuffs
-    [JsonPropertyName($"Formula")]
     public override string Formula { get; set; } = "P(60 if x > 60, x)";
-    [JsonInclude]
-    public override Dictionary<string, MType> Variables { get; } = new()
+    protected override Dictionary<string, MType> Variables { get; } = new()
     {
         ["x"] = MType.Double,
         ["n"] = MType.Int,
@@ -32,11 +26,6 @@ public class NetherRating : AngouriMathPatch
         else
             throw new Exception($"Failure parsing formula: {Formula}");
 
-    }
-
-    public override void Shutdown()
-    {
-        func = null;
     }
     #endregion
 

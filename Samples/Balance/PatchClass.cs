@@ -1,122 +1,130 @@
-﻿
+﻿namespace Balance;
 
-using Balance.Patches;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-
-namespace Balance
+[HarmonyPatch]
+public class PatchClass
 {
-    [HarmonyPatch]
-    public class PatchClass
+    #region Settings
+    //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);
+    const int RETRIES = 10;
+
+    public static Settings Settings = new();
+    private static string settingsPath = Path.Combine(Mod.ModPath, "Settings.json");
+    private static FileInfo settingsInfo = new(settingsPath);
+
+    private static List<AngouriMathPatch> enabledPatches = new();
+
+    private static JsonSerializerOptions _serializeOptions = new()
     {
-        #region Settings
-        //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);
-        const int RETRIES = 10;
+        WriteIndented = true,
+        AllowTrailingCommas = true,
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    };
 
-        public static Settings Settings = new();
-        private static string settingsPath = Path.Combine(Mod.ModPath, "Settings.json");
-        private static FileInfo settingsInfo = new(settingsPath);
-
-        private static JsonSerializerOptions _serializeOptions = new()
+    private static void SaveSettings()
+    {
+        string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
+        if (!settingsInfo.RetryWrite(jsonString, RETRIES))
         {
-            WriteIndented = true,
-            AllowTrailingCommas = true,
-            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        };
+            ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
+            Mod.State = ModState.Error;
+        }
+    }
 
-        private static void SaveSettings()
+    private static void LoadSettings()
+    {
+        if (!File.Exists(settingsInfo.FullName))
         {
-            string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
-            if (!settingsInfo.RetryWrite(jsonString, RETRIES))
-            {
-                ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
-                Mod.State = ModState.Error;
-            }
+            ModManager.Log($"Creating {settingsInfo}...");
+            SaveSettings();
+        }
+        else
+            ModManager.Log($"Loading settings from {settingsPath}...");
+
+        if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
+        {
+            Mod.State = ModState.Error;
+            return;
         }
 
-        private static void LoadSettings()
+        try
         {
-            if (!File.Exists(settingsInfo.FullName))
-            {
-                ModManager.Log($"Creating {settingsInfo}...");
-                SaveSettings();
-            }
-            else
-                ModManager.Log($"Loading settings from {settingsPath}...");
+            Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
+        }
+        catch (Exception)
+        {
+            ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
+            Mod.State = ModState.Error;
+            return;
+        }
+    }
+    #endregion
 
-            if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
-            {
-                Mod.State = ModState.Error;
-                return;
-            }
+    #region Start/Shutdown
+    public static void Start()
+    {
+        //Need to decide on async use
+        Mod.State = ModState.Loading;
+
+        LoadSettings();
+
+        enabledPatches.Clear();
+        bool defaultFormulaUsed = false; 
+
+        var sb = new StringBuilder("\n");
+        foreach (var patchSettings in Settings.Formulas)
+        {
+            //Basic check for if the patch is supplying the default formula to the settings.  Settings saved if true
+            if (string.IsNullOrWhiteSpace(patchSettings.Formula)) defaultFormulaUsed = true;
+
+            var patch = patchSettings.CreatePatch();
 
             try
             {
-                Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
-            }
-            catch (Exception)
-            {
-                ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
-                Mod.State = ModState.Error;
-                return;
-            }
-        }
-        #endregion
-
-        #region Start/Shutdown
-        public static void Start()
-        {
-            //Need to decide on async use
-            Mod.State = ModState.Loading;
-
-            LoadSettings();
-
-            var sb = new StringBuilder("\n");
-            foreach (var kvp in Settings.Formulas)
-            {
-                var patch = kvp.Value;
-                try
+                if (patchSettings.Enabled)
                 {
-                    Debugger.Break();
-                    if (patch.Enabled)
-                        patch.Start();
-                    sb.AppendLine($"{kvp.Key} patched with:\n  {patch.Formula}");
-                }catch(Exception ex)
-                {
-                    ModManager.Log($"Failed to patch {kvp.Key}: {ex.Message}", ModManager.LogLevel.Error);
-                    sb.AppendLine($"Failed to patch {kvp.Key}:\n  {patch.Formula}");
+                    patch.Start();
+                    enabledPatches.Add(patch);
                 }
-            }
-            ModManager.Log(sb.ToString());
+                sb.AppendLine($"{patchSettings.Type} patched with:\n  {patch.Formula}");
 
-            if (Mod.State == ModState.Error)
+            }
+            catch (Exception ex)
             {
-                ModManager.DisableModByPath(Mod.ModPath);
-                return;
+                ModManager.Log($"Failed to patch {patchSettings.Type}: {ex.Message}", ModManager.LogLevel.Error);
+                sb.AppendLine($"Failed to patch {patchSettings.Type}:\n  {patch.Formula}");
             }
-
-            Mod.State = ModState.Running;
         }
+        ModManager.Log(sb.ToString());
 
-        public static void Shutdown()
+        if (defaultFormulaUsed)
+            SaveSettings();
+
+        if (Mod.State == ModState.Error)
         {
-            //if (Mod.State == ModState.Running)
-
-            //Shutdown/unpatch everything on settings change to support repatching by category
-            foreach (var patch in Settings.Formulas.Values)
-            {
-                if (patch.Enabled)
-                    patch.Shutdown();
-            }
-            Mod.Harmony.UnpatchAll();
-
-            if (Mod.State == ModState.Error)
-                ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
+            ModManager.DisableModByPath(Mod.ModPath);
+            return;
         }
-        #endregion
 
-        #region Patches
-        #endregion
+        Mod.State = ModState.Running;
     }
+
+    public static void Shutdown()
+    {
+        //if (Mod.State == ModState.Running)
+
+        //Shutdown/unpatch everything on settings change to support repatching by category
+        foreach (var patch in enabledPatches)
+        {
+            patch.Shutdown();
+        }
+        Mod.Harmony.UnpatchAll();
+
+        if (Mod.State == ModState.Error)
+            ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
+    }
+    #endregion
+
+    #region Patches
+    #endregion
 }

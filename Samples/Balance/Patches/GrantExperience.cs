@@ -5,16 +5,9 @@
 public class GrantExperience : AngouriMathPatch
 {
     #region Fields / Props   
-    //Named property used to indicate patch and enable in settings
-    //[JsonPropertyName($"{nameof(GrantExperience)} Enable")]
-    public override bool Enabled { get; set; } = true;
-
-    //Formula and the variables used
     //x = Xp amount, t = type, n = number of active connections
-    [JsonPropertyName($"Experience Formula")]
     public override string Formula { get; set; } = "P(0 if t = 0, x * 3/n)";
-    [JsonInclude]
-    public override  Dictionary<string, MType>  Variables { get; } = new()
+    protected override Dictionary<string, MType>  Variables { get; } = new()
     {
         ["x"] = MType.Long,
         ["t"] = MType.Int,
@@ -33,12 +26,6 @@ public class GrantExperience : AngouriMathPatch
             Mod.Harmony.PatchCategory(nameof(GrantExperience));
         else
             throw new Exception($"Failure parsing formula: {Formula}");
-
-    }
-
-    public override void Shutdown()
-    {
-        func = null;
     }
     #endregion
 

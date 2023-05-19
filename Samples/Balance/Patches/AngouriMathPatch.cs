@@ -2,14 +2,11 @@
 
 [HarmonyPatch]
 [HarmonyPatchCategory(nameof(AngouriMathPatch))]
-public class AngouriMathPatch : IPatchable
+public abstract class AngouriMathPatch : IPatchable
 {
     #region Fields / Props
-    //Named property used to indicate patch and enable in settings
-    public virtual bool Enabled { get; set; } = true;
-
     public virtual string Formula { get; set; } = "x";
-    public virtual Dictionary<string, MType> Variables { get; } = new()
+    protected virtual Dictionary<string, MType> Variables { get; } = new()
     {
         ["x"] = MType.Double
     };
@@ -39,9 +36,7 @@ public class AngouriMathPatch : IPatchable
     public virtual void Shutdown()
     {
         //Per-category patches don't exist in the same way.
-        //Assume all patches are shut down then unpatched before restarting
-        //Clean up objects
-        //func = null;
+        //Clean up objects.  If you do something like null func you'll have to check for nulls when using it in patches
     }
     #endregion
 }
