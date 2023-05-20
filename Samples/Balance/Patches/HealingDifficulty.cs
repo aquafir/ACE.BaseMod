@@ -23,6 +23,7 @@ namespace Balance.Patches
         public override void Start()
         {
             //If you can parse the formulas patch the corresponding category
+            Debugger.Break();
             if (Formula.TryGetFunction<int, float, int, int>(out func, Variables.TypesAndNames()))
                 Mod.Harmony.PatchCategory(nameof(HealingDifficulty));
             else
@@ -32,7 +33,7 @@ namespace Balance.Patches
 
         #region Patches
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(Healer), nameof(Healer.DoSkillCheck), new Type[] { typeof(Player), typeof(Player), typeof(CreatureVital), typeof(int) })]
+        [HarmonyPatch(typeof(Healer), nameof(Healer.DoSkillCheck), new Type[] { typeof(Player), typeof(Player), typeof(CreatureVital), typeof(int) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
         public static bool PreDoSkillCheck(Player healer, Player target, CreatureVital vital, int difficulty, ref Healer __instance, ref bool __result)
         {
             // skill check:

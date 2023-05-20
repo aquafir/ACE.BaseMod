@@ -86,13 +86,13 @@ public class PatchClass
                     patch.Start();
                     enabledPatches.Add(patch);
                 }
-                sb.AppendLine($"{patchSettings.Type} patched with:\n  {patch.Formula}");
+                sb.AppendLine($"{patchSettings.PatchType} patched with:\n  {patch.Formula}");
 
             }
             catch (Exception ex)
             {
-                ModManager.Log($"Failed to patch {patchSettings.Type}: {ex.Message}", ModManager.LogLevel.Error);
-                sb.AppendLine($"Failed to patch {patchSettings.Type}:\n  {patch.Formula}");
+                ModManager.Log($"Failed to patch {patchSettings.PatchType}: {ex.Message}", ModManager.LogLevel.Error);
+                sb.AppendLine($"Failed to patch {patchSettings.PatchType}:\n  {patch.Formula}");
             }
         }
         ModManager.Log(sb.ToString());
