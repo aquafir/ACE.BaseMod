@@ -23,7 +23,7 @@ public static class AngouriHelpers
     /// </summary>
     /// <param name="formula"></param>
     /// <returns></returns>
-    private static string CompileFriendly(this string formula) => formula.Replace(" if ", " provided ").Replace("P(", "piecewise(");
+    public static string CompileFriendly(this string formula) => formula.Replace(" if ", " provided ").Replace("P(", "piecewise(");
 
     /* Generated with:
 //Providing variable names
@@ -353,7 +353,6 @@ sb.ToString()
     /// Converts a serializable variable dictionary to the tuple used by AngouriMath
     /// </summary>
     public static List<(MType, Variable)> TypesAndNames(this Dictionary<string, MType> variables) => variables.Select(x => (x.Value, (Variable)x.Key)).ToList();
-
 }
 
 /// <summary>

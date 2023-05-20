@@ -1,4 +1,4 @@
-﻿namespace Balance.Patches;
+﻿namespace Balance;
 
 [HarmonyPatch]
 [HarmonyPatchCategory(nameof(AngouriMathPatch))]

@@ -1,4 +1,4 @@
-﻿namespace Balance.Patches;
+﻿namespace Balance;
 
 public interface IPatchable
 {
