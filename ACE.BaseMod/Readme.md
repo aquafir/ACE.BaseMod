@@ -1,1 +1,3 @@
-﻿*Add mod description and usage*
+﻿## $safeprojectname$
+
+*Add mod description and usage*
