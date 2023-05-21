@@ -127,7 +127,5 @@ public class PatchClass
 
     #region Patches
 
-
-
     #endregion
 }

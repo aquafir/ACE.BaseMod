@@ -23,7 +23,6 @@ namespace Balance.Patches
         public override void Start()
         {
             //If you can parse the formulas patch the corresponding category
-            Debugger.Break();
             if (Formula.TryGetFunction<int, float, int, int>(out func, Variables.TypesAndNames()))
                 Mod.Harmony.PatchCategory(nameof(HealingDifficulty));
             else
@@ -59,5 +58,6 @@ namespace Balance.Patches
         }
 
         #endregion
+
     }
 }
