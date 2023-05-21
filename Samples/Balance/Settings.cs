@@ -30,4 +30,7 @@ public class Settings
         new (nameof(PlayerTakeDamage)),
         new (nameof(PlayerTakeDamageOverTime)),
     };
+
+
+    public bool Verbose { get; set; } = false;
 }

@@ -69,7 +69,7 @@ public class PatchClass
         LoadSettings();
 
         enabledPatches.Clear();
-        bool defaultFormulaUsed = false; 
+        bool defaultFormulaUsed = false;
 
         var sb = new StringBuilder("\n");
         foreach (var patchSettings in Settings.Formulas)
@@ -95,7 +95,8 @@ public class PatchClass
                 sb.AppendLine($"Failed to patch {patchSettings.PatchType}:\n  {patch.Formula}");
             }
         }
-        ModManager.Log(sb.ToString());
+        if (Settings.Verbose)
+            ModManager.Log(sb.ToString());
 
         if (defaultFormulaUsed)
             SaveSettings();

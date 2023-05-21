@@ -3,7 +3,7 @@
 public class Settings
 {
     //Maximum connections allowed in non-exempt zones
-    public int AllowedConnections { get; set; } = 1;
+    public int MaxNonExempt { get; set; } = 1;
 
     //Number of seconds between checking
     public double Interval { get;  set; } = 10;

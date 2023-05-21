@@ -91,7 +91,6 @@ namespace ConnectionLimit
         #region Patches
         //Landblock tick approach
         static double lastCheck = 0;
-        static double interval = 10;
         [HarmonyPrefix]
         [HarmonyPatch(typeof(LandblockManager), nameof(LandblockManager.Tick), new Type[] { typeof(double) })]
         public static void PreTick(double portalYearTicks)
@@ -117,9 +116,9 @@ namespace ConnectionLimit
                     connections.Add(address, 1);
                 else connections[address]++;
 
-                if (connections[address] > Settings.AllowedConnections)
+                if (connections[address] > Settings.MaxNonExempt)
                 {
-                    player.SendMessage($"Booting due to exceeding {Settings.AllowedConnections} allowed outside of exempt areas.");
+                    player.SendMessage($"Booting due to exceeding {Settings.MaxNonExempt} allowed outside of exempt areas.");
                     player.Session.LogOffPlayer();
                 }
             }
