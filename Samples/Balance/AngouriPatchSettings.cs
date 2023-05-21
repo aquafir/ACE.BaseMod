@@ -69,33 +69,25 @@ public partial class AngouriPatchSettings
         //    PatchType.WeaponCriticalChance => new WeaponCriticalChance(),
         //    _ => throw new NotImplementedException(),
         //};
-
-        ////If the formula is missing from the settings use the default of the patch, otherwise set the patch's formula to the settings value
-        //if (string.IsNullOrWhiteSpace(Formula))
-        //    Formula = patch.Formula;
-        //else
-        //    patch.Formula = Formula;
-
-        //return patch;
     }
 }
 
-public enum PatchType
-{
-    GrantExperience,
-    LevelCost,
-    MeleeAttributeDamage,
-    MissileAttributeDamage,
-    NetherRating,
-    PlayerAccuracyMod,
-    ArmorMod,
-    MissileArmorRending,
-    MeleeArmorRending,
-    CripplingBlowImbueMod,
-    CriticalStrikeImbueMod,
-    ElementalRendingImbue,
-    MagicWeaponCriticalChance,
-    WeaponCriticalChance,
-    PlayerPowerMod,
-    HealingDifficulty,
-}
+//public enum PatchType
+//{
+//    GrantExperience,
+//    LevelCost,
+//    MeleeAttributeDamage,
+//    MissileAttributeDamage,
+//    NetherRating,
+//    PlayerAccuracyMod,
+//    ArmorMod,
+//    MissileArmorRending,
+//    MeleeArmorRending,
+//    CripplingBlowImbueMod,
+//    CriticalStrikeImbueMod,
+//    ElementalRendingImbue,
+//    MagicWeaponCriticalChance,
+//    WeaponCriticalChance,
+//    PlayerPowerMod,
+//    HealingDifficulty,
+//}
