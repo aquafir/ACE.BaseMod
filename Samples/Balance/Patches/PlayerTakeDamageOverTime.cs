@@ -5,7 +5,7 @@
     public class PlayerTakeDamageOverTime : AngouriMathPatch
     {
         #region Fields / Props   
-        public override string Formula { get; set; } = "0";//"3x*n/3";
+        public override string Formula { get; set; } = "x/3n";
         protected override Dictionary<string, MType> Variables { get; } = new()
         {
             ["x"] = MType.Float,    // Incoming DoT damage
@@ -30,7 +30,7 @@
         #region Patches
         [HarmonyPrefix]
         [HarmonyPatch(typeof(Player), nameof(Player.TakeDamageOverTime), new Type[] { typeof(float), typeof(DamageType) })]
-        public static bool PreTakeDamageOverTime(float _amount, DamageType damageType, ref Player __instance)
+        public static bool PreTakeDamageOverTime(ref float _amount, DamageType damageType, ref Player __instance)
         {
             _amount = func(_amount, __instance.ActiveConnections());
 
