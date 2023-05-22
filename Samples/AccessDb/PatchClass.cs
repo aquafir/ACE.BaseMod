@@ -1,147 +1,253 @@
 ﻿using ACE.Database.Models.Shard;
 using ACE.Database.Models.World;
+using ACE.Database;
 using ACE.Entity.Enum.Properties;
+using ACE.Server.Managers;
+using Microsoft.EntityFrameworkCore;
+using ACE.Server.WorldObjects;
 
-namespace AccessDb
+namespace AccessDb;
+
+[HarmonyPatch]
+public class PatchClass
 {
-    [HarmonyPatch]
-    public class PatchClass
+    #region Settings
+    //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);
+    const int RETRIES = 10;
+
+    public static Settings Settings = new();
+    private static string settingsPath = Path.Combine(Mod.ModPath, "Settings.json");
+    private static FileInfo settingsInfo = new(settingsPath);
+
+    private static JsonSerializerOptions _serializeOptions = new()
     {
-        #region Settings
-        //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);
-        const int RETRIES = 10;
+        WriteIndented = true,
+        AllowTrailingCommas = true,
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    };
 
-        public static Settings Settings = new();
-        private static string settingsPath = Path.Combine(Mod.ModPath, "Settings.json");
-        private static FileInfo settingsInfo = new(settingsPath);
+    private static void SaveSettings()
+    {
+        string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
 
-        private static JsonSerializerOptions _serializeOptions = new()
+        if (!settingsInfo.RetryWrite(jsonString, RETRIES))
         {
-            WriteIndented = true,
-            AllowTrailingCommas = true,
-            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+            ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
+            Mod.State = ModState.Error;
+        }
+    }
 
-        };
-
-        private static void SaveSettings()
+    private static void LoadSettings()
+    {
+        if (!settingsInfo.Exists)
         {
-            string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
+            ModManager.Log($"Creating {settingsInfo}...");
+            SaveSettings();
+        }
+        else
+            ModManager.Log($"Loading settings from {settingsPath}...");
 
-            if (!settingsInfo.RetryWrite(jsonString, RETRIES))
-            {
-                ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
-                Mod.State = ModState.Error;
-            }
+        if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
+        {
+            Mod.State = ModState.Error;
+            return;
         }
 
-        private static void LoadSettings()
+        try
         {
-            if (!settingsInfo.Exists)
-            {
-                ModManager.Log($"Creating {settingsInfo}...");
-                SaveSettings();
-            }
-            else
-                ModManager.Log($"Loading settings from {settingsPath}...");
-
-            if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
-            {
-                Mod.State = ModState.Error;
-                return;
-            }
-
-            try
-            {
-                Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
-            }
-            catch (Exception)
-            {
-                ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
-                Mod.State = ModState.Error;
-                return;
-            }
+            Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
         }
-        #endregion
-
-        #region Start/Shutdown
-        public static void Start()
+        catch (Exception)
         {
-            //Need to decide on async use
-            Mod.State = ModState.Loading;
-            LoadSettings();
+            ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
+            Mod.State = ModState.Error;
+            return;
+        }
+    }
+    #endregion
 
-            if (Mod.State == ModState.Error)
-            {
-                ModManager.DisableModByPath(Mod.ModPath);
-                return;
-            }
+    #region Start/Shutdown
+    public static void Start()
+    {
+        //Need to decide on async use
+        Mod.State = ModState.Loading;
+        LoadSettings();
 
-            Mod.State = ModState.Running;
+        if (Mod.State == ModState.Error)
+        {
+            ModManager.DisableModByPath(Mod.ModPath);
+            return;
         }
 
-        public static void Shutdown()
-        {
-            //if (Mod.State == ModState.Running)
-            // Shut down enabled mod...
+        Mod.State = ModState.Running;
+    }
 
-            if (Mod.State == ModState.Error)
-                ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
+    public static void Shutdown()
+    {
+        //if (Mod.State == ModState.Running)
+        // Shut down enabled mod...
+
+        if (Mod.State == ModState.Error)
+            ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
+    }
+    #endregion
+
+    #region Commands
+    [CommandHandler("ctypes", AccessLevel.Admin, CommandHandlerFlag.None, -1)]
+    public static void HandleCTypes(Session session, params string[] parameters)
+    {
+        DisplayCreatureTypes();
+    }
+
+    [CommandHandler("lcount", AccessLevel.Admin, CommandHandlerFlag.None, -1)]
+    public static void HandleLCount(Session session, params string[] parameters)
+    {
+        DisplayLoginCount();
+    }
+
+    [CommandHandler("plocs", AccessLevel.Admin, CommandHandlerFlag.None, -1)]
+    public static void HandlePLocs(Session session, params string[] parameters)
+    {
+        DisplayPlayerLocations(PositionType.Location, PositionType.Sanctuary);
+    }
+
+    [CommandHandler("moveall", AccessLevel.Admin, CommandHandlerFlag.ConsoleInvoke, 2, "Moves everyone to a location")]
+    public static void HandleMoveAll(Session session, params string[] parameters)
+    {
+        //There's a few ways of getting the position you want:
+        //POI approach
+        var teleportPOI = DatabaseManager.World.GetCachedPointOfInterest("holtburg");
+        if (teleportPOI == null)
+            return;
+        var weenie = DatabaseManager.World.GetCachedWeenie(teleportPOI.WeenieClassId);
+        var portalDest = new ACE.Entity.Position(weenie.GetPosition(PositionType.Destination));
+        WorldObject.AdjustDungeon(portalDest);
+
+        //Negatives for switching between ns/ew, or you can construct with /loc data
+        //var holt = new ACE.Entity.Position(42.1f, 33.6f);
+
+        //Similar but no guessing with negatives and checks for errors
+        if (!CommandParameterHelpers.TryParsePosition(parameters, out var error, out var position))
+        {
+            ModManager.Log($"Error parsing position: {error}", ModManager.LogLevel.Error);
+            return;
         }
-        #endregion
-        [CommandHandler("do", AccessLevel.Admin, CommandHandlerFlag.None, -1)]
-        public static void Do(Session session, params string[] parameters)
-        {
 
-            //DoShardStuff();
-            //DoWorldStuff();
+        MoveAllPlayers(position);
+    }
+    #endregion
+
+    /// <summary>
+    /// Moves all online and offline players to a Position
+    /// </summary>
+    private static void MoveAllPlayers(Position position)
+    {
+        foreach (var p in PlayerManager.GetAllOnline())
+        {
+            p.SendMessage($"You have been forcibly relocated to {position}.");
+            p.Teleport(position);
         }
 
-        private static void DoWorldStuff()
+        foreach (var p in PlayerManager.GetAllOffline())
         {
-            using (var ctx = new WorldDbContext())
+            //Only move regular players / restrict based on access level.  
+            if (p.Account == null || p.Account.AccessLevel >= (uint)AccessLevel.Sentinel)
+                continue;
+
+            //Set Location position for a player to holt and save
+            p.Biota.SetPosition(PositionType.Location, position, p.BiotaDatabaseLock);
+            p.SaveBiotaToDatabase();
+        }
+
+        return;
+    }
+
+    /// <summary>
+    /// Displays offline player locations
+    /// </summary>
+    /// <param name="locationTypes">Location types to print, defaulting to all</param>
+    private static void DisplayPlayerLocations(params PositionType[] locationTypes)
+    {
+        if (locationTypes is null || locationTypes.Length == 0)
+            locationTypes = Enum.GetValues<PositionType>();
+
+        var sb = new StringBuilder("\r\n");
+        foreach (var accounts in PlayerManager.GetAllOffline().OrderBy(x => x.Account.AccountId).GroupBy(g => g.Account.AccountName))
+        {
+            sb.AppendLine($"{accounts.Key}");
+            foreach (var player in accounts)
             {
-                // Group creatures by type
-                var query = from creature in ctx.Weenie
-                            where creature.Type == (int)(WeenieType.Creature)
-                            join cType in ctx.WeeniePropertiesInt on creature.ClassId equals cType.ObjectId
-                            where cType.Type == (ushort)(PropertyInt.CreatureType)
-                            select new
-                            {
-                                Name = creature.ClassName,
-                                Id = creature.ClassId,
-                                Type = cType.Value,
-                            };
-
-                var sb = new StringBuilder($"\n\n{"Name",-40}{"Type",-15}{"Type #",-10}\n");
-                foreach (var group in query.ToList().GroupBy(x => x.Type).OrderBy(x => x.Count()))
-                    sb.AppendLine($"{(CreatureType)group.Key,-40}{group.Key,-15}{group.Count(),-10}");
-
-                ModManager.Log(sb.ToString());
-            }
-        }
-
-        private static void DoShardStuff()
-        {
-            using (var context = new ShardDbContext())
-            {
-                var actNum = 1;
-                var sb = new StringBuilder($"\nAccount {actNum}:\n");
-                foreach (var character in context.Character.Where(c => c.AccountId == actNum).Select(s => new { s.Name, s.Id, s.TotalLogins }))
+                //Get location position/other positions for player if you need it.  Not needed to move but using it to print position info
+                sb.AppendLine($"  {player.Name} ({player.Account.AccountId})");
+                foreach (var pt in locationTypes)
                 {
-                    sb.AppendLine($"  {character.Name} - {character.Id} - {character.TotalLogins}");
-                }
+                    if (!player.Biota.PropertiesPosition.TryGetValue(PositionType.Location, out var pos))
+                        continue;
 
-                ModManager.Log(sb.ToString());
+                    sb.AppendLine($"    {pt,-20}{pos.ObjCellId:X} - {pos.PositionX},{pos.PositionY},{pos.PositionZ}");
+                }
             }
         }
 
-        #region Patches
-        //[HarmonyPrefix]
-        //[HarmonyPatch(typeof(Creature), nameof(Creature.GetDeathMessage), new Type[] { typeof(DamageHistoryInfo), typeof(DamageType), typeof(bool) })]
-        //public static void PreDeathMessage(DamageHistoryInfo lastDamagerInfo, DamageType damageType, bool criticalHit, ref Creature __instance)
-        //{
-        //  ...
-        //}
-        #endregion
+        //Print out locations
+        ModManager.Log($"{sb}");
+
+    }
+
+    /// <summary>
+    /// Displays creature types and the number of types of creatures belonging to that type
+    /// </summary>
+    private static void DisplayCreatureTypes()
+    {
+        using (var ctx = new WorldDbContext())
+        {
+            // Group creatures by type
+            var query = from creature in ctx.Weenie
+                        where creature.Type == (int)(WeenieType.Creature)
+                        join cType in ctx.WeeniePropertiesInt on creature.ClassId equals cType.ObjectId
+                        where cType.Type == (ushort)(PropertyInt.CreatureType)
+                        select new
+                        {
+                            Name = creature.ClassName,
+                            Id = creature.ClassId,
+                            Type = cType.Value,
+                        };
+
+            var sb = new StringBuilder($"\n\n{"Name",-40}{"Type",-15}{"Type #",-10}\n");
+            foreach (var group in query.ToList().GroupBy(x => x.Type).OrderBy(x => x.Count()))
+                sb.AppendLine($"{(CreatureType)group.Key,-40}{group.Key,-15}{group.Count(),-10}");
+
+            ModManager.Log(sb.ToString());
+        }
+    }
+
+    //For header spacing
+    const int nSpace = 25; const int iSpace = 20; const int lSpace = 10;
+    /// <summary>
+    /// Uses EF to display the number of logins for each player
+    /// </summary>
+    private static void DisplayLoginCount()
+    {
+        using (var ctx = new ShardDbContext())
+        {
+
+            var sb = new StringBuilder($"\r\n{"Name",nSpace}{"ID",iSpace}{"Logins",lSpace}");
+
+            var query = ctx.Character.ToList()
+                .Select(s => new { s.AccountId, s.Name, s.Id, s.TotalLogins })
+                .ToList();
+
+            foreach (var result in query.GroupBy(x => x.AccountId))
+            {
+                sb.AppendLine($"\r\nAccount {result.Key}:");
+                foreach (var character in result)
+                {
+                    sb.AppendLine($"  {character.Name,nSpace - 2}{character.Id,iSpace}{character.TotalLogins,lSpace}");
+                }
+            }
+
+            ModManager.Log(sb.ToString());
+        }
     }
 }

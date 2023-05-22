@@ -1,7 +1,6 @@
-﻿namespace AccessDb
+﻿namespace AccessDb;
+
+public class Settings
 {
-    public class Settings
-    {
-        // Your settings here
-    }
+    // Your settings here
 }

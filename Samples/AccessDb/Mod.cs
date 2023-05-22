@@ -2,6 +2,7 @@
 {
     public class Mod : IHarmonyMod
     {
+        #region Members
         //If Harmony is set to debug it creates a log on Desktop
         public const bool DEBUGGING = false;
         //Point to your mod directory
@@ -17,9 +18,10 @@
         //Reload on changes in Settings.json
         private FileSystemWatcher _settingsWatcher;
         private DateTime _lastChange = DateTime.Now;
-        private readonly TimeSpan _reloadInterval = TimeSpan.FromSeconds(1);
+        private readonly TimeSpan _reloadInterval = TimeSpan.FromSeconds(3);
 
         public static ModState State = ModState.None;
+        #endregion
 
         #region Initialize / Dispose (called by ACE)
         public void Initialize()
@@ -103,7 +105,7 @@
             try
             {
                 //Patch everything in the mod with Harmony attributes
-                Harmony.PatchAll();
+                Harmony.PatchAllUncategorized();
 
                 PatchClass.Start();
             }
