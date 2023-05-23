@@ -1,85 +1,27 @@
-﻿using ACE.Server.Managers;
-using AngouriMath.Core.Compilation.IntoLinq;
-using AngouriMath.Extensions;
-using System.ComponentModel;
-using static AngouriMath.Entity;
-using static AngouriMath.Entity.Number;
+#!meta
 
-namespace Balance;
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"languageName":"csharp","name":"csharp"}]}}
 
-public static class NetworkHelpers
-{    
-    //Todo: Replace with future change in PlayerManager.GetAccountPlayers(uint accountId):
-    //https://github.com/ACEmulator/ACE/pull/3966/commits/21452aa104c5626a44eb9adf0cb06d8a6fe62b5e#diff-f2109a463411c50402627d6e21e48b693db349b7b986ef9d6f5ddee66a263dc0R230
-    public static int ActiveConnections(this Player player) => PlayerManager.GetAccountPlayers(player.Account.AccountId).Count;
-        // NetworkManager.GetSessionEndpointTotalByAddressCount(player.Session.EndPoint.Address);
-    //public static int ActiveConnections(Player player) => NetworkManager.GetSessionEndpointTotalByAddressCount(player.Session.EndPoint.Address);
-}
+#!markdown
 
+Add the AngouriMath package and reference it.
 
-public static class AngouriHelpers
-{
-    /// <summary>
-    /// Terrrrrible way of shortening formulas by replacing "piecewise" with "P" and "provided" with "if"
-    /// </summary>
-    /// <param name="formula"></param>
-    /// <returns></returns>
+#!csharp
+
+#r "nuget:AngouriMath, *-*"
+using AngouriMath; using AngouriMath.Extensions; using static AngouriMath.MathS; using static AngouriMath.Entity; using System; using static System.Console;
+using AngouriMath.Core.Compilation; using AngouriMath.Core; using AngouriMath.Core.Compilation.IntoLinq;  using static AngouriMath.Entity.Number;
+//Decided not to use MathNet
+//#r "nuget: MathNet.Symbolics, 0.24.0"
+//using Complex = System.Numerics.Complex; using MathNet.Symbolics; using Expr = MathNet.Symbolics.SymbolicExpression; using MathNet.Numerics; using MathNet.Numerics.Interpolation;
+
+#!markdown
+
+Add in the helpers used in the `Balance` mod.
+
+#!csharp
+
     public static string CompileFriendly(this string formula) => formula.Replace(" if ", " provided ").Replace("P(", "piecewise(");
-
-    /* Generated with:
-//Providing variable names
-    var t = $$"""
-    public static bool TryGetFunction<T1, TResult>(this string formula, out Func<T1, TResult> func, params string[] names)
-    {
-        func = null;
-
-        if (names.Length != 1)
-            return false;
-
-        try
-        {
-            func = formula.CompileFriendly().Compile<T1, TResult>(names[0]);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            return false;
-        }
-    }
-""";
-//With type/Name IEnumerable
-t = $$"""
-    public static bool TryGetFunction<T1, TResult>(this string formula, out Func<T1, TResult> func, List<(Type, Variable)> typesAndNames)
-    {
-        try
-        {
-            func = formula.Compile<Func<T1, TResult>>(new CompilationProtocol(), typeof(TResult), typesAndNames);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            func = null;
-            return false;
-        }
-    }
-""";
-//Enum of Angouri-supported types
-t = $$"""
-    public static bool TryGetFunction<T1, TResult>(this string formula, out Func<T1, TResult> func, List<(MType, Variable)> typesAndNames) =>
-        formula.TryGetFunction<T1, TResult>(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
-""";
-
-var sb = new StringBuilder();
-for(var i = 1; i < 9; i++) {
-    sb.AppendLine(t);
-    t = Regex.Replace(t, "T" + i, $"T{i}, T{i+1}");
-    t = Regex.Replace(t, "!= " + i, "!= " + (i+1));
-    t = Regex.Replace(t, @$"names\[{i-1}\]", $"names[{i-1}], names[{i}]");
-}
-
-sb.ToString()
-    */
-    //Variable names in parameters
     private static bool TryGetFunction<T1, TResult>(this string formula, out Func<T1, TResult> func, params string[] names)
     {
         func = null;
@@ -354,8 +296,6 @@ sb.ToString()
     /// Converts a serializable variable dictionary to the tuple used by AngouriMath
     /// </summary>
     public static List<(MType, Variable)> TypesAndNames(this Dictionary<string, MType> variables) => variables.Select(x => (x.Value, (Variable)x.Key)).ToList();
-}
-
 /// <summary>
 /// Types with built-in AngouriMath support
 /// </summary>
@@ -369,3 +309,178 @@ public enum MType
     Complex,
     BigInt
 };
+
+#!markdown
+
+Not all of the capabilities of [AngouriMath]](https://am.angouri.org/docs/namespaces.html) are supported through their string compilation, but a decent amount do and the syntax is reasonably intuitive.
+* Some constants or functions exist: 
+  
+  `sin(pi)`
+* Piecewise functions let you do some logic:
+  
+  `P(10 if x>10, 0 if x<10, x)` would clamp a value to 0-10
+* Capabilities exist for solving equations
+* You can display simplified/solved/LaTeX versions of formulas:
+  
+  `(MathString)@"H← 60 + \frac{30(B−R)}{Vmax−Vmin}  , if Vmax = G"`
+
+* You can also display HTML/CSS, use SQL/JS/etc. in polyglot notebooks.
+  * HTML("<b style=\"color:blue\">Hello!</b>")
+  * Javascript(@"alert(""Hello!"");")
+  * CSS "h2 { color: darkslategrey; }"
+
+#!csharp
+
+//Formula and variables for armor rating
+var formula ="P(200/3 / (x + 200/3) if x > 0, (1-x)/(200/3x) if x < 0, 1)";
+//Hack-approach to convert some of the uglier syntax (e.g., "piecewise" and "provided" --> "P" and "if")
+formula = formula.CompileFriendly();
+var variables = new Dictionary<string, MType>()
+{
+    ["x"] = MType.Float,    // armor level
+                            // Converts AL from an additive linear value to a scaled damage multiplier
+};
+//Variables/Types are converted to List<(MType, Variable)> used by Angouri
+var typesAndNames = variables.TypesAndNames();
+
+//You can compile other ways:
+//formula.CompileFriendly().Compile<float, float>("x");
+
+//Helpers exist to make the standard use easier
+ if(!formula.TryGetFunction<float, float>(out var func, typesAndNames))  {
+    display("Comilation problem");
+    return;
+ }
+
+//Use the function
+display($"0AL {func(0)}\n500 AL {func(500)}\n-100 AL {func(-100)}");
+
+//Simplify and display the formula
+var simplified = formula.Simplify().Stringize();
+display(simplified);
+//Or in LaTeX 
+(MathString)formula.Simplify().Latexise()
+
+#!markdown
+
+If string compilation doesn't support the [Angouri feature](https://am.angouri.org/wiki/) you're interested in, you can do it in code.
+
+There is support for linear algebra, calculus, and other goodness as well.
+
+#!csharp
+
+WriteLine("2 + 3 is " + "2 + 3".EvalNumerical().Stringize());
+WriteLine("x + 3 + 4 + x + 2x + 23 + a".Simplify().Stringize());
+//Build an expression
+var x = Var("x");
+var expr = Sin(x) + Sqrt(x) + Integral(Sin(Sin(x)), x);
+WriteLine(expr.Stringize());
+// Solve a simple equation
+WriteLine("x2 = 3".Solve("x").Stringize());
+// Solve a complicated statement
+WriteLine("(x - 2)(x - 3) = 0 and (x - 1)(x - 2) = 0".Solve("x").InnerSimplified.Stringize());
+WriteLine("sin(a x)2 + c sin(2 a x) = c".Solve("x"));
+
+#!markdown
+
+The variations of the Angouri helpers are generated with the templates below.
+
+#!csharp
+
+    using System.Text.RegularExpressions;
+    //Providing variable names
+    var t = $$"""
+    public static bool TryGetFunction<T1, TResult>(this string formula, out Func<T1, TResult> func, params string[] names)
+    {
+        func = null;
+
+        if (names.Length != 1)
+            return false;
+
+        try
+        {
+            func = formula.CompileFriendly().Compile<T1, TResult>(names[0]);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
+    }
+""";
+//With type/Name IEnumerable
+t = $$"""
+    public static bool TryGetFunction<T1, TResult>(this string formula, out Func<T1, TResult> func, List<(Type, Variable)> typesAndNames)
+    {
+        try
+        {
+            func = formula.Compile<Func<T1, TResult>>(new CompilationProtocol(), typeof(TResult), typesAndNames);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            func = null;
+            return false;
+        }
+    }
+""";
+//Enum of Angouri-supported types
+t = $$"""
+    public static bool TryGetFunction<T1, TResult>(this string formula, out Func<T1, TResult> func, List<(MType, Variable)> typesAndNames) =>
+        formula.TryGetFunction<T1, TResult>(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
+""";
+
+var sb = new StringBuilder();
+for(var i = 1; i < 9; i++) {
+    sb.AppendLine(t);
+    t = Regex.Replace(t, "T" + i, $"T{i}, T{i+1}");
+    t = Regex.Replace(t, "!= " + i, "!= " + (i+1));
+    t = Regex.Replace(t, @$"names\[{i-1}\]", $"names[{i-1}], names[{i}]");
+}
+
+sb.ToString()
+
+#!csharp
+
+using System.Text.RegularExpressions;
+
+public enum TemplateName
+{
+    Annotations,            //Single-line/split annotations as determined by options
+    AnnotatedPatchType,     //[HarmonyPrefix]
+    HarmonyMethodName,      //nameof(TypeName.MyMethod) or "MyMethod"
+    HarmonyParamSignature,  //new Type[] { ... }
+    ManualPatchType,        //Variable used in Harmony.Patch: prefix|postfix
+    MethodDeclarationName,  //Method name generated for harmony: patchType + patchTarget + methodName
+    MethodName,             //MyMethod
+    MethodSignature,        //Method signature with injections: string foo, ref Bar __instance
+    PatchTarget,            //Ctor|Get|Set|<empty>
+    PatchType,              //Prefix|Postfix
+    ReturnType,             //void|bool
+    TypeName,               //TypeName.MyMethod
+}
+
+    private static readonly Dictionary<TemplateName, string> templateDefaults = new()
+    {
+        [TemplateName.Annotations] = "[HarmonyPatch(typeof(TypeName), nameof(TypeName.MyMethod), MethodType.Getter), new Type[] { typeof(string) }]",
+        [TemplateName.AnnotatedPatchType] = "[HarmonyPrefix]",
+        [TemplateName.HarmonyMethodName] = "nameof(TypeName.MyMethod)",
+        [TemplateName.HarmonyParamSignature] = "new Type[] { typeof(string) }",
+        [TemplateName.ManualPatchType] = "prefix",
+        [TemplateName.MethodDeclarationName] = "PrefixGetMyMethod",
+        [TemplateName.MethodName] = "MyMethod",
+        [TemplateName.MethodSignature] = "string foo, ref Bar __instance, ref bool __result",
+        [TemplateName.PatchTarget] = "Get",
+        [TemplateName.PatchType] = "Prefix",
+        [TemplateName.ReturnType] = "bool",
+        [TemplateName.TypeName] = "TypeName",
+    };
+    public static string Substitute(this string template, Dictionary<TemplateName, string> substitutions)
+    {
+        foreach (var s in substitutions)
+        {
+            template = Regex.Replace(template, $@"${s.Key.ToString()}", s.Value, RegexOptions.IgnoreCase);
+        }
+
+        return template;
+    }

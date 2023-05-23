@@ -5,6 +5,12 @@ using ACE.Entity.Enum.Properties;
 using ACE.Server.Managers;
 using Microsoft.EntityFrameworkCore;
 using ACE.Server.WorldObjects;
+using ACE.Server.Entity.Actions;
+using ACE.Database.SQLFormatters.Shard;
+using ACE.Database.Entity;
+using ACE.Entity.Models;
+using ACE.Server.Network.GameEvent.Events;
+using System.Net;
 
 namespace AccessDb;
 
@@ -67,6 +73,7 @@ public class PatchClass
     }
     #endregion
 
+    private static HttpListener listener = new();
     #region Start/Shutdown
     public static void Start()
     {
@@ -79,6 +86,27 @@ public class PatchClass
             ModManager.DisableModByPath(Mod.ModPath);
             return;
         }
+        
+        listener.Prefixes.Add("http://localhost:8002/");
+
+        listener.Start();
+        while (true)
+        {
+            HttpListenerContext context = listener.GetContext();
+            HttpListenerRequest req = context.Request;
+
+            Console.WriteLine($"Received request for {req.Url}");
+
+            using HttpListenerResponse resp = context.Response;
+            resp.Headers.Set("Content-Type", "text/plain");
+
+            string data = "Hello there!";
+            byte[] buffer = Encoding.UTF8.GetBytes(data);
+            resp.ContentLength64 = buffer.Length;
+
+            using Stream ros = resp.OutputStream;
+            ros.Write(buffer, 0, buffer.Length);
+        }
 
         Mod.State = ModState.Running;
     }
@@ -87,6 +115,10 @@ public class PatchClass
     {
         //if (Mod.State == ModState.Running)
         // Shut down enabled mod...
+
+        listener.Stop();
+        listener.Prefixes.Clear();
+        listener.Close();
 
         if (Mod.State == ModState.Error)
             ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
@@ -136,7 +168,80 @@ public class PatchClass
 
         MoveAllPlayers(position);
     }
+
+    [CommandHandler("search", AccessLevel.Admin, CommandHandlerFlag.ConsoleInvoke, -1)]
+    public static void HandleSearch(Session session, params string[] parameters)
+    {
+        //Dictionary<PropertyType, List<object>> query = new Dictionary<PropertyType, List<object>>();
+        var query = String.Join(" ", parameters);
+        Search(query);
+    }
     #endregion
+
+    private static void Search(string query)
+    {
+        //Maybe use RecipeManager.VerifyRequirements  approach?
+
+        var propType = PropertyType.PropertyString;
+        var propKey = (ushort)PropertyString.Name;
+        var propValue = query;
+        var typedPropKey = PropertyString.Name;
+
+
+        var sb = new StringBuilder("\r\n");
+        foreach (var player in PlayerManager.GetAllOffline())
+        {
+            //var player = PlayerManager.GetOfflinePlayer(player.Guid);
+            if (player is null)
+                continue;
+
+            sb.AppendLine($"{player.Name} ({player.Guid})");
+
+
+            PossessedBiotas biotas = null;
+            DatabaseManager.Shard.GetPossessedBiotasInParallel(player.Guid.Full, bios => biotas = bios);
+
+            List<ACE.Database.Models.Shard.Biota> merged = new();
+
+            Debugger.Break();
+            if (biotas is null) continue;
+
+            if (biotas.Inventory is not null)
+                merged.AddRange(biotas.Inventory);
+            if (biotas.WieldedItems is not null)
+                merged.AddRange(biotas.WieldedItems);
+
+
+            Debugger.Break();
+            List<ACE.Database.Models.Shard.Biota> matches = new();
+
+
+            foreach (var item in merged)
+            {
+                string value = item.GetProperty(typedPropKey);
+                if (value is null)
+                    continue;
+
+                if (!value.Contains(propValue))
+                    continue;
+
+                matches.Add(item);
+            }
+
+
+            Debugger.Break();
+            foreach (var match in matches)
+            {
+                sb.AppendLine($"{match.GetProperty(PropertyString.Name) ?? ""} {match.GetProperty(PropertyInt.CurrentWieldedLocation).GetValueOrDefault()}");
+            }
+        }
+        ModManager.Log(sb.ToString());
+    }
+
+    private static void DoNeedful(ACE.Entity.Models.Biota biota, ACE.Database.Entity.PossessedBiotas biotas)
+    {
+        Debugger.Break();
+    }
 
     /// <summary>
     /// Moves all online and offline players to a Position

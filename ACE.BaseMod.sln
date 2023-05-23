@@ -44,6 +44,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chatter", "Samples\Chatter\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessDb", "Samples\AccessDb\AccessDb.csproj", "{06445B7F-2DF7-4AC9-B7AE-C71E5B23CE1D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Scratchpad", "_Scratchpad\_Scratchpad\_Scratchpad.csproj", "{9F7534B9-7EF7-44C8-8E07-D4AB7CD2F23A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +108,10 @@ Global
 		{06445B7F-2DF7-4AC9-B7AE-C71E5B23CE1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06445B7F-2DF7-4AC9-B7AE-C71E5B23CE1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06445B7F-2DF7-4AC9-B7AE-C71E5B23CE1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F7534B9-7EF7-44C8-8E07-D4AB7CD2F23A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F7534B9-7EF7-44C8-8E07-D4AB7CD2F23A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F7534B9-7EF7-44C8-8E07-D4AB7CD2F23A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F7534B9-7EF7-44C8-8E07-D4AB7CD2F23A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +131,7 @@ Global
 		{CF9EFFCD-4A22-48AE-9C76-EE859610830C} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
 		{A74A81B8-7168-42EB-B04B-7CFAD5A6D52B} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
 		{06445B7F-2DF7-4AC9-B7AE-C71E5B23CE1D} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
+		{9F7534B9-7EF7-44C8-8E07-D4AB7CD2F23A} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78F97B66-6E9E-4329-A0FE-1E02A2C50967}

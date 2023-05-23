@@ -5,8 +5,6 @@ global using ACE.Server.Command;
 global using ACE.Server.Entity;
 global using ACE.Server.Mods;
 global using ACE.Server.Network;
-global using ACE.Server.Network.GameEvent;
-global using ACE.Server.Network.GameEvent.Events;
 global using ACE.Server.WorldObjects;
 global using ACE.Server.WorldObjects.Entity;
 
