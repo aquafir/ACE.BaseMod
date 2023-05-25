@@ -26,8 +26,6 @@
 	<ItemGroup>
 		<PackageReference Include="AngouriMath" Version="1.4.0-preview.3" />
 		<PackageReference Include="Lib.Harmony" Version="2.3.0-alpha.5" />
-		<PackageReference Include="MathNet.Numerics" Version="5.0.0" />
-		<PackageReference Include="MathNet.Symbolics" Version="0.24.0" />
 	</ItemGroup>
 
 	<ItemGroup>

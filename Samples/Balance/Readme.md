@@ -47,7 +47,7 @@ This uses [AngouriMath](https://am.angouri.org/docs/AngouriMath/MathS.html) to r
   * x = level
 * MaxLevel
   * No formula, but if desired there could be a per-Player max level
-* [Math.Net Symbolics](https://github.com/mathnet/mathnet-symbolics) was used to extrapolate costs based on existing ones if a formula isn't provided. 
+* ~~[Math.Net Symbolics](https://github.com/mathnet/mathnet-symbolics) was used to extrapolate costs based on existing ones if a formula isn't provided.~~
 
 
 

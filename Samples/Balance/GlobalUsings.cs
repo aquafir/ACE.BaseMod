@@ -30,9 +30,9 @@ global using AngouriMath;
 global using AngouriMath.Extensions;
 global using static AngouriMath.Entity;
 
-global using MathNet.Symbolics;
-global using MathNet.Numerics;
-global using MathNet.Numerics.Interpolation;
+//global using MathNet.Symbolics;
+//global using MathNet.Numerics;
+//global using MathNet.Numerics.Interpolation;
 
 global using Balance;
 global using Balance.Patches;

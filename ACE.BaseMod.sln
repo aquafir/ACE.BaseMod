@@ -31,20 +31,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Raise", "Samples\Raise\Rais
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayerSave", "Samples\PlayerSave\PlayerSave.csproj", "{F15920DD-D448-4BA9-8110-1C3E6AA12CE7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayerSaveTests", "Samples\PlayerSaveTests\PlayerSaveTests.csproj", "{8A19F1E0-755B-4D10-B217-A795EF62865E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EED4AFCF-6AC5-40E4-BC4E-F682C8C4048F}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectionLimit", "Samples\ConnectionLimit\ConnectionLimit.csproj", "{CF9EFFCD-4A22-48AE-9C76-EE859610830C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConnectionLimit", "Samples\ConnectionLimit\ConnectionLimit.csproj", "{CF9EFFCD-4A22-48AE-9C76-EE859610830C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chatter", "Samples\Chatter\Chatter.csproj", "{A74A81B8-7168-42EB-B04B-7CFAD5A6D52B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chatter", "Samples\Chatter\Chatter.csproj", "{A74A81B8-7168-42EB-B04B-7CFAD5A6D52B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessDb", "Samples\AccessDb\AccessDb.csproj", "{06445B7F-2DF7-4AC9-B7AE-C71E5B23CE1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccessDb", "Samples\AccessDb\AccessDb.csproj", "{06445B7F-2DF7-4AC9-B7AE-C71E5B23CE1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_Scratchpad", "_Scratchpad\_Scratchpad\_Scratchpad.csproj", "{9F7534B9-7EF7-44C8-8E07-D4AB7CD2F23A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Scratchpad", "_Scratchpad\_Scratchpad\_Scratchpad.csproj", "{9F7534B9-7EF7-44C8-8E07-D4AB7CD2F23A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -92,10 +90,6 @@ Global
 		{F15920DD-D448-4BA9-8110-1C3E6AA12CE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F15920DD-D448-4BA9-8110-1C3E6AA12CE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F15920DD-D448-4BA9-8110-1C3E6AA12CE7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8A19F1E0-755B-4D10-B217-A795EF62865E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A19F1E0-755B-4D10-B217-A795EF62865E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A19F1E0-755B-4D10-B217-A795EF62865E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A19F1E0-755B-4D10-B217-A795EF62865E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF9EFFCD-4A22-48AE-9C76-EE859610830C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF9EFFCD-4A22-48AE-9C76-EE859610830C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF9EFFCD-4A22-48AE-9C76-EE859610830C}.Release|Any CPU.ActiveCfg = Release|Any CPU
