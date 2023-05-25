@@ -17,7 +17,7 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Discord.Net" Version="3.8.1" />
-	  <PackageReference Include="Lib.Harmony" Version="2.2.2" />
+	  <PackageReference Include="Lib.Harmony" Version="2.3.0-alpha.5" />
 	</ItemGroup>
 
 	<ItemGroup>

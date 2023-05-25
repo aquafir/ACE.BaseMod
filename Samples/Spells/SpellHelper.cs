@@ -1,13 +1,7 @@
 ﻿//using ACE.Adapter.GDLE.Models;
-using ACE.Server.WorldObjects;
-using ACE.Server.Entity;
 using System.Runtime.Serialization.Formatters.Binary;
 using ACE.DatLoader.Entity;
-using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
 using ACE.Common.Extensions;
 
 namespace Spells;
