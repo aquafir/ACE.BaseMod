@@ -73,7 +73,6 @@ public class PatchClass
     }
     #endregion
 
-    private static HttpListener listener = new();
     #region Start/Shutdown
     public static void Start()
     {
@@ -87,27 +86,6 @@ public class PatchClass
             return;
         }
         
-        listener.Prefixes.Add("http://localhost:8002/");
-
-        listener.Start();
-        while (true)
-        {
-            HttpListenerContext context = listener.GetContext();
-            HttpListenerRequest req = context.Request;
-
-            Console.WriteLine($"Received request for {req.Url}");
-
-            using HttpListenerResponse resp = context.Response;
-            resp.Headers.Set("Content-Type", "text/plain");
-
-            string data = "Hello there!";
-            byte[] buffer = Encoding.UTF8.GetBytes(data);
-            resp.ContentLength64 = buffer.Length;
-
-            using Stream ros = resp.OutputStream;
-            ros.Write(buffer, 0, buffer.Length);
-        }
-
         Mod.State = ModState.Running;
     }
 
@@ -115,10 +93,6 @@ public class PatchClass
     {
         //if (Mod.State == ModState.Running)
         // Shut down enabled mod...
-
-        listener.Stop();
-        listener.Prefixes.Clear();
-        listener.Close();
 
         if (Mod.State == ModState.Error)
             ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
@@ -178,6 +152,7 @@ public class PatchClass
     }
     #endregion
 
+    #region Logic
     private static void Search(string query)
     {
         //Maybe use RecipeManager.VerifyRequirements  approach?
@@ -236,11 +211,6 @@ public class PatchClass
             }
         }
         ModManager.Log(sb.ToString());
-    }
-
-    private static void DoNeedful(ACE.Entity.Models.Biota biota, ACE.Database.Entity.PossessedBiotas biotas)
-    {
-        Debugger.Break();
     }
 
     /// <summary>
@@ -354,5 +324,6 @@ public class PatchClass
 
             ModManager.Log(sb.ToString());
         }
-    }
+    } 
+    #endregion
 }
