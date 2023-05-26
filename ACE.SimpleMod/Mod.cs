@@ -17,7 +17,7 @@ namespace ACE.SimpleMod
         #region Initialize / Dispose (called by ACE)
         public void Initialize()
         {
-            Harmony.PatchAll();
+            Harmony.PatchAllUncategorized();
         }
 
         protected virtual void Dispose(bool disposing)

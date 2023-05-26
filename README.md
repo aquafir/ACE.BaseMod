@@ -1,35 +1,6 @@
-An [extension](https://github.com/aquafir/HarmonyExtension/) has been created for Visual Studio for [creating patches](https://github.com/aquafir/ACE.BaseMod/assets/83029060/09f1cb0e-d758-4854-8f14-eb7588b1a8e1).
+Check out the [wiki to get started](https://github.com/aquafir/ACE.BaseMod/wiki/Getting-Started), or the [spreadsheet](https://docs.google.com/spreadsheets/u/1/d/16XrOSBW195BlrUnsb0Ax4jTRkj25WG0rXxOIz3cWrU8/edit#gid=2104144189) to find templates, samples, or things to patch.
 
 
-
-
-### Samples
-
-Included `Samples` have their own `Readme` and all except `CriticalOverride` have a short video demonstration:
-
-* [CriticalOverride](https://github.com/aquafir/ACE.BaseMod/tree/master/Samples/CriticalOverride) and [HelloCommand](https://github.com/aquafir/ACE.BaseMod/tree/master/Samples/HelloCommand) are the simplest examples of patching or adding chat commands.
-* [Spells](https://github.com/aquafir/ACE.BaseMod/tree/master/Samples/Spells) is a more sophisticated example (the most fun one), doing a handful of things with spells or UA combat.
-* [Achievements](https://github.com/aquafir/ACE.BaseMod/tree/master/Samples/Achievements) currently just keeps a record of kills-by-id-by-player and gives a bonus every *n*th.  Eventually it'll be an example of persisting data without json.
-* [CleaveTranspiler](https://github.com/aquafir/ACE.BaseMod/tree/master/Samples/CleaveTranspiler) is an example of modifying CIL
-* [DiscordPlus](https://github.com/aquafir/ACE.BaseMod/tree/master/Samples/DiscordPlus) is a two-way chat relay that requires creating a bot and adding an assembly to ACE.
-
-
-
-### Usage
-
-Mods are made using [Harmony](https://harmony.pardeike.net/articles/intro.html#how-harmony-works) and require the `feat_mods` [branch of ACE](https://github.com/aquafir/ACE/tree/feat_mods).  Currently this is designed around a Windows environment with the standard installation path.
-
-Here's an example of [creating](https://user-images.githubusercontent.com/83029060/200917023-1ebe4b19-231f-495a-b1d6-c87415bd7690.mp4) and [using](https://user-images.githubusercontent.com/83029060/200917047-62b9cf09-e57a-4926-b5e1-a925a1ec3c0b.mp4)  a `PostFix` that overrides the nether debuff rating bonus:
-
-#### Overview
-
-* Mods contain [patches](https://harmony.pardeike.net/articles/patching.html) to existing code.  
-* Mods can be built outside of ACE (faster building) and be controlled while the server is live.
-* Patches may be added and removed, and in the future ordered.  They can be added explicitly or using [attributes](https://harmony.pardeike.net/articles/annotations.html) describing the signature of what they're patching.
-* They may appear before (prefix), after (postfix), or work by directly alter the instructions of a method as shown with the `CleaveTranspiler`.
-* Since patches directly alter CIL instructions instead of using reflection they shouldn't cause a hit to performance.
-* Harmony requires a static class to create patches.
-* Some patches are easier than others.  If all logic can be done before (or instead of) or after a method, that's a great target.
 
 #### Commands
 
@@ -49,51 +20,11 @@ Verbs are:
 
 
 
-#### Templates
+#### Todo
 
-Two templates exist: 
-
-* `ACE.SimpleMod` has the basics needed by the `ModManager`.  
-  * A class named `Mod` implementing `IHarmonyMod` is expected
-  * `Meta.json` is used to control whether a mod is enabled, used for chat commands, or displayed
-* `ACE.BaseMod` has:
-  * Example `HarmonyPatch` in `PatchClass`
-  * `Settings` class that saves readable JSON to `Settings.json` and hot-reloads when saved
-  * `Global usings` to keep some boilerplate includes out of the way
-
-To create ACE mods either import the templates or:
-
-* Open this repository in Visual Studio
-* Project-->Export Template-->Export `ACE.BaseMod` or `ACE.SimpleMod`
-
-
-
-The template defaults to building to `C:\ACE\Mods` which is where the `feat_mods` [branch](https://github.com/aquafir/ACE/tree/feat_mods) will look when starting.  That may be adjusted in ACE's `Config.js`:
-
->...
->
->"DatFilesDirectory": "c:\\ACE\\Dats\\",
->
->"ModsDirectory": "c:\\ACE\\Mods\\", 
->
->...
-
-
-
-### Limitations
-
-* Patch methods must be static.
-* NuGet packages currently also need to be added to ACE.
-
-
-
-### Todo
-
-* More samples and a list of methods that might be interesting to patch.
 * Possibly [Reverse patches](https://harmony.pardeike.net/articles/reverse-patching.html) to snapshot/restore any patched methods. `TryCreateILCopy` might be relevant.
 * Good example for using [Finalizer patches](https://harmony.pardeike.net/articles/patching-finalizer.html) to eat tricky and inconsequential exceptions.
 * Exposing capabilities of mods to other mods
   * `ModContainer`-based dependencies / incompatibilities.
-* Fix things up for ACE-proper.
 * Threading and all that CI/CD and non-Windows stuff I'm going to put off forever
 

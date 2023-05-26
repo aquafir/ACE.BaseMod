@@ -17,7 +17,7 @@ using AngouriMath.Core.Compilation; using AngouriMath.Core; using AngouriMath.Co
 
 #!markdown
 
-Add in the helpers used in the `Balance` mod.
+Add in the helpers used in the [Balance](https://github.com/aquafir/ACE.BaseMod/tree/master/Samples/Balance) mod.
 
 #!csharp
 
@@ -359,6 +359,7 @@ display($"0AL {func(0)}\n500 AL {func(500)}\n-100 AL {func(-100)}");
 var simplified = formula.Simplify().Stringize();
 display(simplified);
 //Or in LaTeX 
+//(LaTeXString)formula.Simplify().Latexise()
 (MathString)formula.Simplify().Latexise()
 
 #!markdown

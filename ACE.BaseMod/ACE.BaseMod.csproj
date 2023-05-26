@@ -50,6 +50,7 @@
 	  </Reference>
 	  <Reference Include="Microsoft.EntityFrameworkCore">
 	    <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.dll</HintPath>
+	    <Private>False</Private>
 	  </Reference>
 	</ItemGroup>
 

@@ -80,6 +80,9 @@ public class PatchClass
         //if (Mod.State == ModState.Running)
         // Shut down enabled mod...
 
+        //If the mod is making changes that need to be saved use this and only manually edit settings when the patch is not active.
+        //SaveSettings();
+
         if (Mod.State == ModState.Error)
             ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
     }
