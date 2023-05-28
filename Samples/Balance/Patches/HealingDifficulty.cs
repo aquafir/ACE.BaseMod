@@ -11,19 +11,20 @@ namespace Balance.Patches
         protected override Dictionary<string, MType> Variables { get; } = new()
         {
             ["x"] = MType.Int,      // Missing health
-            ["p"] = MType.Float,    // Health percent
+            //["p"] = MType.Float,    // Health percent -- 5-15-2023 method changed to remove vital
             ["c"] = MType.Int,      // 0/1 out/in combat mode
                                     // Difficulty for skill check
         };
 
-        static Func<int, float, int, int> func;
+        static Func<int, int, int> func;
         #endregion
 
         #region Start / Stop
         public override void Start()
         {
             //If you can parse the formulas patch the corresponding category
-            if (Formula.TryGetFunction<int, float, int, int>(out func, Variables.TypesAndNames()))
+            Debugger.Break();
+            if (Formula.TryGetFunction<int, int, int>(out func, Variables.TypesAndNames()))
                 Mod.Harmony.PatchCategory(nameof(HealingDifficulty));
             else
                 throw new Exception($"Failure parsing formula: {Formula}");
@@ -32,8 +33,8 @@ namespace Balance.Patches
 
         #region Patches
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(Healer), nameof(Healer.DoSkillCheck), new Type[] { typeof(Player), typeof(Player), typeof(CreatureVital), typeof(int) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
-        public static bool PreDoSkillCheck(Player healer, Player target, CreatureVital vital, int difficulty, ref Healer __instance, ref bool __result)
+        [HarmonyPatch(typeof(Healer), nameof(Healer.DoSkillCheck), new Type[] { typeof(Player), typeof(Player), typeof(uint), typeof(int) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
+        public static bool PreDoSkillCheck(Player healer, Player target, uint missingVital, int difficulty, ref Healer __instance, ref bool __result)
         {
             // skill check:
             // (healing skill + healing kit boost) * trainedMod
@@ -44,11 +45,11 @@ namespace Balance.Patches
             //var combatMod = healer.CombatMode == CombatMode.NonCombat ? 1.0f : 1.1f;
             var combatMod = healer.CombatMode == CombatMode.NonCombat ? 0 : 1;
 
-            var missingHealth = (int)(vital.MaxValue - vital.Current);
-            var healthPercent = 1 - ((float)missingHealth / vital.MaxValue);
+            //var missingHealth = (int)(vital.MaxValue - vital.Current);
+            //var healthPercent = 1 - ((float)missingHealth / vital.MaxValue);
 
             var effectiveSkill = (int)Math.Round((healingSkill.Current + __instance.BoostValue) * trainedMod);
-            difficulty = func(missingHealth, healthPercent, combatMod); 
+            difficulty = func((int)missingVital, combatMod); 
             //(int)Math.Round(missingHealth * 2 * combatMod);
 
             var skillCheck = SkillCheck.GetSkillChance(effectiveSkill, difficulty);
