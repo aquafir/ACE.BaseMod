@@ -6,7 +6,7 @@ namespace ACE.SimpleMod
     public class Mod : IHarmonyMod
     {
         //Point to your mod directory
-        public const string ModPath = @"C:\ACE\Mods\$safeprojectname$";
+        public static string ModPath = Path.Combine(ModManager.ModPath, nameof($safeprojectname$));
 
         //IDs are used by Harmony to separate multiple patches
         const string ID = "com.ACE.ACEmulator.$safeprojectname$";

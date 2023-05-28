@@ -1,4 +1,7 @@
-﻿global using ACE.DatLoader;
+﻿global using ACE.Common;
+
+global using ACE.DatLoader;
+
 global using ACE.Entity.Enum;
 
 global using ACE.Server.Command;

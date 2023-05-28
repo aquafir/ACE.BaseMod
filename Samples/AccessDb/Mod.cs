@@ -6,7 +6,7 @@
         //If Harmony is set to debug it creates a log on Desktop
         public const bool DEBUGGING = false;
         //Point to your mod directory
-        public const string ModPath = @"C:\ACE\Mods\AccessDb";
+        public static string ModPath = Path.Combine(ModManager.ModPath, nameof(AccessDb));
 
         //IDs are used by Harmony to separate multiple patches
         const string ID = "com.ACE.ACEmulator.AccessDb";

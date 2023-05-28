@@ -1,10 +1,12 @@
 ﻿using ACE.DatLoader.Entity;
 using ACE.Entity;
 using ACE.Entity.Enum;
+using ACE.Server.Entity;
 using ACE.Server.Network;
 using ACE.Server.WorldObjects;
 using System.Numerics;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
 using static ACE.Server.WorldObjects.Player;
 
 namespace Spells
@@ -13,7 +15,7 @@ namespace Spells
     public class PatchClass
     {
         private static Random gen = new();
-
+        
         #region Settings
         //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);
         const int RETRIES = 10;
