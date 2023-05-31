@@ -20,6 +20,7 @@ public class Mod : IHarmonyMod
     private DateTime _lastChange = DateTime.Now;
     private readonly TimeSpan _reloadInterval = TimeSpan.FromSeconds(3);
 
+    private PatchClass patch = new();
     public static ModState State = ModState.None; 
     #endregion
 
@@ -107,7 +108,7 @@ public class Mod : IHarmonyMod
             //Patch everything in the mod with Harmony attributes
             Harmony.PatchAllUncategorized();
 
-            PatchClass.Start();
+            patch.Start();
         }
         catch (Exception ex)
         {
@@ -120,7 +121,7 @@ public class Mod : IHarmonyMod
     private void Stop()
     {
         // TODO: dispose managed state (managed objects)
-        PatchClass.Shutdown();
+        patch.Shutdown();
 
         //CustomCommands.Unregister();
         Harmony.UnpatchAll(ID);

@@ -4,14 +4,13 @@
 public class PatchClass
 {
     #region Settings
-    //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);
     const int RETRIES = 10;
 
-    public static Settings Settings = new();
-    private static string settingsPath = Path.Combine(Mod.ModPath, "Settings.json");
-    private static FileInfo settingsInfo = new(settingsPath);
+    public  Settings Settings = new();
+    static string settingsPath => Path.Combine(Mod.ModPath, "Settings.json");
+    private FileInfo settingsInfo = new(settingsPath);
 
-    private static JsonSerializerOptions _serializeOptions = new()
+    private  JsonSerializerOptions _serializeOptions = new()
     {
         WriteIndented = true,
         AllowTrailingCommas = true,
@@ -19,7 +18,7 @@ public class PatchClass
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
-    private static void SaveSettings()
+    private  void SaveSettings()
     {
         string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
 
@@ -30,7 +29,7 @@ public class PatchClass
         }
     }
 
-    private static void LoadSettings()
+    private  void LoadSettings()
     {
         if (!settingsInfo.Exists)
         {
@@ -60,7 +59,7 @@ public class PatchClass
     #endregion
 
     #region Start/Shutdown
-    public static void Start()
+    public  void Start()
     {
         //Need to decide on async use
         Mod.State = ModState.Loading;
@@ -75,7 +74,7 @@ public class PatchClass
         Mod.State = ModState.Running;
     }
 
-    public static void Shutdown()
+    public  void Shutdown()
     {
         //if (Mod.State == ModState.Running)
         // Shut down enabled mod...
