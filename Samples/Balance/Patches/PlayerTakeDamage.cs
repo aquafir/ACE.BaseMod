@@ -5,7 +5,7 @@
     public class PlayerTakeDamage : AngouriMathPatch
     {
         #region Fields / Props   
-        public override string Formula { get; set; } = "x/3n";
+        public override string Formula { get; set; } = "n*x/3";
         protected override Dictionary<string, MType> Variables { get; } = new()
         {
             ["x"] = MType.Int,  // Damage taken
