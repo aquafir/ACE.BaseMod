@@ -21,6 +21,8 @@
         private readonly TimeSpan _reloadInterval = TimeSpan.FromSeconds(3);
 
         public static ModState State = ModState.None;
+
+        private PatchClass patch = new();
         #endregion
 
         #region Initialize / Dispose (called by ACE)
@@ -107,7 +109,7 @@
                 //Patch everything in the mod with Harmony attributes
                 Harmony.PatchAllUncategorized();
 
-                PatchClass.Start();
+                patch.Start();
             }
             catch (Exception ex)
             {
@@ -120,7 +122,7 @@
         private void Stop()
         {
             // TODO: dispose managed state (managed objects)
-            PatchClass.Shutdown();
+            patch.Shutdown();
 
             //CustomCommands.Unregister();
             Harmony.UnpatchAll(ID);
