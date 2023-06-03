@@ -1,9 +1,4 @@
-﻿using ACE.Database.Models.Shard;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Net.WebSockets;
-
-namespace MinimalAPI;
+﻿namespace ACE.Web;
 
 public class WebApp
 {
@@ -13,30 +8,25 @@ public class WebApp
     private WebApplication app;
     public void Start()
     {
-        Directory.CreateDirectory(RootPath);  //Check is redundant
+        Directory.CreateDirectory(RootPath);
 
         Console.WriteLine("Starting up...");
         var builder = WebApplication.CreateBuilder(new WebApplicationOptions
         {
             ContentRootPath = Mod.ModPath,  //https://learn.microsoft.com/en-us/aspnet/core/fundamentals/?view=aspnetcore-7.0&tabs=windows#content-root
             WebRootPath = RootPath,         //https://learn.microsoft.com/en-us/aspnet/core/fundamentals/?view=aspnetcore-7.0&tabs=windows#web-root
-            //ApplicationName = "",,
-            //EnvironmentName = Environments.Staging             
         });
 
         //Configure builder.  Defaults to HTTP:5000 on Kestrel: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?view=aspnetcore-7.0
         builder.Configuration.AddJsonFile(SettingsPath, false, true);
 
-        //Log if you want.  Nothing by default
+        //Set up logging.  Defaults to none in favor of ACE logging
         builder.Logging.ClearProviders();
-        builder.Logging.AddConsole();
+        //builder.Logging.AddConsole();
 
         //Add services
         builder.Services.AddDirectoryBrowser();
-        //builder.Services.AddRazorPages(); 
-        //builder.Services.AddControllersWithViews();
         builder.Services.AddControllers();
-        //builder.Services.AddDbContext<ShardDbContext>();
 
         //Make the app
         app = builder.Build();
@@ -45,39 +35,17 @@ public class WebApp
         //app.UseExceptionHandler("/Error");
         //app.UseHsts();    
 
-        //Map
+        //Routes
         app.UseDefaultFiles();  //Set defaults served: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/static-files?view=aspnetcore-7.0#serve-default-documents
         app.UseStaticFiles();   //Work as a file server: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/static-files?view=aspnetcore-7.0
-        app.MapControllers();
-
-        //app.UseFileServer(new FileServerOptions()
-        //{
-        //    EnableDirectoryBrowsing = true,
-        //    StaticFileOptions =
-        //    {
-        //        ServeUnknownFileTypes = true,
-        //        DefaultContentType = "application/octet-stream"
-        //    }
-        //});
 
         MapRoutes();
 
-        //app.Run blocks commandline
         app.RunAsync();
-        //app.RunAsync("http://localhost:" + port++);
     }
 
     private void MapRoutes()
     {
-        //app.MapGet("/test/{id}", async (int id, ShardDbContext db) =>
-        //    await db.Biota.FindAsync(id)
-        //        is Biota biota
-        //            ? Results.Ok(biota)
-        //            : Results.NotFound());
-
-        var handler = () => "Route with a lambda";
-        app.MapGet("/foo", handler);
-
         MapUpload();
         MapPlayer();
     }
@@ -147,6 +115,6 @@ public class WebApp
         app.Lifetime.ApplicationStopped.WaitHandle.WaitOne();
         ModManager.Log("Shut down");
         //app.DisposeAsync().GetAwaiter().GetResult();
-        //app.StopAsync().GetAwaiter().GetResult();    }
+        //app.StopAsync().GetAwaiter().GetResult();    
     }
 }

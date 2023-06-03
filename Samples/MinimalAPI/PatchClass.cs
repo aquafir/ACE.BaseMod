@@ -101,5 +101,18 @@ namespace MinimalAPI
         }
         #endregion
 
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(ModContainer), nameof(ModContainer.Initialize))]
+        public static bool PreInitialize(ref ModContainer __instance)
+        {
+            //Return false to override
+            //return false;
+
+            //Return true to execute original
+            return true;
+        }
+
+
+
     }
 }
