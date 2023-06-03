@@ -1,4 +1,4 @@
-﻿namespace ACE.BaseMod;
+﻿namespace ACE.Web;
 
 [HarmonyPatch]
 public class PatchClass
@@ -65,6 +65,8 @@ public class PatchClass
         Mod.State = ModState.Loading;
         LoadSettings();
 
+        StartWeb();
+
         if (Mod.State == ModState.Error)
         {
             ModManager.DisableModByPath(Mod.ModPath);
@@ -82,8 +84,38 @@ public class PatchClass
         //If the mod is making changes that need to be saved use this and only manually edit settings when the patch is not active.
         //SaveSettings();
 
+        StopWeb();
+
         if (Mod.State == ModState.Error)
             ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
+    }
+    #endregion
+
+    #region Web
+    private WebApp app = new();
+    private void StartWeb()
+    {
+        try
+        {
+            app.Start();
+        }
+        catch (Exception ex)
+        {
+            ModManager.Log($"Error starting web app: {ex.Message}", ModManager.LogLevel.Error);
+            Mod.State = ModState.Error;
+        }
+    }
+
+    private void StopWeb()
+    {
+        try
+        {
+            app.Stop();
+        }catch(Exception ex)
+        {
+            ModManager.Log($"Error shutting down web app: {ex.Message}", ModManager.LogLevel.Error);
+            Mod.State = ModState.Error;
+        }
     }
     #endregion
 

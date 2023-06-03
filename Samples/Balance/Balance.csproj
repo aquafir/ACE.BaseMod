@@ -8,8 +8,8 @@
 		<Nullable>enable</Nullable>
 		<OutputPath>C:\ACE\Mods\$(AssemblyName)</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -26,7 +26,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="AngouriMath" Version="1.4.0-preview.3" />
-		<PackageReference Include="Lib.Harmony" Version="2.3.0-alpha.5" />
+		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
 	</ItemGroup>
 
 	<ItemGroup>

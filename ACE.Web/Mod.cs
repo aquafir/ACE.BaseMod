@@ -1,4 +1,4 @@
-﻿namespace ACE.BaseMod;
+﻿namespace ACE.Web;
 
 public class Mod : IHarmonyMod
 {

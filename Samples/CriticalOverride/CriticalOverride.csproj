@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -6,51 +6,52 @@
 		<Nullable>enable</Nullable>
 		<OutputPath>C:\ACE\Mods\$(AssemblyName)</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
+		<EnableDynamicLoading>true</EnableDynamicLoading>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove=".template.config\**" />
-	  <EmbeddedResource Remove=".template.config\**" />
-	  <None Remove=".template.config\**" />
+		<Compile Remove=".template.config\**" />
+		<EmbeddedResource Remove=".template.config\**" />
+		<None Remove=".template.config\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Lib.Harmony" Version="2.3.0-alpha.5" />
+		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Reference Include="ACE.Adapter">
-	    <HintPath>C:\ACE\Server\ACE.Adapter.dll</HintPath>
-	    <Private>False</Private>
-	  </Reference>
-	  <Reference Include="ACE.Common">
-	    <HintPath>C:\ACE\Server\ACE.Common.dll</HintPath>
-	    <Private>False</Private>
-	  </Reference>
-	  <Reference Include="ACE.Database">
-	    <HintPath>C:\ACE\Server\ACE.Database.dll</HintPath>
-	    <Private>False</Private>
-	  </Reference>
-	  <Reference Include="ACE.DatLoader">
-	    <HintPath>C:\ACE\Server\ACE.DatLoader.dll</HintPath>
-	    <Private>False</Private>
-	  </Reference>
-	  <Reference Include="ACE.Entity">
-	    <HintPath>C:\ACE\Server\ACE.Entity.dll</HintPath>
-	    <Private>False</Private>
-	  </Reference>
-	  <Reference Include="ACE.Server">
-	    <HintPath>C:\ACE\Server\ACE.Server.dll</HintPath>
-	    <Private>False</Private>
-	  </Reference>
+		<Reference Include="ACE.Adapter">
+			<HintPath>C:\ACE\Server\ACE.Adapter.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="ACE.Common">
+			<HintPath>C:\ACE\Server\ACE.Common.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="ACE.Database">
+			<HintPath>C:\ACE\Server\ACE.Database.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="ACE.DatLoader">
+			<HintPath>C:\ACE\Server\ACE.DatLoader.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="ACE.Entity">
+			<HintPath>C:\ACE\Server\ACE.Entity.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="ACE.Server">
+			<HintPath>C:\ACE\Server\ACE.Server.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="Meta.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
+		<None Update="Meta.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 </Project>
