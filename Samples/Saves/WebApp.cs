@@ -1,4 +1,6 @@
-﻿namespace Saves;
+﻿using Microsoft.Extensions.FileProviders;
+
+namespace Saves;
 
 public class WebApp
 {
@@ -26,7 +28,10 @@ public class WebApp
 
         //Add services
         builder.Services.AddDirectoryBrowser();
-        builder.Services.AddControllers();
+        //builder.Services.AddControllers();
+
+        builder.Services.AddRazorPages();
+        builder.Services.AddControllersWithViews();
 
         //Make the app
         app = builder.Build();
@@ -36,10 +41,29 @@ public class WebApp
         //app.UseHsts();    
 
         //Routes
-        app.UseDefaultFiles();  //Set defaults served: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/static-files?view=aspnetcore-7.0#serve-default-documents
+        //app.UseDefaultFiles();  //Set defaults served: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/static-files?view=aspnetcore-7.0#serve-default-documents
         app.UseStaticFiles();   //Work as a file server: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/static-files?view=aspnetcore-7.0
 
-        MapRoutes();
+        var fileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.WebRootPath, "saves"));
+        var requestPath = "/saves";
+
+        // Enable displaying browser links.
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = fileProvider,
+            RequestPath = requestPath
+        });
+
+        app.UseDirectoryBrowser(new DirectoryBrowserOptions
+        {
+            FileProvider = fileProvider,
+            RequestPath = requestPath
+        });
+
+        app.MapDefaultControllerRoute();
+        app.MapRazorPages();
+
+        //MapRoutes();
 
         app.RunAsync();
     }

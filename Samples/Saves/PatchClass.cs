@@ -65,6 +65,8 @@ public class PatchClass
         Mod.State = ModState.Loading;
         LoadSettings();
 
+        Directory.CreateDirectory(Settings.SaveDirectory);
+
         StartWeb();
 
         if (Mod.State == ModState.Error)
