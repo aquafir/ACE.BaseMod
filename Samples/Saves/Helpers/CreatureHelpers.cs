@@ -1,12 +1,4 @@
-﻿using ACE.Entity.Enum.Properties;
-using ACE.Server.WorldObjects.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Saves.Helpers;
+﻿namespace Saves.Helpers;
 
 public static class CreatureHelpers
 {

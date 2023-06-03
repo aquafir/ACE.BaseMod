@@ -1,5 +1,4 @@
-﻿namespace Saves
-{
+﻿namespace Saves;
     public class Mod : IHarmonyMod
     {
         #region Members
@@ -154,4 +153,3 @@
         Error,      // An error has occurred (loading/saving/etc.)
         Running     // Mod successfully started
     }
-}

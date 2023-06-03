@@ -1,5 +1,4 @@
-﻿using ACE.Database.Models.Shard;
-using Biota = ACE.Database.Models.Shard.Biota;
+﻿using Biota = ACE.Database.Models.Shard.Biota;
 
 namespace Saves;
 

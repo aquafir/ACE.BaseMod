@@ -1,17 +1,9 @@
 ﻿using ACE.Database;
-using ACE.Entity.Enum.Properties;
-using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
-using Saves.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Saves;
 
-internal class SnapshotCommand
+public class SnapshotCommand
 {
     [CommandHandler("ss", AccessLevel.Developer, CommandHandlerFlag.None, -1, "", "/save <player name>[, save name]")]
     public static void HandleSave(Session session, params string[] parameters)
@@ -20,9 +12,7 @@ internal class SnapshotCommand
         using var writer = new BinaryWriter(ms);
 
         session.Player.GetAllPropertyBools().Write(writer);
-
     }
-
 
     #region Commands
     public static void GodMode(Session session)
