@@ -12,6 +12,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Content Remove="Meta.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Meta.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
 	</ItemGroup>
 

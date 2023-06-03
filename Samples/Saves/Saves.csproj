@@ -12,6 +12,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Content Remove="Meta.json" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
 	</ItemGroup>
 
@@ -47,6 +51,12 @@
 
 	<ItemGroup>
 	  <Folder Include="wwwroot\saves\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Meta.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>

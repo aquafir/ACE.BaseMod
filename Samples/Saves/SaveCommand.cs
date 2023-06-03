@@ -131,12 +131,6 @@ internal class SaveCommand
     {
         var match = _saveRegex.Match(string.Join(' ', parameters));
 
-        //        Did a quick Biota->Weenie conversion-> export thing yesterday after Smiley mentioned it the other day.  
-        //Any worth in making an export command for that?
-
-        //Messed around with per - player per - spell variations:
-        //https://user-images.githubusercontent.com/83029060/202056553-bad9fd90-f169-40c6-802b-87f991f1eb67.mp4
-
         if (!match.Success)
         {
             ModManager.Log($"Usage: /save <player name>[, save name]");
@@ -205,9 +199,9 @@ internal class SaveCommand
         };
 
         if (String.IsNullOrEmpty(savePath))
-            savePath = Path.Combine(Mod.ModPath, "Saves", $"{character.Name} - {DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")}");
+            savePath = Path.Combine(PatchClass.Settings.SaveDirectory, $"{character.Name} - {DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")}");
         else
-            savePath = Path.Combine(Mod.ModPath, "Saves", savePath);
+            savePath = Path.Combine(PatchClass.Settings.SaveDirectory, savePath);
 
         var sb = new StringBuilder("\r\n");
         var watch = Stopwatch.StartNew();
