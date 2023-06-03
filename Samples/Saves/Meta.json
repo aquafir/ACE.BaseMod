@@ -1,0 +1,10 @@
+{
+  "Name": "$safeprojectname$",
+  "Author": "",
+  "Description": "This is an example metadata file for a non-existent mod.",
+  "Version": "1.0",
+  "Enabled": true,
+  "HotReload": true,
+  "RegisterCommands": true,
+  "ACEVersion": "0.0"
+}
