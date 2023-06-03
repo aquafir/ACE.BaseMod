@@ -2,64 +2,47 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<OutputType>Library</OutputType>
 		<OutputPath>C:\ACE\Mods\$(AssemblyName)</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
-		<EnableDynamicLoading>true</EnableDynamicLoading>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Remove=".template.config\**" />
-		<EmbeddedResource Remove=".template.config\**" />
-		<None Remove=".template.config\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
 		<Reference Include="ACE.Adapter">
 			<HintPath>C:\ACE\Server\ACE.Adapter.dll</HintPath>
-			<Private>False</Private>
 		</Reference>
 		<Reference Include="ACE.Common">
 			<HintPath>C:\ACE\Server\ACE.Common.dll</HintPath>
-			<Private>False</Private>
 		</Reference>
 		<Reference Include="ACE.Database">
 			<HintPath>C:\ACE\Server\ACE.Database.dll</HintPath>
-			<Private>False</Private>
 		</Reference>
 		<Reference Include="ACE.DatLoader">
 			<HintPath>C:\ACE\Server\ACE.DatLoader.dll</HintPath>
-			<Private>False</Private>
 		</Reference>
 		<Reference Include="ACE.Entity">
 			<HintPath>C:\ACE\Server\ACE.Entity.dll</HintPath>
-			<Private>False</Private>
 		</Reference>
 		<Reference Include="ACE.Server">
 			<HintPath>C:\ACE\Server\ACE.Server.dll</HintPath>
-			<Private>False</Private>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore">
 			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.dll</HintPath>
-			<Private>False</Private>
 		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="Meta.json">
+		<Content Update="wwwroot\index.html">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
+		</Content>
 	</ItemGroup>
 
 </Project>

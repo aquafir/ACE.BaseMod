@@ -1,17 +1,16 @@
-﻿namespace ACE.MinimalWebAPI
+﻿namespace WebToLua
 {
     [HarmonyPatch]
     public class PatchClass
     {
         #region Settings
-        //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);
         const int RETRIES = 10;
 
-        public static Settings Settings = new();
-        private static string settingsPath = Path.Combine(Mod.ModPath, "Settings.json");
-        private static FileInfo settingsInfo = new(settingsPath);
+        public Settings Settings = new();
+        static string settingsPath => Path.Combine(Mod.ModPath, "Settings.json");
+        private FileInfo settingsInfo = new(settingsPath);
 
-        private static JsonSerializerOptions _serializeOptions = new()
+        private JsonSerializerOptions _serializeOptions = new()
         {
             WriteIndented = true,
             AllowTrailingCommas = true,
@@ -19,7 +18,7 @@
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         };
 
-        private static void SaveSettings()
+        private void SaveSettings()
         {
             string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
 
@@ -30,7 +29,7 @@
             }
         }
 
-        private static void LoadSettings()
+        private void LoadSettings()
         {
             if (!settingsInfo.Exists)
             {
@@ -60,18 +59,13 @@
         #endregion
 
         #region Start/Shutdown
-        public static void Start()
+        public void Start()
         {
             //Need to decide on async use
             Mod.State = ModState.Loading;
             LoadSettings();
 
-            var app = WebApplication.Create(new string[] {});
-
-            app.MapGet("/", () => "Hello World");
-
-            app.Run();
-
+            StartWeb();
 
             if (Mod.State == ModState.Error)
             {
@@ -82,7 +76,7 @@
             Mod.State = ModState.Running;
         }
 
-        public static void Shutdown()
+        public void Shutdown()
         {
             //if (Mod.State == ModState.Running)
             // Shut down enabled mod...
@@ -90,12 +84,41 @@
             //If the mod is making changes that need to be saved use this and only manually edit settings when the patch is not active.
             //SaveSettings();
 
+            StopWeb();
+
             if (Mod.State == ModState.Error)
                 ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
         }
         #endregion
 
+        #region Web
+        private WebApp app = new();
+        private void StartWeb()
+        {
+            try
+            {
+                app.Start();
+            }
+            catch (Exception ex)
+            {
+                ModManager.Log($"Error starting web app: {ex.Message}", ModManager.LogLevel.Error);
+                Mod.State = ModState.Error;
+            }
+        }
 
+        private void StopWeb()
+        {
+            try
+            {
+                app.Stop();
+            }
+            catch (Exception ex)
+            {
+                ModManager.Log($"Error shutting down web app: {ex.Message}", ModManager.LogLevel.Error);
+                Mod.State = ModState.Error;
+            }
+        }
+        #endregion
 
         #region Patches
         //[HarmonyPrefix]

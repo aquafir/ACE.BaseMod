@@ -1,4 +1,4 @@
-﻿namespace ACE.MinimalWebAPI
+﻿namespace WebToLua
 {
     public class Mod : IHarmonyMod
     {
@@ -6,10 +6,10 @@
         //If Harmony is set to debug it creates a log on Desktop
         public const bool DEBUGGING = false;
         //Point to your mod directory
-        public static string ModPath = Path.Combine(ModManager.ModPath, "ACE.MinimalWebAPI");
+        public static string ModPath = Path.Combine(ModManager.ModPath, "WebToLua");
 
         //IDs are used by Harmony to separate multiple patches
-        const string ID = "com.ACE.ACEmulator.ACE.MinimalWebAPI";
+        const string ID = "com.ACE.ACEmulator.WebToLua";
         protected static Harmony Harmony { get; set; } = new(ID);
 
         private bool disposedValue;
@@ -20,6 +20,7 @@
         private DateTime _lastChange = DateTime.Now;
         private readonly TimeSpan _reloadInterval = TimeSpan.FromSeconds(3);
 
+        private PatchClass patch = new();
         public static ModState State = ModState.None;
         #endregion
 
@@ -107,7 +108,7 @@
                 //Patch everything in the mod with Harmony attributes
                 Harmony.PatchAllUncategorized();
 
-                PatchClass.Start();
+                patch.Start();
             }
             catch (Exception ex)
             {
@@ -120,7 +121,7 @@
         private void Stop()
         {
             // TODO: dispose managed state (managed objects)
-            PatchClass.Shutdown();
+            patch.Shutdown();
 
             //CustomCommands.Unregister();
             Harmony.UnpatchAll(ID);

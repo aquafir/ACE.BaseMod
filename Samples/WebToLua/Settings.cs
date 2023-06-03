@@ -1,4 +1,4 @@
-﻿namespace ACE.MinimalWebAPI
+﻿namespace WebToLua
 {
     public class Settings
     {
