@@ -1,4 +1,4 @@
-﻿namespace Saves;
+﻿namespace Saves.Helpers;
 
 //https://www.infoworld.com/article/3660629/how-to-compress-and-decompress-strings-in-c-sharp.html
 public static class Compression

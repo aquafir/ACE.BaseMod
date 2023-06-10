@@ -1,4 +1,6 @@
-﻿namespace Saves.Helpers;
+﻿using Saves.Save;
+
+namespace Saves.Helpers;
 
 public static class CharacterHelpers
 {

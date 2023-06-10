@@ -1,4 +1,6 @@
-﻿namespace Saves;
+﻿using Saves.Save;
+
+namespace Saves;
 
 public class Settings
 {

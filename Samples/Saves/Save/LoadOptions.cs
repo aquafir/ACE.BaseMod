@@ -1,4 +1,4 @@
-﻿namespace Saves;
+﻿namespace Saves.Save;
 
 public class LoadOptions
 {
@@ -26,9 +26,14 @@ public class LoadOptions
     {
         //Marketplace
         ObjCellId = 0x016C01BC,
-        PositionX = 49.206001f, PositionY = -31.934999f, PositionZ = 0.005000f,
-        RotationW = 0.707107f, RotationX = 0.0f, RotationY = 0.0f, RotationZ = -0.707107f
-    };      
+        PositionX = 49.206001f,
+        PositionY = -31.934999f,
+        PositionZ = 0.005000f,
+        RotationW = 0.707107f,
+        RotationX = 0.0f,
+        RotationY = 0.0f,
+        RotationZ = -0.707107f
+    };
 
     //Todo: may remove and just use initial values for default
     public static LoadOptions Default => new LoadOptions

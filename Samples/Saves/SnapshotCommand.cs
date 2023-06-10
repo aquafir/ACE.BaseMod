@@ -5,19 +5,29 @@ namespace Saves;
 
 public class SnapshotCommand
 {
-    [CommandHandler("ss", AccessLevel.Developer, CommandHandlerFlag.None, -1, "", "/save <player name>[, save name]")]
+    [CommandHandler("ss", AccessLevel.Developer, CommandHandlerFlag.RequiresWorld, -1, "")]
     public static void HandleSave(Session session, params string[] parameters)
     {
         using var ms = new MemoryStream();
         using var writer = new BinaryWriter(ms);
 
-        session.Player.GetAllPropertyBools().Write(writer);
+        var player = session.Player;
+        player.GetAllPositions().Write(writer);
+        player.GetAllPropertyBools().Write(writer);
+        player.GetAllPropertyDataId().Write(writer);
+        player.GetAllPropertyFloat().Write(writer);
+        player.GetAllPropertyInstanceId().Write(writer);
+        player.GetAllPropertyInt().Write(writer);
+        player.GetAllPropertyInt64().Write(writer);
+        player.GetAllPropertyString().Write(writer);
+
+        
     }
 
     #region Commands
     public static void GodMode(Session session)
     {
-        DatabaseManager.Shard.SaveBiota(session.Player.Biota, session.Player.BiotaDatabaseLock, result => DoGodMode(result, session));
+        DatabaseManager.Shard.SaveBiota(player.Biota, player.BiotaDatabaseLock, result => DoGodMode(result, session));
     }
 
     private static string SerializePlayer()
@@ -28,19 +38,19 @@ public class SnapshotCommand
 
     private static void DoGodMode(bool playerSaved, Session session, bool exceptionReturn = false)
     {
-        var player = session.Player;
+        var player = player;
         //ACE.Server.WorldObjects.Player
 
         if (!playerSaved)
         {
             ChatPacket.SendServerMessage(session, "Error saving player.", ChatMessageType.Broadcast);
-            Console.WriteLine($"Player {session.Player.Name} tried to enter god mode but there was an error saving player. Godmode not available.");
+            Console.WriteLine($"Player {player.Name} tried to enter god mode but there was an error saving player. Godmode not available.");
             return;
         }
 
-        var biota = session.Player.Biota;
+        var biota = player.Biota;
 
-        string godString = session.Player.GodState;
+        string godString = player.GodState;
 
         if (!exceptionReturn)
         {
@@ -59,10 +69,10 @@ public class SnapshotCommand
             returnState += $"{DateTime.UtcNow}=";
 
             // need level 25, available skill credits 24
-            returnState += $"24={session.Player.AvailableSkillCredits}=25={session.Player.Level}=";
+            returnState += $"24={player.AvailableSkillCredits}=25={player.Level}=";
 
             // need total xp 1, unassigned xp 2
-            returnState += $"1={session.Player.TotalExperience}=2={session.Player.AvailableExperience}=";
+            returnState += $"1={player.TotalExperience}=2={player.AvailableExperience}=";
 
             // need all attributes
             // 1 through 6 str, end, coord, quick, focus, self
@@ -116,18 +126,18 @@ public class SnapshotCommand
             if (returnState.Split("=").Length != 240)
             {
                 ChatPacket.SendServerMessage(session, "Godmode is not available at this time.", ChatMessageType.Broadcast);
-                Console.WriteLine($"Player {session.Player.Name} tried to enter god mode but there was an error with the godString length. (length = {returnState.Split("=").Length}) Godmode not available.");
+                Console.WriteLine($"Player {player.Name} tried to enter god mode but there was an error with the godString length. (length = {returnState.Split("=").Length}) Godmode not available.");
                 return;
             }
 
             // save return state to db in property string
-            session.Player.SetProperty(PropertyString.GodState, returnState);
-            session.Player.SaveBiotaToDatabase();
+            player.SetProperty(PropertyString.GodState, returnState);
+            player.SaveBiotaToDatabase();
         }
 
         // Begin Godly Stats Increase
 
-        var currentPlayer = session.Player;
+        var currentPlayer = player;
         currentPlayer.Level = 999;
         currentPlayer.AvailableExperience = 0;
         currentPlayer.AvailableSkillCredits = 0;
@@ -182,8 +192,8 @@ public class SnapshotCommand
 
     public static void UngodMode(Session session)
     {
-        Player currentPlayer = session.Player;
-        string returnString = session.Player.GodState;
+        Player currentPlayer = player;
+        string returnString = player.GodState;
 
         if (returnString == null)
         {
