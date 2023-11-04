@@ -1,4 +1,6 @@
-﻿namespace ExtendACE;
+﻿using System.Diagnostics;
+
+namespace ExtendACE;
 
 public class Mod : IHarmonyMod
 {
@@ -26,6 +28,8 @@ public class Mod : IHarmonyMod
     #region Initialize / Dispose (called by ACE)
     public void Initialize()
     {
+        Debugger.Break();
+        ModManager.Log("Foo?");
         if (DEBUGGING)
         {
             Harmony.DEBUG = DEBUGGING;
@@ -105,6 +109,7 @@ public class Mod : IHarmonyMod
         try
         {
             //Patch everything in the mod with Harmony attributes
+            Debugger.Break();
             Harmony.PatchAllUncategorized();
 
             PatchClass.Start();

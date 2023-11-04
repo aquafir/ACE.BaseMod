@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -7,7 +7,7 @@
 		<OutputPath>C:\ACE\Mods\$(AssemblyName)</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
 	</PropertyGroup>
 	
 	<PropertyGroup>
@@ -26,33 +26,32 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Reference Include="ACE.Adapter">
 	    <HintPath>C:\ACE\Server\ACE.Adapter.dll</HintPath>
+	    <Private>True</Private>
 	  </Reference>
 	  <Reference Include="ACE.Common">
 	    <HintPath>C:\ACE\Server\ACE.Common.dll</HintPath>
+	    <Private>True</Private>
 	  </Reference>
 	  <Reference Include="ACE.Database">
 	    <HintPath>C:\ACE\Server\ACE.Database.dll</HintPath>
+	    <Private>True</Private>
 	  </Reference>
 	  <Reference Include="ACE.DatLoader">
 	    <HintPath>C:\ACE\Server\ACE.DatLoader.dll</HintPath>
+	    <Private>True</Private>
 	  </Reference>
 	  <Reference Include="ACE.Entity">
 	    <HintPath>C:\ACE\Server\ACE.Entity.dll</HintPath>
+	    <Private>True</Private>
 	  </Reference>
 	  <Reference Include="ACE.Server">
 	    <HintPath>C:\ACE\Server\ACE.Server.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Microsoft.EntityFrameworkCore">
-	    <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.dll</HintPath>
+	    <Private>True</Private>
 	  </Reference>
 	</ItemGroup>
 
