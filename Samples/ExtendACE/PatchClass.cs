@@ -3,6 +3,7 @@ using ACE.Server.Command.Handlers;
 using ACE.Server.Entity.Actions;
 using ACE.Server.Managers;
 using ACE.Server.Network;
+using ACE.Server.Network.Structure;
 using ACE.Server.Physics.Common;
 using System.Diagnostics;
 
@@ -118,30 +119,30 @@ public class PatchClass
 
     #endregion
 
-    [CommandHandler("clearquest", AccessLevel.Admin, CommandHandlerFlag.None, 0)]
-    public static void HandleQuestClear(Session session, params string[] parameters)
-    {
-        DatabaseManager.World.ClearCachedQuest(parameters[0]);
-    }
+    //[CommandHandler("clearquest", AccessLevel.Admin, CommandHandlerFlag.None, 0)]
+    //public static void HandleQuestClear(Session session, params string[] parameters)
+    //{
+    //    DatabaseManager.World.ClearCachedQuest(parameters[0]);
+    //}
 
-    [CommandHandler("cq", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleCheckQuest(Session session, params string[] parameters)
-    {
-        //var quest = DatabaseManager.World.GetCachedQuest("stipendtimer_0812");
-        var p = session.Player;
-        var quests = p.QuestManager.GetQuests().Where(x => x.QuestName.Contains("0812"));
+    //[CommandHandler("cq", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
+    //public static void HandleCheckQuest(Session session, params string[] parameters)
+    //{
+    //    //var quest = DatabaseManager.World.GetCachedQuest("stipendtimer_0812");
+    //    var p = session.Player;
+    //    var quests = p.QuestManager.GetQuests().Where(x => x.QuestName.Contains("0812"));
 
-        foreach (var playerQuest in quests)
-        {
-            var questName = QuestManager.GetQuestName(playerQuest.QuestName);
-            DatabaseManager.World.ClearCachedQuest(questName);
-            var quest = DatabaseManager.World.GetCachedQuest(questName);
-            var nextSolve = p.QuestManager.GetNextSolveTime(questName);
-            var hours = nextSolve.TotalHours;
-            ModManager.Log($"{questName} can be solved in {hours} hours, adding delta {quest.MinDelta} to last solve {playerQuest.LastTimeCompleted}");
-            //Debugger.Break();
-        }
-    }
+    //    foreach (var playerQuest in quests)
+    //    {
+    //        var questName = QuestManager.GetQuestName(playerQuest.QuestName);
+    //        DatabaseManager.World.ClearCachedQuest(questName);
+    //        var quest = DatabaseManager.World.GetCachedQuest(questName);
+    //        var nextSolve = p.QuestManager.GetNextSolveTime(questName);
+    //        var hours = nextSolve.TotalHours;
+    //        ModManager.Log($"{questName} can be solved in {hours} hours, adding delta {quest.MinDelta} to last solve {playerQuest.LastTimeCompleted}");
+    //        //Debugger.Break();
+    //    }
+    //}
 
     static ExtendACE.Creatures.CreatureType[] types = Enum.GetValues<ExtendACE.Creatures.CreatureType>();
     static string availableTypes = String.Join('\n', types.Select(x => $"  {x.ToString()}"));
@@ -170,30 +171,27 @@ public class PatchClass
         session.Player.SendMessage($"{creature.Name} created.");
     }
 
-    //[CommandHandler("hp", AccessLevel.Sentinel, CommandHandlerFlag.RequiresWorld, 0)]
-    //public static void HandleHp(Session session, params string[] parameters)
-    //{
-    //    session.Player.Health.StartingValue = 10000000;
-    //}
+    [CommandHandler("hp", AccessLevel.Sentinel, CommandHandlerFlag.RequiresWorld, 0)]
+    public static void HandleHp(Session session, params string[] parameters)
+    {
+        session.Player.Health.StartingValue = 10000000;
+    }
 
-    //[CommandHandler("tt", AccessLevel.Sentinel, CommandHandlerFlag.RequiresWorld, 0)]
-    //public static void HandleT(Session session, params string[] parameters)
-    //{
-    //    var p = session.Player;
-    //    var actionChain = new ActionChain();
-    //    foreach (var emote in Enum.GetValues<MotionCommand>())
-    //    {
-    //        actionChain.AddDelaySeconds(2f);
-    //        actionChain.AddAction(p, () =>
-    //        {
-    //            var motionCommand = MotionCommandHelper.GetMotion(emote);
-    //            var motion = new Motion(p, motionCommand);
-    //            p.EnqueueBroadcastMotion(motion);
-    //            p.SendMessage($"Playing {emote}");
-    //        });
-    //    }
-    //    actionChain.EnqueueChain();
-    //}
+    [CommandHandler("tt", AccessLevel.Sentinel, CommandHandlerFlag.RequiresWorld, 1)]
+    public static void HandleT(Session session, params string[] parameters)
+    {
+        var p = session.Player;
+        var m = new Motion(MotionStance.NonCombat);
+
+        //p.FailCast(false);
+        //p.HandleActionCancelAttack();
+
+        p.Stun(uint.Parse(parameters[0]));
+
+        //  var time = p.ExecuteMotion(m);
+        //var time = p.ExecuteMotionPersist(m);
+        // p.SendMessage($"{time}");
+    }
 
     ////Play all animations
     //[CommandHandler("animations", AccessLevel.Sentinel, CommandHandlerFlag.RequiresWorld, 0)]

@@ -2,6 +2,17 @@
 
 
 
+* EnchantmentManager
+  * BuildEntry
+    * Builds an enchantment registry entry from a spell ID
+    * Sets duration.  Scales if player, -1 if item
+    * Sets caster to either the casters guid or the recipients
+    * Sets mod key/modifiers
+    * Checks DoT
+    * Checks equipment sets
+
+
+
 `CreatureEx` extends `Creature` with different subclasses overriding or patching for singular purposes.  It includes a patch for the `WorldObjectFactory.CreateWorldObject` methods to intercept new creatures and replace them with a variant from the available `CreatureType`.
 
 You can create them using the `/cex [type]` command:
@@ -35,6 +46,8 @@ You can create them using the `/cex [type]` command:
 * //Splitter
 * Stomper damages in a radius for a fraction of damage dealt (post mitigation) based on how far you are from the center
 * *Stunner periodically stuns a nearby player.  This cancels casts/combat and plays the kneel animation. Doesn't prevent restarting cast/combat while kneeling.*
+  * Status effects a queue/HashSet in a manager?  Part of CreatureEx?  Through enchantments?
+
 * //Suppresser
 * Tank intercepts damage from something nearby at a reduced rate
 * Vampire heals from damage dealt
@@ -48,3 +61,4 @@ You can create them using the `/cex [type]` command:
 
 * Property enums are ushort
 * `Creature.OnDamageTarget` is a placeholder for Player that does nothing.  Never called.
+* Creating an `Enchantment` sucks.  No empty constructor for inheritance?

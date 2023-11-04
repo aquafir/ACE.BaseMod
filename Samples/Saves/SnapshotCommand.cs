@@ -27,6 +27,7 @@ public class SnapshotCommand
     #region Commands
     public static void GodMode(Session session)
     {
+        var player = session.Player;
         DatabaseManager.Shard.SaveBiota(player.Biota, player.BiotaDatabaseLock, result => DoGodMode(result, session));
     }
 
@@ -38,7 +39,7 @@ public class SnapshotCommand
 
     private static void DoGodMode(bool playerSaved, Session session, bool exceptionReturn = false)
     {
-        var player = player;
+        var player = session.Player;
         //ACE.Server.WorldObjects.Player
 
         if (!playerSaved)
@@ -192,6 +193,7 @@ public class SnapshotCommand
 
     public static void UngodMode(Session session)
     {
+        var player = session.Player;
         Player currentPlayer = player;
         string returnString = player.GodState;
 
