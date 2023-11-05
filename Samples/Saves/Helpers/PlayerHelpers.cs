@@ -25,8 +25,6 @@ public static class PlayerHelpers
         }
     }
 
-    public static void 
-
     public static byte[] CreateBinarySave(Character character, ACE.Database.Models.Shard.Biota playerBiota, PossessedBiotas possessions)
     {
         using MemoryStream ms = new();

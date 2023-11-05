@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -7,13 +7,25 @@
 		<OutputPath>C:\ACE\Mods\$(AssemblyName)</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
 	</PropertyGroup>
-	
+
 	<PropertyGroup>
 		<PublicizeAll>true</PublicizeAll>
 	</PropertyGroup>
-	
+
+	<ItemGroup>
+		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<Compile Remove=".template.config\**" />
 		<EmbeddedResource Remove=".template.config\**" />
@@ -22,10 +34,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Lib.Harmony" Version="2.3.0-alpha.5" />
+		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -33,27 +45,34 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Reference Include="ACE.Adapter">
-	    <HintPath>C:\ACE\Server\ACE.Adapter.dll</HintPath>
-	  </Reference>
-	  <Reference Include="ACE.Common">
-	    <HintPath>C:\ACE\Server\ACE.Common.dll</HintPath>
-	  </Reference>
-	  <Reference Include="ACE.Database">
-	    <HintPath>C:\ACE\Server\ACE.Database.dll</HintPath>
-	  </Reference>
-	  <Reference Include="ACE.DatLoader">
-	    <HintPath>C:\ACE\Server\ACE.DatLoader.dll</HintPath>
-	  </Reference>
-	  <Reference Include="ACE.Entity">
-	    <HintPath>C:\ACE\Server\ACE.Entity.dll</HintPath>
-	  </Reference>
-	  <Reference Include="ACE.Server">
-	    <HintPath>C:\ACE\Server\ACE.Server.dll</HintPath>
-	  </Reference>
-	  <Reference Include="Microsoft.EntityFrameworkCore">
-	    <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.dll</HintPath>
-	  </Reference>
+		<Reference Include="ACE.Adapter">
+			<HintPath>C:\ACE\Server\ACE.Adapter.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="ACE.Common">
+			<HintPath>C:\ACE\Server\ACE.Common.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="ACE.Database">
+			<HintPath>C:\ACE\Server\ACE.Database.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="ACE.DatLoader">
+			<HintPath>C:\ACE\Server\ACE.DatLoader.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="ACE.Entity">
+			<HintPath>C:\ACE\Server\ACE.Entity.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="ACE.Server">
+			<HintPath>C:\ACE\Server\ACE.Server.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.EntityFrameworkCore">
+			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>

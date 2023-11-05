@@ -1,8 +1,4 @@
-﻿using ACE.DatLoader.Entity;
-using ACE.Server.WorldObjects;
-using System.Diagnostics;
-
-namespace ExtendACE.Creatures;
+﻿namespace ExtendACE.Creatures;
 
 [HarmonyPatch]
 public class Rogue : CreatureEx

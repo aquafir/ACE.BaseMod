@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace ExtendACE.Creatures;
+﻿namespace ExtendACE.Creatures;
 
 [HarmonyPatch]
 public class Stomper : CreatureEx

@@ -1,8 +1,4 @@
-﻿using ACE.Server.Entity.Actions;
-using ACE.Server.Physics.Animation;
-using System.Runtime.CompilerServices;
-
-namespace ExtendACE.Creatures;
+﻿namespace ExtendACE.Creatures;
 
 [HarmonyPatch]
 public class Stunner : CreatureEx
@@ -22,11 +18,6 @@ public class Stunner : CreatureEx
     const int interval = 3;
     private int count = interval;
 
-    const float speed = 1f;
-    //static uint motionTableId = MotionTableId;
-    const MotionCommand command = MotionCommand.Kneel;
-    const MotionStance stance = MotionStance.NonCombat;
-    private Motion stunMotion = new(stance, command, speed);
     //private float motionLength = MotionTable.GetAnimationLength((uint)stunMotion, stance, command);
     public override void Heartbeat(double currentUnixTime)
     {
@@ -39,27 +30,28 @@ public class Stunner : CreatureEx
             return;
 
         count = interval;
-        p.SendMessage($"You have been stunned by {Name}.");
 
-        //Get stun duration
-        float motionLength = MotionTable.GetAnimationLength(p.MotionTableId, stance, command, speed);
+        //p.SendMessage($"You have been stunned by {Name}.");
 
-        //Add current time before queued stun will play
-        p.GetCurrentMotionState(out var pStance, out var pMotion);
-        if(pStance != MotionStance.Invalid && pMotion != MotionCommand.Ready)
-            motionLength += MotionTable.GetAnimationLength(p.MotionTableId, stance, command);
+        ////Get stun duration
+        //float motionLength = MotionTable.GetAnimationLength(p.MotionTableId, stance, command, speed);
 
-        var actionChain = new ActionChain();
-        actionChain.AddAction(p, () =>
-        {
-            //Todo figure out what to actually disable
-            p.EnqueueBroadcastMotion(stunMotion);
-            
-            p.OnAttackDone();
-            p.FailCast(false);
-        });
-        actionChain.AddDelaySeconds(motionLength);
-        actionChain.AddAction(p, () => p.SendMessage("The stun has worn off."));
-        actionChain.EnqueueChain();
+        ////Add current time before queued stun will play
+        //p.GetCurrentMotionState(out var pStance, out var pMotion);
+        //if (pStance != MotionStance.Invalid && pMotion != MotionCommand.Ready)
+        //    motionLength += MotionTable.GetAnimationLength(p.MotionTableId, stance, command);
+
+        //var actionChain = new ActionChain();
+        //actionChain.AddAction(p, () =>
+        //{
+        //    //Todo figure out what to actually disable
+        //    p.EnqueueBroadcastMotion(stunMotion);
+
+        //    p.OnAttackDone();
+        //    p.FailCast(false);
+        //});
+        //actionChain.AddDelaySeconds(motionLength);
+        //actionChain.AddAction(p, () => p.SendMessage("The stun has worn off."));
+        //actionChain.EnqueueChain();
     }
 }

@@ -1,7 +1,4 @@
-﻿using ACE.Database.Models.Auth;
-using ACE.Server.Entity.Actions;
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
+﻿using ACE.Server.Entity.Actions;
 using System.Numerics;
 
 namespace ExtendACE.Creatures;
@@ -166,7 +163,7 @@ public class Boss : CreatureEx
             return;
 
         lastBullHell = time;
-        target.SendMessage($"{Name} is targetting you after {lapsed} seconds.  Try to dodge...");
+        target.SendMessage($"{Name} is targeting you after {lapsed} seconds.  Try to dodge...");
 
         var actionChain = new ActionChain();
         for (var i = 0; i < bulletCount; i++)

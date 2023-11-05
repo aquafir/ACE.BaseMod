@@ -1,6 +1,4 @@
-﻿using ACE.Database.Models.Auth;
-
-namespace ExtendACE;
+﻿namespace ExtendACE;
 
 public enum PropertyAttributeEx : ushort
 {

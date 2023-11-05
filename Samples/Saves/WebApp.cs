@@ -60,10 +60,10 @@ public class WebApp
             RequestPath = requestPath
         });
 
-        app.MapDefaultControllerRoute();
-        app.MapRazorPages();
+        //app.MapDefaultControllerRoute();
+        //app.MapRazorPages();
 
-        //MapRoutes();
+        MapRoutes();
 
         app.RunAsync();
     }

@@ -1,18 +1,11 @@
 ﻿using ACE.Server.Network.GameEvent.Events;
-using ACE.Server.Network;
 using ACE.Server.WorldObjects.Entity;
 using System.Text;
-using ACE.Server.WorldObjects;
-using System.Diagnostics;
 using static ACE.Server.WorldObjects.Player;
-using ACE.Server.WorldObjects.Managers;
 using ExtendACE.Creatures;
-using System;
-using ACE.Server.Managers;
-using ACE.Server.Command.Handlers;
-using static ACE.Server.Physics.Common.LandDefs;
-using System.Numerics;
-using Windows.Win32.Foundation;
+using ACE.Server.Physics;
+using ACE.Database;
+using ACE.Server.Network.GameMessages.Messages;
 
 namespace ExtendACE;
 
@@ -440,7 +433,7 @@ public static class CreatureExHelpers
         Creatures.CreatureType.Evader => new Evader(weenie, guid),
         Creatures.CreatureType.Exploding => new Exploder(weenie, guid),
         Creatures.CreatureType.Healer => new Creatures.Healer(weenie, guid),
-        //Creatures.CreatureType.Merging => new Merger(weenie, guid),
+        Creatures.CreatureType.Merger => new Merger(weenie, guid),
         //Creatures.CreatureType.Necromancer => new Necromancer(weenie, guid),
         //Creatures.CreatureType.Poisoner => new Poisoner(weenie, guid),
         Creatures.CreatureType.Puppeteer => new Puppeteer(weenie, guid),
@@ -464,25 +457,25 @@ public static class CreatureExHelpers
 
 public static class PositionHelpers
 {
-    public static Position Translate(this Position p, float distanceInFront, float radians = 0)
-    {
-        //Add rotation?
-        //Quaternion.CreateFromYawPitchRoll()
-        var pos = new Position();
-        //pos.landblockId.Raw = p.LandblockId.Raw;
-        pos.Rotation = p.Rotation;
+//    public static Position Translate(this Position p, float distanceInFront, float radians = 0)
+//    {
+//        //Add rotation?
+//        //Quaternion.CreateFromYawPitchRoll()
+//        var pos = new Position();
+//        //pos.landblockId.Raw = p.LandblockId.Raw;
+//        pos.Rotation = p.Rotation;
 
-        // Create a Quaternion representing the rotation
-        Quaternion rotationQuaternion = Quaternion.CreateFromYawPitchRoll(radians, 0, 0);
+//        // Create a Quaternion representing the rotation
+//        Quaternion rotationQuaternion = Quaternion.CreateFromYawPitchRoll(radians, 0, 0);
 
-        // Multiply a unit vector by distance/rotation
-        Vector3 rotatedPosition = Vector3.Transform(Vector3.One * distanceInFront, rotationQuaternion);
+//        // Multiply a unit vector by distance/rotation
+//        Vector3 rotatedPosition = Vector3.Transform(Vector3.One * distanceInFront, rotationQuaternion);
 
-        // Add the rotated position to the original position to obtain the translated position
-        pos.Pos = p.Pos + rotatedPosition;
+//        // Add the rotated position to the original position to obtain the translated position
+//        pos.Pos = p.Pos + rotatedPosition;
 
-        return pos;
-        //p.FindZ()
-//        return new Position(p.LandblockId.Raw, p.PositionX + num2, p.PositionY + num3, p.PositionZ + num4, 0f, 0f, rotationZ, rotationW);
-    }
+//        return pos;
+//        //p.FindZ()
+////        return new Position(p.LandblockId.Raw, p.PositionX + num2, p.PositionY + num3, p.PositionZ + num4, 0f, 0f, rotationZ, rotationW);
+//    }
 }

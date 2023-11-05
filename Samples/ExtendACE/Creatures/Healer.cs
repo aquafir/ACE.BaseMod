@@ -1,7 +1,4 @@
-﻿using ACE.Entity.Enum;
-using ACE.Server.WorldObjects;
-
-namespace ExtendACE.Creatures;
+﻿namespace ExtendACE.Creatures;
 
 [HarmonyPatch]
 public class Healer : CreatureEx
