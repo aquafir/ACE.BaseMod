@@ -1,10 +1,12 @@
 ﻿*Thanks to Jkurs for the original `/raise`*
 
-This is a ported version of a refactor of `/raise` and `/raiserefund`.
+This mod adds common "infinite" features like a custom max level and `/raise` command:
 
-Instead of keeping track of a raised `RaiseTarget` in the database through an ACE change this keeps track in `History.json` which is saved when the mod is disabled.
+* `/raise` can be used on any attribute and a few `PropertyInt` values that correspond to Luminance ratings.  Adding more is easy.
+* ``/raiserefund` (`/rr`) refunds the player and invested resource
+* `/raiselist` (`/rl`) sends the player a list of their raised levels and resources spent
 
-Note that changing the settings will cause an over/underestimate of refunded costs.  An improvement would allow a server-wide refund or tracking costs separately.
+The number of times a target has been raised is stored using an offset to its enum value as a `PropertyInt`.
 
 https://user-images.githubusercontent.com/83029060/201008467-63116461-0b20-4b09-a174-4d2c08eeedfe.mp4
 

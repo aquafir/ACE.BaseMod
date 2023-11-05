@@ -1,5 +1,4 @@
-﻿using ACE.Entity.Enum.Properties;
-using ACE.Server.Network.GameMessages.Messages;
+﻿using System.Text.Encodings.Web;
 
 namespace Raise
 {
@@ -18,8 +17,8 @@ namespace Raise
         {
             WriteIndented = true,
             AllowTrailingCommas = true,
-            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
-
+            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         };
 
         private static void SaveSettings()
@@ -62,54 +61,6 @@ namespace Raise
         }
         #endregion
 
-        #region Raise History
-        public static RaiseHistory History = new();
-        private static string historyPath = Path.Combine(Mod.ModPath, "History.json");
-        private static FileInfo historyInfo = new(historyPath);
-
-        private static void SaveHistory()
-        {
-            string jsonString = JsonSerializer.Serialize(History, _serializeOptions);
-
-            if (!historyInfo.RetryWrite(jsonString, RETRIES))
-            {
-                ModManager.Log($"Failed to save history to {historyPath}...", ModManager.LogLevel.Warn);
-                Mod.State = ModState.Error;
-            }
-        }
-
-        private static void LoadHistory()
-        {
-            if (historyInfo.Exists)
-            {
-                ModManager.Log($"Loading history from {historyPath}...");
-
-                if (!historyInfo.RetryRead(out string jsonString, RETRIES))
-                {
-                    Mod.State = ModState.Error;
-                    return;
-                }
-
-                try
-                {
-                    History = JsonSerializer.Deserialize<RaiseHistory>(jsonString, _serializeOptions);
-                }
-                catch (Exception)
-                {
-                    ModManager.Log($"Failed to deserialize: {historyPath}", ModManager.LogLevel.Warn);
-                    Mod.State = ModState.Error;
-                    return;
-                }
-            }
-            else
-            {
-                ModManager.Log($"Creating {historyInfo}...");
-                SaveHistory();
-            }
-        }
-
-        #endregion
-
         #region Start/Shutdown
         public static void Start()
         {
@@ -123,156 +74,52 @@ namespace Raise
                 return;
             }
 
+            SetMaxLevel();
+
             Mod.State = ModState.Running;
         }
 
         public static void Shutdown()
         {
             if (Mod.State == ModState.Running)
-                SaveHistory();
+            {
+                RestoreMaxLevel();
+            }
 
             if (Mod.State == ModState.Error)
                 ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
         }
         #endregion
 
-        #region Commands
-        [CommandHandler("raise", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, "/raise str/end/coord/focus/self, /raise enlighten, /raise offense, and /raise defense..", "/raise <target> <amount>")]
-        public static void HandleAttribute(Session session, params string[] parameters)
+        //Probably shouldn't be doing this except at the start/end...
+        readonly static List<ulong> storedCosts = DatManager.PortalDat.XpTable.CharacterLevelXPList.ToList();
+        readonly static List<uint> storedCredits = DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList.ToList();
+        private static void SetMaxLevel()
         {
-            Player player = session.Player;
-            RaiseTarget target;
-            if (parameters.Length < 1 || !Enum.TryParse<RaiseTarget>(parameters[0], true, out target))
+            RestoreMaxLevel();
+
+            //Add levels up to max
+            for (int i = DatManager.PortalDat.XpTable.CharacterLevelXPList.Count; i <= PatchClass.Settings.MaxLevel; i++)
             {
-                //If a bad target was selected quit and list the valid commands
-                session.Network.EnqueueSend(new GameMessageSystemChat($"You must specify what you wish to raise: /raise <{String.Join("|", Enum.GetNames(typeof(RaiseTarget)))}> [amount]", ChatMessageType.Broadcast));
-                return;
+                var cost = DatManager.PortalDat.XpTable.CharacterLevelXPList.Last() + PatchClass.Settings.CostPerLevel;
+                var credits = (uint)(i % PatchClass.Settings.CreditInterval == 0 ? 1 : 0);
+                DatManager.PortalDat.XpTable.CharacterLevelXPList.Add(cost);
+                DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList.Add(credits);
+                //session?.Player?.SendMessage($"Adding level {i} for {cost}.  {credits} skill credits.");
             }
 
-            int amt = 1;
-            if (parameters.Length > 1)
-            {
-                if (!int.TryParse(parameters[1], out amt))
-                {
-                    session.Network.EnqueueSend(new GameMessageSystemChat($"You must specify or omit the amount to raise: /raise <{String.Join("|", Enum.GetNames(typeof(RaiseTarget)))}> [amount]", ChatMessageType.Broadcast));
-                    return;
-                }
-            }
-            //Check for bad amounts to level
-            if (amt < 1 || amt > Settings.RaiseMax)
-            {
-                session.Network.EnqueueSend(new GameMessageSystemChat($"Provide an amount from 1-{Settings.RaiseMax}: /raise <{String.Join("|", Enum.GetNames(typeof(RaiseTarget)))}> [amount]", ChatMessageType.Broadcast));
-                return;
-            }
-
-            //Check if the Rating has already been maxed normally
-            var currentLevel = target.GetLevel(player);
-            if (currentLevel < target.StartingLevel())
-            {
-                //If you wanted to gate it
-                //session.Network.EnqueueSend(new GameMessageSystemChat($"You must raise {target} to {target.StartingLevel()} with Nalicana before using /raise on it.", ChatMessageType.Broadcast));
-                //return;
-                //Gift it
-                session.Network.EnqueueSend(new GameMessageSystemChat($"You've been granted {target.StartingLevel()} {target} through Nalicana's benificence.", ChatMessageType.Broadcast));
-                target.SetLevel(player, target.StartingLevel());
-            }
-
-            //Get the cost
-            long cost = long.MaxValue;
-            if (!target.TryGetCostToLevel(currentLevel, amt, out cost))
-            {
-                session.Network.EnqueueSend(new GameMessageSystemChat($"Error: Unable to find cost required to raise.  Report to admin.", ChatMessageType.Broadcast));
-                return;
-            }
-
-            //Acceptable /raise target/amount
-            if (target.TryGetAttribute(player, out var attribute))
-            {
-                //Require max attr first
-                if (!attribute.IsMaxRank)
-                {
-                    session.Network.EnqueueSend(new GameMessageSystemChat($"Your {target} is not max level yet. Please raise {target} until it is maxed out. ", ChatMessageType.Broadcast));
-                    return;
-                }
-
-                //Halt if there isn't enough xp
-                if (session.Player.AvailableExperience < cost)
-                {
-                    session.Network.EnqueueSend(new GameMessageSystemChat($"You do not have enough available experience to level your {target}{(amt == 1 ? "" : $" {amt} times")}.  {cost:N0} needed.", ChatMessageType.Broadcast));
-                    return;
-                }
-
-                //Otherwise go ahead raising the attribute
-                target.SetLevel(player, currentLevel + (int)amt);
-                player.AvailableExperience -= cost;
-
-                //Update the player
-                session.Network.EnqueueSend(new GameMessagePrivateUpdatePropertyInt64(player, PropertyInt64.AvailableExperience, player.AvailableExperience ?? 0));
-                session.Network.EnqueueSend(new GameMessagePrivateUpdateAttribute(player, attribute));
-                session.Network.EnqueueSend(new GameMessageSystemChat($"Your base {target} is now {attribute.Base}! Spent {cost:N0} xp.", ChatMessageType.Advancement));
-                return;
-            }
-
-            //Handle luminance
-            if (cost > player.AvailableLuminance || !player.SpendLuminance(cost))
-            {
-                var lumMult = (target == RaiseTarget.World ? Settings.WorldMult : Settings.RaitingMult);
-                ChatPacket.SendServerMessage(session, $"Not enough Luminance, you require {lumMult} Luminance per point of {target}.", ChatMessageType.Broadcast);
-                return;
-            }
-            //Update luminance available
-            session.Network.EnqueueSend(new GameMessagePrivateUpdatePropertyInt64(player, PropertyInt64.AvailableLuminance, player.AvailableLuminance ?? 0));
-
-            //If successful in spending luminance level the target
-            target.SetLevel(player, currentLevel + (int)amt);
-
-            //...and update player
-            switch (target)
-            {
-                case RaiseTarget.World:
-                    ChatPacket.SendServerMessage(session, $"You have raised your World Aug to {player.LumAugAllSkills}! Skills increased by {amt} for {cost:N0} Luminance.", ChatMessageType.Broadcast);
-                    session.Network.EnqueueSend(new GameMessagePrivateUpdatePropertyInt(player, PropertyInt.LumAugAllSkills, player.LumAugAllSkills));
-                    break;
-                case RaiseTarget.Defense:
-                    ChatPacket.SendServerMessage(session, $"Your Damage Reduction Rating has increased by {amt} to {player.LumAugDamageReductionRating} for {cost:N0} Luminance.", ChatMessageType.Broadcast);
-                    session.Network.EnqueueSend(new GameMessagePrivateUpdatePropertyInt(player, PropertyInt.LumAugDamageReductionRating, player.LumAugDamageReductionRating));
-                    break;
-                case RaiseTarget.Offense:
-                    ChatPacket.SendServerMessage(session, $"Your Damage Rating has increased by {amt} to {player.LumAugDamageRating} for {cost:N0} Luminance.", ChatMessageType.Broadcast);
-                    session.Network.EnqueueSend(new GameMessagePrivateUpdatePropertyInt(player, PropertyInt.LumAugDamageRating, player.LumAugDamageRating));
-                    break;
-            }
+            ModManager.Log($"Set max level to {PatchClass.Settings.MaxLevel}");
         }
 
-        [CommandHandler("raiserefund", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 0, "Refunds costs associated with /raise.")]
-        public static void HandleRaiseRefund(Session session, params string[] parameters)
+        private static void RestoreMaxLevel()
         {
-            var player = session.Player;
-            //var timeLapse = DateTime.Now - new DateTime(player.LastRaisedRefundTimestamp);
-            //var timeToUse = Settings.RAISE_TIME_BETWEEN_REFUND - timeLapse;
+            //Restored the original values...
+            DatManager.PortalDat.XpTable.CharacterLevelXPList.Clear();
+            DatManager.PortalDat.XpTable.CharacterLevelXPList.AddRange(storedCosts);
+            DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList.Clear();
+            DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList.AddRange(storedCredits);
 
-            ////Check if enough time has passed
-            //if (timeToUse.TotalSeconds > 0)
-            //{
-            //ChatPacket.SendServerMessage(session, $"You must wait {timeToUse.TotalMinutes:0.##} minutes before refunding.", ChatMessageType.Broadcast);
-            //return;
-            //}
-
-            //Refund player and set last use
-            //TODO: Check if the player has anything to refund before setting a cooldown
-            Raise.RaiseRefundToPlayer(player);
-            //player.LastRaisedRefundTimestamp = DateTime.Now.Ticks;
+            ModManager.Log($"Restored max level to {DatManager.PortalDat.XpTable.CharacterLevelXPList.Count}");
         }
-
-        #endregion
-
-        #region Patches
-        //[HarmonyPrefix]
-        //[HarmonyPatch(typeof(Creature), nameof(Creature.GetDeathMessage), new Type[] { typeof(DamageHistoryInfo), typeof(DamageType), typeof(bool) })]
-        //public static void PreDeathMessage(DamageHistoryInfo lastDamagerInfo, DamageType damageType, bool criticalHit, ref Creature __instance)
-        //{
-        //  ...
-        //}
-        #endregion
     }
 }

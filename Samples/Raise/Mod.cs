@@ -2,10 +2,11 @@
 {
     public class Mod : IHarmonyMod
     {
+        #region Members
         //If Harmony is set to debug it creates a log on Desktop
         public const bool DEBUGGING = false;
         //Point to your mod directory
-        public static string ModPath = Path.Combine(ModManager.ModPath, nameof(Raise));
+        public static string ModPath = Path.Combine(ModManager.ModPath, "Raise");
 
         //IDs are used by Harmony to separate multiple patches
         const string ID = "com.ACE.ACEmulator.Raise";
@@ -20,6 +21,7 @@
         private readonly TimeSpan _reloadInterval = TimeSpan.FromSeconds(3);
 
         public static ModState State = ModState.None;
+        #endregion
 
         #region Initialize / Dispose (called by ACE)
         public void Initialize()
@@ -103,7 +105,7 @@
             try
             {
                 //Patch everything in the mod with Harmony attributes
-                Harmony.PatchAll();
+                Harmony.PatchAllUncategorized();
 
                 PatchClass.Start();
             }
