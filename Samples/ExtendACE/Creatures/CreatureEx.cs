@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using static ACE.Server.Factories.PlayerFactory;
+﻿using static ACE.Server.Factories.PlayerFactory;
 using Weenie = ACE.Entity.Models.Weenie;
 
 namespace ExtendACE.Creatures;
@@ -49,7 +47,6 @@ public class CreatureEx : Creature
     [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(Weenie), typeof(ObjectGuid) })]
     public static bool PreCreateWorldObject(Weenie weenie, ObjectGuid guid, ref WorldObject __result)
     {
-        Debugger.Break();
         if (weenie.WeenieType != WeenieType.Creature || weenie == null) return true;
         if (ThreadSafeRandom.Next(0, 1.0f) > PatchClass.Settings.CreatureChance) return true;
 
@@ -61,7 +58,6 @@ public class CreatureEx : Creature
     [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(Biota) })]
     public static bool PreCreateWorldObject(Biota biota, ref WorldObject __result)
     {
-        Debugger.Break();
         if (biota.WeenieType != WeenieType.Creature) return true;
         if (ThreadSafeRandom.Next(0, 1.0f) > PatchClass.Settings.CreatureChance) return true;
         __result = RollCreature(biota);
@@ -70,10 +66,9 @@ public class CreatureEx : Creature
     }
 
     protected static int possibleCreatureTypes = Enum.GetValues<CreatureType>().Length;
-    protected static CreatureType RandomCreatureType() => Creatures.CreatureType.Boss; 
-    //(CreatureType) ThreadSafeRandom.Next(0, possibleCreatureTypes);
+    protected static CreatureType RandomCreatureType() => (CreatureType)ThreadSafeRandom.Next(0, possibleCreatureTypes);
+            //Creatures.CreatureType.Boss; 
 
-    public static CreatureEx RollCreature(Weenie weenie, ObjectGuid guid) => new CreatureEx(weenie, guid);
-        //RandomCreatureType().Create(weenie, guid);
+    public static CreatureEx RollCreature(Weenie weenie, ObjectGuid guid) => RandomCreatureType().Create(weenie, guid);
     public static CreatureEx RollCreature(Biota biota) => RandomCreatureType().Create(biota);
 }

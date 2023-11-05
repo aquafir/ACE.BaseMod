@@ -1,8 +1,4 @@
-﻿using ACE.Server.Entity.Actions;
-using ACE.Server.Physics.Animation;
-using System.Runtime.CompilerServices;
-
-namespace ExtendACE.Creatures;
+﻿namespace ExtendACE.Creatures;
 
 [HarmonyPatch]
 public class Stunner : CreatureEx

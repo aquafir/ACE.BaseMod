@@ -1,17 +1,11 @@
 ﻿using ACE.Server.Network.GameEvent.Events;
-using ACE.Server.Network;
 using ACE.Server.WorldObjects.Entity;
 using System.Text;
-using ACE.Server.WorldObjects;
-using System.Diagnostics;
 using static ACE.Server.WorldObjects.Player;
-using ACE.Server.WorldObjects.Managers;
 using ExtendACE.Creatures;
-using System;
-using ACE.Server.Managers;
-using ACE.Server.Command.Handlers;
-using static ACE.Server.Physics.Common.LandDefs;
-using System.Numerics;
+using ACE.Server.Physics;
+using ACE.Database;
+using ACE.Server.Network.GameMessages.Messages;
 
 namespace ExtendACE;
 
@@ -439,7 +433,7 @@ public static class CreatureExHelpers
         Creatures.CreatureType.Evader => new Evader(weenie, guid),
         Creatures.CreatureType.Exploding => new Exploder(weenie, guid),
         Creatures.CreatureType.Healer => new Creatures.Healer(weenie, guid),
-        //Creatures.CreatureType.Merging => new Merger(weenie, guid),
+        Creatures.CreatureType.Merger => new Merger(weenie, guid),
         //Creatures.CreatureType.Necromancer => new Necromancer(weenie, guid),
         //Creatures.CreatureType.Poisoner => new Poisoner(weenie, guid),
         Creatures.CreatureType.Puppeteer => new Puppeteer(weenie, guid),

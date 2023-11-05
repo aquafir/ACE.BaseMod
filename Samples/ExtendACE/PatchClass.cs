@@ -1,11 +1,7 @@
 ﻿using ACE.Server.Command;
 using ACE.Server.Command.Handlers;
-using ACE.Server.Entity.Actions;
 using ACE.Server.Managers;
 using ACE.Server.Network;
-using ACE.Server.Network.Structure;
-using ACE.Server.Physics.Common;
-using System.Diagnostics;
 
 namespace ExtendACE;
 
@@ -145,21 +141,30 @@ public class PatchClass
     //}
 
     static ExtendACE.Creatures.CreatureType[] types = Enum.GetValues<ExtendACE.Creatures.CreatureType>();
-    static string availableTypes = String.Join('\n', types.Select(x => $"  {x.ToString()}"));
-    [CommandHandler("cex", AccessLevel.Sentinel, CommandHandlerFlag.RequiresWorld, 2)]
+    static string availableTypes = String.Join('\n', types.Select(x => $"  {x.ToString()} - {(int)x}"));
+    [CommandHandler("cex", AccessLevel.Sentinel, CommandHandlerFlag.RequiresWorld)]
     public static void HandleCreateEx(Session session, params string[] parameters)
     {
+        //Check parameters
+        if(parameters.Length != 2)
+        {
+            session.Player.SendMessage($"Available types are: \n{availableTypes}");
+            return;
+        }
+
+        //Check valid CreatureEx type
+        //todo: allow use of enum value
+        var name = parameters[0];
+        if (!types.Any(x => x.ToString().Contains(parameters[0], StringComparison.InvariantCultureIgnoreCase)))
+        {
+            session.Player.SendMessage($"Available types are: \n{availableTypes}");
+            return;
+        }       
+
         var weenie = AdminCommands.GetWeenieForCreate(session, parameters[1]);
         if (weenie is null)
         {
             session.Player.SendMessage($"Provide a valid weenie ID: {parameters[1]}");
-            return;
-        }
-
-        var name = parameters[0];
-        if (!types.Any(x => x.ToString().Contains(name, StringComparison.InvariantCultureIgnoreCase)))
-        {
-            session.Player.SendMessage($"Available types are: \n{availableTypes}");
             return;
         }
 
@@ -186,29 +191,10 @@ public class PatchClass
         //p.FailCast(false);
         //p.HandleActionCancelAttack();
 
-        p.Stun(uint.Parse(parameters[0]));
+        //p.Stun(uint.Parse(parameters[0]));
 
         //  var time = p.ExecuteMotion(m);
         //var time = p.ExecuteMotionPersist(m);
         // p.SendMessage($"{time}");
     }
-
-    ////Play all animations
-    //[CommandHandler("animations", AccessLevel.Sentinel, CommandHandlerFlag.RequiresWorld, 0)]
-    //public static void HandleAnimations(Session session, params string[] parameters)
-    //{
-    //    var p = session.Player;
-
-    //    var actionChain = new ActionChain();
-    //    foreach (var script in Enum.GetValues<PlayScript>())
-    //    {
-    //        actionChain.AddDelaySeconds(2f);
-    //        actionChain.AddAction(p, () =>
-    //        {
-    //            p.PlayAnimation(script);
-    //            p.SendMessage($"Playing {script}");
-    //        });
-    //    }
-    //    actionChain.EnqueueChain();
-    //}
 }

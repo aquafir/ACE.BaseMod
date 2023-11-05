@@ -1,5 +1,4 @@
-﻿using ACE.Server.WorldObjects;
-using static ACE.Server.WorldObjects.Player;
+﻿using static ACE.Server.WorldObjects.Player;
 
 namespace ExtendACE.Creatures;
 
