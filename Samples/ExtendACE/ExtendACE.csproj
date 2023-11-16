@@ -7,18 +7,10 @@
 		<OutputPath>C:\ACE\Mods\$(AssemblyName)</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<PublicizeAll>true</PublicizeAll>
+		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
 	</ItemGroup>
 
@@ -33,10 +25,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
 			<PrivateAssets>all</PrivateAssets>
