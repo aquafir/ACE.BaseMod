@@ -15,6 +15,11 @@ public static class CloakMutation
             _ => 150,
         };
 
+        wo.ItemXpStyle = ItemXpStyle.Fixed;
+        wo.ItemBaseXp = 1_000_000_000;
+        //wo.ItemTotalXp = 0;
+        wo.ItemTotalXp = wo.ItemBaseXp;
+
         wo.IconOverlayId = LootGenerationFactory.IconOverlay_ItemMaxLevel[wo.ItemMaxLevel.Value - 1];
 
         //Add a set

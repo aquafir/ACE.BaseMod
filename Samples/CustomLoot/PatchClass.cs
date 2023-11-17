@@ -100,6 +100,10 @@ public class PatchClass
 
         if (Settings.EnableOnHitForNonCloak)
             Mod.Harmony.PatchCategory(Settings.OnHitCategory);
+
+
+        if (Settings.EnableProcOverride)
+            Mod.Harmony.PatchCategory(Settings.ProcOverrideCategory);
     }
 
     #region Mutation Handlers
@@ -135,6 +139,13 @@ public class PatchClass
 
             //Use all creatures or just a subset
             var cTypes = Settings.UseCustomSlayers ? Settings.SlayerSpecies : Enum.GetValues<CreatureType>();
+
+            if (cTypes.Length < 1)
+            {
+                ModManager.Log("No available species to add Slayer for.");
+                return;
+            }
+
             //Get a random type
             var type = cTypes[ThreadSafeRandom.Next(0, cTypes.Length - 1)];
             var power = Settings.SlayerPower[treasureDeath.Tier];
