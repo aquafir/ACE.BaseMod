@@ -82,7 +82,15 @@ public class PatchClass
         //Add difficulties
         ModifyTinkering();
 
+        PatchCategories();
+
         Mod.State = ModState.Running;
+    }
+
+    private static void PatchCategories()
+    {
+        if (Settings.EnableRecipeManagerPatch)
+            Mod.Harmony.PatchCategory(Settings.RecipeManagerCategory);
     }
 
     public static void Shutdown()

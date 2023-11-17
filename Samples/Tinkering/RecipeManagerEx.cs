@@ -1,4 +1,6 @@
-﻿namespace Tinkering;
+﻿using ACE.Database.Models.World;
+
+namespace Tinkering;
 
 [HarmonyPatchCategory(Settings.RecipeManagerCategory)]
 public class RecipeManagerEx
@@ -48,6 +50,14 @@ public class RecipeManagerEx
             return false;
         }
 
+        StartCraftAnimation(player, source, target, confirmed, allowCraftInCombat, recipe, percentSuccess);
+
+        //Override
+        return false;
+    }
+
+    private static void StartCraftAnimation(Player player, WorldObject source, WorldObject target, bool confirmed, bool allowCraftInCombat, Recipe recipe, double? percentSuccess)
+    {
         var showDialog = RecipeManager.HasDifficulty(recipe) && player.GetCharacterOption(CharacterOption.UseCraftingChanceOfSuccessDialog);
 
         if (!confirmed && player.LumAugSkilledCraft > 0)
@@ -103,11 +113,7 @@ public class RecipeManagerEx
         actionChain.EnqueueChain();
 
         player.NextUseTime = DateTime.UtcNow.AddSeconds(nextUseTime);
-
-        return false;
     }
-
-
 
     private static bool CheckBusy(Player player, bool allowCraftInCombat)
     {

@@ -10,4 +10,5 @@ public class Settings
 
 
     public const string RecipeManagerCategory = "RecipeManagerPatch";
+    public bool EnableRecipeManagerPatch { get; set; } = true;
 }

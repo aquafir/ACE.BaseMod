@@ -10,7 +10,7 @@
 
         //IDs are used by Harmony to separate multiple patches
         const string ID = "com.ACE.ACEmulator.Tinkering";
-        protected static Harmony Harmony { get; set; } = new(ID);
+        public static Harmony Harmony { get; set; } = new(ID);
 
         private bool disposedValue;
         public static Mod Instance { get; private set; }
