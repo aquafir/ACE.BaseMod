@@ -1,4 +1,9 @@
-﻿namespace CustomLoot;
+﻿using ACE.Server.Physics;
+using ACE.Server.WorldObjects;
+using static ACE.Server.WorldObjects.Creature;
+using System.Security.Cryptography;
+
+namespace CustomLoot;
 
 public class Settings
 {
@@ -53,21 +58,21 @@ public class Settings
     //Use custom pool to remove ring / allow other options
     public bool UseCustomCloakSpellProcs { get; set; } = true;
     public List<SpellId> CloakSpells { get; set; } =
-       new() {        
-           SpellId.VulnerabilityOther8,
-           SpellId.AcidArc8
-};
-        //new (
-        ////No ring spells
-        ////Sets.cloakSpecificSpells
-        ////Add your own
-        ////.Append(SpellId.DrainHealth8)
-        //);
+        new(
+        //No ring spells
+        //Sets.cloakSpecificSpells
+        //Add your own
+        //.Append(SpellId.DrainHealth8)
+        );
     #endregion
 
     #region Slayer
     //Chance of rolling a random slayer
     public double SlayerChance { get; set; } = .25;
+    //Use default list or all
+    public bool UseCustomSlayers { get; set; } = true;
+    //Default list is all defined except wall
+    public CreatureType[] SlayerSpecies { get; set; } = Enum.GetValues<CreatureType>().TakeWhile(x => x != CreatureType.Unknown && x != CreatureType.Wall && x != CreatureType.Invalid).ToArray();
 
     //Power of slayer
     public Dictionary<int, float> SlayerPower { get; set; } = new()

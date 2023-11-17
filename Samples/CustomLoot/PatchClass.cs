@@ -133,8 +133,10 @@ public class PatchClass
             if (__result.GetProperty(PropertyInt.SlayerCreatureType) is not null)
                 return;
 
-            var cTypes = Enum.GetValues<CreatureType>();
-            var type = cTypes[ThreadSafeRandom.Next(0, cTypes.Length)];
+            //Use all creatures or just a subset
+            var cTypes = Settings.UseCustomSlayers ? Settings.SlayerSpecies : Enum.GetValues<CreatureType>();
+            //Get a random type
+            var type = cTypes[ThreadSafeRandom.Next(0, cTypes.Length - 1)];
             var power = Settings.SlayerPower[treasureDeath.Tier];
 
             __result.SetProperty(PropertyInt.SlayerCreatureType, (int)type);
