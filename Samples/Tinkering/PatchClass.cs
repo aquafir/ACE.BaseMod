@@ -141,22 +141,6 @@ public class PatchClass
 
         #endregion
 
-        //if (recipe.IsImbuing())
-        //{
-        //    successChance /= 3.0f;
-
-        //    if (player.AugmentationBonusImbueChance > 0)
-        //        successChance += player.AugmentationBonusImbueChance * 0.05f;
-        //}
-        //Debugger.Break();
-
-        //The target item has been imbued already!
-        //3
-        //428
-        //4452
-        //179
-        //1
-
         foreach (var requirement in intReqs)
         {
             int? value = obj.GetProperty((PropertyInt)requirement.Stat);
@@ -307,4 +291,7 @@ public class PatchClass
         [0x38000040] = ImbuedEffectType.SlashRending,
         [0x38000041] = ImbuedEffectType.Spellbook,
     };
+
+    //RecipeManager.UseObjectOnTarget
+    //WorldObject.HandleActionUseOnTarget
 }

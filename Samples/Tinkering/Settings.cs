@@ -7,4 +7,7 @@ public class Settings
     public float Scale { get; set; } = .5f;
 
     public int MaxImbueEffects { get; set; } = 2;
+
+
+    public const string RecipeManagerCategory = "RecipeManagerPatch";
 }
