@@ -89,12 +89,32 @@ public class PatchClass
     }
     #endregion
 
-
     static ProfanityFilter.ProfanityFilter filter = new();
 
     private void SetupFilter()
     {
-        filter = new ProfanityFilter.ProfanityFilter();
+        //Create default or empty list
+        filter = Settings.UseDefaultList ? new ProfanityFilter.ProfanityFilter() : new ProfanityFilter.ProfanityFilter(new string[] { });
+
+        //Load blacklist
+        var watch = Stopwatch.StartNew();
+        if (File.Exists(Settings.BlackList))
+        {
+            var list = File.ReadAllLines(Settings.BlackList);
+            filter.AddProfanity(list);
+
+            ModManager.Log($"Blacklisted {list.Length} words after {watch.ElapsedMilliseconds} ms");
+            watch.Restart();
+
+        }
+        if (File.Exists(Settings.WhiteList))
+        {
+            var list = File.ReadAllLines(Settings.WhiteList);
+            filter.RemoveProfanity(list);
+
+            ModManager.Log($"Whitelisted {list.Length} words after {watch.ElapsedMilliseconds} ms");
+            watch.Stop();
+        }
     }
 
 
