@@ -1,4 +1,4 @@
-﻿namespace ACE.BaseMod;
+﻿namespace ACE.CatMod;
 
 [HarmonyPatch]
 public class PatchClass
@@ -10,7 +10,7 @@ public class PatchClass
     static string settingsPath => Path.Combine(Mod.ModPath, "Settings.json");
     private FileInfo settingsInfo = new(settingsPath);
 
-    private  JsonSerializerOptions _serializeOptions = new()
+    private JsonSerializerOptions _serializeOptions = new()
     {
         WriteIndented = true,
         AllowTrailingCommas = true,
@@ -18,7 +18,7 @@ public class PatchClass
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
-    private  void SaveSettings()
+    private void SaveSettings()
     {
         string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
 
@@ -29,7 +29,7 @@ public class PatchClass
         }
     }
 
-    private  void LoadSettings()
+    private void LoadSettings()
     {
         if (!settingsInfo.Exists)
         {
@@ -47,7 +47,7 @@ public class PatchClass
 
         try
         {
-            Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
+            Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions) ?? new Settings();
         }
         catch (Exception)
         {
@@ -59,7 +59,7 @@ public class PatchClass
     #endregion
 
     #region Start/Shutdown
-    public  void Start()
+    public void Start()
     {
         //Need to decide on async use
         Mod.State = ModState.Loading;
@@ -71,10 +71,12 @@ public class PatchClass
             return;
         }
 
+        PatchCategories();
+
         Mod.State = ModState.Running;
     }
 
-    public  void Shutdown()
+    public void Shutdown()
     {
         //if (Mod.State == ModState.Running)
         // Shut down enabled mod...
@@ -87,13 +89,10 @@ public class PatchClass
     }
     #endregion
 
-    #region Patches
-    //[HarmonyPrefix]
-    //[HarmonyPatch(typeof(Creature), nameof(Creature.GetDeathMessage), new Type[] { typeof(DamageHistoryInfo), typeof(DamageType), typeof(bool) })]
-    //public static void PreDeathMessage(DamageHistoryInfo lastDamagerInfo, DamageType damageType, bool criticalHit, ref Creature __instance)
-    //{
-    //  ...
-    //}
-    #endregion
+    //Patch only desired categories
+    private static void PatchCategories()
+    {
+        if (Settings.EnablePatchCategory)
+            Mod.Harmony.PatchCategory(Settings.PatchCategoryName);
+    }
 }
-

@@ -64,7 +64,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfFound", "Samples\SelfFo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tinkering", "Samples\Tinkering\Tinkering.csproj", "{9DCC1E63-AB17-447E-ABBE-C739094C3285}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatFilter", "Samples\ChatFilter\ChatFilter.csproj", "{628E565B-9F4C-4E46-AAF9-C94F584F0E50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatFilter", "Samples\ChatFilter\ChatFilter.csproj", "{628E565B-9F4C-4E46-AAF9-C94F584F0E50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACE.CatMod", "ACE.CatMod\ACE.CatMod.csproj", "{FF41F305-0FE1-4983-8D37-1BF75EDE76B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -172,6 +174,10 @@ Global
 		{628E565B-9F4C-4E46-AAF9-C94F584F0E50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{628E565B-9F4C-4E46-AAF9-C94F584F0E50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{628E565B-9F4C-4E46-AAF9-C94F584F0E50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF41F305-0FE1-4983-8D37-1BF75EDE76B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF41F305-0FE1-4983-8D37-1BF75EDE76B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF41F305-0FE1-4983-8D37-1BF75EDE76B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF41F305-0FE1-4983-8D37-1BF75EDE76B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

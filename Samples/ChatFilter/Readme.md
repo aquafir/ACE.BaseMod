@@ -1,1 +1,1 @@
-﻿*Add mod description and usage*
+﻿Uses [Profanity.Detector](https://github.com/stephenhaunts/ProfanityDetector).
