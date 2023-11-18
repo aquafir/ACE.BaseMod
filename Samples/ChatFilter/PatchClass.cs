@@ -1,4 +1,6 @@
-﻿namespace ChatFilter;
+﻿using ACE.Server.Network;
+
+namespace ChatFilter;
 
 [HarmonyPatch]
 public class PatchClass
@@ -71,6 +73,7 @@ public class PatchClass
             return;
         }
 
+        PatchCategories();
         SetupFilter();
 
         Mod.State = ModState.Running;
@@ -88,9 +91,17 @@ public class PatchClass
             ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
     }
     #endregion
+    
+    private void PatchCategories()
+    {
+        if (Settings.FilterChat)
+            Mod.Harmony.PatchCategory(Settings.ChatCategory);
+
+        if (Settings.FilterTells)
+            Mod.Harmony.PatchCategory(Settings.TellCategory);
+    }
 
     static ProfanityFilter.ProfanityFilter filter = new();
-
     private void SetupFilter()
     {
         //Create default or empty list
@@ -103,7 +114,7 @@ public class PatchClass
             var list = File.ReadAllLines(Settings.BlackList);
             filter.AddProfanity(list);
 
-            ModManager.Log($"Blacklisted {list.Length} words after {watch.ElapsedMilliseconds} ms");
+            ModManager.Log($"ChatFilter: Blacklisted {list.Length} words after {watch.ElapsedMilliseconds} ms");
             watch.Restart();
 
         }
@@ -112,82 +123,19 @@ public class PatchClass
             var list = File.ReadAllLines(Settings.WhiteList);
             filter.RemoveProfanity(list);
 
-            ModManager.Log($"Whitelisted {list.Length} words after {watch.ElapsedMilliseconds} ms");
+            ModManager.Log($"ChatFilter: Whitelisted {list.Length} words after {watch.ElapsedMilliseconds} ms");
             watch.Stop();
         }
     }
 
-
-    //Rewrite of GameActionTell with a filter check added
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(GameActionTell), nameof(GameActionTell.Handle), new Type[] { typeof(ClientMessage), typeof(Session) })]
-    public static bool PreHandle(ClientMessage clientMessage, Session session)
+    public static bool TryHandleToxicity(string message, Player player, ChatSource source)
     {
-        var message = clientMessage.Payload.ReadString16L(); // The client seems to do the trimming for us
-        var target = clientMessage.Payload.ReadString16L(); // Needs to be trimmed because it may contain white spaces after the name and before the ,
-
-        if (TryHandleToxicity(message, session.Player))
-            return false;
-
-        if (session.Player.IsGagged)
-        {
-            session.Player.SendGagError();
-            return false;
-        }
-
-        target = target.Trim();
-        var targetPlayer = PlayerManager.GetOnlinePlayer(target);
-
-        if (targetPlayer == null)
-        {
-            var statusMessage = new GameEventWeenieError(session, WeenieError.CharacterNotAvailable);
-            session.Network.EnqueueSend(statusMessage);
-            return false;
-        }
-
-        if (session.Player != targetPlayer)
-            session.Network.EnqueueSend(new GameMessageSystemChat($"You tell {targetPlayer.Name}, \"{message}\"", ChatMessageType.OutgoingTell));
-
-        if (targetPlayer.SquelchManager.Squelches.Contains(session.Player, ChatMessageType.Tell))
-        {
-            session.Network.EnqueueSend(new GameEventWeenieErrorWithString(session, WeenieErrorWithString.MessageBlocked_, $"{target} has you squelched."));
-            //log.Warn($"Tell from {session.Player.Name} (0x{session.Player.Guid.ToString()}) to {targetPlayer.Name} (0x{targetPlayer.Guid.ToString()}) blocked due to squelch");
-            return false;
-        }
-
-        if (targetPlayer.IsAfk)
-        {
-            session.Network.EnqueueSend(new GameEventWeenieErrorWithString(session, WeenieErrorWithString.AFK, $"{targetPlayer.Name} is away: " + (string.IsNullOrWhiteSpace(targetPlayer.AfkMessage) ? ACE.Server.WorldObjects.Player.DefaultAFKMessage : targetPlayer.AfkMessage)));
-            //return;
-        }
-
-        var tell = new GameEventTell(targetPlayer.Session, message, session.Player.GetNameWithSuffix(), session.Player.Guid.Full, targetPlayer.Guid.Full, ChatMessageType.Tell);
-        targetPlayer.Session.Network.EnqueueSend(tell);
-
-        return false;
-    }
-
-
-    //White text
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Player), nameof(Player.HandleActionTalk), new Type[] { typeof(string) })]
-    public static bool PreHandleActionTalk(string message, ref Player __instance)
-    {
-        if (TryHandleToxicity(message, __instance))
-            return false;
-
-        return true;
-    }
-
-    private static bool TryHandleToxicity(string message, Player player)
-    {
-        if (player.IsShadowBanned())
+        if (TryHandleShadowBan(message, player, source))
             return true;
-
 
         if (filter.ContainsProfanity(message))
         {
-            player.ShadowBan();
+            player.SetShadowBanned();
 
             player.SendGagError();
             message = filter.CensorString(message);
@@ -204,4 +152,16 @@ public class PatchClass
 
         return false;
     }
+
+    public static bool TryHandleShadowBan(string message, Player player, ChatSource source)
+    {
+        if (!player.IsShadowBanned()) return false;
+
+        return false;
+    }
+}
+public enum ChatSource
+{
+    Chat,
+    Tell
 }
