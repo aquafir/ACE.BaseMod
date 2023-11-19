@@ -8,4 +8,4 @@
   * If `BroadcastGag` is enabled it will broadcast the gag.
 * If `BanPlayer` is enabled it will ban the player for `BanBaseTime` seconds plus `BanTimePerInfraction` per infraction.
   * If `BroadcastBan` is enabled it will broadcast the ban.
-* 
+* If `CensorText` is true the message will replace matches with `*`

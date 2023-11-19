@@ -1,4 +1,5 @@
 ﻿using ACE.Database;
+using ACE.Server.Network.Enum;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ChatFilter;
@@ -11,7 +12,7 @@ public static class Helper
 
     public static int ChatInfractionCount(this Player player) => player.GetProperty(PatchClass.Settings.ChatInfractionsProperty) ?? 0;
     public static void SetChatInfractionCount(this Player player, int count) => player.SetProperty(PatchClass.Settings.ChatInfractionsProperty, count);
-    public static void IncreaseChatInfractionCount(this Player player, int count) => player.SetProperty(PatchClass.Settings.ChatInfractionsProperty, player.ChatInfractionCount() + count);
+    public static void IncreaseChatInfractionCount(this Player player, int count = 1) => player.SetProperty(PatchClass.Settings.ChatInfractionsProperty, player.ChatInfractionCount() + count);
     public static bool GagPlayer(this Player player)
     {
         if (player == null || !PatchClass.Settings.GagPlayer)
@@ -30,7 +31,7 @@ public static class Helper
         return true;
     }
 
-    public static bool BanPlayerAccount(this Player player)
+    public static bool BanPlayerAccount(this Player player, string? infraction = null)
     {
         if (player == null || !PatchClass.Settings.BanAccount)
             return false;
@@ -50,8 +51,8 @@ public static class Helper
             bannedBy = session.AccountId;
         }
 
-        var reason = $"{player.Name} has been gagged {player.Name} for {banSeconds / 60} minute(s) for their {player.ChatInfractionCount()} infraction.";
-        var accountName = account.AccountName;
+        var reason = $"{player.Name} has been banned {player.Name} for {banSeconds / 60} minute(s) for their {player.ChatInfractionCount()} infraction.";
+        //var accountName = account.AccountName;
         account.BannedTime = bannedOn;
         account.BanExpireTime = banExpires;
         account.BannedByAccountId = bannedBy;
@@ -61,7 +62,8 @@ public static class Helper
         DatabaseManager.Authentication.UpdateAccount(account);
 
         // Boot the player
-        player.Session.LogOffPlayer(true);       
+        //player.Session.LogOffPlayer(true);       
+        player.Session.Terminate(SessionTerminationReason.AccountBooted, new GameMessageBootAccount(reason), null, infraction);
 
         if (PatchClass.Settings.BroadcastBan)
             PlayerManager.BroadcastToAuditChannel(player, reason);

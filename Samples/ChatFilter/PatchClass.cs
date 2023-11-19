@@ -91,7 +91,7 @@ public class PatchClass
             ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
     }
     #endregion
-    
+
     private void PatchCategories()
     {
         if (Settings.FilterChat)
@@ -130,27 +130,43 @@ public class PatchClass
 
     public static bool TryHandleToxicity(string message, Player player, ChatSource source)
     {
-        if (TryHandleShadowBan(message, player, source))
-            return true;
+        var hasProfanity = filter.ContainsProfanity(message);
 
-        if (filter.ContainsProfanity(message))
+        //Unsure about a short circuit.  Allow non-profane messages, or block all?
+        if (!hasProfanity)
+            return false;
+
+        player.IncreaseChatInfractionCount();
+
+        //Check shadowban before anything.  Skips recipient but sends user?
+        if (Settings.ShadowBan && !player.IsShadowBanned())
+            player.SetShadowBanned(true);
+
+        if(player.IsShadowBanned())
+            if (TryHandleShadowBan(message, player, source))
+                return true;
+
+        //Replace words but don't stop
+        if (Settings.CensorText)
         {
-            player.SetShadowBanned();
-
-            player.SendGagError();
             message = filter.CensorString(message);
-
-            player.SendMessage($"Banned for: {message}");
-
-            var chain = new ActionChain();
-            chain.AddDelaySeconds(3);
-            chain.AddAction(player, () => player.Session.LogOffPlayer(true));
-            chain.EnqueueChain();
-
-            return true;
+            return false;
         }
 
-        return false;
+        if (Settings.GagPlayer)
+            player.GagPlayer();
+
+        if (Settings.BanAccount)
+            player.BanPlayerAccount();
+
+        //player.SendMessage($"Banned for: {message}");
+
+        //var chain = new ActionChain();
+        //chain.AddDelaySeconds(3);
+        //chain.AddAction(player, () => player.Session.LogOffPlayer(true));
+        //chain.EnqueueChain();
+
+        return true;
     }
 
     public static bool TryHandleShadowBan(string message, Player player, ChatSource source)

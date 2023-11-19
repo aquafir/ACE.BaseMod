@@ -27,7 +27,8 @@ public class Settings
 
 
     //Users unaware they're muted
-    public bool ShadowBan { get; set; }
+    public bool CensorText { get; set; } = true;
+    public bool ShadowBan { get; set; } = false;
     public PropertyBool ShadowBanProperty => (PropertyBool)12345;
     public PropertyInt ChatInfractionsProperty => (PropertyInt)12345;
 
