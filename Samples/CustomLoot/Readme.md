@@ -31,13 +31,6 @@ This mod changes the loot generated objects returned by `LootGenerationFactory.C
   * Weapons (or missing) roll nothing
 
 
-
-
-https://github.com/aquafir/ACE.BaseMod/assets/83029060/1300de91-fa7f-442c-a2f1-527bc4a282f0
-
-
-
-
 ### Aetheria
 
 * `EnableOnAttackForNonAetheria` is needed to patch ACE to check non-Aetheria for OnAttack triggers
@@ -45,11 +38,27 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/1300de91-fa7f-442c-a2f1-5
 
 
 
+
+### Video
+
+
+
+<details>
+ <summary>Sets</summary>
+
+https://github.com/aquafir/ACE.BaseMod/assets/83029060/1300de91-fa7f-442c-a2f1-527bc4a282f0
+</details>
+
+<details>
+ <summary>OnAttack Proc</summary>
+
 https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c2efbf67d781
+</details>
 
 
 
-## Enums
+
+### Enums
 
 * [EquipmentSet](https://github.com/ACEmulator/ACE/blob/fdfdec9f0a16bbcbb89a9120ce4f889520a51708/Source/ACE.Entity/Enum/EquipmentSet.cs#L4)
 * [TreasureItemType_Orig enum](https://github.com/ACEmulator/ACE/blob/fdfdec9f0a16bbcbb89a9120ce4f889520a51708/Source/ACE.Server/Factories/Enum/TreasureItemType_Orig.cs#L4)
@@ -61,7 +70,7 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 
 
 
-## Notes
+### Notes
 
 * Per-tier chances would be a good candidate for future customization
 * Currently doesn't wipe a set/proc if one exists and a mutation isn't rolled.
@@ -70,7 +79,7 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 
 
 
-## Levels?
+### Levels?
 
 * Needs all 3
   * ItemMaxLevel - max level
