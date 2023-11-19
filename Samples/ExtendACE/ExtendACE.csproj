@@ -7,7 +7,7 @@
 		<OutputPath>C:\ACE\Mods\$(AssemblyName)</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-		<!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
+		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
 	<PropertyGroup>

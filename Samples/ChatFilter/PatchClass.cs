@@ -92,6 +92,7 @@ public class PatchClass
     }
     #endregion
 
+    #region Setup
     private void PatchCategories()
     {
         if (Settings.FilterChat)
@@ -127,24 +128,57 @@ public class PatchClass
             watch.Stop();
         }
     }
+    #endregion
 
-    public static bool TryHandleToxicity(string message, Player player, ChatSource source)
+    #region Commands
+    // unsban [name]
+    [CommandHandler("unsban", AccessLevel.Sentinel, CommandHandlerFlag.None, 1, "Removes shadow ban from a player.")]
+    public static void HandleShadowbanRemove(Session session, params string[] parameters)
+    {
+        var name = parameters[0];
+        if (PlayerManager.FindByName(name) is not Player player)
+        {
+            ModManager.Log($"Unable to remove shadow ban from offline player: {name}");
+            return;
+        }
+
+        player.SetShadowBanned(false);
+        player.SendMessage("Your are no longer shadow banned.");
+    }
+    #endregion
+
+    public static bool TryHandleToxicity(ref string message, Player player, ChatSource source, string? target = null)
     {
         var hasProfanity = filter.ContainsProfanity(message);
+
+        //Check shadowban before anything.  Skips recipient but sends user?
+        if (Settings.ShadowBan)
+        {
+            if (!player.IsShadowBanned())
+                player.SetShadowBanned(true);
+
+            //Todo: If a player was shadow banned ban ALL chat or just filtered chat?
+            if (player.IsShadowBanned())
+            {
+                switch (source)
+                {
+                    case ChatSource.Chat:
+                        player.FakeChat(message);
+                        break;
+                    case ChatSource.Tell:
+                        player.FakeTell(message, target);
+                        break;
+                }
+
+                return true;
+            }
+        }
 
         //Unsure about a short circuit.  Allow non-profane messages, or block all?
         if (!hasProfanity)
             return false;
 
         player.IncreaseChatInfractionCount();
-
-        //Check shadowban before anything.  Skips recipient but sends user?
-        if (Settings.ShadowBan && !player.IsShadowBanned())
-            player.SetShadowBanned(true);
-
-        if(player.IsShadowBanned())
-            if (TryHandleShadowBan(message, player, source))
-                return true;
 
         //Replace words but don't stop
         if (Settings.CensorText)
@@ -159,21 +193,7 @@ public class PatchClass
         if (Settings.BanAccount)
             player.BanPlayerAccount();
 
-        //player.SendMessage($"Banned for: {message}");
-
-        //var chain = new ActionChain();
-        //chain.AddDelaySeconds(3);
-        //chain.AddAction(player, () => player.Session.LogOffPlayer(true));
-        //chain.EnqueueChain();
-
         return true;
-    }
-
-    public static bool TryHandleShadowBan(string message, Player player, ChatSource source)
-    {
-        if (!player.IsShadowBanned()) return false;
-
-        return false;
     }
 }
 public enum ChatSource

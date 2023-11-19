@@ -1,4 +1,5 @@
 ﻿using ACE.Database;
+using ACE.Server.Network;
 using ACE.Server.Network.Enum;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -30,7 +31,6 @@ public static class Helper
 
         return true;
     }
-
     public static bool BanPlayerAccount(this Player player, string? infraction = null)
     {
         if (player == null || !PatchClass.Settings.BanAccount)
@@ -71,5 +71,28 @@ public static class Helper
         return true;
     }
 
-   
+    public static void FakeChat(this Player player, string message)
+    {
+        //For monsters
+        player.OnTalk(message);
+        //Use broadcast with range of 0
+        player.EnqueueBroadcast(new GameMessageHearSpeech(message, player.GetNameWithSuffix(), player.Guid.Full, ChatMessageType.Speech), 0, ChatMessageType.Speech);
+    }
+    public static void FakeTell(this Player player, string message, string? target = null)
+    {
+        player.OnTalk(message);
+
+        var session = player.Session;
+        var targetPlayer = PlayerManager.GetOnlinePlayer(target);
+
+        if (targetPlayer == null)
+        {
+            var statusMessage = new GameEventWeenieError(session, WeenieError.CharacterNotAvailable);
+            session.Network.EnqueueSend(statusMessage);
+            return;
+        }
+
+        if (session.Player != targetPlayer)
+            session.Network.EnqueueSend(new GameMessageSystemChat($"You tell {targetPlayer.Name}, \"{message}\"", ChatMessageType.OutgoingTell));
+    }
 }

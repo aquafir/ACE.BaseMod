@@ -4,6 +4,8 @@
   * [Additional list](https://github.com/surge-ai/profanity) available (thanks Maethor)
 * Set `FilterChat` / `FilterTells` to `true` to filter the corresponding communication or `false` to ignore
 * If `ShadowBan` is enabled and a player has/will-be chat banned they will see their message appear but it won't be sent.
+  * They will not be gagged or banned.
+  * The `/unsban [name]` command can be used to remove a shadow ban
 * If `GagPlayer` is enabled it will gag the player for `GagBaseTime` seconds plus `GagTimePerInfraction` per infraction.
   * If `BroadcastGag` is enabled it will broadcast the gag.
 * If `BanPlayer` is enabled it will ban the player for `BanBaseTime` seconds plus `BanTimePerInfraction` per infraction.

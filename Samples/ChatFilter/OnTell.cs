@@ -13,7 +13,7 @@ internal static class OnTell
 
         if (PatchClass.Settings.FilterTells)
         {
-            if (PatchClass.TryHandleToxicity(message, session.Player, ChatSource.Tell))
+            if (PatchClass.TryHandleToxicity(ref message, session.Player, ChatSource.Tell, target))
                 return false;
         }
 
