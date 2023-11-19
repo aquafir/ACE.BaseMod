@@ -1,15 +1,16 @@
-﻿This mod changes the loot generated objects returned by `LootGenerationFactory.CreateAndMutateWcid`
+## CustomLoot
+ 
+This mod changes the loot generated objects returned by `LootGenerationFactory.CreateAndMutateWcid`
 
 
-
-## Slayer
+### Slayer
 
 * `SlayerChance` is a 0-1 chance of adding a random Slayer property to a weapon.
   * `SlayerPower` determines the power of the corresponding tier of item.
 
 
 
-## Cloak-style Mutation
+### Cloak-style Mutation
 
 * For each of armor/jewelry/clothing, `CloakMutationChance` is a 0-1 chance of adding Cloak properties
   * If the `TreasureItemType_Orig` is missing that item type doesn't attempt a cloak mutation
@@ -19,7 +20,7 @@
 
 
 
-## Set Mutation
+### Set Mutation
 
 * For each of armor/jewelry/clothing/weapon (or added `TreasureItemType_Orig`), `CloakMutationChance` is a 0-1 chance of adding Cloak properties
 
@@ -32,11 +33,19 @@
 
 
 
+https://github.com/aquafir/ACE.BaseMod/assets/83029060/1300de91-fa7f-442c-a2f1-527bc4a282f0
 
-## Aetheria
+
+
+
+### Aetheria
 
 * `EnableOnAttackForNonAetheria` is needed to patch ACE to check non-Aetheria for OnAttack triggers
   * TitaniumWeenie's [UniqueWeenies](https://github.com/titaniumweiner/ACEUniqueWeenies) contains compatible weenies
+
+
+
+https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c2efbf67d781
 
 
 
