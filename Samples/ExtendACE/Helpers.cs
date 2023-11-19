@@ -246,6 +246,45 @@ public static class InventoryHelpers
     }
 }
 
+//public static class BiotaHelpers
+//{
+//    public static bool IsNpc(this ACE.Entity.Models.Biota biota)
+//    {
+//        //Assume npc
+//        if (biota is null || biota.PropertiesBool is null || biota.PropertiesInt is null) return true;
+
+//        //IsNPC => !(this is Player) && !Attackable && TargetingTactic == TargetingTactic.None;
+//        //Attackable = GetProperty(PropertyBool.Attackable) ?? true;
+//        if (!biota.PropertiesBool.TryGetValue(PropertyBool.Attackable, out var value) || value != false)
+//            return false;
+
+//        //TargetingTactic = (TargetingTactic)(GetProperty(PropertyInt.TargetingTactic) ?? 0);
+//        if (!biota.PropertiesInt.TryGetValue(PropertyInt.TargetingTactic, out var target) || target != (int)ACE.Entity.Enum.TargetingTactic.None)
+//            return false;
+
+//        return true;
+//    }
+//}
+
+//public static class WeenieHelpers
+//{
+//    public static bool IsNpc(this Weenie weenie)
+//    {
+//        //Assume npc
+//        if (weenie is null) return true;
+
+//        //Check NPC as no target, unattackable
+//        var target = weenie.GetProperty(PropertyInt.TargetingTactic);
+//        if (target is null || target != (int)ACE.Entity.Enum.TargetingTactic.None)
+//            return false;
+
+//        if (weenie.GetProperty(PropertyBool.Attackable) ?? true)
+//            return false;
+
+//        return true;
+//    }
+//}
+
 public static class WorldObjectHelpers
 {
     /// <summary>
@@ -457,25 +496,25 @@ public static class CreatureExHelpers
 
 public static class PositionHelpers
 {
-//    public static Position Translate(this Position p, float distanceInFront, float radians = 0)
-//    {
-//        //Add rotation?
-//        //Quaternion.CreateFromYawPitchRoll()
-//        var pos = new Position();
-//        //pos.landblockId.Raw = p.LandblockId.Raw;
-//        pos.Rotation = p.Rotation;
+    //    public static Position Translate(this Position p, float distanceInFront, float radians = 0)
+    //    {
+    //        //Add rotation?
+    //        //Quaternion.CreateFromYawPitchRoll()
+    //        var pos = new Position();
+    //        //pos.landblockId.Raw = p.LandblockId.Raw;
+    //        pos.Rotation = p.Rotation;
 
-//        // Create a Quaternion representing the rotation
-//        Quaternion rotationQuaternion = Quaternion.CreateFromYawPitchRoll(radians, 0, 0);
+    //        // Create a Quaternion representing the rotation
+    //        Quaternion rotationQuaternion = Quaternion.CreateFromYawPitchRoll(radians, 0, 0);
 
-//        // Multiply a unit vector by distance/rotation
-//        Vector3 rotatedPosition = Vector3.Transform(Vector3.One * distanceInFront, rotationQuaternion);
+    //        // Multiply a unit vector by distance/rotation
+    //        Vector3 rotatedPosition = Vector3.Transform(Vector3.One * distanceInFront, rotationQuaternion);
 
-//        // Add the rotated position to the original position to obtain the translated position
-//        pos.Pos = p.Pos + rotatedPosition;
+    //        // Add the rotated position to the original position to obtain the translated position
+    //        pos.Pos = p.Pos + rotatedPosition;
 
-//        return pos;
-//        //p.FindZ()
-////        return new Position(p.LandblockId.Raw, p.PositionX + num2, p.PositionY + num3, p.PositionZ + num4, 0f, 0f, rotationZ, rotationW);
-//    }
+    //        return pos;
+    //        //p.FindZ()
+    ////        return new Position(p.LandblockId.Raw, p.PositionX + num2, p.PositionY + num3, p.PositionZ + num4, 0f, 0f, rotationZ, rotationW);
+    //    }
 }

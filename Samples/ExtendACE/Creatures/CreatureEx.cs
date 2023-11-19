@@ -1,4 +1,7 @@
-﻿using static ACE.Server.Factories.PlayerFactory;
+﻿using ACE.Server.Managers;
+using System;
+using System.Runtime.CompilerServices;
+using static ACE.Server.Factories.PlayerFactory;
 using Weenie = ACE.Entity.Models.Weenie;
 
 namespace ExtendACE.Creatures;
@@ -47,10 +50,20 @@ public class CreatureEx : Creature
     [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(Weenie), typeof(ObjectGuid) })]
     public static bool PreCreateWorldObject(Weenie weenie, ObjectGuid guid, ref WorldObject __result)
     {
+        //if (weenie.IsNpc()) return true;
         if (weenie.WeenieType != WeenieType.Creature || weenie == null) return true;
         if (ThreadSafeRandom.Next(0, 1.0f) > PatchClass.Settings.CreatureChance) return true;
 
         __result = RollCreature(weenie, guid);
+
+        //Fix it in post!
+        var timer = Stopwatch.StartNew();
+        if (__result is Creature creature && creature.IsNPC)
+        {
+            __result = new Creature(weenie, guid);
+            timer.Stop();
+            ModManager.Log($"{creature.Name} was an NPC remade as a vanilla Creature in {timer.ElapsedMilliseconds} ms");
+        }
 
         return false;
     }
@@ -58,16 +71,26 @@ public class CreatureEx : Creature
     [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(Biota) })]
     public static bool PreCreateWorldObject(Biota biota, ref WorldObject __result)
     {
+        //if (biota.IsNpc()) return true;
         if (biota.WeenieType != WeenieType.Creature) return true;
         if (ThreadSafeRandom.Next(0, 1.0f) > PatchClass.Settings.CreatureChance) return true;
         __result = RollCreature(biota);
+
+        //Fix it in post!
+        var timer = Stopwatch.StartNew();
+        if (__result is Creature creature && creature.IsNPC)
+        {
+            __result = new Creature(biota);
+            timer.Stop();
+            ModManager.Log($"{creature.Name} was an NPC remade as a vanilla Creature in {timer.ElapsedMilliseconds} ms");
+        }
 
         return false;
     }
 
     protected static int possibleCreatureTypes = Enum.GetValues<CreatureType>().Length;
     protected static CreatureType RandomCreatureType() => (CreatureType)ThreadSafeRandom.Next(0, possibleCreatureTypes);
-            //Creatures.CreatureType.Boss; 
+    //Creatures.CreatureType.Boss; 
 
     public static CreatureEx RollCreature(Weenie weenie, ObjectGuid guid) => RandomCreatureType().Create(weenie, guid);
     public static CreatureEx RollCreature(Biota biota) => RandomCreatureType().Create(biota);
