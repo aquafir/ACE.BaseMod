@@ -4,60 +4,33 @@ public class Settings
 {
     public bool Verbose { get; set; } = true;
 
-    #region Features / Mutators / Odds / Targets
+    #region Features / Mutators
     public List<Feature> Features { get; set; } = Enum.GetValues<Feature>().ToList();
     public List<MutatorSettings> Mutators { get; set; } = Enum.GetValues<Mutation>()
-        .Select(x => new MutatorSettings(x) { 
-            Odds = x.DefaultOdds(), 
+        .Select(x => new MutatorSettings(x) {
+            Odds = x.DefaultOdds(),
             Targets = x.DefaultTargets()
         }).ToList();
-
-    //OddsType and helpers just for convenience-- any string can be used
-    public Dictionary<string, Odds> Odds { get; set; } = new()
-    {
-        [nameof(OddsType.Common)] = OddsType.Common.OddsOf(),
-        [nameof(OddsType.Rare)] = OddsType.Rare.OddsOf(),
-        [nameof(OddsType.Always)] = OddsType.Always.OddsOf(),
-    };
-
-    //For convenience.  People can make their own
-    public Dictionary<string, HashSet<TreasureItemType_Orig>> TargetGroups { get; set; } = new()
-    {
-        [nameof(TargetGroup.Accessories)] = TargetGroup.Accessories.SetOf(),
-        [nameof(TargetGroup.ArmorClothing)] = TargetGroup.ArmorClothing.SetOf(),
-        [nameof(TargetGroup.Equipables)] = TargetGroup.Equipables.SetOf(),
-        [nameof(TargetGroup.Weapon)] = TargetGroup.Weapon.SetOf(),
-        [nameof(TargetGroup.Wearables)] = TargetGroup.Wearables.SetOf(),
-
-        //[nameof(TargetGroup.Armor)] = TargetGroup.Armor.SetOf(),
-        //[nameof(TargetGroup.Cloaks)] = TargetGroup.Cloaks.SetOf(),
-        //[nameof(TargetGroup.Clothing)] = TargetGroup.Clothing.SetOf(),
-        //[nameof(TargetGroup.Consumable)] = TargetGroup.Consumable.SetOf(),
-        //[nameof(TargetGroup.Jewelry)] = TargetGroup.Jewelry.SetOf(),
-        //[nameof(TargetGroup.Pet)] = TargetGroup.Pet.SetOf(),
-    };
     #endregion
 
     #region Mutator Settings
     #region Sets
     //Type -> List of valid eligible sets
-    public Dictionary<TreasureItemType_Orig, List<EquipmentSet>> CustomSets { get; set; } = new()
+    public Dictionary<TreasureItemType_Orig, EquipmentSetGroup> ItemTypeEquipmentSets { get; set; } = new()
     {
         //Armor / clothes the standard sets
-        [TreasureItemType_Orig.Armor] = new(Sets.armorSets) { },
-        [TreasureItemType_Orig.Clothing] = new(Sets.armorSets) { },
+        [TreasureItemType_Orig.Armor] = EquipmentSetGroup.Armor,
+        [TreasureItemType_Orig.Clothing] = EquipmentSetGroup.Armor,
         //Cloaks / jewelry roll cloak sets
-        [TreasureItemType_Orig.Cloak] = new(Sets.cloakSets) { },
-        [TreasureItemType_Orig.Jewelry] = new(Sets.cloakSets) { },
+        [TreasureItemType_Orig.Cloak] = EquipmentSetGroup.Cloak,
+        [TreasureItemType_Orig.Jewelry] = EquipmentSetGroup.Cloak,
         //Weapons do nothing
         //[TreasureItemType_Orig.Weapon] = new() { },   //Ignores missing
     };
     #endregion
 
     #region Slayer
-    public bool UseCustomSlayers { get; set; } = true;
-    public CreatureType[] SlayerSpecies { get; set; } = Enum.GetValues<CreatureType>();
-    //.TakeWhile(x => x != CreatureType.Unknown && x != CreatureType.Wall && x != CreatureType.Invalid).ToArray();
+    public string Slayers { get; set; } = nameof(CreatureTypeGroup.Popular);
 
     //Power of slayer
     public Dictionary<int, float> SlayerPower { get; set; } = new()
@@ -76,12 +49,7 @@ public class Settings
 
     #region ProcOnHit
     //Use custom pool to remove ring / allow other options
-    public bool UseCustomCloakSpellProcs { get; set; } = true;
-    public List<SpellId> ProcOnHitSpells { get; set; } =
-        new(
-        Sets.cloakSpecificSpells            //No ring spells
-        .Append(SpellId.DrainHealth8)       //Add your own
-        );
+    public string ProcOnSpells { get; set; } = nameof(SpellGroup.CloakOnly);
     #endregion
     #endregion
 
@@ -93,7 +61,20 @@ public class Settings
     #endregion
     #endregion
 
-    #region Pools (e.g., Sets / Spell IDs / Species)
-
+    #region Pools (e.g., Odds / Targets / Sets / Spell IDs / Species)
+    //For convenience.  People can make their own
+    public Dictionary<string, Odds> Odds { get; set; } = Enum.GetValues<OddsGroup>().ToDictionary(x => x.ToString(), x => x.OddsOf());
+    public Dictionary<string, TreasureItemType_Orig[]> TargetGroups { get; set; } = new()
+    {
+        [nameof(TargetGroup.Accessories)] = TargetGroup.Accessories.SetOf(),
+        [nameof(TargetGroup.ArmorClothing)] = TargetGroup.ArmorClothing.SetOf(),
+        [nameof(TargetGroup.Equipables)] = TargetGroup.Equipables.SetOf(),
+        [nameof(TargetGroup.Weapon)] = TargetGroup.Weapon.SetOf(),
+        [nameof(TargetGroup.Wearables)] = TargetGroup.Wearables.SetOf(),
+    };
+    //Full pools defined in enum helpers or it can be done explicitly like TargetGroups
+    public Dictionary<string, CreatureType[]> CreatureTypeGroups = Enum.GetValues<CreatureTypeGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
+    public Dictionary<string, EquipmentSet[]> EquipmentSetGroups = Enum.GetValues<EquipmentSetGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
+    public Dictionary<string, SpellId[]> SpellGroups = Enum.GetValues<SpellGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     #endregion
 }

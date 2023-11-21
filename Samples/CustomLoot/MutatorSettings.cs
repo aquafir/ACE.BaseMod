@@ -52,7 +52,7 @@ public static class MutatorHelpers
         }
 
         //Nullable odds?
-        mutator.TargetTypes = PatchClass.Settings.TargetGroups.TryGetValue(settings.Targets, out var targets) ? targets : null;
+        mutator.TargetTypes = PatchClass.Settings.TargetGroups.TryGetValue(settings.Targets, out var targets) ? targets.ToHashSet() : null;
         mutator.Odds = PatchClass.Settings.Odds.TryGetValue(settings.Odds, out var mutatorOdds) ? mutatorOdds : null;
 
         return mutator;

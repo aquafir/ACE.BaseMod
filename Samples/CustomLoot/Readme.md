@@ -22,14 +22,15 @@ This mod changes the loot generated objects returned by `LootGenerationFactory.C
 #### ProcOnHit
 
 * Cloak-style mutations that require the `ProcOnHit` feature to also be enabled.
-* If `UseCustomCloakSpellProcs` is true the spells in `CloakSpells` will be used instead of the normal pool.
+* If `ProcOnSpells` refers to a valid `SpellGroup` it will be used instead of the default cloak list
+*  is true the spells in `CloakSpells` will be used instead of the normal pool.
 * ***Still requires you to be wearing a cloak with a proc.***  Probably could change this with a rewrite/Postfix of `SpellProjectile.DamageTarget` and `Player.TakeDamage` which make the checks.
 
 
 
 #### Set
 
-* Adds a set based on `TreasureItemType_Orig` in `CustomSets`
+* Adds a set based on the `EquipmentSetGroups` corresponding to the `TreasureItemType_Orig` of the item in `ItemTypeEquipmentSets`
 
 * By default: 
   * Armor/clothing roll armor sets  
@@ -43,7 +44,7 @@ This mod changes the loot generated objects returned by `LootGenerationFactory.C
 #### Slayer
 
 * `SlayerPower` determines the power of the corresponding tier of item.
-* If `UseCustomSlayers` is true `SlayerSpecies` will be used instead of the full list
+* If `Slayers` refers to a valid `CreatureTypeGroup` it will be used instead of the full list
   * Invalid|Unknown|Wall are removed from the pool
 
 
@@ -52,7 +53,7 @@ This mod changes the loot generated objects returned by `LootGenerationFactory.C
 ### Features
 
 
-#### Aetheria
+#### EnableOnAttackForNonAetheria
 
 * `EnableOnAttackForNonAetheria` is needed to patch ACE to check non-Aetheria for OnAttack triggers
   * TitaniumWeenie's [UniqueWeenies](https://github.com/titaniumweiner/ACEUniqueWeenies) contains compatible weenies

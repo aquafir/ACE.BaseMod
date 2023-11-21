@@ -1,5 +1,4 @@
-﻿using ACE.Entity;
-using ACE.Server.Command;
+﻿using ACE.Server.Command;
 using ACE.Server.Network;
 
 namespace CustomLoot;
@@ -138,6 +137,9 @@ public class PatchClass
         }
     }
 
+    /// <summary>
+    /// Entry point for mutation.  After loot is generated it is passed to mutators to try to change
+    /// </summary>
     [HarmonyPostfix]
     [HarmonyPatch(typeof(LootGenerationFactory), nameof(LootGenerationFactory.CreateAndMutateWcid), new Type[] { typeof(TreasureDeath), typeof(TreasureRoll), typeof(bool) })]
     public static void PostCreateAndMutateWcid(TreasureDeath treasureDeath, TreasureRoll treasureRoll, bool isMagical, ref WorldObject __result)

@@ -23,36 +23,6 @@ public static class Helpers
     public static bool IsSelfTargeting(this SpellId spellId) => new Spell(spellId).IsSelfTargeted; //spellId == SpellId.CloakAllSkill;
 
 
-    /// <summary>
-    /// Assign an EquipmentSetId to a WorldObject based on the loot type
-    /// </summary>
-    /// <param name="wo"></param>
-    public static void RollEquipmentSet(this WorldObject wo, TreasureRoll roll)
-    {
-        if (!PatchClass.Settings.CustomSets.TryGetValue(roll.ItemType, out var set))
-            return; //Remove if missing?
-
-        wo.EquipmentSetId = set[ThreadSafeRandom.Next(0, set.Count - 1)];
-    }
-
-    //Find the treasure type from WO.  Not preferred.
-    //public static void RollEquipmentSet(this WorldObject wo)
-    //{
-    //    if (!PatchClass.Settings.CustomSets.TryGetValue(treasureType, out var set))
-    //        return; //Remove?
-
-    //    wo.EquipmentSetId = set[ThreadSafeRandom.Next(0, set.Count - 1)];
-    //}
-
-    //public static TreasureItemType_Orig GetOriginalTreasureType(this WorldObject wo) => wo switch
-    //{
-    //    _ when wo.isarm
-    //    _ when Cloak.IsCloak(wo) => TreasureItemType_Orig.Cloak,
-    //    _ => throw new NotImplementedException(),
-    //};
-
-
-
 
 }
 

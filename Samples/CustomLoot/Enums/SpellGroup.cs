@@ -1,31 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CustomLoot.Enums;
+﻿namespace CustomLoot.Enums;
 
 
 public enum SpellGroup
 {
-    SurgeTargetSelf,
+    Cloak,
+    CloakOnly,
+    CloakRings,
+    Aetheria,
 }
 
 public static class SpellGroupHelper
 {
-    public static HashSet<TreasureItemType_Orig> SetOf(this SpellGroup type) => type switch
+    public static SpellId[] SetOf(this SpellGroup type) => type switch
     {
-        SpellGroup.Equipables => new()
+        SpellGroup.Cloak =>
+        SpellGroup.CloakOnly.SetOf()
+            .AddRangeToArray(SpellGroup.CloakOnly.SetOf()),
+        SpellGroup.CloakOnly => new[]
         {
-            TreasureItemType_Orig.Armor,
-            TreasureItemType_Orig.Clothing,
-            TreasureItemType_Orig.Cloak,
-            TreasureItemType_Orig.Jewelry,
-            TreasureItemType_Orig.Weapon,
-
+            SpellId.CloakAllSkill,      // Cloaked in Skill
+            SpellId.CloakMagicDLower,   // Shroud of Darkness (Magic)
+            SpellId.CloakMeleeDLower,   // Shroud of Darkness (Melee)
+            SpellId.CloakMissileDLower, // Shroud of Darkness (Missile)
         },
-        
-        _ => new(),
+        SpellGroup.CloakRings => new[]
+        {
+            SpellId.AcidRing,           // Searing Disc
+            SpellId.BladeRing,          // Horizon's Blades
+            SpellId.FlameRing,          // Cassius' Ring of Fire
+            SpellId.ForceRing,          // Nuhmudira's Spines
+            SpellId.FrostRing,          // Halo of Frost
+            SpellId.LightningRing,      // Eye of the Storm
+            SpellId.ShockwaveRing,      // Tectonic Rifts
+            SpellId.NetherRing,         // Clouded Soul
+        },
+        SpellGroup.Aetheria => new[]
+        {
+            SpellId.AetheriaProcDamageBoost,
+            SpellId.AetheriaProcDamageOverTime,
+            SpellId.AetheriaProcDamageReduction,
+            SpellId.AetheriaProcHealDebuff,
+            SpellId.AetheriaProcHealthOverTime,
+        },
+        _ => throw new NotImplementedException(),
     };
 }

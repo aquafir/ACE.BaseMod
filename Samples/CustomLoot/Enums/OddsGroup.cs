@@ -1,7 +1,7 @@
 ﻿namespace CustomLoot.Enums;
 
 //Just used for convenience.  string->Odds dictionary used
-public enum OddsType
+public enum OddsGroup
 {
     Common,
     Rare,
@@ -12,12 +12,12 @@ public static class OddsHelper
 {
     public static string DefaultOdds(this Mutation mutator) => mutator switch
     {
-        Mutation.Slayer => nameof(OddsType.Rare),
-        _ => nameof(OddsType.Always)
+        Mutation.Slayer => nameof(OddsGroup.Rare),
+        _ => nameof(OddsGroup.Always)
     };
-    public static Odds OddsOf(this OddsType type) => type switch
+    public static Odds OddsOf(this OddsGroup type) => type switch
     {
-        OddsType.Common => new()
+        OddsGroup.Common => new()
         {
             TierChance = new()
             {
@@ -31,7 +31,7 @@ public static class OddsHelper
                 [8] = .25f,
             }
         },
-        OddsType.Rare => new()
+        OddsGroup.Rare => new()
         {
             TierChance = new()
             {
@@ -39,7 +39,7 @@ public static class OddsHelper
                 [8] = .03f,
             }
         },
-        OddsType.Always => new()
+        OddsGroup.Always => new()
         {
             TierChance = new()
             {

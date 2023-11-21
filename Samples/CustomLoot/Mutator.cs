@@ -9,7 +9,6 @@ public abstract class Mutator
     public HashSet<TreasureItemType_Orig>? TargetTypes { get; set; } = new();
     public Odds? Odds { get; set; }
 
-
     /// <summary>
     /// Checks for valid target using TargetTypes and successful roll using Odds
     /// </summary>

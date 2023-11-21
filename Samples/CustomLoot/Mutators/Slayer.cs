@@ -1,5 +1,4 @@
-﻿
-namespace CustomLoot.Mutators;
+﻿namespace CustomLoot.Mutators;
 
 public class Slayer : Mutator
 {
@@ -34,7 +33,10 @@ public class Slayer : Mutator
     public override void Start()
     {
         //Use all creatures or just a subset
-        var cTypes = PatchClass.Settings.UseCustomSlayers ? PatchClass.Settings.SlayerSpecies : Enum.GetValues<CreatureType>();
+        var groupName = PatchClass.Settings.Slayers;
+        if (!PatchClass.Settings.CreatureTypeGroups.TryGetValue(groupName, out var cTypes))
+            cTypes = Enum.GetValues<CreatureType>();
+
         //Construct bag without bad types
         species = cTypes.Where(x => x != CreatureType.Invalid && x != CreatureType.Unknown && x != CreatureType.Wall).ToArray();
 

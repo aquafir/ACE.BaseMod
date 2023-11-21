@@ -2,6 +2,26 @@
 
 public class ProcOnAttack : Mutator
 {
+    #region Todo: Move somewhere 
+    public static Dictionary<SpellId, bool> SurgeTargetSelf = new Dictionary<SpellId, bool>()
+        {
+            { SpellId.AetheriaProcDamageBoost,     true },
+            { SpellId.AetheriaProcDamageOverTime,  false },
+            { SpellId.AetheriaProcDamageReduction, true },
+            { SpellId.AetheriaProcHealDebuff,      false },
+            { SpellId.AetheriaProcHealthOverTime,  true },
+        };
+
+    public static Dictionary<Sigil, EquipmentSet> SigilToEquipmentSet = new Dictionary<Sigil, EquipmentSet>()
+        {
+            { Sigil.Defense, EquipmentSet.AetheriaDefense },
+            { Sigil.Destruction, EquipmentSet.AetheriaDestruction },
+            { Sigil.Fury, EquipmentSet.AetheriaFury },
+            { Sigil.Growth, EquipmentSet.AetheriaGrowth },
+            { Sigil.Vigor, EquipmentSet.AetheriaVigor }
+        }; 
+    #endregion
+
     public override bool TryMutate(TreasureDeath treasureDeath, TreasureRoll treasureRoll, HashSet<Mutation> mutations, WorldObject item)
     {
         //Todo
@@ -13,7 +33,7 @@ public class ProcOnAttack : Mutator
         // rng select a sigil / spell set
         var randSigil = (Sigil)ThreadSafeRandom.Next(0, 4);
 
-        var equipmentSet = Sets.SigilToEquipmentSet[randSigil];
+        var equipmentSet = SigilToEquipmentSet[randSigil];
         target.SetProperty(PropertyInt.EquipmentSetId, (int)equipmentSet);
 
         // change icon

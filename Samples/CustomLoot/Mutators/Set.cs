@@ -2,11 +2,31 @@
 
 public class Set : Mutator
 {
-    public override bool TryMutate(TreasureDeath treasureDeath, TreasureRoll treasureRoll, HashSet<Mutation> mutations, WorldObject item)
+    readonly Dictionary<TreasureItemType_Orig, EquipmentSet[]> sets= new();
+
+    public override bool TryMutate(TreasureDeath profile, TreasureRoll roll, HashSet<Mutation> mutations, WorldObject item)
     {
         //Add a set from the valid ones in the settings
-        item.RollEquipmentSet(treasureRoll);
+        if (!sets.TryGetValue(roll.ItemType, out var setGroup))
+            return false; //Remove if missing?
+
+        if (!setGroup.TryGetRandom(out var set))
+            return false;
+
+        item.EquipmentSetId = set;
 
         return true;
+    }
+
+    public override void Start()
+    {
+        foreach(var kvp in PatchClass.Settings.ItemTypeEquipmentSets)
+        {
+            //Skip equipment group names that have no group
+            if (!PatchClass.Settings.EquipmentSetGroups.TryGetValue(kvp.Key.ToString(), out var setGroup))
+                continue;
+
+            sets.Add(kvp.Key, setGroup);
+        }
     }
 }

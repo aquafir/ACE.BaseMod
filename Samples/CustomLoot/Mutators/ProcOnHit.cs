@@ -1,10 +1,17 @@
-﻿namespace CustomLoot.Mutators;
+﻿using CustomLoot.Enums;
+
+namespace CustomLoot.Mutators;
 
 //ConcurrentBag<
 public class ProcOnHit : Mutator
 {
+    SpellId[] spells;
+
     public override bool TryMutate(TreasureDeath profile, TreasureRoll roll, HashSet<Mutation> mutations, WorldObject wo)
     {
+        if (!spells.TryGetRandom(out var spellId))
+            return false;
+
         wo.ItemMaxLevel = CloakChance.Roll_ItemMaxLevel(profile);
         wo.WieldDifficulty = wo.ItemMaxLevel switch
         {
@@ -27,7 +34,8 @@ public class ProcOnHit : Mutator
         //wo.RollEquipmentSet(roll);
 
         //Use custom set.  Todo: check the target stuff?
-        SpellId spellId = PatchClass.Settings.UseCustomCloakSpellProcs ? RollProcSpell() : CloakChance.RollProcSpell();
+        //SpellId spellId = PatchClass.Settings.UseCustomCloakSpellProcs ? RollProcSpell() : CloakChance.RollProcSpell();
+        //wo.SetCloakSpellProc(spellId);
         wo.SetCloakSpellProc(spellId);
 
         //Todo, think about these?
@@ -42,17 +50,16 @@ public class ProcOnHit : Mutator
         return true;
     }
 
-    /// <summary>
-    /// Returns spell ID from cloak set
-    /// </summary>
-    private static SpellId RollProcSpell()
+    public override void Start()
     {
-        int num = ThreadSafeRandom.Next(0, PatchClass.Settings.ProcOnHitSpells.Count);
-        if (num == PatchClass.Settings.ProcOnHitSpells.Count)
-        {
-            return SpellId.Undef;
-        }
+        //Find group or use default
+        var groupName = PatchClass.Settings.ProcOnSpells;
+        if (!PatchClass.Settings.SpellGroups.TryGetValue(groupName, out spells))
+            spells = SpellGroup.Cloak.SetOf();
 
-        return PatchClass.Settings.ProcOnHitSpells[num];
+        //Could build self target lookup?  Strip invalid spells?
+
+        if (PatchClass.Settings.Verbose)
+            ModManager.Log($"Set up bag of {spells.Length} spells to add as ProcOnHit.");
     }
 }

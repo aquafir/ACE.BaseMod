@@ -11,7 +11,6 @@ global using ACE.Server.Mods;
 global using ACE.Server.WorldObjects;
 global using CustomLoot.Enums;
 global using HarmonyLib;
-global using System.Collections.Concurrent;
 global using System.Diagnostics;
 global using System.Text.Encodings.Web;
 global using System.Text.Json;

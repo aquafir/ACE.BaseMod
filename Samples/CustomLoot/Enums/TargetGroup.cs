@@ -23,9 +23,9 @@ public static class TargetGroupHelper
         _ => nameof(TargetGroup.Wearables)
     };
 
-    public static HashSet<TreasureItemType_Orig> SetOf(this TargetGroup type) => type switch
+    public static TreasureItemType_Orig[] SetOf(this TargetGroup type) => type switch
     {
-        TargetGroup.Equipables => new()
+        TargetGroup.Equipables => new[]
         {
             TreasureItemType_Orig.Armor,
             TreasureItemType_Orig.Clothing,
@@ -34,7 +34,7 @@ public static class TargetGroupHelper
             TreasureItemType_Orig.Weapon,
 
         },
-        TargetGroup.Wearables => new()
+        TargetGroup.Wearables => new[]
         {
             TreasureItemType_Orig.Armor,
             TreasureItemType_Orig.Clothing,
@@ -42,44 +42,44 @@ public static class TargetGroupHelper
             TreasureItemType_Orig.Jewelry,
 
         },
-        TargetGroup.ArmorClothing => new()
+        TargetGroup.ArmorClothing => new[]
         {
             TreasureItemType_Orig.Armor,
             TreasureItemType_Orig.Clothing,
         },
-        TargetGroup.Accessories => new()
+        TargetGroup.Accessories => new[]
         {
             TreasureItemType_Orig.Cloak,
             TreasureItemType_Orig.Jewelry,
         },
-        TargetGroup.Armor => new()
+        TargetGroup.Armor => new[]
         {
             TreasureItemType_Orig.Armor,
         },
-        TargetGroup.Clothing => new()
+        TargetGroup.Clothing => new[]
         {
             TreasureItemType_Orig.Clothing,
         },
-        TargetGroup.Cloaks => new()
+        TargetGroup.Cloaks => new[]
         {
             TreasureItemType_Orig.Cloak,
         },
-        TargetGroup.Consumable => new()
+        TargetGroup.Consumable => new[]
         {
             TreasureItemType_Orig.Consumable,
         },
-        TargetGroup.Pet => new()
+        TargetGroup.Pet => new[]
         {
             TreasureItemType_Orig.PetDevice,
         },
-        TargetGroup.Jewelry => new()
+        TargetGroup.Jewelry => new[]
         {
             TreasureItemType_Orig.Jewelry,
         },
-        TargetGroup.Weapon => new()
+        TargetGroup.Weapon => new[]
         {
             TreasureItemType_Orig.Weapon,
         },
-        _ => new(),
+        _ => throw new NotImplementedException(),
     };
 }
