@@ -6,6 +6,7 @@ public enum Feature
     ProcRateOverride,
     ProcOnHit,
     ReduceBurden,
-    ImbueOnItemLevelUp
+    ImbueOnItemLevelUp,
+    CorpseCreatureType
 }
 

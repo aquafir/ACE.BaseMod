@@ -21,10 +21,7 @@ public static class Helpers
     //CloakAllId was the original cloak check
     //Aetheria uses a lookup
     public static bool IsSelfTargeting(this SpellId spellId) => new Spell(spellId).IsSelfTargeted; //spellId == SpellId.CloakAllSkill;
-
-
-
-}
+ }
 
 public static class RandomExtensions
 {
