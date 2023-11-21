@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using System.Xml.Linq;
+using CustomLoot.Enums;
+using CustomLoot.Mutators;
 
 namespace CustomLoot;
 

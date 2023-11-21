@@ -1,4 +1,6 @@
-﻿namespace CustomLoot.Mutators;
+﻿using CustomLoot.Enums;
+
+namespace CustomLoot.Mutators;
 
 public static class ProcOnAttack
 {

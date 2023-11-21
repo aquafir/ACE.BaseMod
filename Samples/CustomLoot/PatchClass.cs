@@ -1,4 +1,5 @@
-﻿using CustomLoot.Mutators;
+﻿using CustomLoot.Enums;
+using CustomLoot.Mutators;
 using System.Text;
 
 namespace CustomLoot;

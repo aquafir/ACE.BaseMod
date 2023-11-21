@@ -1,4 +1,4 @@
-﻿namespace CustomLoot;
+﻿namespace CustomLoot.Enums;
 
 public class Sets
 {
@@ -43,7 +43,7 @@ public class Sets
             { Sigil.Fury, EquipmentSet.AetheriaFury },
             { Sigil.Growth, EquipmentSet.AetheriaGrowth },
             { Sigil.Vigor, EquipmentSet.AetheriaVigor }
-        }; 
+        };
     #endregion
 
     #region EquipmentSets
@@ -106,6 +106,6 @@ public class Sets
         EquipmentSet.CloakShield,
         EquipmentSet.CloakSneakAttack,
         EquipmentSet.CloakSummoning,
-    }; 
-    #endregion    
+    };
+    #endregion
 }

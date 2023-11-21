@@ -1,4 +1,4 @@
-﻿namespace CustomLoot;
+﻿namespace CustomLoot.Enums;
 
 //Just used for convenience.  string->Odds dictionary used
 public enum OddsType

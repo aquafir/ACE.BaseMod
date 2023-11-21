@@ -1,4 +1,4 @@
-﻿namespace CustomLoot;
+﻿namespace CustomLoot.Enums;
 
 public enum TargetGroup
 {

@@ -1,4 +1,4 @@
-﻿namespace CustomLoot;
+﻿namespace CustomLoot.Mutators;
 
 [HarmonyPatch]
 [HarmonyPatchCategory(nameof(Mutator))]
@@ -6,7 +6,7 @@ public abstract class Mutator
 {
     //Todo: decide on target types
     public HashSet<TreasureItemType_Orig>? TargetTypes { get; set; } = new();
-    public Odds? Odds { get; set; } 
+    public Odds? Odds { get; set; }
 
     public virtual bool Mutates()
     {

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using CustomLoot.Enums;
 
 namespace CustomLoot;
 
@@ -36,7 +37,7 @@ public class Settings
 
     #region Mutator Settings
     #region Slayer
-    //Default list is all defined except wall
+    public bool UseCustomSlayers { get; set; } = true;
     public CreatureType[] SlayerSpecies { get; set; } = Enum.GetValues<CreatureType>();
     //.TakeWhile(x => x != CreatureType.Unknown && x != CreatureType.Wall && x != CreatureType.Invalid).ToArray();
 

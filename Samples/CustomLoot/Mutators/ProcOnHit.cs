@@ -1,10 +1,12 @@
 ﻿namespace CustomLoot.Mutators;
 
+//ConcurrentBag<
 internal static class ProcOnHit
 {
-    public static void HandleCloakMutation(TreasureDeath treasureDeath, TreasureRoll treasureRoll, WorldObject __result)
+    public void HandleCloakMutation(TreasureDeath treasureDeath, TreasureRoll treasureRoll, WorldObject __result)
     {
         //Don't roll missing chance
+
         if (!PatchClass.Settings.CloakMutationChance.TryGetValue(treasureRoll.ItemType, out var odds))
             return;
 
