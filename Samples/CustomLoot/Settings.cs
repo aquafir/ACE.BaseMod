@@ -1,13 +1,16 @@
-﻿using System.Linq;
-using CustomLoot.Enums;
-
-namespace CustomLoot;
+﻿namespace CustomLoot;
 
 public class Settings
 {
+    public bool Verbose { get; set; } = true;
+
     #region Features / Mutators / Odds / Targets
     public List<Feature> Features { get; set; } = Enum.GetValues<Feature>().ToList();
-    public List<MutatorSettings> Mutators { get; set; } = Enum.GetValues<Mutation>().Select(x => new MutatorSettings(x.ToString())).ToList();
+    public List<MutatorSettings> Mutators { get; set; } = Enum.GetValues<Mutation>()
+        .Select(x => new MutatorSettings(x) { 
+            Odds = x.DefaultOdds(), 
+            Targets = x.DefaultTargets()
+        }).ToList();
 
     //OddsType and helpers just for convenience-- any string can be used
     public Dictionary<string, Odds> Odds { get; set; } = new()
@@ -36,6 +39,21 @@ public class Settings
     #endregion
 
     #region Mutator Settings
+    #region Sets
+    //Type -> List of valid eligible sets
+    public Dictionary<TreasureItemType_Orig, List<EquipmentSet>> CustomSets { get; set; } = new()
+    {
+        //Armor / clothes the standard sets
+        [TreasureItemType_Orig.Armor] = new(Sets.armorSets) { },
+        [TreasureItemType_Orig.Clothing] = new(Sets.armorSets) { },
+        //Cloaks / jewelry roll cloak sets
+        [TreasureItemType_Orig.Cloak] = new(Sets.cloakSets) { },
+        [TreasureItemType_Orig.Jewelry] = new(Sets.cloakSets) { },
+        //Weapons do nothing
+        //[TreasureItemType_Orig.Weapon] = new() { },   //Ignores missing
+    };
+    #endregion
+
     #region Slayer
     public bool UseCustomSlayers { get; set; } = true;
     public CreatureType[] SlayerSpecies { get; set; } = Enum.GetValues<CreatureType>();
@@ -56,45 +74,26 @@ public class Settings
     };
     #endregion
 
-
-    #endregion
-
-    #region Feature Settings
-
-
-
-    #region ProcRateOverride
-    public double CloakProcRate { get; set; } = .05; //5%
-    public double AetheriaProcRate { get; set; } = .05;
-    #endregion
-    #endregion
-
-
-    #region Sets
-    //Type -> List of valid eligible sets
-    public Dictionary<TreasureItemType_Orig, List<EquipmentSet>> CustomSets { get; set; } = new()
-    {
-        //Armor / clothes the standard sets
-        [TreasureItemType_Orig.Armor] = new(Sets.armorSets) { },
-        [TreasureItemType_Orig.Clothing] = new(Sets.armorSets) { },
-        //Cloaks / jewelry roll cloak sets
-        [TreasureItemType_Orig.Cloak] = new(Sets.cloakSets) { },
-        [TreasureItemType_Orig.Jewelry] = new(Sets.cloakSets) { },
-        //Weapons do nothing
-        //[TreasureItemType_Orig.Weapon] = new() { },   //Ignores missing
-    };
-    #endregion
-
-
-    #region Cloak Procs
+    #region ProcOnHit
     //Use custom pool to remove ring / allow other options
     public bool UseCustomCloakSpellProcs { get; set; } = true;
-    public List<SpellId> CloakSpells { get; set; } =
+    public List<SpellId> ProcOnHitSpells { get; set; } =
         new(
         Sets.cloakSpecificSpells            //No ring spells
         .Append(SpellId.DrainHealth8)       //Add your own
         );
     #endregion
+    #endregion
 
+    #region Feature Settings
 
+    #region ProcRateOverride
+    public double CloakProcRate { get; set; } = .05; //5%
+    public float AetheriaProcRate { get; set; } = .05f;
+    #endregion
+    #endregion
+
+    #region Pools (e.g., Sets / Spell IDs / Species)
+
+    #endregion
 }

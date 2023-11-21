@@ -19,33 +19,32 @@ This mod changes the loot generated objects returned by `LootGenerationFactory.C
 
 ### Mutations
 
+#### ProcOnHit
+
+* Cloak-style mutations that require the `ProcOnHit` feature to also be enabled.
+* If `UseCustomCloakSpellProcs` is true the spells in `CloakSpells` will be used instead of the normal pool.
+* ***Still requires you to be wearing a cloak with a proc.***  Probably could change this with a rewrite/Postfix of `SpellProjectile.DamageTarget` and `Player.TakeDamage` which make the checks.
+
+
+
+#### Set
+
+* Adds a set based on `TreasureItemType_Orig` in `CustomSets`
+
+* By default: 
+  * Armor/clothing roll armor sets  
+  * Cloak/jewelry rolls cloak sets
+  * Missing/Weapons roll nothing
+
+
+
+
 
 #### Slayer
 
 * `SlayerPower` determines the power of the corresponding tier of item.
-
-
-
-#### Cloak-style Mutation
-
-* For each of armor/jewelry/clothing, `CloakMutationChance` is a 0-1 chance of adding Cloak properties
-  * If the `TreasureItemType_Orig` is missing that item type doesn't attempt a cloak mutation
-  * If `UseCustomCloakSpellProcs` is true the spells in `CloakSpells` will be used instead of the normal pool.
-* `EnableOnHitForNonCloak` is needed to patch ACE to check non-Cloaks for OnHit triggers
-  * ***This requires you to be wearing a cloak with a proc.***  Probably could change this with a rewrite/Postfix of `SpellProjectile.DamageTarget` and `Player.TakeDamage` which make the above checks.
-
-
-
-#### Set Mutation
-
-* For each of armor/jewelry/clothing/weapon (or added `TreasureItemType_Orig`), `CloakMutationChance` is a 0-1 chance of adding Cloak properties
-
-* If the `TreasureItemType_Orig` is missing it won't attempt a set mutation.
-* `CustomSets` is a `TreasureItemType_Orig` with a list of set IDs that it can roll.  By default: 
-  * Armor/clothing roll armor sets  
-  * Cloak/jewelry rolls cloak sets
-  * Weapons (or missing) roll nothing
-
+* If `UseCustomSlayers` is true `SlayerSpecies` will be used instead of the full list
+  * Invalid|Unknown|Wall are removed from the pool
 
 
 
@@ -63,8 +62,6 @@ This mod changes the loot generated objects returned by `LootGenerationFactory.C
 
 ### Video
 
-
-
 <details>
  <summary>Sets</summary>
 
@@ -73,7 +70,6 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/1300de91-fa7f-442c-a2f1-5
 
 <details>
  <summary>OnAttack Proc</summary>
-
 https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c2efbf67d781
 </details>
 
@@ -92,19 +88,22 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 
 
 
-### Notes
 
+
+### Todo
+
+* Check mutations compatibility
+* ArrayOf for pools for constant time sampling?
 * If ACE ever goes .NET >7 should switch to polymorphic serialization 
-* Per-tier chances would be a good candidate for future customization
 * Currently doesn't wipe a set/proc if one exists and a mutation isn't rolled.
 * Possibly inefficient way of checking for self-targeting spells
 * Possible increase in efficiency by intercepting WO creation instead of mutating after creation
 
 
 
-### Levels?
+### Levels
 
-* Needs all 3
+* Needs all 3?
   * ItemMaxLevel - max level
   * ItemBaseXp - xp per level
   * ItemXpStyle

@@ -10,6 +10,11 @@ public enum OddsType
 
 public static class OddsHelper
 {
+    public static string DefaultOdds(this Mutation mutator) => mutator switch
+    {
+        Mutation.Slayer => nameof(OddsType.Rare),
+        _ => nameof(OddsType.Always)
+    };
     public static Odds OddsOf(this OddsType type) => type switch
     {
         OddsType.Common => new()

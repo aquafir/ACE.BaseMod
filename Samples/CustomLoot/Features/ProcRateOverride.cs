@@ -1,6 +1,4 @@
-﻿using CustomLoot.Enums;
-
-namespace CustomLoot.Features;
+﻿namespace CustomLoot.Features;
 
 [HarmonyPatchCategory(nameof(Feature.ProcRateOverride))]
 public class ProcRateOverride
@@ -19,7 +17,7 @@ public class ProcRateOverride
     [HarmonyPatch(typeof(Aetheria), nameof(Aetheria.CalcProcRate), new Type[] { typeof(WorldObject), typeof(Creature) })]
     public static bool PreCalcProcRate(WorldObject aetheria, Creature wielder, ref Aetheria __instance, ref float __result)
     {
-        __result = ThreadSafeRandom.Next(0, 1.0f) < PatchClass.Settings.AetheriaProcRate;
+        __result = PatchClass.Settings.AetheriaProcRate;
 
         return false;
     }

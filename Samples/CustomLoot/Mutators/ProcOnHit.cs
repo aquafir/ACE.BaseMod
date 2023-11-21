@@ -1,22 +1,9 @@
 ﻿namespace CustomLoot.Mutators;
 
 //ConcurrentBag<
-internal static class ProcOnHit
+public class ProcOnHit : Mutator
 {
-    public void HandleCloakMutation(TreasureDeath treasureDeath, TreasureRoll treasureRoll, WorldObject __result)
-    {
-        //Don't roll missing chance
-
-        if (!PatchClass.Settings.CloakMutationChance.TryGetValue(treasureRoll.ItemType, out var odds))
-            return;
-
-        //Failed roll
-        if (ThreadSafeRandom.Next(0.0f, 1.0f) >= odds)
-            return;
-        __result.MutateLikeCloak(treasureDeath, treasureRoll);
-    }
-
-    public static void MutateLikeCloak(this WorldObject wo, TreasureDeath profile, TreasureRoll roll)
+    public override bool TryMutate(TreasureDeath profile, TreasureRoll roll, HashSet<Mutation> mutations, WorldObject wo)
     {
         wo.ItemMaxLevel = CloakChance.Roll_ItemMaxLevel(profile);
         wo.WieldDifficulty = wo.ItemMaxLevel switch
@@ -52,6 +39,7 @@ internal static class ProcOnHit
         //}
 
         //LootGenerationFactory.MutateValue(wo, profile.Tier, roll);
+        return true;
     }
 
     /// <summary>
@@ -59,13 +47,12 @@ internal static class ProcOnHit
     /// </summary>
     private static SpellId RollProcSpell()
     {
-        int num = ThreadSafeRandom.Next(0, PatchClass.Settings.CloakSpells.Count);
-        if (num == PatchClass.Settings.CloakSpells.Count)
+        int num = ThreadSafeRandom.Next(0, PatchClass.Settings.ProcOnHitSpells.Count);
+        if (num == PatchClass.Settings.ProcOnHitSpells.Count)
         {
             return SpellId.Undef;
         }
 
-        return PatchClass.Settings.CloakSpells[num];
+        return PatchClass.Settings.ProcOnHitSpells[num];
     }
-
 }

@@ -1,9 +1,13 @@
-﻿using CustomLoot.Enums;
+﻿namespace CustomLoot.Mutators;
 
-namespace CustomLoot.Mutators;
-
-public static class ProcOnAttack
+public class ProcOnAttack : Mutator
 {
+    public override bool TryMutate(TreasureDeath treasureDeath, TreasureRoll treasureRoll, HashSet<Mutation> mutations, WorldObject item)
+    {
+        //Todo
+        //throw new NotImplementedException();
+        return false;
+    }
     public static void ActivateSigil(WorldObject target)
     {
         // rng select a sigil / spell set
@@ -22,27 +26,16 @@ public static class ProcOnAttack
 
         target.SetProperty(PropertyDataId.ProcSpell, (uint)surgeSpell);
 
-        if (Sets.SurgeTargetSelf[surgeSpell])
+        //if (Sets.SurgeTargetSelf[surgeSpell])
+        if(new Spell(surgeSpell).IsSelfTargeted)
             target.SetProperty(PropertyBool.ProcSpellSelfTargeted, true);
 
         // set equip mask
         //target.SetProperty(PropertyInt.ValidLocations, (int)ColorToMask[color]);
     }
 
-
-    private static SpellId RollProcSpell()
-    {
-        int num = ThreadSafeRandom.Next(0, PatchClass.Settings.CloakSpells.Count);
-        if (num == PatchClass.Settings.CloakSpells.Count)
-        {
-            return SpellId.Undef;
-        }
-
-        return PatchClass.Settings.CloakSpells[num];
-    }
-
     //Mutating at lootgen level so pass profiles
-    public static void MutateLikeAetheria(this WorldObject wo, TreasureDeath profile, TreasureRoll roll)//int tier)
+    public static void MutateLikeAetheria(WorldObject wo, TreasureDeath profile, TreasureRoll roll)//int tier)
     {
         //Mutate pre-activated 
         // Initial roll for an Aetheria level 1 through 3
@@ -73,4 +66,15 @@ public static class ProcOnAttack
         //Activate
         ActivateSigil(wo);
     }
+
+    //private static SpellId RollProcSpell()
+    //{
+    //    int num = ThreadSafeRandom.Next(0, PatchClass.Settings.ProcOnHitSpells.Count);
+    //    if (num == PatchClass.Settings.ProcOnHitSpells.Count)
+    //    {
+    //        return SpellId.Undef;
+    //    }
+
+    //    return PatchClass.Settings.ProcOnHitSpells[num];
+    //}
 }

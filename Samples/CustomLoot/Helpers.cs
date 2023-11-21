@@ -1,6 +1,4 @@
-﻿using Spell = ACE.Server.Entity.Spell;
-
-namespace CustomLoot;
+﻿namespace CustomLoot;
 
 public static class Helpers
 {
@@ -23,6 +21,7 @@ public static class Helpers
     //CloakAllId was the original cloak check
     //Aetheria uses a lookup
     public static bool IsSelfTargeting(this SpellId spellId) => new Spell(spellId).IsSelfTargeted; //spellId == SpellId.CloakAllSkill;
+
 
     /// <summary>
     /// Assign an EquipmentSetId to a WorldObject based on the loot type
@@ -51,4 +50,24 @@ public static class Helpers
     //    _ when Cloak.IsCloak(wo) => TreasureItemType_Orig.Cloak,
     //    _ => throw new NotImplementedException(),
     //};
+
+
+
+
+}
+
+public static class RandomExtensions
+{
+    private static Random random = new Random();
+
+    public static bool TryGetRandom<T>(this T[] array, out T value)
+    {
+        value = default;
+
+        if (array == null || array.Length == 0)
+            return false;
+
+        value = array[random.Next(array.Length)];
+        return true;
+    }
 }

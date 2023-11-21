@@ -1,14 +1,12 @@
 ﻿namespace CustomLoot.Mutators;
 
-internal static class Set
+public class Set : Mutator
 {
-    public static void HandleSetMutation(TreasureDeath treasureDeath, TreasureRoll treasureRoll, WorldObject __result)
+    public override bool TryMutate(TreasureDeath treasureDeath, TreasureRoll treasureRoll, HashSet<Mutation> mutations, WorldObject item)
     {
-        //Missing or empty set doesn't roll
-        if (!PatchClass.Settings.CustomSets.TryGetValue(treasureRoll.ItemType, out var setList) || setList.Count == 0)
-            return;
+        //Add a set from the valid ones in the settings
+        item.RollEquipmentSet(treasureRoll);
 
-        //Add a set
-        __result.RollEquipmentSet(treasureRoll);
+        return true;
     }
 }

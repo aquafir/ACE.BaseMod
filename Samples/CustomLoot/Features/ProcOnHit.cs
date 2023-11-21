@@ -1,6 +1,4 @@
-﻿using CustomLoot.Enums;
-
-namespace CustomLoot.Features;
+﻿namespace CustomLoot.Features;
 
 [HarmonyPatchCategory(nameof(Feature.ProcOnHit))]
 internal class ProcOnHit

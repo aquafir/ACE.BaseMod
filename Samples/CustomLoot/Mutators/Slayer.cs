@@ -1,36 +1,44 @@
-﻿using System.Runtime.CompilerServices;
-
+﻿
 namespace CustomLoot.Mutators;
 
 public class Slayer : Mutator
 {
+    CreatureType[] species;
 
+    public override bool Mutates(TreasureDeath profile, TreasureRoll roll, HashSet<Mutation> mutations, WorldObject item = null)
+    {
+        //Doesn't mutate Slayers
+        if (item.GetProperty(PropertyInt.SlayerCreatureType) is not null)
+            return false;
+
+        return base.Mutates(profile, roll, mutations, item);
+    }
+
+    public override bool TryMutate(TreasureDeath profile, TreasureRoll roll, HashSet<Mutation> mutations, WorldObject item)
+    {
+        //Try to get a random type
+        if (!species.TryGetRandom(out var type))
+            return false;
+
+        var power = PatchClass.Settings.SlayerPower[profile.Tier];
+
+        item.SetProperty(PropertyInt.SlayerCreatureType, (int)type);
+        item.SetProperty(PropertyFloat.SlayerDamageBonus, power);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Example of doing some setup when the Mutator is created
+    /// </summary>
     public override void Start()
     {
-    }
-    public void HandleSlayerMutation(TreasureDeath treasureDeath, WorldObject __result)
-    {
-        if (Odds is null || !Odds.Roll(treasureDeath))
-            return;
-
-        //Check already slayer            
-        if (__result.GetProperty(PropertyInt.SlayerCreatureType) is not null)
-            return;
-
         //Use all creatures or just a subset
         var cTypes = PatchClass.Settings.UseCustomSlayers ? PatchClass.Settings.SlayerSpecies : Enum.GetValues<CreatureType>();
+        //Construct bag without bad types
+        species = cTypes.Where(x => x != CreatureType.Invalid && x != CreatureType.Unknown && x != CreatureType.Wall).ToArray();
 
-        if (cTypes.Length < 1)
-        {
-            ModManager.Log("No available species to add Slayer for.");
-            return;
-        }
-
-        //Get a random type
-        var type = cTypes[ThreadSafeRandom.Next(0, cTypes.Length - 1)];
-        var power = PatchClass.Settings.SlayerPower[treasureDeath.Tier];
-
-        __result.SetProperty(PropertyInt.SlayerCreatureType, (int)type);
-        __result.SetProperty(PropertyFloat.SlayerDamageBonus, power);
+        if (PatchClass.Settings.Verbose)
+            ModManager.Log($"Set up bag of {species.Length} species to add Slayer from.");
     }
 }

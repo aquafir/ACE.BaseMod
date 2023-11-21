@@ -17,6 +17,12 @@ public enum TargetGroup
 
 public static class TargetGroupHelper
 {
+    public static string DefaultTargets(this Mutation mutator) => mutator switch
+    {
+        Mutation.Slayer => nameof(TargetGroup.Weapon),
+        _ => nameof(TargetGroup.Wearables)
+    };
+
     public static HashSet<TreasureItemType_Orig> SetOf(this TargetGroup type) => type switch
     {
         TargetGroup.Equipables => new()

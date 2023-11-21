@@ -1,17 +1,5 @@
 ﻿namespace CustomLoot.Enums;
 
-public static class EnumHelper
-{
-
-}
-
-
-public enum Mutation
-{
-    Slayer,
-    //AutoImbue,
-}
-
 public enum Feature
 {
     ProcOnAttack,

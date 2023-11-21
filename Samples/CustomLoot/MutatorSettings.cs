@@ -1,9 +1,4 @@
-﻿using System.IO;
-using System.Xml.Linq;
-using CustomLoot.Enums;
-using CustomLoot.Mutators;
-
-namespace CustomLoot;
+﻿namespace CustomLoot;
 
 /// <summary>
 /// Patch settings are used to serialized patches
@@ -11,14 +6,22 @@ namespace CustomLoot;
 public class MutatorSettings
 {
     public const string NAMESPACE = $"CustomLoot.Mutators";
-    public string PatchType { get; set; }
+    //public string PatchType { get; set; }
+    public Mutation PatchType { get; set; }
     public bool Enabled { get; set; } = true;
-    public string Odds { get; set; } = nameof(OddsType.Always);
-    public string Targets { get; set; } = nameof(TargetGroup.Wearables);
+    //If settings are missing Odds or Targets
+    public string Odds { get; set; } 
+    public string Targets { get; set; } 
 
     //public MutatorSettings() { }
 
-    public MutatorSettings(string patchType, bool enabled = true)
+    //public MutatorSettings(string patchType, bool enabled = true)
+    //{
+    //    PatchType = patchType;
+    //    Enabled = enabled;
+    //}
+
+    public MutatorSettings(Mutation patchType, bool enabled = true)
     {
         PatchType = patchType;
         Enabled = enabled;
@@ -33,7 +36,7 @@ public static class MutatorHelpers
     public static Mutator CreateMutator(this MutatorSettings settings)
     {
         //Mutators match enum
-        var type = System.Type.GetType($"{MutatorSettings.NAMESPACE}.{settings.PatchType}");
+        var type = Type.GetType($"{MutatorSettings.NAMESPACE}.{settings.PatchType}");
 
         if (type is null)
         {

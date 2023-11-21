@@ -1,6 +1,6 @@
-﻿using CustomLoot.Enums;
-using CustomLoot.Mutators;
-using System.Text;
+﻿using ACE.Entity;
+using ACE.Server.Command;
+using ACE.Server.Network;
 
 namespace CustomLoot;
 
@@ -107,7 +107,7 @@ public class PatchClass
         foreach (var feature in PatchClass.Settings.Features)
         {
             Mod.Harmony.PatchCategory(nameof(feature));
-            ModManager.Log($"Enabled feature: {nameof(feature)}");
+            ModManager.Log($"Enabled feature: {feature}");
         }
     }
 
@@ -123,15 +123,17 @@ public class PatchClass
 
             try
             {
-                Debugger.Break();
                 var mutator = mutatorOptions.CreateMutator();
                 mutator.Start();
                 enabledPatches.Add(mutator);
-                ModManager.Log($"Enabled mutator: {nameof(mutatorOptions)}");
+
+                if (PatchClass.Settings.Verbose)
+                    ModManager.Log($"Enabled mutator: {mutatorOptions.PatchType}");
             }
             catch (Exception ex)
             {
-                ModManager.Log($"Failed to patch {mutatorOptions.PatchType}: {ex.Message}", ModManager.LogLevel.Error);
+                if (PatchClass.Settings.Verbose)
+                    ModManager.Log($"Failed to patch {mutatorOptions.PatchType}: {ex.Message}", ModManager.LogLevel.Error);
             }
         }
     }
@@ -142,42 +144,37 @@ public class PatchClass
     {
         if (treasureDeath is null) return;
 
-        //Todo Add additional spells to armor or weapons like cloaks. You don't need to do rings but maybe dbuffs or heals/mana/stam or rare gem spells
-        switch (treasureRoll.ItemType)
-        {
-            case TreasureItemType_Orig.Caster:
-                break;
-            case TreasureItemType_Orig.Weapon:
-                //Slayer.HandleSlayerMutation(treasureDeath, __result);
-                break;
-            case TreasureItemType_Orig.Clothing:
-            case TreasureItemType_Orig.Jewelry:
-            case TreasureItemType_Orig.Armor:
-                //ProcOnHit.HandleCloakMutation(treasureDeath, treasureRoll, __result);
-                break;
-            case TreasureItemType_Orig.Cloak:
-                break;
-            case TreasureItemType_Orig.PetDevice:
-                break;
-            case TreasureItemType_Orig.HealKit:
-                break;
-            case TreasureItemType_Orig.Lockpick:
-                break;
-        }
-
         //Keeps track of what mutations have been applied
         HashSet<Mutation> mutations = new();
 
         foreach (var mutator in enabledPatches)
         {
             //Check for elligible item type
-            //if (mutator.Mutates(treasureRoll.ItemType))
-            //    if(mutator.TryMutate(__result, treasureDeath, treasureRoll);
+            if (!mutator.Mutates(treasureDeath, treasureRoll, mutations, __result))
+                continue;
+
+            //If an item was mutated add the type
+            if (mutator.TryMutate(treasureDeath, treasureRoll, mutations, __result))
+                mutations.Add(mutator.MutationType);
         }
 
-        //Check if the set is mutated
-        //if (PatchClass.Settings.SetMutationChance.TryGetValue(treasureRoll.ItemType, out var setOdds)
-        //    && ThreadSafeRandom.Next(0.0f, 1.0f) < setOdds)
-        //    Set.HandleSetMutation(treasureDeath, treasureRoll, __result);
+        if (PatchClass.Settings.Verbose && mutations.Count > 0)
+            ModManager.Log($"{__result.Name} was mutated with: {String.Join(", ", mutations)}");
+
+    }
+
+
+    [CommandHandler("clean", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
+    public static void Clean(Session session, params string[] parameters)
+    {
+        // @delete - Deletes the selected object. Players may not be deleted this way.
+
+        var player = session.Player;
+
+        Debugger.Break();
+        foreach (var item in player.Inventory)
+        {
+            player.TryRemoveFromInventoryWithNetworking(item.Key, out var i, Player.RemoveFromInventoryAction.None);
+        }
     }
 }
