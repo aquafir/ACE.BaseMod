@@ -1,6 +1,6 @@
-﻿namespace CustomLoot;
+﻿namespace CustomLoot.Mutators;
 
-public static class AetheriaMutation
+public static class ProcOnAttack
 {
     public static void ActivateSigil(WorldObject target)
     {

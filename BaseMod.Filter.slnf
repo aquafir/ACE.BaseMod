@@ -2,8 +2,7 @@
   "solution": {
     "path": "ACE.BaseMod.sln",
     "projects": [
-      "Samples\\ChatFilter\\ChatFilter.csproj",
-      "Samples\\Tinkering\\Tinkering.csproj"
+      "Samples\\CustomLoot\\CustomLoot.csproj"
     ]
   }
 }

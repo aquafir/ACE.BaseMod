@@ -1,16 +1,32 @@
 ## CustomLoot
- 
+
 This mod changes the loot generated objects returned by `LootGenerationFactory.CreateAndMutateWcid`
 
 
-### Slayer
 
-* `SlayerChance` is a 0-1 chance of adding a random Slayer property to a weapon.
-  * `SlayerPower` determines the power of the corresponding tier of item.
+### **Overview**
+
+* **Features** are patches that enable additional functionality, such as a "reduced weight" property for a container
+  * Some mutations may require a feature for the item they produce to do what it should.
+* **Mutators** change loot after its generated.
+  * `Targets` is a set of `TreasureItemType_Orig` the mutation applies to
+  * `Odds` is the 0-1 chance of being applied to an item of a tier
+  * There are default sets of both but you can make your own.
+  * You can make multiple Mutators if you want to have different odds for different targets.
+* Settings for Mutators/Features are currently just dumped in `Settings.json`.  
 
 
 
-### Cloak-style Mutation
+### Mutations
+
+
+#### Slayer
+
+* `SlayerPower` determines the power of the corresponding tier of item.
+
+
+
+#### Cloak-style Mutation
 
 * For each of armor/jewelry/clothing, `CloakMutationChance` is a 0-1 chance of adding Cloak properties
   * If the `TreasureItemType_Orig` is missing that item type doesn't attempt a cloak mutation
@@ -20,7 +36,7 @@ This mod changes the loot generated objects returned by `LootGenerationFactory.C
 
 
 
-### Set Mutation
+#### Set Mutation
 
 * For each of armor/jewelry/clothing/weapon (or added `TreasureItemType_Orig`), `CloakMutationChance` is a 0-1 chance of adding Cloak properties
 
@@ -31,7 +47,13 @@ This mod changes the loot generated objects returned by `LootGenerationFactory.C
   * Weapons (or missing) roll nothing
 
 
-### Aetheria
+
+
+
+### Features
+
+
+#### Aetheria
 
 * `EnableOnAttackForNonAetheria` is needed to patch ACE to check non-Aetheria for OnAttack triggers
   * TitaniumWeenie's [UniqueWeenies](https://github.com/titaniumweiner/ACEUniqueWeenies) contains compatible weenies
@@ -72,6 +94,7 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 
 ### Notes
 
+* If ACE ever goes .NET >7 should switch to polymorphic serialization 
 * Per-tier chances would be a good candidate for future customization
 * Currently doesn't wipe a set/proc if one exists and a mutation isn't rolled.
 * Possibly inefficient way of checking for self-targeting spells

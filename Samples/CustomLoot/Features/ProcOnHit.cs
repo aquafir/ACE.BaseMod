@@ -1,7 +1,7 @@
-﻿namespace CustomLoot;
+﻿namespace CustomLoot.Features;
 
-[HarmonyPatchCategory(Settings.OnHitCategory)]
-internal class OnHit
+[HarmonyPatchCategory(nameof(Feature.ProcOnHit))]
+internal class ProcOnHit
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Cloak), nameof(Cloak.TryProcSpell), new Type[] { typeof(Creature), typeof(WorldObject), typeof(WorldObject), typeof(float) })]

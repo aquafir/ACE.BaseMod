@@ -1,7 +1,19 @@
-﻿namespace CustomLoot;
+﻿namespace CustomLoot.Mutators;
 
-public static class CloakMutation
+internal static class ProcOnHit
 {
+    public static void HandleCloakMutation(TreasureDeath treasureDeath, TreasureRoll treasureRoll, WorldObject __result)
+    {
+        //Don't roll missing chance
+        if (!PatchClass.Settings.CloakMutationChance.TryGetValue(treasureRoll.ItemType, out var odds))
+            return;
+
+        //Failed roll
+        if (ThreadSafeRandom.Next(0.0f, 1.0f) >= odds)
+            return;
+        __result.MutateLikeCloak(treasureDeath, treasureRoll);
+    }
+
     public static void MutateLikeCloak(this WorldObject wo, TreasureDeath profile, TreasureRoll roll)
     {
         wo.ItemMaxLevel = CloakChance.Roll_ItemMaxLevel(profile);
@@ -53,4 +65,5 @@ public static class CloakMutation
 
         return PatchClass.Settings.CloakSpells[num];
     }
+
 }

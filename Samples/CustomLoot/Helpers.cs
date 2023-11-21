@@ -28,13 +28,13 @@ public static class Helpers
     /// Assign an EquipmentSetId to a WorldObject based on the loot type
     /// </summary>
     /// <param name="wo"></param>
-    public static void RollEquipmentSet(this WorldObject wo, TreasureRoll roll)
-    {
-        if (!PatchClass.Settings.CustomSets.TryGetValue(roll.ItemType, out var set))
-            return; //Remove if missing?
+    //public static void RollEquipmentSet(this WorldObject wo, TreasureRoll roll)
+    //{
+    //    if (!PatchClass.Settings.CustomSets.TryGetValue(roll.ItemType, out var set))
+    //        return; //Remove if missing?
 
-        wo.EquipmentSetId = set[ThreadSafeRandom.Next(0, set.Count - 1)];
-    }
+    //    wo.EquipmentSetId = set[ThreadSafeRandom.Next(0, set.Count - 1)];
+    //}
 
     //Find the treasure type from WO.  Not preferred.
     //public static void RollEquipmentSet(this WorldObject wo)

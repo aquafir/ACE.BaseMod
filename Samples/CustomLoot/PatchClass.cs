@@ -1,4 +1,7 @@
-﻿namespace CustomLoot;
+﻿using CustomLoot.Mutators;
+using System.Text;
+
+namespace CustomLoot;
 
 [HarmonyPatch]
 public class PatchClass
@@ -17,6 +20,7 @@ public class PatchClass
         AllowTrailingCommas = true,
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     };
 
     private static void SaveSettings()
@@ -72,7 +76,8 @@ public class PatchClass
             return;
         }
 
-        PatchCategories();
+        SetupFeatures();
+        SetupMutators();
 
         Mod.State = ModState.Running;
     }
@@ -80,10 +85,13 @@ public class PatchClass
     public static void Shutdown()
     {
         //if (Mod.State == ModState.Running)
-        // Shut down enabled mod...
 
-        //If the mod is making changes that need to be saved use this and only manually edit settings when the patch is not active.
-        //SaveSettings();
+        //Shutdown/unpatch everything on settings change to support repatching by category
+        foreach (var patch in enabledPatches)
+        {
+            patch.Shutdown();
+        }
+        Mod.Harmony.UnpatchAll();
 
         if (Mod.State == ModState.Error)
             ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
@@ -91,70 +99,41 @@ public class PatchClass
     #endregion
 
     /// <summary>
-    /// Selectively patch ACE to look for non-Aetheria/Cloak items for procs
+    /// Adds additional features to ACE that may be needed by custom loot
     /// </summary>
-    private static void PatchCategories()
+    private static void SetupFeatures()
     {
-        if (Settings.EnableOnAttackForNonAetheria)
-            Mod.Harmony.PatchCategory(Settings.OnAttackCategory);
-
-        if (Settings.EnableOnHitForNonCloak)
-            Mod.Harmony.PatchCategory(Settings.OnHitCategory);
-
-
-        if (Settings.EnableProcOverride)
-            Mod.Harmony.PatchCategory(Settings.ProcOverrideCategory);
-    }
-
-    #region Mutation Handlers
-    private static void HandleSetMutation(TreasureDeath treasureDeath, TreasureRoll treasureRoll, WorldObject __result)
-    {
-        //Missing or empty set doesn't roll
-        if (!Settings.CustomSets.TryGetValue(treasureRoll.ItemType, out var setList) || setList.Count == 0)
-            return;
-
-        //Add a set
-        __result.RollEquipmentSet(treasureRoll);
-    }
-
-    private static void HandleCloakMutation(TreasureDeath treasureDeath, TreasureRoll treasureRoll, WorldObject __result)
-    {
-        //Don't roll missing chance
-        if (!Settings.CloakMutationChance.TryGetValue(treasureRoll.ItemType, out var odds))
-            return;
-
-        //Failed roll
-        if (ThreadSafeRandom.Next(0.0f, 1.0f) >= odds)
-            return;
-        __result.MutateLikeCloak(treasureDeath, treasureRoll);
-    }
-
-    private static void HandleSlayerMutation(TreasureDeath treasureDeath, WorldObject __result)
-    {
-        if (ThreadSafeRandom.Next(0.0f, 1.0f) < Settings.SlayerChance)
+        foreach (var feature in PatchClass.Settings.Features)
         {
-            //Check already slayer            
-            if (__result.GetProperty(PropertyInt.SlayerCreatureType) is not null)
-                return;
-
-            //Use all creatures or just a subset
-            var cTypes = Settings.UseCustomSlayers ? Settings.SlayerSpecies : Enum.GetValues<CreatureType>();
-
-            if (cTypes.Length < 1)
-            {
-                ModManager.Log("No available species to add Slayer for.");
-                return;
-            }
-
-            //Get a random type
-            var type = cTypes[ThreadSafeRandom.Next(0, cTypes.Length - 1)];
-            var power = Settings.SlayerPower[treasureDeath.Tier];
-
-            __result.SetProperty(PropertyInt.SlayerCreatureType, (int)type);
-            __result.SetProperty(PropertyFloat.SlayerDamageBonus, power);
+            Mod.Harmony.PatchCategory(nameof(feature));
+            ModManager.Log($"Enabled feature: {nameof(feature)}");
         }
     }
-    #endregion
+
+    private static List<Mutator> enabledPatches = new();
+    private static void SetupMutators()
+    {
+        enabledPatches.Clear();
+
+        foreach (var mutatorOptions in Settings.Mutators)
+        {
+            if (!mutatorOptions.Enabled)
+                continue;
+
+            try
+            {
+                Debugger.Break();
+                var mutator = mutatorOptions.CreateMutator();
+                mutator.Start();
+                enabledPatches.Add(mutator);
+                ModManager.Log($"Enabled mutator: {nameof(mutatorOptions)}");
+            }
+            catch (Exception ex)
+            {
+                ModManager.Log($"Failed to patch {mutatorOptions.PatchType}: {ex.Message}", ModManager.LogLevel.Error);
+            }
+        }
+    }
 
     [HarmonyPostfix]
     [HarmonyPatch(typeof(LootGenerationFactory), nameof(LootGenerationFactory.CreateAndMutateWcid), new Type[] { typeof(TreasureDeath), typeof(TreasureRoll), typeof(bool) })]
@@ -168,12 +147,12 @@ public class PatchClass
             case TreasureItemType_Orig.Caster:
                 break;
             case TreasureItemType_Orig.Weapon:
-                HandleSlayerMutation(treasureDeath, __result);
+                //Slayer.HandleSlayerMutation(treasureDeath, __result);
                 break;
             case TreasureItemType_Orig.Clothing:
             case TreasureItemType_Orig.Jewelry:
             case TreasureItemType_Orig.Armor:
-                HandleCloakMutation(treasureDeath, treasureRoll, __result);
+                //ProcOnHit.HandleCloakMutation(treasureDeath, treasureRoll, __result);
                 break;
             case TreasureItemType_Orig.Cloak:
                 break;
@@ -185,9 +164,19 @@ public class PatchClass
                 break;
         }
 
+        //Keeps track of what mutations have been applied
+        HashSet<Mutation> mutations = new();
+
+        foreach (var mutator in enabledPatches)
+        {
+            //Check for elligible item type
+            //if (mutator.Mutates(treasureRoll.ItemType))
+            //    if(mutator.TryMutate(__result, treasureDeath, treasureRoll);
+        }
+
         //Check if the set is mutated
-        if (Settings.SetMutationChance.TryGetValue(treasureRoll.ItemType, out var setOdds)
-            && ThreadSafeRandom.Next(0.0f, 1.0f) < setOdds)
-            HandleSetMutation(treasureDeath, treasureRoll, __result);
+        //if (PatchClass.Settings.SetMutationChance.TryGetValue(treasureRoll.ItemType, out var setOdds)
+        //    && ThreadSafeRandom.Next(0.0f, 1.0f) < setOdds)
+        //    Set.HandleSetMutation(treasureDeath, treasureRoll, __result);
     }
 }

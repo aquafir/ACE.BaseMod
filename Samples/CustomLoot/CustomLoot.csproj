@@ -17,6 +17,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Mutators\ProcOnAttack.cs" />
+	  <Compile Remove="Mutators\ProcOnHit.cs" />
+	  <Compile Remove="Mutators\Set.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
 			<PrivateAssets>all</PrivateAssets>

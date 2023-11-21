@@ -1,7 +1,7 @@
-﻿namespace CustomLoot;
+﻿namespace CustomLoot.Features;
 
-[HarmonyPatchCategory(Settings.OnAttackCategory)]
-internal class OnAttack
+[HarmonyPatchCategory(nameof(Feature.ProcOnAttack))]
+internal class ProcOnAttack
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.TryProcEquippedItems), new Type[] { typeof(WorldObject), typeof(Creature), typeof(bool), typeof(WorldObject) })]
@@ -56,17 +56,5 @@ internal class OnAttack
     //        foreach (var equip in equipped)
     //            equip.TryProcItem(attacker, target, selfTarget);
     //    }
-    //}
-
-    //Proc chance is based on level / augs / combat mode
-    //[HarmonyPrefix]
-    //[HarmonyPatch(typeof(Aetheria), nameof(Aetheria.CalcProcRate), new Type[] { typeof(WorldObject), typeof(Creature) })]
-    //public static bool PreCalcProcRate(WorldObject aetheria, Creature wielder, ref Aetheria __instance, ref float __result)
-    //{
-    //    //Return false to override
-    //    //return false;
-
-    //    //Return true to execute original
-    //    return true;
     //}
 }
