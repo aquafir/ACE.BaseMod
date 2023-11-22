@@ -2,7 +2,7 @@
 
 public class Settings
 {
-    public bool Verbose { get; set; } = true;
+    public bool Verbose { get; set; } = false;
 
     #region Features / Mutators
     public List<Feature> Features { get; set; } = Enum.GetValues<Feature>().ToList();

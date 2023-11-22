@@ -1,8 +1,10 @@
 ﻿using ACE.Database;
+using ACE.Entity.Models;
 using ACE.Server.Entity.Actions;
 using ACE.Server.Managers;
 using ACE.Server.Network;
 using ACE.Server.WorldObjects;
+using CustomLoot.Features;
 
 namespace CustomLoot.Mutators;
 
@@ -42,15 +44,23 @@ public class ShinyPet : Mutator
             if (item is not PetDevice petDevice)
                 return;
 
-            var creatureName = corpse.Name.Substring(10);
-            var weenieByName = DatabaseManager.World.GetCachedWeenie(creatureName);
-            //Debugger.Break();
-            if (corpse.CreatureType is null)
+            var livingType = corpse.GetLivingWeenieType();
+            if (livingType is null)
                 return;
 
+            var weenie = DatabaseManager.World.GetCachedWeenie((uint)livingType);
+            if (weenie is null) 
+                return;
+
+            //            if (corpse.CreatureType is null)
+            //return;
+
             player.DoWorldBroadcast($"A shiny {corpse.CreatureType} has dropped from a {corpse.Name} killed by {player.Name}!!", ChatMessageType.WorldBroadcast);
-            petDevice.PetClass = (int)corpse.CreatureType ;
+            petDevice.PetClass = livingType;
             petDevice.Structure = 250;
+            petDevice.CooldownDuration = 5;
+            petDevice.IconId = weenie.GetProperty(PropertyDataId.Icon) ?? petDevice.IconId;
+
             
             petDevice.Name = $"Shiny {corpse.Name}";
             //var parent = item.Container;

@@ -21,7 +21,13 @@ public static class Helpers
     //CloakAllId was the original cloak check
     //Aetheria uses a lookup
     public static bool IsSelfTargeting(this SpellId spellId) => new Spell(spellId).IsSelfTargeted; //spellId == SpellId.CloakAllSkill;
- }
+
+
+    static PropertyInt LivingWeenieType => (PropertyInt)10000;
+    public static void SetLivingWeenieType(this Corpse corpse, Creature creature) => corpse.SetProperty(LivingWeenieType, (int)creature.CreatureType);
+    public static int? GetLivingWeenieType(this Corpse corpse) => corpse.GetProperty(LivingWeenieType);
+
+}
 
 public static class RandomExtensions
 {

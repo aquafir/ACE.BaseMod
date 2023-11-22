@@ -1,5 +1,6 @@
 ﻿using ACE.Server.Command;
 using ACE.Server.Network;
+using CustomLoot.Enums;
 
 namespace CustomLoot;
 
@@ -105,7 +106,7 @@ public class PatchClass
     {
         foreach (var feature in PatchClass.Settings.Features)
         {
-            Mod.Harmony.PatchCategory(nameof(feature));
+            Mod.Harmony.PatchCategory(feature.ToString());
             ModManager.Log($"Enabled feature: {feature}");
         }
     }
