@@ -9,6 +9,6 @@ public enum Mutation
     Set,
     ProcOnAttack,
     ProcOnHit,
-    //ShinyPet,
+    ShinyPet,
 }
 

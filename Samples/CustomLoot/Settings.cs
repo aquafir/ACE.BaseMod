@@ -73,8 +73,8 @@ public class Settings
         [nameof(TargetGroup.Wearables)] = TargetGroup.Wearables.SetOf(),
     };
     //Full pools defined in enum helpers or it can be done explicitly like TargetGroups
-    public Dictionary<string, CreatureType[]> CreatureTypeGroups = Enum.GetValues<CreatureTypeGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
-    public Dictionary<string, EquipmentSet[]> EquipmentSetGroups = Enum.GetValues<EquipmentSetGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
-    public Dictionary<string, SpellId[]> SpellGroups = Enum.GetValues<SpellGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
+    public Dictionary<string, CreatureType[]> CreatureTypeGroups { get; set; } = Enum.GetValues<CreatureTypeGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
+    public Dictionary<string, EquipmentSet[]> EquipmentSetGroups { get; set; } = Enum.GetValues<EquipmentSetGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
+    public Dictionary<string, SpellId[]> SpellGroups { get; set; } = Enum.GetValues<SpellGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     #endregion
 }

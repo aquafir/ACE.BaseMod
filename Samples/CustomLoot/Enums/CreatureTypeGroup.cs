@@ -1,9 +1,4 @@
-﻿using ACE.Server.Physics;
-using ACE.Server.WorldObjects;
-using static ACE.Server.WorldObjects.Creature;
-using System.Security.Cryptography;
-
-namespace CustomLoot.Enums;
+﻿namespace CustomLoot.Enums;
 
 
 public enum CreatureTypeGroup

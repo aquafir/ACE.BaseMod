@@ -1,6 +1,5 @@
 ﻿using ACE.Server.Command;
 using ACE.Server.Network;
-using CustomLoot.Enums;
 
 namespace CustomLoot;
 
@@ -174,7 +173,6 @@ public class PatchClass
 
         var player = session.Player;
 
-        Debugger.Break();
         foreach (var item in player.Inventory)
         {
             player.TryRemoveFromInventoryWithNetworking(item.Key, out var i, Player.RemoveFromInventoryAction.None);

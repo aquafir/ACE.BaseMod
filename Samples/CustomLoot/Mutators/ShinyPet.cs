@@ -2,9 +2,6 @@
 using ACE.Entity.Models;
 using ACE.Server.Entity.Actions;
 using ACE.Server.Managers;
-using ACE.Server.Network;
-using ACE.Server.WorldObjects;
-using CustomLoot.Features;
 
 namespace CustomLoot.Mutators;
 
@@ -55,13 +52,17 @@ public class ShinyPet : Mutator
             //            if (corpse.CreatureType is null)
             //return;
 
-            player.DoWorldBroadcast($"A shiny {corpse.CreatureType} has dropped from a {corpse.Name} killed by {player.Name}!!", ChatMessageType.WorldBroadcast);
+            player.DoWorldBroadcast($"A shiny {weenie.GetName()} has dropped from a {corpse.Name} killed by {player.Name}!!", ChatMessageType.WorldBroadcast);
             petDevice.PetClass = livingType;
             petDevice.Structure = 250;
             petDevice.CooldownDuration = 5;
             petDevice.IconId = weenie.GetProperty(PropertyDataId.Icon) ?? petDevice.IconId;
+            petDevice.RemoveProperty(PropertyInt.SummoningMastery);
 
-            
+            petDevice.UseRequiresLevel = null;
+            petDevice.UseRequiresSkillLevel = null;
+            petDevice.UseRequiresSkill = null;
+
             petDevice.Name = $"Shiny {corpse.Name}";
             //var parent = item.Container;
             

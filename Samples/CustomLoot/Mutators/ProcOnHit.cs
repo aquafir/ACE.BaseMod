@@ -1,6 +1,4 @@
-﻿using CustomLoot.Enums;
-
-namespace CustomLoot.Mutators;
+﻿namespace CustomLoot.Mutators;
 
 //ConcurrentBag<
 public class ProcOnHit : Mutator
