@@ -17,5 +17,6 @@ public enum Feature
     FakePropertyCache,
     FakeLeech,
     FakeReducedBurden,
+    FakePercentDamage,
 }
 

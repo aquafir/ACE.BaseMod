@@ -21,10 +21,6 @@ public static class FakePropertyCache
     } 
     #endregion
 
-    //FloatProps are doubles, ofc
-    static readonly HashSet<FakeFloat> watchedFloats = new();
-    static readonly Dictionary<Player, Dictionary<FakeFloat, double>> cachedFloats = new();
-
     /// <summary>
     /// Updates all cached properties
     /// </summary>
@@ -35,14 +31,19 @@ public static class FakePropertyCache
         foreach (var prop in watchedFloats)
         {
             double bonus = 0;
-            foreach (var item in player.Inventory.Values)
+            foreach (var item in player.EquippedObjects.Values)
             {
                 bonus += item.GetProperty(prop) ?? 0;
+                player.SendMessage($"{item.Name}: {prop}->{bonus}");
             }
             player.SendMessage($"{prop} = {bonus}");
         }
     }
 
+    //FloatProps are doubles, ofc
+    #region Float Cache/Helpers
+    static readonly HashSet<FakeFloat> watchedFloats = new();
+    static readonly Dictionary<Player, Dictionary<FakeFloat, double>> cachedFloats = new();
     public static double GetCachedFake(this Player player, FakeFloat prop)
     {
         var cache = player.GetOrCreateFloatCache();
@@ -52,12 +53,11 @@ public static class FakePropertyCache
             value = player.EquipmentBonus(prop);
 
         //Watch property
-        if(watchedFloats.Add(prop))
+        if (watchedFloats.Add(prop))
             player.SendMessage($"Added {prop} to cache: {value}");
 
         return value;
     }
-
     private static Dictionary<FakeFloat, double> GetOrCreateFloatCache(this Player player)
     {
         if (!cachedFloats.TryGetValue(player, out var cache))
@@ -70,7 +70,38 @@ public static class FakePropertyCache
 
         return cache;
     }
-
-    //Todo: ask about efficiency of using linq?
     public static double EquipmentBonus(this Player player, FakeFloat prop) => player.EquippedObjects.Select(x => x.Value.GetProperty(prop)).Where(x => x.HasValue).Sum() ?? 0;
+    #endregion
+    #region Int Cache/Helpers
+    static readonly HashSet<FakeInt> watchedInts = new();
+    static readonly Dictionary<Player, Dictionary<FakeInt, int>> cachedInts = new();
+    public static int GetCachedFake(this Player player, FakeInt prop)
+    {
+        var cache = player.GetOrCreateIntCache();
+
+        //Fetch or create
+        if (!cache.TryGetValue(prop, out var value))
+            value = player.EquipmentBonus(prop);
+
+        //Watch property
+        if (watchedInts.Add(prop))
+            player.SendMessage($"Added {prop} to cache: {value}");
+
+        return value;
+    }
+    private static Dictionary<FakeInt, int> GetOrCreateIntCache(this Player player)
+    {
+        if (!cachedInts.TryGetValue(player, out var cache))
+        {
+            cache = new();
+            cachedInts.Add(player, cache);
+
+            player.SendMessage($"Created cache.");
+        }
+
+        return cache;
+    }
+    public static int EquipmentBonus(this Player player, FakeInt prop) => player.EquippedObjects.Select(x => x.Value.GetProperty(prop)).Where(x => x.HasValue).Sum() ?? 0;
+    #endregion
+
 }
