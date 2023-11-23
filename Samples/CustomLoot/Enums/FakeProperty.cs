@@ -15,7 +15,6 @@ public enum FakeFloat
     ItemLeechHealth = 10001,
     ItemLeechMana = 10002,
     ItemLeechStamina = 10003,
-    ReducedBurden = 10004,
 }
 public enum FakeIID
 {

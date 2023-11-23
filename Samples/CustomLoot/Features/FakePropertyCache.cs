@@ -21,7 +21,6 @@ public static class FakePropertyCache
     } 
     #endregion
 
-
     //FloatProps are doubles, ofc
     static readonly HashSet<FakeFloat> watchedFloats = new();
     static readonly Dictionary<Player, Dictionary<FakeFloat, double>> cachedFloats = new();

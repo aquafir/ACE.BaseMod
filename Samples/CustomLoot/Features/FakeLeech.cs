@@ -1,30 +1,42 @@
-﻿namespace CustomLoot.Features;
+﻿using ACE.Database.Models.Auth;
+using ACE.Entity.Enum;
+using ACE.Server.Network.GameMessages.Messages;
+using ACE.Server.Network;
+
+namespace CustomLoot.Features;
 
 [HarmonyPatchCategory(nameof(Feature.FakeLeech))]
 internal class FakeLeech
 {
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Player), nameof(Player.GrantXP), new Type[] { typeof(long), typeof(XpType), typeof(ShareType) })]
-    public static bool PreGrantXP(ref long amount, XpType xpType, ShareType shareType, ref Player __instance)
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Player), nameof(Player.DamageTarget), new Type[] { typeof(Creature), typeof(WorldObject) })]
+    public static void PostDamageTarget(Creature target, WorldObject damageSource, ref Player __instance, ref DamageEvent __result)
     {
-        if (xpType != XpType.Kill)
-            return true;
+        if (!__result.HasDamage)
+            return;
+        var dmg = __result.Damage;
+        var vital = __instance.Health;
+        uint leech = (uint)(__instance.GetCachedFake(FakeFloat.ItemLeechHealth) * dmg);
+        if (leech > 0)
+        {
+            __instance.UpdateVitalDelta(vital, leech);
+            __instance.SendMessage($"You leeched {leech} health.");
+        }
 
-        //Return false to override
-        //return false;
-        //double bonus = 0;
-        //foreach(var item in __instance.EquippedObjects.Values)
-        //    bonus += item.GetProperty(FakeFloat.ItemXpBoost) ?? 0;
+        leech = (uint)(__instance.GetCachedFake(FakeFloat.ItemLeechMana) * dmg);
+        if (leech > 0)
+        {
+            vital = __instance.Mana;
+            __instance.UpdateVitalDelta(vital, leech);
+            __instance.SendMessage($"You leeched {leech} mana.");
+        }
 
-
-        var bonus = __instance.GetCachedFake(FakeFloat.ItemXpBoost);
-        var bonusAmount = (long)(bonus * amount);
-        amount += bonusAmount;
-
-
-        __instance.SendMessage($"Added {bonusAmount} xp from {1+bonus} equipment bonus.");
-
-        //Return true to execute original
-        return true;
+        leech = (uint)(__instance.GetCachedFake(FakeFloat.ItemLeechStamina) * dmg);
+        if (leech > 0)
+        {
+            vital = __instance.Stamina;
+            __instance.UpdateVitalDelta(vital, leech);
+            __instance.SendMessage($"You leeched {leech} stamina.");
+        }
     }
 }
