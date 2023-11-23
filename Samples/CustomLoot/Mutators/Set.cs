@@ -26,7 +26,8 @@ public class Set : Mutator
             if (!PatchClass.Settings.EquipmentSetGroups.TryGetValue(kvp.Key.ToString(), out var setGroup))
                 continue;
 
-            sets.Add(kvp.Key, setGroup);
+            if (!sets.TryAdd(kvp.Key, setGroup) && PatchClass.Settings.Verbose)
+                ModManager.Log($"Failed to add Set mutator for {kvp.Key}");
         }
     }
 }

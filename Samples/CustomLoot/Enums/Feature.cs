@@ -2,13 +2,20 @@
 
 public enum Feature
 {
-    ProcOnAttack,
-    ProcRateOverride,
-    ProcOnHit,
-    ReduceBurden,
-    ImbueOnItemLevelUp,
+    ItemLevelUpGrowth,
+    ItemLevelUpImbue,
     LivingType,
+    PetAttackSelected,
+    PetMessageDamage,
+    PetStow,
+    ProcOnAttack,
+    ProcOnHit,
+    ProcRateOverride,
+    ReduceBurden,
     SummonCreatureAsPet,
-    StowPets
+    FakeXpBoost,
+    FakePropertyCache,
+    FakeLeech,
+    FakeReducedBurden,
 }
 

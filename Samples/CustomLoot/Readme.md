@@ -104,11 +104,12 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 
 ### Levels
 
-* Needs all 3?
+* Needs all?
   * ItemMaxLevel - max level
   * ItemBaseXp - xp per level
   * ItemXpStyle
     * Undef, Fixed, ScalesWithLevel, FixedPlusBase
+  * ItemTotalXp = 0
 * `Player.OnItemLevelUp`
   * Removes/adds spells using `GetSpellSet`
   * Finds spells in `DatManager.PortalDat.SpellTable.SpellSet`

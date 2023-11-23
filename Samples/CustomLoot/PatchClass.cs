@@ -106,7 +106,9 @@ public class PatchClass
         foreach (var feature in PatchClass.Settings.Features)
         {
             Mod.Harmony.PatchCategory(feature.ToString());
-            ModManager.Log($"Enabled feature: {feature}");
+
+            if (PatchClass.Settings.Verbose)
+                ModManager.Log($"Enabled feature: {feature}");
         }
     }
 

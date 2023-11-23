@@ -1,23 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace CustomLoot.Enums;
 
-namespace CustomLoot.Enums;
-
-public enum FakeBool { }
-public enum FakeDID { }
-public enum FakeFloat { }
-public enum FakeIID {
-    PetDevice
+//!!!!Very important to avoid using properties ACE or other Mods uses!!!!
+public enum FakeBool
+{
+    GrowthItem = 10000
+}
+public enum FakeDID
+{
+    Placeholder = 10000
+}
+public enum FakeFloat
+{
+    ItemXpBoost = 10000,
+    ItemLeechHealth = 10001,
+    ItemLeechMana = 10002,
+    ItemLeechStamina = 10003,
+    ReducedBurden = 10004,
+}
+public enum FakeIID
+{
+    PetDevice = 10000
 }
 public enum FakeInt
 {
     LivingWeenieType = 10000,
+    GrowthTier = 10001,
 }
-public enum FakeInt64 { }
-public enum FakeString { }
+public enum FakeInt64
+{
+    Placeholder = 10000
+}
+public enum FakeString
+{
+    Placeholder = 10000
+}
 
 
 public static class FakePropertyHelper

@@ -6,11 +6,21 @@ public class Settings
 
     #region Features / Mutators
     public List<Feature> Features { get; set; } = Enum.GetValues<Feature>().ToList();
-    public List<MutatorSettings> Mutators { get; set; } = Enum.GetValues<Mutation>()
-        .Select(x => new MutatorSettings(x) {
-            Odds = x.DefaultOdds(),
-            Targets = x.DefaultTargets()
-        }).ToList();
+    public List<MutatorSettings> Mutators { get; set; } =
+        //Select items
+        new()
+        {
+            new MutatorSettings(Mutation.GrowthItem) {
+            Odds = nameof(OddsGroup.Always),
+            Targets = nameof(TargetGroup.Weapon)
+        }
+        };
+    //Full set
+    //Enum.GetValues<Mutation>()
+    //.Select(x => new MutatorSettings(x) {
+    //    Odds = x.DefaultOdds(),
+    //    Targets = x.DefaultTargets()
+    //}).ToList();
     #endregion
 
     #region Mutator Settings
@@ -74,6 +84,7 @@ public class Settings
     };
     //Full pools defined in enum helpers or it can be done explicitly like TargetGroups
     public Dictionary<string, CreatureType[]> CreatureTypeGroups { get; set; } = Enum.GetValues<CreatureTypeGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
+    public Dictionary<string, ImbuedEffectType[]> ImbueGroups { get; set; } = Enum.GetValues<ImbueGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     public Dictionary<string, EquipmentSet[]> EquipmentSetGroups { get; set; } = Enum.GetValues<EquipmentSetGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     public Dictionary<string, SpellId[]> SpellGroups { get; set; } = Enum.GetValues<SpellGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     #endregion

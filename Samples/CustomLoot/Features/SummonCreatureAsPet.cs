@@ -1,6 +1,5 @@
 ﻿using ACE.Database;
 using ACE.Server.Managers;
-using System.Runtime.CompilerServices;
 
 namespace CustomLoot.Features;
 
@@ -21,13 +20,17 @@ public static class SummonCreatureAsPet
             return false;
         }
         //var worldObject = CreateWorldObject(weenie, guid);
-        //var wo = new CombatPet(weenie, guid);
-        var wo = new Pet(weenie, guid);
+        var wo = new CombatPet(weenie, guid);
+        //var wo = new Pet(weenie, guid);
 
         //Could wipe others?         /* PhysicsState - Ethereal, ReportCollisions, Gravity */
         wo.SetPhysicsState(PhysicsState.Ethereal | PhysicsState.ReportCollisions | PhysicsState.Gravity, true);
         /* TargetingTactic - Nearest */
-        wo.TargetingTactic = TargetingTactic.Nearest;
+        wo.TargetingTactic = TargetingTactic.None;
+        wo.RadarBehavior = RadarBehavior.ShowAlways;
+        wo.RadarColor = RadarColor.Blue;
+
+        //wo.
 
         if (wo == null)
             GuidManager.RecycleDynamicGuid(guid);
@@ -52,6 +55,4 @@ public static class SummonCreatureAsPet
 
         return false;
     }
-
-    //public static int 
 }

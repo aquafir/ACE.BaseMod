@@ -5,10 +5,11 @@
 /// </summary>
 public enum Mutation
 {
-    Slayer,
-    Set,
+    GrowthItem,
     ProcOnAttack,
     ProcOnHit,
+    Set,
     ShinyPet,
+    Slayer,
 }
 
