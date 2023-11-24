@@ -16,6 +16,8 @@ public enum FakeFloat
     ItemLeechMana = 10002,
     ItemLeechStamina = 10003,
     ItemPercentMaxHealthDamage = 10004,
+    ItemPercentCurrentHealthDamage = 10005,
+    ItemPercentMissingHealthDamage = 10006,
 }
 public enum FakeIID
 {
@@ -25,6 +27,9 @@ public enum FakeInt
 {
     LivingWeenieType = 10000,
     GrowthTier = 10001,
+    ItemPercentMaxHealthCap = 10002,
+    ItemPercentCurrentHealthCap = 10003,
+    ItemPercentMissingHealthCap = 10004,
 }
 public enum FakeInt64
 {

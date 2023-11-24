@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ACE.Server.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 namespace CustomLoot.Features;
 
 [HarmonyPatchCategory(nameof(Feature.FakePercentDamage))]
-internal class FakePercentDamage
+public static class FakePercentDamage
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Player), nameof(Player.DamageTarget), new Type[] { typeof(Creature), typeof(WorldObject) })]
@@ -15,10 +16,92 @@ internal class FakePercentDamage
     {
         if (!__result.HasDamage)
             return;
-        var dmg = __result.Damage;
+
         var vital = target.Health;
+        var mitigation = __result.Damage / __result.DamageBeforeMitigation;
 
-       // uint damage = (uint)(Math.Min(__instance.GetCachedFake(FakeFloat.ItemPercentMaxHealthDamage) * dmg, __instance.GetCachedFake(FakeInt));
+        //Percent max
+        var percent = __instance.GetCachedFake(FakeFloat.ItemPercentMaxHealthDamage);
+        if (percent > 0) {
+            
+            var max = __instance.GetCachedFake(FakeInt.ItemPercentMaxHealthCap);
+            if(max == 0) 
+                max = int.MaxValue;
 
+            uint damage = (uint)Math.Min(max, percent * vital.MaxValue);
+            var trueDamage = damage * mitigation;   //Flat or a ratio based on result?
+            var damageEvent = new DamageEvent()
+            {
+                DamageSource = __instance,
+                CombatType = CombatType.Magic,
+                Damage = trueDamage,
+            };
+            __instance.FakeDamage(damageEvent, target);
+            __instance.SendMessage($"You hit {target.Name} for {trueDamage} percent-of-max health damage.");
+        }
+
+        //Percent current
+        percent = __instance.GetCachedFake(FakeFloat.ItemPercentCurrentHealthDamage);
+        if (percent > 0)
+        {
+            var max = __instance.GetCachedFake(FakeInt.ItemPercentCurrentHealthCap);
+            if (max == 0)
+                max = int.MaxValue;
+
+            uint damage = (uint)Math.Min(max, percent * vital.Current);
+            var trueDamage = damage * mitigation;   //Flat or a ratio based on result?
+            var damageEvent = new DamageEvent()
+            {
+                DamageSource = __instance,
+                CombatType = CombatType.Magic,
+                Damage = trueDamage,
+            };
+            __instance.FakeDamage(damageEvent, target);
+            __instance.SendMessage($"You hit {target.Name} for {trueDamage} percent-of-current health damage.");
+        }
+
+        //Percent missing
+        percent = __instance.GetCachedFake(FakeFloat.ItemPercentMissingHealthDamage);
+        if (percent > 0)
+        {
+            var max = __instance.GetCachedFake(FakeInt.ItemPercentMissingHealthCap);
+            if (max == 0)
+                max = int.MaxValue;
+
+            uint damage = (uint)Math.Min(max, percent * vital.Missing);
+            var trueDamage = damage * mitigation;   //Flat or a ratio based on result?
+            var damageEvent = new DamageEvent()
+            {
+                DamageSource = __instance,
+                CombatType = CombatType.Magic,
+                Damage = trueDamage,
+            };
+            __instance.FakeDamage(damageEvent, target);
+            __instance.SendMessage($"You hit {target.Name} for {trueDamage} percent-of-missing health damage.");
+        }
+    }
+
+    //public static DamageEvent FakeDamage(this DamageEvent damageEvent) {
+    //Todo: make fake damage from helper?
+    //DamageRatingMod = Creature.AdditiveCombine(DamageRatingBaseMod, RecklessnessMod, SneakAttackMod, HeritageMod);
+    // damage before mitigation
+    //DamageBeforeMitigation = BaseDamage * AttributeMod * PowerMod * SlayerMod * DamageRatingMod;
+    // calculate final output damage
+    //Damage = DamageBeforeMitigation * ArmorMod * ShieldMod * ResistanceMod * DamageResistanceRatingMod;
+    //}
+
+    public static void FakeDamage(this Player player, DamageEvent damageEvent, Creature target)
+    {
+        if (damageEvent.HasDamage)
+        {
+            player.OnDamageTarget(target, damageEvent.CombatType, damageEvent.IsCritical);
+
+            //if (target is Player targetPlayer)
+            //{
+            // //   targetPlayer.TakeDamage(this, damageEvent);
+            //}
+            //else
+            target.TakeDamage(player, damageEvent.DamageType, damageEvent.Damage, damageEvent.IsCritical);
+        }
     }
 }
