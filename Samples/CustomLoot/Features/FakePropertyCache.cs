@@ -3,6 +3,7 @@
 [HarmonyPatchCategory(nameof(Feature.FakePropertyCache))]
 public static class FakePropertyCache
 {
+    //Todo: add cleanup of players (logoff?) and props?
     #region Patches / Triggers of cache update
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Creature), "AddItemToEquippedItemsRatingCache", new Type[] { typeof(WorldObject) })]
@@ -103,5 +104,36 @@ public static class FakePropertyCache
     }
     public static int EquipmentBonus(this Player player, FakeInt prop) => player.EquippedObjects.Select(x => x.Value.GetProperty(prop)).Where(x => x.HasValue).Sum() ?? 0;
     #endregion
+    //#region Int64 Cache/Helpers
+    //static readonly HashSet<FakeInt64> watchedInt64s = new();
+    //static readonly Dictionary<Player, Dictionary<FakeInt64, long>> cachedInt64s = new();
+    //public static long GetCachedFake(this Player player, FakeInt64 prop)
+    //{
+    //    var cache = player.GetOrCreateInt64Cache();
+
+    //    //Fetch or create
+    //    if (!cache.TryGetValue(prop, out var value))
+    //        value = player.EquipmentBonus(prop);
+
+    //    //Watch property
+    //    if (watchedInt64s.Add(prop))
+    //        player.SendMessage($"Added {prop} to cache: {value}");
+
+    //    return value;
+    //}
+    //private static Dictionary<FakeInt64, long> GetOrCreateInt64Cache(this Player player)
+    //{
+    //    if (!cachedInt64s.TryGetValue(player, out var cache))
+    //    {
+    //        cache = new();
+    //        cachedInt64s.Add(player, cache);
+
+    //        player.SendMessage($"Created cache.");
+    //    }
+
+    //    return cache;
+    //}
+    //public static long EquipmentBonus(this Player player, FakeInt64 prop) => player.EquippedObjects.Select(x => x.Value.GetProperty(prop)).Where(x => x.HasValue).Sum() ?? 0;
+    //#endregion
 
 }
