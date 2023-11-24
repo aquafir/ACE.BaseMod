@@ -1,11 +1,4 @@
-﻿using ACE.Server.WorldObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CustomLoot.Features;
+﻿namespace CustomLoot.Features;
 
 [HarmonyPatchCategory(nameof(Feature.FakeCulling))]
 internal class FakeCulling

@@ -1,11 +1,7 @@
 ﻿using ACE.Server.Command;
 using ACE.Server.Command.Handlers;
 using ACE.Server.Network;
-using ACE.Server.WorldObjects;
-using CustomLoot.Enums;
-using System.Net.Http.Headers;
 using System.Text;
-using static System.Text.Json.Serialization.Metadata.ReflectionEmitCachingMemberAccessor;
 
 namespace CustomLoot.Features;
 
@@ -19,8 +15,13 @@ public static class FakePropertyCache
     public static void PreAddItemToEquippedItemsRatingCache(WorldObject wo, ref Creature __instance)
     {
         if (__instance is Player player)
+        {
             player.UpdateEquipmentCache();
-        //UpdateItem(player, wo, true);
+            //UpdateItem(player, wo, true);
+#if DEBUG
+            player.SendMessage($"\nEquipped {wo.Name}:\n{wo.DumpItem()}"); 
+#endif
+        }
     }
 
     [HarmonyPrefix]
@@ -28,11 +29,39 @@ public static class FakePropertyCache
     public static void PreRemoveItemFromEquippedItemsRatingCache(WorldObject wo, ref Creature __instance)
     {
         if (__instance is Player player)
+        {
             player.UpdateEquipmentCache();
-        //UpdateItem(player, wo, true);
+            //UpdateItem(player, wo, true);
+#if DEBUG
+            player.SendMessage($"\nUnequipped {wo.Name}:\n{wo.DumpItem()}"); 
+#endif
+        }
     }
-    #endregion
 
+    //[HarmonyPostfix]
+    //[HarmonyPatch(typeof(LootGenerationFactory), nameof(LootGenerationFactory.GetLongDesc), new Type[] { typeof(WorldObject) })]
+    //public static void PostGetLongDesc(WorldObject wo, ref string __result)
+    //{
+    //    __result += $"\n{wo.DumpItem()}";
+
+    //}
+
+    //[HarmonyPrefix]
+    //[HarmonyPatch(MethodType.Setter)]
+    //[HarmonyPatch(typeof(WorldObject), nameof(WorldObject.LongDesc), new Type[] { typeof(string) })]
+    //public static bool PreSetLongDesc(ref string value, ref WorldObject __instance)
+    //{
+    //    if (!String.IsNullOrEmpty(value))
+    //        value = __instance.DumpItem() + "\n\n" + value;
+    //    //Return false to override
+    //    //return false;
+
+    //    //Return true to execute original
+    //    return true;
+    //}
+
+
+    #endregion
 
     /// <summary>
     /// Updates all cached properties
@@ -51,7 +80,7 @@ public static class FakePropertyCache
         foreach (var item in player.EquippedObjects.Values)
             player.UpdateItem(item);
     }
-
+    //todo
     public static void UpdateItem(this Player player, WorldObject item, bool equipping = true)
     {
         var floatCache = player.GetOrCreateFloatCache();
@@ -94,34 +123,6 @@ public static class FakePropertyCache
             intCache[prop] = cacheValue;
         }
     }
-
-    #region Abandoned Generic Update
-    //public static void UpdateEquipmentCache<T, V>(this Player player, WorldObject wo, bool equipping, Dictionary<T, V> cache, List<T> watched, bool full = false)
-    //{
-    //    player.SendMessage($"{(equipping ? "Equipping" : "Unequipping")} {wo.Name}: ");
-
-    //    //For each type of prop
-    //    var valueType = typeof(V);
-    //    player.SendMessage($"  ====={typeof(T).Name} ({watched.Count} watched)====");
-    //    foreach (var prop in watched)
-    //    {
-    //        //Get value, add to cache if missing
-    //        if (!cache.TryGetValue(prop, out var cacheValue))
-    //        {
-    //            cache.Add(prop, (V)Convert.ChangeType(0, valueType));
-    //            cacheValue = (V)Convert.ChangeType(0, valueType);
-    //        }
-
-    //        var itemValue = wo.GetProperty(prop) ?? 0;
-    //        cache[prop] = equipping ? cacheValue + itemValue : cacheValue - itemValue;
-    //        //cache[prop] = newValue;
-    //        player.SendMessage($"  {prop}: {cacheValue} + {itemValue} -> {cache[prop]}");
-
-    //        //Full rebuild?
-    //        //foreach (var item in player.EquippedObjects.Values)
-    //    }
-    //} 
-    #endregion
 
     //FloatProps are doubles, ofc
     #region Float Cache/Helpers
@@ -218,7 +219,7 @@ public static class FakePropertyCache
     //public static long EquipmentBonus(this Player player, FakeInt64 prop) => player.EquippedObjects.Select(x => x.Value.GetProperty(prop)).Where(x => x.HasValue).Sum() ?? 0;
     //#endregion
 
-
+    #region Commands / Dumps -- /ecXX
     [CommandHandler("ecdw", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
     public static void WatchedDump(Session session, params string[] parameters)
     {
@@ -252,20 +253,7 @@ public static class FakePropertyCache
 
         player.SendMessage(target.DumpItem());
     }
-
-
-    public static string DumpPlayerCache(this Player player)
-    {
-        var floatCache = player.GetOrCreateFloatCache();
-        var intCache = player.GetOrCreateIntCache();
-
-        //For each prop in a list, get each value in a dictionary
-        var dump = new StringBuilder();
-        dump.Append(floatCache.DumpPlayerPropertyCache());
-        dump.Append(intCache.DumpPlayerPropertyCache());
-
-        return dump.ToString();
-    }
+    #endregion
 
     public static string DumpPlayerItems(this Player player)
     {
@@ -311,7 +299,7 @@ public static class FakePropertyCache
         if (watchedInts.Count == 0) return "";
 
         int count = 0;
-        var sb = new StringBuilder($"======={typeof(FakeFloat).Name} ({watchedInts.Count} watched)=======\n");
+        var sb = new StringBuilder($"======={typeof(FakeInt).Name} ({watchedInts.Count} watched)=======\n");
         foreach (var prop in watchedInts)
         {
             var value = item.GetProperty(prop) ?? 0;
@@ -324,11 +312,19 @@ public static class FakePropertyCache
 
         return sb.ToString();
     }
+    public static string DumpPlayerCache(this Player player)
+    {
+        var floatCache = player.GetOrCreateFloatCache();
+        var intCache = player.GetOrCreateIntCache();
 
+        //For each prop in a list, get each value in a dictionary
+        var dump = new StringBuilder();
+        dump.Append(floatCache.DumpPlayerPropertyCache());
+        dump.Append(intCache.DumpPlayerPropertyCache());
 
-    /// <summary>
-    /// Returns a string dump of a type of property cache
-    /// </summary>
+        return dump.ToString();
+    }
+    //Only one I could make generic with the GetProperty requirement
     public static string DumpPlayerPropertyCache<T, E>(this Dictionary<T, E> cache)
     {
         if (cache.Count == 0) return "";

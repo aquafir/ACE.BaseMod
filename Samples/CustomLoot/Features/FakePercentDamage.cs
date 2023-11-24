@@ -1,11 +1,4 @@
-﻿using ACE.Server.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CustomLoot.Features;
+﻿namespace CustomLoot.Features;
 
 [HarmonyPatchCategory(nameof(Feature.FakePercentDamage))]
 public static class FakePercentDamage

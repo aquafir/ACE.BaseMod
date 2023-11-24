@@ -1,41 +1,11 @@
 ﻿using ACE.Entity;
 using ACE.Server.Managers;
-using ACE.Server.WorldObjects;
 
 namespace CustomLoot.Features;
 
-[HarmonyPatchCategory(nameof(Feature.FakeItemKillTask))]
-internal class FakeItemKillTask
+[HarmonyPatchCategory(nameof(Feature.FakeKillTask))]
+internal class FakeKillTask
 {
-
-    //[HarmonyPrefix]
-    //[HarmonyPatch(typeof(Creature), nameof(Creature.TryHandleKillTask), new Type[] { typeof(Player), typeof(string), typeof(Dictionary<ObjectGuid, int>), typeof(int) })]
-    //public static bool PreTryHandleKillTask(Player player, string killTask, Dictionary<ObjectGuid, int> killTaskCredits, int cap, ref Creature __instance, ref bool __result)
-    //{
-    //    //Rewrite.  The ACE approach seems weird and wasteful but might just be me?
-    //    if (killTaskCredits.TryGetValue(player.Guid, out var currentCredits))
-    //    {
-    //        if (currentCredits >= cap)
-    //            __result = false;
-
-    //        //killTaskCredits[player.Guid]++;
-    //        killTaskCredits[player.Guid] += player.GetCachedFake(FakeInt.ItemKillTaskBonus);
-    //    }
-    //    else
-    //    {
-    //        killTaskCredits[player.Guid] = 1;
-    //        //player
-    //    }
-
-    //    player.QuestManager.HandleKillTask(killTask, __instance);
-
-    //    __result = true;
-
-    //    return false;
-    //}
-
-
-
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Creature), nameof(Creature.OnDeath_HandleKillTask), new Type[] { typeof(string) })]
     public static bool PreOnDeath_HandleKillTask(string killQuest, ref Creature __instance)
@@ -113,11 +83,29 @@ internal class FakeItemKillTask
         return false;
     }
 
-    //Use on death?
-    //[HarmonyPostfix]
-    //[HarmonyPatch(typeof(Creature), nameof(Creature.OnDeath), new Type[] { typeof(DamageHistoryInfo), typeof(DamageType), typeof(bool) })]
-    //public static void PostOnDeath(DamageHistoryInfo lastDamager, DamageType damageType, bool criticalHit, ref Creature __instance, ref DeathMessage __result)
+    //[HarmonyPrefix]
+    //[HarmonyPatch(typeof(Creature), nameof(Creature.TryHandleKillTask), new Type[] { typeof(Player), typeof(string), typeof(Dictionary<ObjectGuid, int>), typeof(int) })]
+    //public static bool PreTryHandleKillTask(Player player, string killTask, Dictionary<ObjectGuid, int> killTaskCredits, ref int cap, ref Creature __instance, ref bool __result)
     //{
-    //    //Your code here
+    //    //Rewrite.  The ACE approach seems weird and wasteful but might just be me?
+    //    if (killTaskCredits.TryGetValue(player.Guid, out var currentCredits))
+    //    {
+    //        if (currentCredits >= cap)
+    //            __result = false;
+
+    //        //killTaskCredits[player.Guid]++;
+    //        killTaskCredits[player.Guid] += player.GetCachedFake(FakeInt.ItemKillTaskBonus);
+    //    }
+    //    else
+    //    {
+    //        killTaskCredits[player.Guid] = 1;
+    //        //player
+    //    }
+
+    //    player.QuestManager.HandleKillTask(killTask, __instance);
+
+    //    __result = true;
+
+    //    return false;
     //}
 }

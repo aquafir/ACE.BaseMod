@@ -2,15 +2,16 @@
 using ACE.Entity.Models;
 using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
+using ACE.Server.WorldObjects;
 
 namespace CustomLoot.Features;
 
 //Corpse generation sucks.  Long method and it doesn't track the type of corpse.
-[HarmonyPatchCategory(nameof(Feature.LivingType))]
-public class LivingType
+[HarmonyPatchCategory(nameof(Feature.CorpseInfo))]
+public class CorpseInfo
 {
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(Creature), "CreateCorpse", new Type[] { typeof(DamageHistoryInfo), typeof(bool) })]
+    [HarmonyPatch(typeof(Creature), nameof(Creature.CreateCorpse), new Type[] { typeof(DamageHistoryInfo), typeof(bool) })]
     public static bool PreCreateCorpse(DamageHistoryInfo killer, bool hadVitae, ref Creature __instance)
     {
         //        Debugger.Break();
@@ -205,7 +206,9 @@ public class LivingType
 
 
         //!!Add the functionality needed!!  Todo: clean alllll this up
-        corpse.SetLivingWeenieType(__instance);
+        //        corpse.SetLivingWeenieType(__instance);
+        corpse.SetProperty(FakeInt.CorpseLivingWCID, (int)__instance.WeenieClassId);
+
 
 
         corpse.EnterWorld();
