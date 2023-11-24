@@ -1,9 +1,11 @@
 ﻿using ACE.Server.Command;
+using ACE.Server.Command.Handlers;
 using ACE.Server.Network;
 using ACE.Server.WorldObjects;
 using CustomLoot.Enums;
 using System.Net.Http.Headers;
 using System.Text;
+using static System.Text.Json.Serialization.Metadata.ReflectionEmitCachingMemberAccessor;
 
 namespace CustomLoot.Features;
 
@@ -217,26 +219,117 @@ public static class FakePropertyCache
     //#endregion
 
 
-    [CommandHandler("edc", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-    public static void Clean(Session session, params string[] parameters)
+    [CommandHandler("ecdw", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
+    public static void WatchedDump(Session session, params string[] parameters)
     {
         var player = session.Player;
 
+        var dump = $"\nFloats: {String.Join(", ", watchedFloats)}\nInts: {String.Join(", ", watchedInts)}";
 
+        player.SendMessage(dump);
+    }
+    [CommandHandler("ecdc", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
+    public static void PlayerCacheDump(Session session, params string[] parameters)
+    {
+        var player = session.Player;
+        player.SendMessage(player.DumpPlayerCache());
+    }
+    [CommandHandler("ecde", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
+    public static void PlayerEquipmentDump(Session session, params string[] parameters)
+    {
+        var player = session.Player;
+        var dump = player.DumpPlayerItems();
+        player.SendMessage(dump);
+    }
+    [CommandHandler("ecdi", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
+    public static void ItemDump(Session session, params string[] parameters)
+    {
+        var player = session.Player;
+        var target = CommandHandlerHelper.GetLastAppraisedObject(session);
+
+        if (target is null)
+            return;
+
+        player.SendMessage(target.DumpItem());
+    }
+
+
+    public static string DumpPlayerCache(this Player player)
+    {
         var floatCache = player.GetOrCreateFloatCache();
         var intCache = player.GetOrCreateIntCache();
 
         //For each prop in a list, get each value in a dictionary
-        var dump = new StringBuilder("\n");
-        dump.Append(floatCache.CacheDump());
-        dump.Append(intCache.CacheDump());
-        player.SendMessage(dump.ToString());
+        var dump = new StringBuilder();
+        dump.Append(floatCache.DumpPlayerPropertyCache());
+        dump.Append(intCache.DumpPlayerPropertyCache());
 
-        //foreach(var )
+        return dump.ToString();
     }
 
-    //public static string CacheDump<T, E>(List<T> watched, Dictionary<T, E> cache)
-    public static string CacheDump<T, E>(this Dictionary<T, E> cache)
+    public static string DumpPlayerItems(this Player player)
+    {
+        var sb = new StringBuilder();
+        foreach(var item in player.EquippedObjects.Values)
+        {
+            var dump = item.DumpItem();
+
+            if (dump.Length > 0) {
+                sb.Append($"============={item.Name}=============\n{dump}\n");
+            }
+        }
+        return sb.ToString();
+    }
+    public static string DumpItem(this WorldObject item)
+    {
+        var sb = new StringBuilder();
+        sb.Append(item.DumpItemFloats());
+        sb.Append(item.DumpItemInts());
+
+        return sb.ToString();
+    }
+    public static string DumpItemFloats(this WorldObject item)
+    {
+        if (watchedFloats.Count == 0) return "";
+
+        int count = 0;
+        var sb = new StringBuilder($"======={typeof(FakeFloat).Name} ({watchedFloats.Count} watched)=======\n");
+        foreach (var prop in watchedFloats)
+        {
+            var value = item.GetProperty(prop) ?? 0;
+            if (value == 0) continue;
+
+            count++;
+            sb.Append($"  {prop} = {value:0.00}\n");
+        }
+        if (count == 0) return "";
+
+        return sb.ToString();
+    }
+    public static string DumpItemInts(this WorldObject item)
+    {
+        if (watchedInts.Count == 0) return "";
+
+        int count = 0;
+        var sb = new StringBuilder($"======={typeof(FakeFloat).Name} ({watchedInts.Count} watched)=======\n");
+        foreach (var prop in watchedInts)
+        {
+            var value = item.GetProperty(prop) ?? 0;
+            if (value == 0) continue;
+
+            count++;
+            sb.Append($"  {prop} = {value:0.00}\n");
+        }
+        if (count == 0) return "";
+
+        return sb.ToString();
+    }
+
+
+    /// <summary>
+    /// Returns a string dump of a type of property cache
+    /// </summary>
+    public static string DumpPlayerPropertyCache<T, E>(this Dictionary<T, E> cache)
     {
         if (cache.Count == 0) return "";
 
