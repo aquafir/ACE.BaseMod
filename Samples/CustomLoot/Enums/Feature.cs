@@ -4,7 +4,7 @@ public enum Feature
 {
     ItemLevelUpGrowth,
     ItemLevelUpImbue,
-    LivingType,
+    CorpseInfo,
     PetAttackSelected,
     PetMessageDamage,
     PetStow,
@@ -21,6 +21,7 @@ public enum Feature
     FakeCombo,
     FakeCulling,
     FakeItemLoot,
-    FakeItemKillTask,
+    FakeKillTask,
+    FakeAttributes,
 }
 

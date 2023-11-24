@@ -25,6 +25,7 @@ public enum FakeFloat
     TimestampLastResist = 10011,
     ItemPercentCull = 10012,
     ItemLootTierUpgrade = 10013,
+    LootItemMaxAmount = 10014,
 }
 public enum FakeIID
 {
@@ -32,7 +33,7 @@ public enum FakeIID
 }
 public enum FakeInt
 {
-    LivingWeenieType = 10000,
+    CorpseLivingWCID = 10000,
     GrowthTier = 10001,
     ItemPercentMaxHealthCap = 10002,
     ItemPercentCurrentHealthCap = 10003,
@@ -42,6 +43,21 @@ public enum FakeInt
     ComboEvade = 10007,
     ComboResist = 10008,
     ItemKillTaskBonus = 10009,
+    ItemStrengthMod = 10010,
+    ItemEnduranceMod = 10011,
+    ItemQuicknessMod = 10012,
+    ItemCoordinationMod = 10013,
+    ItemFocusMod = 10014,
+    ItemSelfMod = 10015,
+    LootMundaneItemChance = 10016,
+    LootMundaneItemMinAmount = 10017,
+    LootMundaneItemMaxAmount = 10018,
+    LootItemChance = 10019,
+    LootItemMinAmount = 10020,
+    LootItemMaxAmount = 10021,
+    LootMagicItemChance = 10022,
+    LootMagicItemMinAmount = 10023,
+    LootMagicItemMaxAmount = 10024,
 }
 public enum FakeInt64
 {

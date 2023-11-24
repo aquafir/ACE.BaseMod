@@ -41,7 +41,7 @@ public class ShinyPet : Mutator
             if (item is not PetDevice petDevice)
                 return;
 
-            var livingType = corpse.GetLivingWeenieType();
+            var livingType = corpse.GetProperty(FakeInt.CorpseLivingWCID);
             if (livingType is null)
                 return;
 
