@@ -18,5 +18,6 @@ public enum Feature
     FakeLeech,
     FakeReducedBurden,
     FakePercentDamage,
+    FakeCombo,
 }
 

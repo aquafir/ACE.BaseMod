@@ -35,9 +35,9 @@ public static class FakePropertyCache
             foreach (var item in player.EquippedObjects.Values)
             {
                 bonus += item.GetProperty(prop) ?? 0;
-                player.SendMessage($"{item.Name}: {prop}->{bonus}");
+                //player.SendMessage($"{item.Name}: {prop}->{bonus}");
             }
-            player.SendMessage($"{prop} = {bonus}");
+            //player.SendMessage($"{prop} = {bonus}");
         }
     }
 

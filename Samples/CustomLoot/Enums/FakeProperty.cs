@@ -18,6 +18,11 @@ public enum FakeFloat
     ItemPercentMaxHealthDamage = 10004,
     ItemPercentCurrentHealthDamage = 10005,
     ItemPercentMissingHealthDamage = 10006,
+    TimestampLastKill = 10007,
+    TimestampLastHit = 10008,
+    TimestampLastEvade = 10009,
+    TimestampLastCast = 10010,
+    TimestampLastResist = 10011,
 }
 public enum FakeIID
 {
@@ -30,6 +35,10 @@ public enum FakeInt
     ItemPercentMaxHealthCap = 10002,
     ItemPercentCurrentHealthCap = 10003,
     ItemPercentMissingHealthCap = 10004,
+    ComboKill = 10005,
+    ComboHit = 10006,
+    ComboEvade = 10007,
+    ComboResist = 10008,
 }
 public enum FakeInt64
 {

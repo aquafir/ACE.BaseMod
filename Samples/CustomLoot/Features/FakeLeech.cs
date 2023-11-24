@@ -1,9 +1,4 @@
-﻿using ACE.Database.Models.Auth;
-using ACE.Entity.Enum;
-using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.Network;
-
-namespace CustomLoot.Features;
+﻿namespace CustomLoot.Features;
 
 [HarmonyPatchCategory(nameof(Feature.FakeLeech))]
 internal class FakeLeech
