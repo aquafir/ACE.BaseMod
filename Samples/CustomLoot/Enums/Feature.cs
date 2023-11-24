@@ -11,7 +11,7 @@ public enum Feature
     ProcOnAttack,
     ProcOnHit,
     ProcRateOverride,
-    ReduceBurden,
+    //ReduceBurden,
     SummonCreatureAsPet,
     FakeXpBoost,
     FakePropertyCache,
@@ -19,5 +19,8 @@ public enum Feature
     FakeReducedBurden,
     FakePercentDamage,
     FakeCombo,
+    FakeCulling,
+    FakeItemLoot,
+    FakeItemKillTask,
 }
 

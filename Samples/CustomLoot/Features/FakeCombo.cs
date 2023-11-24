@@ -41,6 +41,8 @@ public static class FakeCombo
         __instance.UpdateEvadeCombo();
     }
 
+
+
     //Could make generic if there's the same conditions
     public static void UpdateKillCombo(this Player player)
     {
@@ -127,7 +129,7 @@ public static class FakeCombo
             player.SetProperty(FakeInt.ComboResist, combo);
 
             if (combo % 10 == 0)
-                player.PlayParticleEffect(PlayScript.HealthUpBlue, player.Guid);
+                player.PlayParticleEffect(PlayScript.WeddingBliss, player.Guid);
         }
     }
 }

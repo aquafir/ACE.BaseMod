@@ -30,13 +30,14 @@ public static class FakePercentDamage
 
             uint damage = (uint)Math.Min(max, percent * vital.MaxValue);
             var trueDamage = damage * mitigation;   //Flat or a ratio based on result?
-            var damageEvent = new DamageEvent()
-            {
-                DamageSource = __instance,
-                CombatType = CombatType.Magic,
-                Damage = trueDamage,
-            };
-            __instance.FakeDamage(damageEvent, target);
+            target.TakeDamage(__instance, DamageType.Health, trueDamage);
+            //var damageEvent = new DamageEvent()
+            //{
+            //    DamageSource = __instance,
+            //    CombatType = CombatType.Magic,
+            //    Damage = trueDamage,
+            //};
+            //__instance.FakeDamage(damageEvent, target);
             __instance.SendMessage($"You hit {target.Name} for {trueDamage} percent-of-max health damage.");
         }
 
@@ -50,13 +51,7 @@ public static class FakePercentDamage
 
             uint damage = (uint)Math.Min(max, percent * vital.Current);
             var trueDamage = damage * mitigation;   //Flat or a ratio based on result?
-            var damageEvent = new DamageEvent()
-            {
-                DamageSource = __instance,
-                CombatType = CombatType.Magic,
-                Damage = trueDamage,
-            };
-            __instance.FakeDamage(damageEvent, target);
+            target.TakeDamage(__instance, DamageType.Health, trueDamage);
             __instance.SendMessage($"You hit {target.Name} for {trueDamage} percent-of-current health damage.");
         }
 
@@ -70,13 +65,7 @@ public static class FakePercentDamage
 
             uint damage = (uint)Math.Min(max, percent * vital.Missing);
             var trueDamage = damage * mitigation;   //Flat or a ratio based on result?
-            var damageEvent = new DamageEvent()
-            {
-                DamageSource = __instance,
-                CombatType = CombatType.Magic,
-                Damage = trueDamage,
-            };
-            __instance.FakeDamage(damageEvent, target);
+            target.TakeDamage(__instance, DamageType.Health, trueDamage);
             __instance.SendMessage($"You hit {target.Name} for {trueDamage} percent-of-missing health damage.");
         }
     }

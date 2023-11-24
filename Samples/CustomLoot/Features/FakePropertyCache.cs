@@ -1,4 +1,7 @@
-﻿namespace CustomLoot.Features;
+﻿using CustomLoot.Enums;
+using System.Net.Http.Headers;
+
+namespace CustomLoot.Features;
 
 [HarmonyPatchCategory(nameof(Feature.FakePropertyCache))]
 public static class FakePropertyCache
@@ -10,7 +13,7 @@ public static class FakePropertyCache
     public static void PreAddItemToEquippedItemsRatingCache(WorldObject wo, ref Creature __instance)
     {
         if (__instance is Player player)
-            UpdateEquipmentCache(player);
+            UpdateEquipmentCache(player, wo, true, true);
     }
 
     [HarmonyPrefix]
@@ -18,28 +21,92 @@ public static class FakePropertyCache
     public static void PreRemoveItemFromEquippedItemsRatingCache(WorldObject wo, ref Creature __instance)
     {
         if (__instance is Player player)
-            UpdateEquipmentCache(player);
+            UpdateEquipmentCache(player, wo, false, true);
     } 
     #endregion
+
 
     /// <summary>
     /// Updates all cached properties
     /// </summary>
-    public static void UpdateEquipmentCache(this Player player)
+    public static void UpdateEquipmentCache(this Player player, WorldObject wo, bool equipping, bool full = false)
     {
-        var cache = player.GetOrCreateFloatCache();
+        var floatCache = player.GetOrCreateFloatCache();
 
+        player.SendMessage($"{(equipping ? "Equipping" : "Unequipping")} {wo.Name}: ");
+
+        //For each type of prop
+        player.SendMessage($"  =====FakeFloat ({watchedFloats.Count} watched)====");
         foreach (var prop in watchedFloats)
         {
-            double bonus = 0;
-            foreach (var item in player.EquippedObjects.Values)
+            //Get value, add to cache if missing
+            if (!floatCache.TryGetValue(prop, out var cacheValue))
             {
-                bonus += item.GetProperty(prop) ?? 0;
-                //player.SendMessage($"{item.Name}: {prop}->{bonus}");
+                floatCache.Add(prop, 0);
+                cacheValue = 0;
             }
-            //player.SendMessage($"{prop} = {bonus}");
+
+            var items = full ? player.EquippedObjects.Values : new List<WorldObject>().AddItem(wo);
+            foreach (var item in items)
+            {
+                var itemValue = item.GetProperty(prop) ?? 0;
+                cacheValue += equipping ? itemValue : -itemValue;
+                player.SendMessage($"    {item.Name}.{prop}: {cacheValue:0.00} + {itemValue:0.00} -> {floatCache[prop]:0.00}");
+            }
+
+            floatCache[prop] = cacheValue;
+        }
+
+        var intCache = player.GetOrCreateIntCache();
+        player.SendMessage($"  =====FakeInt ({watchedInts.Count} watched)====");
+        foreach (var prop in watchedInts)
+        {
+            //Get value, add to cache if missing
+            if (!intCache.TryGetValue(prop, out var cacheValue))
+            {
+                intCache.Add(prop, 0);
+                cacheValue = 0;
+            }
+
+            var items = full ? player.EquippedObjects.Values : new List<WorldObject>().AddItem(wo);
+            foreach (var item in items)
+            {
+                var itemValue = item.GetProperty(prop) ?? 0;
+                cacheValue += equipping ? itemValue : -itemValue;
+                player.SendMessage($"    {item.Name}.{prop}: {cacheValue} + {itemValue} -> {intCache[prop]}");
+            }
+
+            intCache[prop] = cacheValue;
         }
     }
+
+    #region Abandoned Generic Update
+    //public static void UpdateEquipmentCache<T, V>(this Player player, WorldObject wo, bool equipping, Dictionary<T, V> cache, List<T> watched, bool full = false)
+    //{
+    //    player.SendMessage($"{(equipping ? "Equipping" : "Unequipping")} {wo.Name}: ");
+
+    //    //For each type of prop
+    //    var valueType = typeof(V);
+    //    player.SendMessage($"  ====={typeof(T).Name} ({watched.Count} watched)====");
+    //    foreach (var prop in watched)
+    //    {
+    //        //Get value, add to cache if missing
+    //        if (!cache.TryGetValue(prop, out var cacheValue))
+    //        {
+    //            cache.Add(prop, (V)Convert.ChangeType(0, valueType));
+    //            cacheValue = (V)Convert.ChangeType(0, valueType);
+    //        }
+
+    //        var itemValue = wo.GetProperty(prop) ?? 0;
+    //        cache[prop] = equipping ? cacheValue + itemValue : cacheValue - itemValue;
+    //        //cache[prop] = newValue;
+    //        player.SendMessage($"  {prop}: {cacheValue} + {itemValue} -> {cache[prop]}");
+
+    //        //Full rebuild?
+    //        //foreach (var item in player.EquippedObjects.Values)
+    //    }
+    //} 
+    #endregion
 
     //FloatProps are doubles, ofc
     #region Float Cache/Helpers

@@ -23,6 +23,8 @@ public enum FakeFloat
     TimestampLastEvade = 10009,
     TimestampLastCast = 10010,
     TimestampLastResist = 10011,
+    ItemPercentCull = 10012,
+    ItemLootTierUpgrade = 10013,
 }
 public enum FakeIID
 {
@@ -39,6 +41,7 @@ public enum FakeInt
     ComboHit = 10006,
     ComboEvade = 10007,
     ComboResist = 10008,
+    ItemKillTaskBonus = 10009,
 }
 public enum FakeInt64
 {
