@@ -28,6 +28,7 @@ public enum FakeFloat
     LootItemMaxAmount = 10014,
     LootItemQualityMod = 10015,
     ItemReflectPercent = 10016,
+    ItemReflectSpellChance = 10017,
 }
 public enum FakeIID
 {

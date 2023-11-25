@@ -14,33 +14,32 @@ internal class FakeItemLoot
     [HarmonyPatch(typeof(Creature), nameof(Creature.GenerateTreasure), new Type[] { typeof(DamageHistoryInfo), typeof(Corpse) })]
     public static bool PreGenerateTreasure(DamageHistoryInfo killer, Corpse corpse, ref Creature __instance, ref List<WorldObject> __result)
     {
-        //Get player
-        if (!killer.IsPlayer || killer.TryGetPetOwnerOrAttacker() is not Player player)
-            return true;
-
         //Modified loot
-        var lootProfile = __instance.DeathTreasure.MemberwiseClone() as TreasureDeath;
-        if (lootProfile is null)
-            return true;
+        var lootProfile = __instance?.DeathTreasure?.MemberwiseClone() as TreasureDeath;
 
-        lootProfile.MundaneItemChance += player.GetCachedFake(FakeInt.LootMundaneItemChance);
-        lootProfile.MundaneItemMinAmount += player.GetCachedFake(FakeInt.LootMundaneItemMinAmount);
-        lootProfile.MundaneItemMaxAmount += player.GetCachedFake(FakeInt.LootMundaneItemMaxAmount);
-        lootProfile.ItemChance += player.GetCachedFake(FakeInt.LootItemChance);
-        lootProfile.ItemMinAmount += player.GetCachedFake(FakeInt.LootItemMinAmount);
-        lootProfile.ItemMaxAmount += player.GetCachedFake(FakeInt.LootItemMaxAmount);
-        lootProfile.MagicItemChance += player.GetCachedFake(FakeInt.LootMagicItemChance);
-        lootProfile.MagicItemMinAmount += player.GetCachedFake(FakeInt.LootMagicItemMinAmount);
-        lootProfile.MagicItemMaxAmount += player.GetCachedFake(FakeInt.LootMagicItemMaxAmount);
-        lootProfile.LootQualityMod += (float)player.GetCachedFake(FakeFloat.LootItemQualityMod);
-        //Short circuit roll?
-        var chance = player.GetCachedFake(FakeFloat.ItemLootTierUpgrade);
-        if (chance > 0 && ThreadSafeRandom.Next(0f, 1.0f) < chance)
+        bool replaceProfile = false;
+        
+        if (killer.IsPlayer && killer.TryGetPetOwnerOrAttacker() is Player player && lootProfile is not null)
         {
-            lootProfile.Tier = Math.Min(8, lootProfile.Tier + 1);
-            player.SendMessage($"Upgraded treasure tier of {corpse.Name} to {lootProfile.Tier}");
+            replaceProfile = true;
+            lootProfile.MundaneItemChance += player.GetCachedFake(FakeInt.LootMundaneItemChance);
+            lootProfile.MundaneItemMinAmount += player.GetCachedFake(FakeInt.LootMundaneItemMinAmount);
+            lootProfile.MundaneItemMaxAmount += player.GetCachedFake(FakeInt.LootMundaneItemMaxAmount);
+            lootProfile.ItemChance += player.GetCachedFake(FakeInt.LootItemChance);
+            lootProfile.ItemMinAmount += player.GetCachedFake(FakeInt.LootItemMinAmount);
+            lootProfile.ItemMaxAmount += player.GetCachedFake(FakeInt.LootItemMaxAmount);
+            lootProfile.MagicItemChance += player.GetCachedFake(FakeInt.LootMagicItemChance);
+            lootProfile.MagicItemMinAmount += player.GetCachedFake(FakeInt.LootMagicItemMinAmount);
+            lootProfile.MagicItemMaxAmount += player.GetCachedFake(FakeInt.LootMagicItemMaxAmount);
+            lootProfile.LootQualityMod += (float)player.GetCachedFake(FakeFloat.LootItemQualityMod);
+            //Short circuit roll?
+            var chance = player.GetCachedFake(FakeFloat.ItemLootTierUpgrade);
+            if (chance > 0 && ThreadSafeRandom.Next(0f, 1.0f) < chance)
+            {
+                lootProfile.Tier = Math.Min(8, lootProfile.Tier + 1);
+                player.SendMessage($"Upgraded treasure tier of {corpse.Name} to {lootProfile.Tier}");
+            }
         }
-
 
         #region Original
         var droppedItems = new List<WorldObject>();
@@ -49,7 +48,7 @@ internal class FakeItemLoot
         if (__instance.DeathTreasure != null)
         {
             //List<WorldObject> items = LootGenerationFactory.CreateRandomLootObjects(__instance.DeathTreasure);
-            List<WorldObject> items = LootGenerationFactory.CreateRandomLootObjects(lootProfile);
+            List<WorldObject> items = LootGenerationFactory.CreateRandomLootObjects(replaceProfile ? lootProfile : __instance.DeathTreasure);
             foreach (WorldObject wo in items)
             {
                 if (corpse != null)
