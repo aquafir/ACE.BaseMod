@@ -33,7 +33,6 @@ internal class FakeItemLoot
         lootProfile.MagicItemMinAmount += player.GetCachedFake(FakeInt.LootMagicItemMinAmount);
         lootProfile.MagicItemMaxAmount += player.GetCachedFake(FakeInt.LootMagicItemMaxAmount);
         lootProfile.LootQualityMod += (float)player.GetCachedFake(FakeFloat.LootItemQualityMod);
-
         //Short circuit roll?
         var chance = player.GetCachedFake(FakeFloat.ItemLootTierUpgrade);
         if (chance > 0 && ThreadSafeRandom.Next(0f, 1.0f) < chance)
@@ -49,7 +48,8 @@ internal class FakeItemLoot
         // create death treasure from loot generation factory
         if (__instance.DeathTreasure != null)
         {
-            List<WorldObject> items = LootGenerationFactory.CreateRandomLootObjects(__instance.DeathTreasure);
+            //List<WorldObject> items = LootGenerationFactory.CreateRandomLootObjects(__instance.DeathTreasure);
+            List<WorldObject> items = LootGenerationFactory.CreateRandomLootObjects(lootProfile);
             foreach (WorldObject wo in items)
             {
                 if (corpse != null)

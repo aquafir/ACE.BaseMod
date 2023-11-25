@@ -27,6 +27,7 @@ public enum FakeFloat
     ItemLootTierUpgrade = 10013,
     LootItemMaxAmount = 10014,
     LootItemQualityMod = 10015,
+    ItemReflectPercent = 10016,
 }
 public enum FakeIID
 {
@@ -59,6 +60,7 @@ public enum FakeInt
     LootMagicItemChance = 10022,
     LootMagicItemMinAmount = 10023,
     LootMagicItemMaxAmount = 10024,
+    ItemReflectFlat = 10025,
 }
 public enum FakeInt64
 {

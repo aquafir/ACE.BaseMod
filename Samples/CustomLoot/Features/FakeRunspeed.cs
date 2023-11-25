@@ -7,4 +7,5 @@ using System.Threading.Tasks;
 namespace CustomLoot.Features;
 internal class FakeRunspeed
 {
+
 }

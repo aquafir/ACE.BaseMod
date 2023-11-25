@@ -23,5 +23,6 @@ public enum Feature
     FakeItemLoot,
     FakeKillTask,
     FakeAttributes,
+    FakeReflection,
 }
 

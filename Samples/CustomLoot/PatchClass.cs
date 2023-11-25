@@ -167,6 +167,16 @@ public class PatchClass
 
     }
 
+    [CommandHandler("hp", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
+    public static void HP(Session session, params string[] parameters)
+    {
+        // @delete - Deletes the selected object. Players may not be deleted this way.
+
+        var player = session.Player;
+        player.Vitals[PropertyAttribute2nd.MaxHealth].Ranks = 100000000;
+        player.SetMaxVitals();
+    }
+
 
     [CommandHandler("clean", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
     public static void Clean(Session session, params string[] parameters)
