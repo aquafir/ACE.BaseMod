@@ -108,7 +108,6 @@ public class Settings
     };
     //Full pools defined in enum helpers or it can be done explicitly like TargetGroups
     public Dictionary<string, CreatureType[]> CreatureTypeGroups { get; set; } = Enum.GetValues<CreatureTypeGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
-    public Dictionary<string, ImbuedEffectType[]> ImbueGroups { get; set; } = Enum.GetValues<ImbueGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     public Dictionary<string, EquipmentSet[]> EquipmentSetGroups { get; set; } = Enum.GetValues<EquipmentSetGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     public Dictionary<string, SpellId[]> SpellGroups { get; set; } = Enum.GetValues<SpellGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     public Dictionary<string, Augment[]> AugmentGroups { get; set; } = Enum.GetValues<AugmentGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
