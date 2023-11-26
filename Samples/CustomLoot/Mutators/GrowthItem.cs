@@ -1,7 +1,7 @@
 ﻿namespace CustomLoot.Mutators;
 internal class GrowthItem : Mutator
 {
-    public override bool TryMutate(TreasureDeath profile, TreasureRoll roll, HashSet<Mutation> mutations, WorldObject item)
+    public override bool TryMutateLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item)
     {
         if (item.HasItemLevel)
             return false;

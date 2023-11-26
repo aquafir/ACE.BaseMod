@@ -6,26 +6,79 @@ public abstract class Mutator
 {
     //Todo: decide on target types
     public Mutation MutationType { get; set; }
-    public HashSet<TreasureItemType_Orig>? TargetTypes { get; set; } = new();
+    public MutationEvent Event { get; set; }
+    //Nullity handled on creation by MutatorSettings
+    public HashSet<TreasureItemType_Orig> TreasureTargets { get; set; } = new();
+    public HashSet<WeenieType> WeenieTypeTargets { get; set; } = new();
     public Odds? Odds { get; set; }
+
+    public bool IsLootMutator => Event.HasFlag(MutationEvent.Loot);
+    public bool IsCorpseMutator => Event.HasFlag(MutationEvent.Corpse);
+    public bool IsGeneratorMutator => Event.HasFlag(MutationEvent.Generator);
 
     /// <summary>
     /// Checks for valid target using TargetTypes and successful roll using Odds
     /// </summary>
-    public virtual bool Mutates(TreasureDeath profile, TreasureRoll roll, HashSet<Mutation> mutations, WorldObject item = null)
+    public virtual bool MutatesLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item = null)
     {
         //Check types
-        if (TargetTypes is null)
+        if (!ValidTreasureTargets(roll))
             return false;
 
-        if (!TargetTypes.Contains(roll.ItemType))
+        if (!ValidWeenieTypeTargets(item))
+            return false;
+
+        return TryRoll(profile.Tier);
+    }
+    public virtual bool MutatesCorpse(HashSet<Mutation> mutations, Creature creature = null, DamageHistoryInfo killer = null, Corpse corpse = null, WorldObject item = null)
+    {
+        if (!ValidWeenieTypeTargets(item))
+            return false;
+
+        return TryRoll();
+    }
+    public virtual bool MutatesGenerator(HashSet<Mutation> mutations, GeneratorProfile profile = null, WorldObject item = null)
+    {
+        if (!ValidWeenieTypeTargets(item))
             return false;
 
         //Check odds
-        if (Odds is null)
+        return TryRoll();
+    }
+
+    //Todo: decide on throwing an error on fail?
+    public virtual bool TryMutateLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item) => false;
+    public virtual bool TryMutateCorpse(HashSet<Mutation> mutations, Creature creature, DamageHistoryInfo killer, Corpse corpse, WorldObject item) => false;
+    public virtual bool TryMutateGenerator(HashSet<Mutation> mutations, GeneratorProfile generator, WorldObject item) => false;
+    //Validation of what's available
+    private bool ValidTreasureTargets(TreasureRoll roll)
+    {
+        if (TreasureTargets is null)
+            return true;
+
+        if (!TreasureTargets.Contains(roll.ItemType))
             return false;
 
-        if (!Odds.TierChance.TryGetValue(profile.Tier, out var chance))
+        return true;
+    }
+    private bool ValidWeenieTypeTargets(WorldObject wo)
+    {
+        if (WeenieTypeTargets is null)
+            return true;
+
+        if (wo is null || !WeenieTypeTargets.Contains(wo.WeenieType))
+            return false;
+
+        return true;
+    }
+    private bool TryRoll(int tier = 0)
+    {
+        //Check odds
+        if (Odds is null)
+            return true;
+
+        //Get tier / default odds
+        if (!Odds.TierChance.TryGetValue(tier, out var chance) && !Odds.TierChance.TryGetValue(0, out chance))
             return false;
 
         if (ThreadSafeRandom.Next(0f, 1f) >= chance)
@@ -33,11 +86,6 @@ public abstract class Mutator
 
         return true;
     }
-
-    /// <summary>
-    /// Tries to mutate the 
-    /// </summary>
-    public abstract bool TryMutate(TreasureDeath profile, TreasureRoll roll, HashSet<Mutation> mutations, WorldObject item);
 
     #region Start/Stop - Placeholders for now
     public virtual void Start()
@@ -51,4 +99,15 @@ public abstract class Mutator
 
     }
     #endregion
+}
+
+[Flags]
+public enum MutationEvent
+{
+    Loot = 0x1,         //LootGenerationFactory.CreateRandomLootObjects_New
+    Corpse = 0x2,       //Creature.GenerateTreasure
+    Generator = 0x4,    //GeneratorProfile.TreasureGenerator
+
+    Containers = Corpse | Generator,
+    //Factory = 0x4,  //LootGenerationFactory.CreateRandomLootObjects
 }

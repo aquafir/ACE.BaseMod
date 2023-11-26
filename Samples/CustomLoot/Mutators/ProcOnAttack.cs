@@ -22,7 +22,7 @@ public class ProcOnAttack : Mutator
         }; 
     #endregion
 
-    public override bool TryMutate(TreasureDeath treasureDeath, TreasureRoll treasureRoll, HashSet<Mutation> mutations, WorldObject item)
+    public override bool TryMutateLoot(HashSet<Mutation> mutations, TreasureDeath treasureDeath, TreasureRoll treasureRoll, WorldObject item)
     {
         //Todo
         //throw new NotImplementedException();

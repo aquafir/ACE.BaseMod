@@ -1,11 +1,13 @@
-﻿namespace CustomLoot.Mutators;
+﻿using CustomLoot.Helpers;
+
+namespace CustomLoot.Mutators;
 
 //ConcurrentBag<
 public class ProcOnHit : Mutator
 {
     SpellId[] spells;
 
-    public override bool TryMutate(TreasureDeath profile, TreasureRoll roll, HashSet<Mutation> mutations, WorldObject wo)
+    public override bool TryMutateLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject wo)
     {
         if (!spells.TryGetRandom(out var spellId))
             return false;

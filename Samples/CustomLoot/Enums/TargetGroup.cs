@@ -15,7 +15,7 @@ public enum TargetGroup
     Weapon,
 }
 
-public static class TargetGroupHelper
+public static class TargetGroupGroupHelper
 {
     public static string DefaultTargets(this Mutation mutator) => mutator switch
     {

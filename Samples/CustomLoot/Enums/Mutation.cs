@@ -5,6 +5,7 @@
 /// </summary>
 public enum Mutation
 {
+    LocationLocked,
     GrowthItem,
     ProcOnAttack,
     ProcOnHit,

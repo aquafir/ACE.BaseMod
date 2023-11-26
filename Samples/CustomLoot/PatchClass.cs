@@ -1,5 +1,10 @@
-﻿using ACE.Server.Command;
+﻿using ACE.Database.Models.World;
+using ACE.Server.Command;
+using ACE.Server.Factories.Entity;
 using ACE.Server.Network;
+using ACE.Server.WorldObjects;
+using HarmonyLib;
+using System.Text;
 
 namespace CustomLoot;
 
@@ -85,13 +90,7 @@ public class PatchClass
 
     public static void Shutdown()
     {
-        //if (Mod.State == ModState.Running)
-
-        //Shutdown/unpatch everything on settings change to support repatching by category
-        foreach (var patch in enabledPatches)
-        {
-            patch.Shutdown();
-        }
+        ShutdownMutators();
         Mod.Harmony.UnpatchAll();
 
         if (Mod.State == ModState.Error)
@@ -99,6 +98,7 @@ public class PatchClass
     }
     #endregion
 
+    private static readonly Dictionary<MutationEvent, List<Mutator>> mutators = new();
     /// <summary>
     /// Adds additional features to ACE that may be needed by custom loot
     /// </summary>
@@ -112,11 +112,13 @@ public class PatchClass
                 ModManager.Log($"Enabled feature: {feature}");
         }
     }
-
-    private static List<Mutator> enabledPatches = new();
     private static void SetupMutators()
     {
-        enabledPatches.Clear();
+        //enabledPatches.Clear();
+        mutators.Clear();
+        mutators[MutationEvent.Loot] = new();
+        mutators[MutationEvent.Corpse] = new();
+        mutators[MutationEvent.Generator] = new();
 
         foreach (var mutatorOptions in Settings.Mutators)
         {
@@ -127,7 +129,15 @@ public class PatchClass
             {
                 var mutator = mutatorOptions.CreateMutator();
                 mutator.Start();
-                enabledPatches.Add(mutator);
+
+                //enabledPatches.Add(mutator);
+                if (mutator.IsLootMutator)
+                    mutators[MutationEvent.Loot].Add(mutator);
+                if (mutator.IsCorpseMutator)
+                    mutators[MutationEvent.Corpse].Add(mutator);
+                if (mutator.IsGeneratorMutator)
+                    mutators[MutationEvent.Generator].Add(mutator);
+
 
                 if (PatchClass.Settings.Verbose)
                     ModManager.Log($"Enabled mutator: {mutatorOptions.PatchType}");
@@ -136,6 +146,27 @@ public class PatchClass
             {
                 if (PatchClass.Settings.Verbose)
                     ModManager.Log($"Failed to patch {mutatorOptions.PatchType}: {ex.Message}", ModManager.LogLevel.Error);
+            }
+        }
+    }
+    private static void ShutdownMutators()
+    {
+        //if (Mod.State == ModState.Running)
+
+        //Shutdown/unpatch everything on settings change to support repatching by category
+        foreach (var eventType in mutators.Values)
+        {
+            //Todo: Prevent duplicate shutdowns..?
+            HashSet<Mutator> encountered = new();
+
+            foreach (var mutator in eventType)
+            {
+                if (encountered.Contains(mutator))
+                    continue;
+
+                //Shut down the mutator / remember it
+                encountered.Add(mutator);
+                mutator.Shutdown();
             }
         }
     }
@@ -152,14 +183,14 @@ public class PatchClass
         //Keeps track of what mutations have been applied
         HashSet<Mutation> mutations = new();
 
-        foreach (var mutator in enabledPatches)
+        foreach (var mutator in mutators[MutationEvent.Loot])
         {
             //Check for elligible item type
-            if (!mutator.Mutates(treasureDeath, treasureRoll, mutations, __result))
+            if (!mutator.MutatesLoot(mutations, treasureDeath, treasureRoll, __result))
                 continue;
 
             //If an item was mutated add the type
-            if (mutator.TryMutate(treasureDeath, treasureRoll, mutations, __result))
+            if (mutator.TryMutateLoot(mutations, treasureDeath, treasureRoll, __result))
                 mutations.Add(mutator.MutationType);
         }
 
@@ -168,27 +199,61 @@ public class PatchClass
 
     }
 
-    [CommandHandler("hp", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-    public static void HP(Session session, params string[] parameters)
+    /// <summary>
+    /// After creature dies
+    /// </summary>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Creature), nameof(Creature.GenerateTreasure), new Type[] { typeof(DamageHistoryInfo), typeof(Corpse) })]
+    public static void PostGenerateTreasure(DamageHistoryInfo killer, Corpse corpse, ref Creature __instance, ref List<WorldObject> __result)
     {
-        // @delete - Deletes the selected object. Players may not be deleted this way.
+        //Todo: look at skipping based on container
+        //Loop through each item
+        foreach (var item in __result)
+        {
+            //Keeps track of what mutations have been applied
+            HashSet<Mutation> mutations = new();
 
-        var player = session.Player;
-        player.Vitals[PropertyAttribute2nd.MaxHealth].Ranks = 100000000;
-        player.SetMaxVitals();
+            foreach (var mutator in mutators[MutationEvent.Corpse])
+            {
+                if (!mutator.MutatesCorpse(mutations, __instance, killer, corpse, item))
+                    continue;
+
+                //If an item was mutated add the type
+                if (mutator.TryMutateCorpse(mutations, __instance, killer, corpse, item))
+                    mutations.Add(mutator.MutationType);
+
+                if (PatchClass.Settings.Verbose && mutations.Count > 0)
+                    ModManager.Log($"{item.Name} was mutated with: {String.Join(", ", mutations)}");
+            }
+        }
     }
 
-
-    [CommandHandler("clean", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-    public static void Clean(Session session, params string[] parameters)
+    /// <summary>
+    /// Container/treasure generator?
+    /// </summary>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(GeneratorProfile), nameof(GeneratorProfile.TreasureGenerator))]
+    public static void PostTreasureGenerator(ref GeneratorProfile __instance, ref List<WorldObject> __result)
     {
-        // @delete - Deletes the selected object. Players may not be deleted this way.
-
-        var player = session.Player;
-
-        foreach (var item in player.Inventory)
+        //Todo: look at skipping based on container
+        //Loop through each item
+        foreach (var item in __result)
         {
-            player.TryRemoveFromInventoryWithNetworking(item.Key, out var i, Player.RemoveFromInventoryAction.None);
+            //Keeps track of what mutations have been applied
+            HashSet<Mutation> mutations = new();
+
+            foreach (var mutator in mutators[MutationEvent.Generator])
+            {
+                if (!mutator.MutatesGenerator(mutations, __instance, item))
+                    continue;
+
+                //If an item was mutated add the type
+                if (mutator.TryMutateGenerator(mutations, __instance, item))
+                    mutations.Add(mutator.MutationType);
+
+                if (PatchClass.Settings.Verbose && mutations.Count > 0)
+                    ModManager.Log($"{item.Name} was mutated with: {String.Join(", ", mutations)}");
+            }
         }
     }
 }

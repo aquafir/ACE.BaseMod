@@ -3,7 +3,6 @@
 public enum Feature
 {
     ItemLevelUpGrowth,
-    ItemLevelUpImbue,
     CorpseInfo,
     PetAttackSelected,
     PetMessageDamage,
@@ -26,5 +25,6 @@ public enum Feature
     FakeReflection,
     FakeSpellReflection,
     FakeDurability,
+    FakeEquipRestriction,
 }
 

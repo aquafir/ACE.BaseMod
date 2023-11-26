@@ -22,6 +22,9 @@
 
 	<ItemGroup>
 	  <Compile Remove="Features\FakeReducedBurden.cs" />
+	  <Compile Remove="Helpers\SpellHelper.cs" />
+	  <Compile Remove="Helpers\SpellsPatchClass.cs" />
+	  <Compile Remove="Helpers\SplashHelpers.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

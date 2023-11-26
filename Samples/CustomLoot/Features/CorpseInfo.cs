@@ -34,6 +34,25 @@ public class CorpseInfo
 
         var corpse = WorldObjectFactory.CreateNewWorldObject(cachedWeenie) as Corpse;
 
+
+
+
+
+
+
+
+        //!!Add the functionality needed!!  Todo: clean alllll this up
+        //        corpse.SetLivingWeenieType(__instance);
+        corpse.SetProperty(FakeInt.CorpseLivingWCID, (int)__instance.WeenieClassId);
+        corpse.SetProperty(FakeDID.CorpseLandblockId, __instance.CurrentLandblock.Id.Raw);
+        corpse.SetProperty(FakeBool.CorpseSpawnedDungeon, __instance.CurrentLandblock.IsDungeon);
+
+        var l = corpse.GetProperty(FakeBool.CorpseSpawnedDungeon);
+        Debugger.Break();
+
+
+
+
         var prefix = "Corpse";
 
         if (__instance.TreasureCorpse)
@@ -199,15 +218,6 @@ public class CorpseInfo
 
         // persist the original creature velocity (only used for falling) to corpse
         corpse.PhysicsObj.Velocity = __instance.PhysicsObj.Velocity;
-
-
-
-
-
-        //!!Add the functionality needed!!  Todo: clean alllll this up
-        //        corpse.SetLivingWeenieType(__instance);
-        corpse.SetProperty(FakeInt.CorpseLivingWCID, (int)__instance.WeenieClassId);
-
 
 
         corpse.EnterWorld();

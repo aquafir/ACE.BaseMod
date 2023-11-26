@@ -3,11 +3,13 @@
 //!!!!Very important to avoid using properties ACE or other Mods uses!!!!
 public enum FakeBool
 {
-    GrowthItem = 10000
+    GrowthItem = 10000,
+    CorpseSpawnedDungeon = 10001
 }
 public enum FakeDID
 {
-    Placeholder = 10000
+    CorpseLandblockId = 10000,
+    LocationLockId = 10001
 }
 public enum FakeFloat
 {

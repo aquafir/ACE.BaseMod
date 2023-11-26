@@ -1,19 +1,21 @@
-﻿namespace CustomLoot.Mutators;
+﻿using CustomLoot.Helpers;
+
+namespace CustomLoot.Mutators;
 
 public class Slayer : Mutator
 {
     CreatureType[] species;
 
-    public override bool Mutates(TreasureDeath profile, TreasureRoll roll, HashSet<Mutation> mutations, WorldObject item = null)
+    public override bool MutatesLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item = null)
     {
         //Doesn't mutate Slayers
         if (item.GetProperty(PropertyInt.SlayerCreatureType) is not null)
             return false;
 
-        return base.Mutates(profile, roll, mutations, item);
+        return base.MutatesLoot(mutations, profile, roll, item);
     }
 
-    public override bool TryMutate(TreasureDeath profile, TreasureRoll roll, HashSet<Mutation> mutations, WorldObject item)
+    public override bool TryMutateLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item)
     {
         //Try to get a random type
         if (!species.TryGetRandom(out var type))

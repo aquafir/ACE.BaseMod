@@ -5,15 +5,26 @@ public class Settings
     public bool Verbose { get; set; } = false;
 
     #region Features / Mutators
-    public List<Feature> Features { get; set; } = Enum.GetValues<Feature>().ToList();
+    public List<Feature> Features { get; set; } =
+        new()
+        {
+            Feature.CorpseInfo, Feature.FakePropertyCache,
+        };
+        //Full set
+        //Enum.GetValues<Feature>().ToList();
     public List<MutatorSettings> Mutators { get; set; } =
         //Select items
         new()
         {
             new MutatorSettings(Mutation.GrowthItem) {
             Odds = nameof(OddsGroup.Always),
-            Targets = nameof(TargetGroup.Weapon)
-        }
+            TreasureTargets = nameof(TargetGroup.Weapon),
+            },
+            new MutatorSettings(Mutation.LocationLocked)  {
+            Odds = nameof(OddsGroup.Always),
+            TreasureTargets = nameof(TargetGroup.Weapon),
+            },
+
         };
     //Full set
     //Enum.GetValues<Mutation>()
@@ -32,12 +43,12 @@ public class Settings
         [TreasureItemType_Orig.Armor] = nameof(AugmentGroup.Armor),
     };
     //Type->Level-fixed augments.  Should it be groups instead?
-    public Dictionary<TreasureItemType_Orig, Dictionary<int,Augment>> GrowthFixedLevelAugments { get; set; } = new()
+    public Dictionary<TreasureItemType_Orig, Dictionary<int, Augment>> GrowthFixedLevelAugments { get; set; } = new()
     {
         [TreasureItemType_Orig.Weapon] = new Dictionary<int, Augment>()
         {
             [1] = Augment.RendAll,
-        }        
+        }
     };
     //Tier->Low/high level range
     public Dictionary<int, IntRange> GrowthTierLevelRange { get; set; } = Enumerable.Range(1, 8).ToDictionary(x => x, x => Range.Int(x * 2 - 1, x * 2 + 3));
@@ -105,6 +116,10 @@ public class Settings
         [nameof(TargetGroup.Equipables)] = TargetGroup.Equipables.SetOf(),
         [nameof(TargetGroup.Weapon)] = TargetGroup.Weapon.SetOf(),
         [nameof(TargetGroup.Wearables)] = TargetGroup.Wearables.SetOf(),
+    };
+    public Dictionary<string, WeenieType[]> WeenieTypeGroups { get; set; } = new()
+    {
+        [nameof(WeenieTypeGroup.Placeholder)] = WeenieTypeGroup.Placeholder.SetOf(),
     };
     //Full pools defined in enum helpers or it can be done explicitly like TargetGroups
     public Dictionary<string, CreatureType[]> CreatureTypeGroups { get; set; } = Enum.GetValues<CreatureTypeGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());

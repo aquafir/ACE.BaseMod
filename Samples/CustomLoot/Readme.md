@@ -9,11 +9,50 @@ This mod changes the loot generated objects returned by `LootGenerationFactory.C
 * **Features** are patches that enable additional functionality, such as a "reduced weight" property for a container
   * Some mutations may require a feature for the item they produce to do what it should.
 * **Mutators** change loot after its generated.
-  * `Targets` is a set of `TreasureItemType_Orig` the mutation applies to
+  * The `Event` is a bitfield of `MutatorEvent` which decides when a mutator mutates.  
+    All will require a `WorldObject` but some will have more granularity or other information available.
+    * `Loot` catches all loot but misses corpse/location/etc.
+    * `Corpse` modifies items in a creature corpse after `Creature.GenerateTreasure`
+    * `Generator` runs after `GeneratorProfile.TreasureGenerator`
+    * Could expose things like `RollMundane` / `CreateDinnerware` / etc.
+  * Different sets of valid targets are available.  Succeeds if missing.  
+    Available targets are:
+    * `WeenieTypeTargets` is a set of `WeenieType` the WorldObject must be
+    * `TreasureTargets` is a set of `TreasureItemType_Orig` 
+  
   * `Odds` is the 0-1 chance of being applied to an item of a tier
-  * There are default sets of both but you can make your own.
+    * If missing it will always succeed.
+    * Tier 0 is a default if missing tier information
+  * There are default sets but you can make your own using names from the relevant enums.
   * You can make multiple Mutators if you want to have different odds for different targets.
+  
 * Settings for Mutators/Features are currently just dumped in `Settings.json`.  
+
+
+
+### Groups
+
+* `CreatureType`
+
+* `EquipmentSet` 
+
+* `SpellId`
+
+* `Augment` - attempt to change a WorldObject
+
+  
+
+
+
+### Dependencies
+
+Some features or mutators depend on a utility `Feature`:
+
+* `CorpseInfo` adds additional information to a `Corpse`
+  * `FakeInt.CorpseLivingWCID`
+  * `FakeDID.CorpseLandblockId`
+  * `FakeBool.CorpseSpawnedDungeon`
+* `FakePropertyCache` stores a cached version for a players `FakeProperty` bonus and updates on change.  Not strictly required but gives a significant performance boost.
 
 
 
@@ -128,4 +167,11 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 * durability
 * Sets.  Finds spells in `DatManager.PortalDat.SpellTable.SpellSet`
   * * Combined item levels in a sorted dictionary for `SpellSetTiers` list of spells
-* 
+
+
+
+
+
+
+
+https://i.gyazo.com/9d12388f6e416f76c281ea3436ef57e8.mp4

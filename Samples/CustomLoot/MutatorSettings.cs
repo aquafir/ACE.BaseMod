@@ -1,4 +1,6 @@
-﻿namespace CustomLoot;
+﻿using System.Runtime.CompilerServices;
+
+namespace CustomLoot;
 
 /// <summary>
 /// Patch settings are used to serialized patches
@@ -8,18 +10,12 @@ public class MutatorSettings
     public const string NAMESPACE = $"CustomLoot.Mutators";
     //public string PatchType { get; set; }
     public Mutation PatchType { get; set; }
-    public bool Enabled { get; set; } = true;
-    //If settings are missing Odds or Targets
-    public string Odds { get; set; } 
-    public string Targets { get; set; } 
-
+    public bool Enabled { get; set; } = false;
+    public MutationEvent Events { get; set; } = MutationEvent.Loot;
+    public string? Odds { get; set; }
+    public string? TreasureTargets { get; set; }
+    public string? WeenieTypeTargets { get; set; }
     //public MutatorSettings() { }
-
-    //public MutatorSettings(string patchType, bool enabled = true)
-    //{
-    //    PatchType = patchType;
-    //    Enabled = enabled;
-    //}
 
     public MutatorSettings(Mutation patchType, bool enabled = true)
     {
@@ -50,10 +46,15 @@ public static class MutatorHelpers
             Debugger.Break();
             throw new Exception();
         }
+        
+        mutator.Event = settings.Events;
 
         //Nullable odds?
-        mutator.TargetTypes = PatchClass.Settings.TargetGroups.TryGetValue(settings.Targets, out var targets) ? targets.ToHashSet() : null;
-        mutator.Odds = PatchClass.Settings.Odds.TryGetValue(settings.Odds, out var mutatorOdds) ? mutatorOdds : null;
+        mutator.TreasureTargets = S.Settings.TargetGroups.TryGetValue(settings.TreasureTargets, out var treasureTargets) ? treasureTargets.ToHashSet() : null;
+        mutator.WeenieTypeTargets = S.Settings.WeenieTypeGroups.TryGetValue(settings.WeenieTypeTargets, out var weenieTargets) ? weenieTargets.ToHashSet() : null;
+        mutator.Odds = S.Settings.Odds.TryGetValue(settings.Odds, out var mutatorOdds) ? mutatorOdds : null;
+
+        ModManager.Log($"{mutator.TreasureTargets is null} - {mutator.WeenieTypeTargets is null} - {mutator.Odds is null}");
 
         return mutator;
     }

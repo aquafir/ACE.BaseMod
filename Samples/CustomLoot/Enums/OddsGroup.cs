@@ -43,14 +43,7 @@ public static class OddsHelper
         {
             TierChance = new()
             {
-                [1] = 1f,
-                [2] = 1f,
-                [3] = 1f,
-                [4] = 1f,
-                [5] = 1f,
-                [6] = 1f,
-                [7] = 1f,
-                [8] = 1f,
+                [0] = 1f,
             }
         },
         _ => new(),

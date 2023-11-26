@@ -1,4 +1,4 @@
-﻿namespace CustomLoot;
+﻿namespace CustomLoot.Helpers;
 
 public static class Helpers
 {

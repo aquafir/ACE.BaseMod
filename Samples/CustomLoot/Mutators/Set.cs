@@ -1,10 +1,12 @@
-﻿namespace CustomLoot.Mutators;
+﻿using CustomLoot.Helpers;
+
+namespace CustomLoot.Mutators;
 
 public class Set : Mutator
 {
     readonly Dictionary<TreasureItemType_Orig, EquipmentSet[]> sets= new();
 
-    public override bool TryMutate(TreasureDeath profile, TreasureRoll roll, HashSet<Mutation> mutations, WorldObject item)
+    public override bool TryMutateLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item)
     {
         //Add a set from the valid ones in the settings
         if (!sets.TryGetValue(roll.ItemType, out var setGroup))
