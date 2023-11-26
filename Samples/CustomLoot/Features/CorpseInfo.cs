@@ -2,7 +2,6 @@
 using ACE.Entity.Models;
 using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.WorldObjects;
 
 namespace CustomLoot.Features;
 

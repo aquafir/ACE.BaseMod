@@ -5,91 +5,53 @@ public static class ItemLevelUpGrowth
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Player), nameof(Player.OnItemLevelUp), new Type[] { typeof(WorldObject), typeof(int) })]
-    public static bool PreOnItemLevelUp(WorldObject item, int prevItemLevel, ref Player __instance)
+    public static void PreOnItemLevelUp(WorldObject item, int prevItemLevel, ref Player __instance)
     {
         //Skip items not made as growth items
         if (item.GetProperty(FakeBool.GrowthItem) is null)  //Will this ever by false?
-            return false;
+            return;
 
-        for (int i = prevItemLevel; i < item.ItemLevel; i++)
+
+        //Todo: WO->Original type
+        var storedType = item.GetProperty(FakeInt.OriginalItemType);
+        if (storedType is null) return;
+        var itemType = (TreasureItemType_Orig)storedType;
+
+
+        for (int level = prevItemLevel+1; level <= item.ItemLevel; level++)
         {
-            __instance.SendMessage($"Growing {item.Name} - {item.ItemType} - {i}");
-
-            switch (item.ItemType)
+            if(!item.TryGrowItem(level, itemType, __instance))
             {
-                case ItemType.MissileWeapon:
-                case ItemType.Weapon:
-                case ItemType.WeaponOrCaster:
-                case ItemType.MeleeWeapon:
-                    GrowWeapon(item, __instance,i);
-                    break;
-                case ItemType.Armor:
-                    GrowArmor(item, __instance,i);
-                    break;
-                case ItemType.Clothing:
-                    break;
-                case ItemType.Jewelry:
-                    break;
+                //Quit early?
+                __instance.SendMessage($"Failed to apply Augment to {item.Name} for level {level}");
             }
         }
 
-        //Debugger.Break();
-        //if (item.ImbuedEffect != ImbuedEffectType.Undef)
-        //    return true;
-
-        //if (ImbueGroup.AllRending.SetOf().TryGetRandom(out var imbuedEffectType))
-        //    item.ImbuedEffect = imbuedEffectType;
-
         //Return true to execute original
+        return;
+    }
+
+    private static bool TryGrowItem(this WorldObject item, int level, TreasureItemType_Orig itemType, Player player)
+    {
+        //Try to get an augment for level, checking for fixed level then pool
+        Augment augment = 0;
+        if (!S.Settings.GrowthFixedLevelAugments.TryGetValue(itemType, out var levelAugments) || !levelAugments.TryGetValue(level, out augment))
+        {
+            if (!S.Settings.GrowthAugments.TryGetValue(itemType, out var augmentGroup))
+                return false;
+
+            if (!S.Settings.AugmentGroups.TryGetValue(augmentGroup, out var augmentPool))
+                return false;
+
+            if (!augmentPool.TryGetRandom(out augment))
+                return false;
+        }
+
+        //Apply
+        if (!item.TryAugmentWith(augment))
+            return false;            
+
+        player.SendMessage($"Growing {item.Name} with {augment} for level {level}/{item.ItemMaxLevel}");
         return true;
-    }
-
-    public static void GrowWeapon(this WorldObject item, Player player, int level)
-    {
-        switch (level)
-        {
-            //Try to imbue on first level
-            case 1:
-                if (ImbueGroup.AllRending.SetOf().TryGetRandom(out var imbuedEffectType))
-                {
-                    item.ImbuedEffect = imbuedEffectType;
-                    item.IconUnderlayId = 0x06005B0C;   //Rares //RecipeManager.IconUnderlay[imbuedEffectType];
-                    item.UiEffects = UiEffects.BoostHealth;
-                    player.UpdateProperty(item, PropertyDataId.IconUnderlay, 0x06005B0C, true);
-
-                    player.SendMessage($"Your {item.Name} was imbued with {imbuedEffectType}");
-                }
-                break;
-
-            default:
-                item.WeaponOffense += .02;
-                item.WeaponDefense += .02;
-                item.Damage += 1;
-
-                player.SendMessage($"Your {item.Name} got 2% to skill.");
-                break;
-        }
-    }
-
-    public static void GrowArmor(this WorldObject item, Player player, int level)
-    {
-        switch (level)
-        {
-            //Try to imbue on first level
-            //case 1:
-            //    if (ImbueGroup.AllRending.SetOf().TryGetRandom(out var imbuedEffectType))
-            //    {
-            //        item.ImbuedEffect = imbuedEffectType;
-
-            //        player.SendMessage($"Your {item.Name} was imbued with {imbuedEffectType}");
-            //    }
-            //    break;
-
-            default:
-                item.ArmorLevel += 20;
-
-                player.SendMessage($"Your {item.Name} got 20 armor?");
-                break;
-        }
     }
 }

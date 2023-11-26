@@ -316,7 +316,7 @@ public static class FakePropertyCache
     {
         var floatCache = player.GetOrCreateFloatCache();
         var intCache = player.GetOrCreateIntCache();
-
+        Debugger.Break();
         //For each prop in a list, get each value in a dictionary
         var dump = new StringBuilder();
         dump.Append(floatCache.DumpPlayerPropertyCache());

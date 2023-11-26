@@ -24,8 +24,32 @@ public class Settings
     #endregion
 
     #region Mutator Settings
-    #region Sets
-    //Type -> List of valid eligible sets
+    #region GrowthItem
+    //Type -> List of eligible augments on growth
+    public Dictionary<TreasureItemType_Orig, string> GrowthAugments { get; set; } = new()
+    {
+        [TreasureItemType_Orig.Weapon] = nameof(AugmentGroup.Weapon),
+        [TreasureItemType_Orig.Armor] = nameof(AugmentGroup.Armor),
+    };
+    //Type->Level-fixed augments.  Should it be groups instead?
+    public Dictionary<TreasureItemType_Orig, Dictionary<int,Augment>> GrowthFixedLevelAugments { get; set; } = new()
+    {
+        [TreasureItemType_Orig.Weapon] = new Dictionary<int, Augment>()
+        {
+            [1] = Augment.RendAll,
+        }        
+    };
+    //Tier->Low/high level range
+    public Dictionary<int, IntRange> GrowthTierLevelRange { get; set; } = Enumerable.Range(1, 8).ToDictionary(x => x, x => Range.Int(x * 2 - 1, x * 2 + 3));
+    //Tier->XP.  Defaulting to same cost per level
+    public long GrowthXpBase { get; set; } = 1_000_000;
+    public double GrowthXpScaleByTier { get; set; } = 1.2;
+    //public Dictionary<int, long> GrowthTierXpCost => Enumerable.Range(1, 8).ToDictionary(x => x, x => (long)(1000000 * Math.Pow(1.5, x)));
+
+    #endregion
+
+    #region Set
+    //Type -> List of eligible sets
     public Dictionary<TreasureItemType_Orig, EquipmentSetGroup> ItemTypeEquipmentSets { get; set; } = new()
     {
         //Armor / clothes the standard sets
@@ -87,5 +111,6 @@ public class Settings
     public Dictionary<string, ImbuedEffectType[]> ImbueGroups { get; set; } = Enum.GetValues<ImbueGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     public Dictionary<string, EquipmentSet[]> EquipmentSetGroups { get; set; } = Enum.GetValues<EquipmentSetGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     public Dictionary<string, SpellId[]> SpellGroups { get; set; } = Enum.GetValues<SpellGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
+    public Dictionary<string, Augment[]> AugmentGroups { get; set; } = Enum.GetValues<AugmentGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     #endregion
 }

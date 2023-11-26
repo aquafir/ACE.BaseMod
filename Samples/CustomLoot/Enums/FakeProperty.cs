@@ -11,7 +11,6 @@ public enum FakeDID
 }
 public enum FakeFloat
 {
-    ItemXpBoost = 10000,
     ItemLeechHealth = 10001,
     ItemLeechMana = 10002,
     ItemLeechStamina = 10003,
@@ -28,7 +27,10 @@ public enum FakeFloat
     LootItemMaxAmount = 10014,
     LootItemQualityMod = 10015,
     ItemReflectPercent = 10016,
-    ItemReflectSpellChance = 10017,
+    ItemReflectSpellProjectileChance = 10017,
+    ItemReflectSpellChance = 10018,
+    ItemXpBoost = 10019,
+    ItemLuminanceBoost = 10020,
 }
 public enum FakeIID
 {
@@ -62,6 +64,7 @@ public enum FakeInt
     LootMagicItemMinAmount = 10023,
     LootMagicItemMaxAmount = 10024,
     ItemReflectFlat = 10025,
+    OriginalItemType = 10026,
 }
 public enum FakeInt64
 {

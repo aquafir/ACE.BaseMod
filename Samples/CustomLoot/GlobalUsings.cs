@@ -17,3 +17,4 @@ global using System.Text.Json;
 global using System.Text.Json.Serialization;
 //Aliases for polluted types
 global using Spell = ACE.Server.Entity.Spell;
+global using S = CustomLoot.PatchClass;

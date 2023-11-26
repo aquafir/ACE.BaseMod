@@ -94,7 +94,7 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 ### Todo
 
 * Check mutations compatibility
-* ArrayOf for pools for constant time sampling?
+* ~~ArrayOf for pools for constant time sampling?~~
 * If ACE ever goes .NET >7 should switch to polymorphic serialization 
 * Currently doesn't wipe a set/proc if one exists and a mutation isn't rolled.
 * Possibly inefficient way of checking for self-targeting spells
@@ -102,15 +102,24 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 
 
 
-### Levels
 
-* Needs all?
-  * ItemMaxLevel - max level
-  * ItemBaseXp - xp per level
-  * ItemXpStyle
-    * Undef, Fixed, ScalesWithLevel, FixedPlusBase
-  * ItemTotalXp = 0
-* `Player.OnItemLevelUp`
-  * Removes/adds spells using `GetSpellSet`
-  * Finds spells in `DatManager.PortalDat.SpellTable.SpellSet`
-    * Combined item levels in a sorted dictionary for `SpellSetTiers` list of spells
+
+
+
+## Scratch
+
+* skill trained/under
+* import spell split
+* cleave
+* aura + kdtree
+* steal->alt curr
+* spell ref
+* refl non-spell
+* rage
+* combo over x pow/acc/lvl
+* combo same target
+* shield flat/per
+* landblock specific wield
+* durability
+* Sets.  Finds spells in `DatManager.PortalDat.SpellTable.SpellSet`
+  * * Combined item levels in a sorted dictionary for `SpellSetTiers` list of spells

@@ -7,7 +7,7 @@ public static class FakePercentDamage
     [HarmonyPatch(typeof(Player), nameof(Player.DamageTarget), new Type[] { typeof(Creature), typeof(WorldObject) })]
     public static void PostDamageTarget(Creature target, WorldObject damageSource, ref Player __instance, ref DamageEvent __result)
     {
-        if (!__result.HasDamage)
+        if (__result is null || !__result.HasDamage)
             return;
 
         var vital = target.Health;
@@ -15,10 +15,11 @@ public static class FakePercentDamage
 
         //Percent max
         var percent = __instance.GetCachedFake(FakeFloat.ItemPercentMaxHealthDamage);
-        if (percent > 0) {
-            
+        if (percent > 0)
+        {
+
             var max = __instance.GetCachedFake(FakeInt.ItemPercentMaxHealthCap);
-            if(max == 0) 
+            if (max == 0)
                 max = int.MaxValue;
 
             uint damage = (uint)Math.Min(max, percent * vital.MaxValue);
@@ -74,16 +75,17 @@ public static class FakePercentDamage
 
     public static void FakeDamage(this Player player, DamageEvent damageEvent, Creature target)
     {
-        if (damageEvent.HasDamage)
-        {
-            player.OnDamageTarget(target, damageEvent.CombatType, damageEvent.IsCritical);
+        if (damageEvent is null || !damageEvent.HasDamage)
+            return;
 
-            //if (target is Player targetPlayer)
-            //{
-            // //   targetPlayer.TakeDamage(this, damageEvent);
-            //}
-            //else
-            target.TakeDamage(player, damageEvent.DamageType, damageEvent.Damage, damageEvent.IsCritical);
-        }
+        player.OnDamageTarget(target, damageEvent.CombatType, damageEvent.IsCritical);
+
+        //if (target is Player targetPlayer)
+        //{
+        // //   targetPlayer.TakeDamage(this, damageEvent);
+        //}
+        //else
+        target.TakeDamage(player, damageEvent.DamageType, damageEvent.Damage, damageEvent.IsCritical);
+
     }
 }

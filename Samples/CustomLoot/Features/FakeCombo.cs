@@ -30,8 +30,9 @@ public static class FakeCombo
     [HarmonyPatch(typeof(Player), nameof(Player.DamageTarget), new Type[] { typeof(Creature), typeof(WorldObject) })]
     public static void PostDamageTarget(Creature target, WorldObject damageSource, ref Player __instance, ref DamageEvent __result)
     {
-        if (!__result.HasDamage) return;
-        __instance.UpdateHitCombo();
+        if (__result is null || !__result.HasDamage)
+
+            __instance.UpdateHitCombo();
     }
 
     [HarmonyPostfix]

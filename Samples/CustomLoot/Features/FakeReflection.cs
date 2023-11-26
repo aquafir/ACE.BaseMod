@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CustomLoot.Features;
+﻿namespace CustomLoot.Features;
 
 [HarmonyPatchCategory(nameof(Feature.FakeReflection))]
 internal class FakeReflection
@@ -27,32 +21,4 @@ internal class FakeReflection
         //Player
         //Your code here
     }
-
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(SpellProjectile), nameof(SpellProjectile.OnCollideObject), new Type[] { typeof(WorldObject) })]
-    public static bool PreOnCollideObject(WorldObject target, ref SpellProjectile __instance)
-    {
-        if (target is not Player player)
-            return true;
-
-        if (__instance.ProjectileSource is not Creature creature)
-            return true;
-
-        var reflectChance = player.GetCachedFake(FakeFloat.ItemReflectSpellChance);
-            if (reflectChance > 0 && ThreadSafeRandom.Next(0f, 1.0f) < reflectChance)
-        {
-            var reflectedSpell = new Spell(__instance.Spell.Id);
-            player.TryCastSpell_WithRedirects(reflectedSpell, creature);
-            player.SendMessage($"You reflected {reflectedSpell.Name} with {reflectChance:0.0} chance at {creature.Name}");
-
-            return false;
-        }
-        //Return false to override
-        //return false;
-
-        //Return true to execute original
-        return true;
-    }
-
 }

@@ -16,7 +16,7 @@ public enum Feature
     FakeXpBoost,
     FakePropertyCache,
     FakeLeech,
-    FakeReducedBurden,
+    //FakeReducedBurden,
     FakePercentDamage,
     FakeCombo,
     FakeCulling,
@@ -24,5 +24,6 @@ public enum Feature
     FakeKillTask,
     FakeAttributes,
     FakeReflection,
+    FakeSpellReflection,
 }
 

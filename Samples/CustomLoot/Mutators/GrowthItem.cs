@@ -10,19 +10,24 @@ internal class GrowthItem : Mutator
         if (mutations.Count > 0)
             return false;
 
-        //if (item.ItemType != ItemType.Weapon)
-        //    return false;
+        //Get level range.  Validate?
+        if (!S.Settings.GrowthTierLevelRange.TryGetValue(profile.Tier, out var levelRange))
+            return false;
 
-//        item.Name = "Test";
-        //Todo: more interesting things with item levels
-        item.ItemMaxLevel = 50 * profile.Tier;
-        item.ItemBaseXp = (int)(Math.Pow(2, profile.Tier) * 1_000_000); 
+        //Item costs
+        //if (!S.Settings.GrowthTierXpCost.TryGetValue(profile.Tier, out var xpCost))
+        //    return false;
+        var xpCost = (long)(S.Settings.GrowthXpBase * Math.Pow(S.Settings.GrowthXpScaleByTier, profile.Tier-1));
+
         item.ItemXpStyle = ItemXpStyle.ScalesWithLevel;
         item.ItemTotalXp = 0;
+        item.ItemMaxLevel = levelRange.Roll();
+        item.ItemBaseXp = xpCost;
 
         //Store item tier
         item.SetProperty(FakeBool.GrowthItem, true);
         item.SetProperty(FakeInt.GrowthTier, profile.Tier);
+        item.SetProperty(FakeInt.OriginalItemType, (int)roll.ItemType);
 
         return true;
     }

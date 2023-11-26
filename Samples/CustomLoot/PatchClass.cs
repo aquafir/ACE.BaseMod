@@ -68,6 +68,7 @@ public class PatchClass
     {
         //Need to decide on async use
         Mod.State = ModState.Loading;
+
         LoadSettings();
 
         if (Mod.State == ModState.Error)
