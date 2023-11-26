@@ -1,4 +1,5 @@
-﻿using ACE.Server.Command;
+﻿using ACE.Entity;
+using ACE.Server.Command;
 using ACE.Server.Command.Handlers;
 using ACE.Server.Network;
 using System.Text;
@@ -11,7 +12,7 @@ public static class FakePropertyCache
     //Todo: add cleanup of players (logoff?) and props?
     #region Patches / Triggers of cache update
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(Creature), "AddItemToEquippedItemsRatingCache", new Type[] { typeof(WorldObject) })]
+    [HarmonyPatch(typeof(Creature), nameof(Creature.AddItemToEquippedItemsRatingCache), new Type[] { typeof(WorldObject) })]
     public static void PreAddItemToEquippedItemsRatingCache(WorldObject wo, ref Creature __instance)
     {
         if (__instance is Player player)
@@ -25,7 +26,7 @@ public static class FakePropertyCache
     }
 
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(Creature), "RemoveItemFromEquippedItemsRatingCache", new Type[] { typeof(WorldObject) })]
+    [HarmonyPatch(typeof(Creature), nameof(Creature.RemoveItemFromEquippedItemsRatingCache), new Type[] { typeof(WorldObject) })]
     public static void PreRemoveItemFromEquippedItemsRatingCache(WorldObject wo, ref Creature __instance)
     {
         if (__instance is Player player)
@@ -130,6 +131,7 @@ public static class FakePropertyCache
     static readonly Dictionary<Player, Dictionary<FakeFloat, double>> cachedFloats = new();
     public static double GetCachedFake(this Player player, FakeFloat prop)
     {
+        var watch = Stopwatch.StartNew();
         var cache = player.GetOrCreateFloatCache();
 
         //Fetch or create
@@ -139,7 +141,8 @@ public static class FakePropertyCache
         //Watch property
         if (watchedFloats.Add(prop))
             player.SendMessage($"Added {prop} to cache: {value}");
-
+        watch.Stop();
+        player.SendMessage($"Fetched in {watch.ElapsedTicks} ticks / {watch.ElapsedMilliseconds} ms.");
         return value;
     }
     private static Dictionary<FakeFloat, double> GetOrCreateFloatCache(this Player player)
@@ -187,37 +190,6 @@ public static class FakePropertyCache
     }
     public static int EquipmentBonus(this Player player, FakeInt prop) => player.EquippedObjects.Select(x => x.Value.GetProperty(prop)).Where(x => x.HasValue).Sum() ?? 0;
     #endregion
-    //#region Int64 Cache/Helpers
-    //static readonly HashSet<FakeInt64> watchedInt64s = new();
-    //static readonly Dictionary<Player, Dictionary<FakeInt64, long>> cachedInt64s = new();
-    //public static long GetCachedFake(this Player player, FakeInt64 prop)
-    //{
-    //    var cache = player.GetOrCreateInt64Cache();
-
-    //    //Fetch or create
-    //    if (!cache.TryGetValue(prop, out var value))
-    //        value = player.EquipmentBonus(prop);
-
-    //    //Watch property
-    //    if (watchedInt64s.Add(prop))
-    //        player.SendMessage($"Added {prop} to cache: {value}");
-
-    //    return value;
-    //}
-    //private static Dictionary<FakeInt64, long> GetOrCreateInt64Cache(this Player player)
-    //{
-    //    if (!cachedInt64s.TryGetValue(player, out var cache))
-    //    {
-    //        cache = new();
-    //        cachedInt64s.Add(player, cache);
-
-    //        player.SendMessage($"Created cache.");
-    //    }
-
-    //    return cache;
-    //}
-    //public static long EquipmentBonus(this Player player, FakeInt64 prop) => player.EquippedObjects.Select(x => x.Value.GetProperty(prop)).Where(x => x.HasValue).Sum() ?? 0;
-    //#endregion
 
     #region Commands / Dumps -- /ecXX
     [CommandHandler("ecdw", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]

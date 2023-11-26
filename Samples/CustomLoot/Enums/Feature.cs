@@ -25,5 +25,6 @@ public enum Feature
     FakeAttributes,
     FakeReflection,
     FakeSpellReflection,
+    FakeDurability,
 }
 

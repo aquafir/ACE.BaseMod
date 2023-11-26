@@ -93,6 +93,8 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 
 ### Todo
 
+* EquipmentCache caps
+* Need to use [different collections](https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/data-structures-for-parallel-programming) for parallel support?
 * Check mutations compatibility
 * ~~ArrayOf for pools for constant time sampling?~~
 * If ACE ever goes .NET >7 should switch to polymorphic serialization 
@@ -111,11 +113,14 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 * skill trained/under
 * import spell split
 * cleave
-* aura + kdtree
+* kdtree
+  * aura
+  * transfer falling damage if close enough
 * steal->alt curr
 * spell ref
 * refl non-spell
 * rage
+  * Low health / Low stam / low mana
 * combo over x pow/acc/lvl
 * combo same target
 * shield flat/per
@@ -123,3 +128,4 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 * durability
 * Sets.  Finds spells in `DatManager.PortalDat.SpellTable.SpellSet`
   * * Combined item levels in a sorted dictionary for `SpellSetTiers` list of spells
+* 

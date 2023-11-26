@@ -17,7 +17,7 @@ public static class FakeCombo
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(Creature), "Die", new Type[] { typeof(DamageHistoryInfo), typeof(DamageHistoryInfo) })]
+    [HarmonyPatch(typeof(Creature), nameof(Creature.Die), new Type[] { typeof(DamageHistoryInfo), typeof(DamageHistoryInfo) })]
     public static void PostDie(DamageHistoryInfo lastDamager, DamageHistoryInfo topDamager, ref Creature __instance)
     {
         if (!lastDamager.IsPlayer || lastDamager.TryGetPetOwnerOrAttacker() is not Player player)
