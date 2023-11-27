@@ -5,11 +5,7 @@ public class Settings
     public bool Verbose { get; set; } = false;
 
     #region Features / Mutators
-    public List<Feature> Features { get; set; } =
-        new()
-        {
-            Feature.CorpseInfo, Feature.FakePropertyCache,
-        };
+    public List<Feature> Features { get; set; } = new() { Feature.CorpseInfo, Feature.FakePropertyCache, };
         //Full set
         //Enum.GetValues<Feature>().ToList();
     public List<MutatorSettings> Mutators { get; set; } =
@@ -24,13 +20,13 @@ public class Settings
             Odds = nameof(OddsGroup.Always),
             TreasureTargets = nameof(TargetGroup.Weapon),
             },
-
         };
     //Full set
     //Enum.GetValues<Mutation>()
-    //.Select(x => new MutatorSettings(x) {
+    //.Select(x => new MutatorSettings(x)
+    //{
     //    Odds = x.DefaultOdds(),
-    //    Targets = x.DefaultTargets()
+    //    TreasureTargets = x.DefaultTargets()
     //}).ToList();
     #endregion
 
@@ -119,7 +115,7 @@ public class Settings
     };
     public Dictionary<string, WeenieType[]> WeenieTypeGroups { get; set; } = new()
     {
-        [nameof(WeenieTypeGroup.Placeholder)] = WeenieTypeGroup.Placeholder.SetOf(),
+        [nameof(WeenieTypeGroup.Container)] = WeenieTypeGroup.Container.SetOf(),
     };
     //Full pools defined in enum helpers or it can be done explicitly like TargetGroups
     public Dictionary<string, CreatureType[]> CreatureTypeGroups { get; set; } = Enum.GetValues<CreatureTypeGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());

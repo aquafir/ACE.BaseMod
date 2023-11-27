@@ -46,13 +46,13 @@ public static class MutatorHelpers
             Debugger.Break();
             throw new Exception();
         }
-        
+
         mutator.Event = settings.Events;
 
         //Nullable odds?
-        mutator.TreasureTargets = S.Settings.TargetGroups.TryGetValue(settings.TreasureTargets, out var treasureTargets) ? treasureTargets.ToHashSet() : null;
-        mutator.WeenieTypeTargets = S.Settings.WeenieTypeGroups.TryGetValue(settings.WeenieTypeTargets, out var weenieTargets) ? weenieTargets.ToHashSet() : null;
-        mutator.Odds = S.Settings.Odds.TryGetValue(settings.Odds, out var mutatorOdds) ? mutatorOdds : null;
+        mutator.TreasureTargets = S.Settings.TargetGroups.TryGetValue(settings.TreasureTargets ?? "", out var treasureTargets) ? treasureTargets.ToHashSet() : null;
+        mutator.WeenieTypeTargets = S.Settings.WeenieTypeGroups.TryGetValue(settings.WeenieTypeTargets ?? "", out var weenieTargets) ? weenieTargets.ToHashSet() : null;
+        mutator.Odds = S.Settings.Odds.TryGetValue(settings.Odds ?? "", out var mutatorOdds) ? mutatorOdds : null;
 
         ModManager.Log($"{mutator.TreasureTargets is null} - {mutator.WeenieTypeTargets is null} - {mutator.Odds is null}");
 

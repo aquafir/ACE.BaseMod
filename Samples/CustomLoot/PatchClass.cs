@@ -3,6 +3,7 @@ using ACE.Server.Command;
 using ACE.Server.Factories.Entity;
 using ACE.Server.Network;
 using ACE.Server.WorldObjects;
+using CustomLoot.Enums;
 using HarmonyLib;
 using System.Text;
 
@@ -207,8 +208,9 @@ public class PatchClass
     public static void PostGenerateTreasure(DamageHistoryInfo killer, Corpse corpse, ref Creature __instance, ref List<WorldObject> __result)
     {
         //Todo: look at skipping based on container
-        //Loop through each item
-        foreach (var item in __result)
+        //!!DROPPED ITEMS in __result, the rest are moved to corpse?!!
+        //foreach (var item in __result)
+        foreach (var item in corpse.Inventory.Values)
         {
             //Keeps track of what mutations have been applied
             HashSet<Mutation> mutations = new();

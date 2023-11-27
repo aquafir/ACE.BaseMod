@@ -1,10 +1,12 @@
 ﻿//using ACE.Adapter.GDLE.Models;
 using System.Runtime.Serialization.Formatters.Binary;
 using ACE.DatLoader.Entity;
-using Newtonsoft.Json;
 using ACE.Common.Extensions;
+using System.Text;
+using ACE.DatLoader;
+using ACE.Server.Network;
 
-namespace Spells;
+namespace CustomLoot.Helpers;
 
 public static class SpellHelper
 {
@@ -24,7 +26,7 @@ public static class SpellHelper
 
     public static bool TryInitializeSpellGroups()
     {
-        if (!File.Exists(SpellsPatchClass.Settings.PortalDatPath))
+        if (!File.Exists(S.Settings.PortalDatPath))
         {
             ModManager.Log($"Unable to create spell groups.  Missing portal dat.");
             return false;
@@ -39,7 +41,7 @@ public static class SpellHelper
         try
         {
             //Load comparable map
-            if (File.Exists(_groupPath) && SpellsPatchClass.Settings.LastGenerated == SpellsPatchClass.Settings.GroupType)
+            if (File.Exists(_groupPath) && S.Settings.LastGenerated == S.Settings.GroupType)
             {
                 //Skip header, tab-separated list
                 foreach (var line in File.ReadAllLines(_groupPath).Skip(1).Select(x => x.Split(CD)))
@@ -78,8 +80,8 @@ public static class SpellHelper
 
                 File.WriteAllText(_groupPath, output.ToString());
 
-                SpellsPatchClass.Settings.LastGenerated = SpellsPatchClass.Settings.GroupType;
-                SpellsPatchClass.SaveSettings();
+                S.Settings.LastGenerated = S.Settings.GroupType;
+                S.SaveSettings();
             }
         }
         catch (Exception ex)
@@ -93,9 +95,9 @@ public static class SpellHelper
 
     private static void CreateComparableSpellGroups()
     {
-        var portalDat = new PortalDatDatabase(SpellsPatchClass.Settings.PortalDatPath, false);
+        var portalDat = new PortalDatDatabase(S.Settings.PortalDatPath, false);
 
-        var spells = !SpellsPatchClass.Settings.OnlyPlayerSpells ?
+        var spells = !S.Settings.OnlyPlayerSpells ?
             portalDat.SpellTable.Spells :
             //Restrict SpellTable to player spells.  PlayerSpellTable is sorted for binary search
             portalDat.SpellTable.Spells.Where(c => Array.BinarySearch(Player.PlayerSpellTable, c.Key) >= 0);
@@ -127,7 +129,7 @@ public static class SpellHelper
         portalDat = null;
 
         #region Group Dump
-        if (!SpellsPatchClass.Settings.DumpSpellGroups)
+        if (!S.Settings.DumpSpellGroups)
             return;
 
         var watch = new System.Diagnostics.Stopwatch();
@@ -150,7 +152,7 @@ public static class SpellHelper
 
     private static void CreateRelatedSpellGroups()
     {
-        var portalDat = new PortalDatDatabase(SpellsPatchClass.Settings.PortalDatPath, false);
+        var portalDat = new PortalDatDatabase(S.Settings.PortalDatPath, false);
             
         //var spells = !PatchClass.Settings.OnlyPlayerSpells ?
         //    portalDat.SpellTable.Spells :
@@ -203,7 +205,7 @@ public static class SpellHelper
         portalDat = null;
 
         #region Group Dump
-        if (!SpellsPatchClass.Settings.DumpSpellGroups)
+        if (!S.Settings.DumpSpellGroups)
             return;
 
         var watch = new System.Diagnostics.Stopwatch();
@@ -435,19 +437,19 @@ public static class SpellHelper
     /// <typeparam name="T">The type of object being copied.</typeparam>
     /// <param name="source">The object instance to copy.</param>
     /// <returns>The copied object.</returns>
-    public static T CloneJson<T>(this T source)
-    {
-        // Don't serialize a null object, simply return the default for that object
-        if (ReferenceEquals(source, null)) return default;
+    //public static T CloneJson<T>(this T source)
+    //{
+    //    // Don't serialize a null object, simply return the default for that object
+    //    if (ReferenceEquals(source, null)) return default;
 
-        // initialize inner objects individually
-        // for example in default constructor some list property initialized with some values,
-        // but in 'source' these items are cleaned -
-        // without ObjectCreationHandling.Replace default constructor values will be added to result
-        var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };
+    //    // initialize inner objects individually
+    //    // for example in default constructor some list property initialized with some values,
+    //    // but in 'source' these items are cleaned -
+    //    // without ObjectCreationHandling.Replace default constructor values will be added to result
+    //    var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };
 
-        return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), deserializeSettings);
-    }
+    //    return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), deserializeSettings);
+    //}
 
     public static T Clone<T>(this T source) //where T : ISerializable
     {

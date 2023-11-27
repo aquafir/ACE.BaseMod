@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Spells
+namespace CustomLoot.Helpers
 {
     public static class SplashHelper
     {

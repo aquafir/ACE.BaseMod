@@ -70,7 +70,8 @@ public enum FakeInt
 }
 public enum FakeInt64
 {
-    Placeholder = 10000
+    Placeholder = 10000,
+    Pyreals = 10001
 }
 public enum FakeString
 {

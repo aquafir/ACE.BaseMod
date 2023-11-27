@@ -47,9 +47,6 @@ public class CorpseInfo
         corpse.SetProperty(FakeDID.CorpseLandblockId, __instance.CurrentLandblock.Id.Raw);
         corpse.SetProperty(FakeBool.CorpseSpawnedDungeon, __instance.CurrentLandblock.IsDungeon);
 
-        var l = corpse.GetProperty(FakeBool.CorpseSpawnedDungeon);
-        Debugger.Break();
-
 
 
 
