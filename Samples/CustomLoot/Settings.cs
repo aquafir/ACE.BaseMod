@@ -102,6 +102,8 @@ public class Settings
     #endregion
     #endregion
 
+    public SpellSettings SpellSettings { get; set; } = new();
+
     #region Pools (e.g., Odds / Targets / Sets / Spell IDs / Species)
     //For convenience.  People can make their own
     public Dictionary<string, Odds> Odds { get; set; } = Enum.GetValues<OddsGroup>().ToDictionary(x => x.ToString(), x => x.OddsOf());

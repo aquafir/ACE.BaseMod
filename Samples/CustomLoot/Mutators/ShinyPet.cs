@@ -8,7 +8,7 @@ namespace CustomLoot.Mutators;
 public class ShinyPet : Mutator
 {
 
-    public override bool MutatesLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item = null)
+    public override bool CheckMutatesLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item = null)
     {
         return roll.ItemType == TreasureItemType_Orig.PetDevice;
     }

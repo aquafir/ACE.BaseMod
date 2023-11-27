@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace CustomLoot;
+﻿namespace CustomLoot;
 
 /// <summary>
 /// Patch settings are used to serialized patches

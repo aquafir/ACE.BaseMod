@@ -1,43 +1,50 @@
 ﻿
 
+using CustomLoot.Helpers;
+
 namespace CustomLoot.Mutators;
 internal class LocationLocked : Mutator
 {
-    //public override bool MutatesCorpse(HashSet<Mutation> mutations, Creature creature = null, DamageHistoryInfo killer = null, Corpse corpse = null, WorldObject item = null)
-    //{
-    //    //Relies on CorpseInfo - Check dungeon first?
-    //    var lb = item.GetProperty(FakeBool.CorpseSpawnedDungeon);
-    //    if (!(item.GetProperty(FakeBool.CorpseSpawnedDungeon) ?? false))
-    //        return false;
-
-    //    return base.MutatesLoot(mutations, profile, roll, item);
-    //}
-
-    public override bool MutatesGenerator(HashSet<Mutation> mutations, GeneratorProfile profile = null, WorldObject item = null)
+    //Corpse/Generators check landblock and other relevant things first to skip collection evaluation
+    public override bool CanMutateGenerator(GeneratorProfile profile)
     {
-        if (profile.RegenLocationType != RegenLocationType.Treasure)
+        if (profile is null)
             return false;
 
-        return base.MutatesGenerator(mutations, profile, item);
+        if (!profile.Generator.CurrentLandblock.IsDungeon)
+            return false;
+
+        //Must be a treasure
+        if (!profile.RegenLocationType.HasAny(RegenLocationType.Treasure))
+            return false;
+
+        return base.CanMutateGenerator(profile);
+    }
+    public override bool CanMutateCorpse(DamageHistoryInfo killer, Corpse corpse, Creature creature)
+    {
+        if (creature is null)
+            return false;
+
+        if (!creature.CurrentLandblock.IsDungeon)
+            return false;
+
+        if (!killer.IsPlayer)
+            return false;
+
+        return base.CanMutateCorpse(killer, corpse, creature);
     }
 
     public override bool TryMutateCorpse(HashSet<Mutation> mutations, Creature creature, DamageHistoryInfo killer, Corpse corpse, WorldObject item)
     {
         return TryMutate(mutations, item, creature.CurrentLandblock);
     }
-
     public override bool TryMutateGenerator(HashSet<Mutation> mutations, GeneratorProfile generator, WorldObject item)
     {
-        Debugger.Break();
-
         return TryMutate(mutations, item, generator.Generator.CurrentLandblock);
     }
 
     public bool TryMutate(HashSet<Mutation> mutations, WorldObject item, Landblock lb)
     {
-        if (lb is null)// || !lb.IsDungeon)
-            return false;
-
         var id = lb.Id.Raw;
         item.SetProperty(FakeDID.LocationLockId, id);
 

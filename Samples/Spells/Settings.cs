@@ -51,6 +51,5 @@
         /// Related spells have similar targets and schools
         /// </summary>
         Related = R,
-
     }
 }

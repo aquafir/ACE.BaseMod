@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using CustomLoot.Helpers;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CustomLoot.Features;
 
@@ -30,7 +27,7 @@ internal class AutoLoot
         var total = amount + player.GetProperty(FakeInt64.Pyreals).GetValueOrDefault();
         player.SetProperty(FakeInt64.Pyreals, total);
 
-        var casters = corpse.Inventory.Values.Where(x => (x.ItemType & (ItemType.WeaponOrCaster | ItemType.Jewelry | ItemType.Clothing)) > 0);
+        var casters = corpse.Inventory.Values.Where(x => x.ItemType.HasAny(ItemType.WeaponOrCaster | ItemType.Jewelry | ItemType.Clothing));
         foreach (var item in casters)
         {
             //player.TryAdd
@@ -50,4 +47,21 @@ internal class AutoLoot
         player.SendMessage(sb.ToString());
 
     }
+
+
+
+
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.Generator_Generate))]
+    public static bool PreGenerator_Generate(ref WorldObject __instance)
+    {
+        //Return false to override
+        //return false;
+//        Debugger.Break();
+
+        //Return true to execute original
+        return true;
+    }
+
 }

@@ -1,5 +1,4 @@
 ﻿using ACE.Server.Command;
-using ACE.Server.Managers;
 using ACE.Server.Network;
 
 namespace CustomLoot.Features;
@@ -11,7 +10,6 @@ internal class FakeEquipRestriction
     [HarmonyPatch(typeof(Player), nameof(Player.CheckWieldRequirements), new Type[] { typeof(WorldObject) })]
     public static bool PreCheckWieldRequirements(WorldObject item, ref Player __instance, ref WeenieError __result)
     {
-        Debugger.Break();
         if (!__instance.CurrentLandblock.IsDungeon)
             return true;
 
@@ -36,9 +34,7 @@ internal class FakeEquipRestriction
     [CommandHandler("t1", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
     public static void T(Session session, params string[] parameters)
     {
-        var player = session.Player;
-
-        
+        var player = session.Player;      
 
         player.SendMessage(player.CurrentLandblock.IsDungeon.ToString());
     }

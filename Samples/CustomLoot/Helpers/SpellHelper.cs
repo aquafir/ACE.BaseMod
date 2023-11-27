@@ -26,7 +26,7 @@ public static class SpellHelper
 
     public static bool TryInitializeSpellGroups()
     {
-        if (!File.Exists(S.Settings.PortalDatPath))
+        if (!File.Exists(S.Settings.SpellSettings.PortalDatPath))
         {
             ModManager.Log($"Unable to create spell groups.  Missing portal dat.");
             return false;
@@ -41,7 +41,7 @@ public static class SpellHelper
         try
         {
             //Load comparable map
-            if (File.Exists(_groupPath) && S.Settings.LastGenerated == S.Settings.GroupType)
+            if (File.Exists(_groupPath) && S.Settings.SpellSettings.LastGenerated == S.Settings.SpellSettings.GroupType)
             {
                 //Skip header, tab-separated list
                 foreach (var line in File.ReadAllLines(_groupPath).Skip(1).Select(x => x.Split(CD)))
@@ -80,7 +80,7 @@ public static class SpellHelper
 
                 File.WriteAllText(_groupPath, output.ToString());
 
-                S.Settings.LastGenerated = S.Settings.GroupType;
+                S.Settings.SpellSettings.LastGenerated = S.Settings.SpellSettings.GroupType;
                 S.SaveSettings();
             }
         }
@@ -95,9 +95,9 @@ public static class SpellHelper
 
     private static void CreateComparableSpellGroups()
     {
-        var portalDat = new PortalDatDatabase(S.Settings.PortalDatPath, false);
+        var portalDat = new PortalDatDatabase(S.Settings.SpellSettings.PortalDatPath, false);
 
-        var spells = !S.Settings.OnlyPlayerSpells ?
+        var spells = !S.Settings.SpellSettings.OnlyPlayerSpells ?
             portalDat.SpellTable.Spells :
             //Restrict SpellTable to player spells.  PlayerSpellTable is sorted for binary search
             portalDat.SpellTable.Spells.Where(c => Array.BinarySearch(Player.PlayerSpellTable, c.Key) >= 0);
@@ -129,7 +129,7 @@ public static class SpellHelper
         portalDat = null;
 
         #region Group Dump
-        if (!S.Settings.DumpSpellGroups)
+        if (!S.Settings.SpellSettings.DumpSpellGroups)
             return;
 
         var watch = new System.Diagnostics.Stopwatch();
@@ -152,9 +152,9 @@ public static class SpellHelper
 
     private static void CreateRelatedSpellGroups()
     {
-        var portalDat = new PortalDatDatabase(S.Settings.PortalDatPath, false);
+        var portalDat = new PortalDatDatabase(S.Settings.SpellSettings.PortalDatPath, false);
             
-        //var spells = !PatchClass.Settings.OnlyPlayerSpells ?
+        //var spells = !PatchClass.Settings.SpellSettings.OnlyPlayerSpells ?
         //    portalDat.SpellTable.Spells :
         //    //Restrict SpellTable to player spells.  PlayerSpellTable is sorted for binary search
         //    portalDat.SpellTable.Spells.Where(c => Array.BinarySearch(Player.PlayerSpellTable, c.Key) >= 0);
@@ -205,7 +205,7 @@ public static class SpellHelper
         portalDat = null;
 
         #region Group Dump
-        if (!S.Settings.DumpSpellGroups)
+        if (!S.Settings.SpellSettings.DumpSpellGroups)
             return;
 
         var watch = new System.Diagnostics.Stopwatch();

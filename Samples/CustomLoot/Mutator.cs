@@ -12,46 +12,30 @@ public abstract class Mutator
     public HashSet<WeenieType> WeenieTypeTargets { get; set; } = new();
     public Odds? Odds { get; set; }
 
-    public bool IsLootMutator => Event.HasFlag(MutationEvent.Loot);
-    public bool IsCorpseMutator => Event.HasFlag(MutationEvent.Corpse);
-    public bool IsGeneratorMutator => Event.HasFlag(MutationEvent.Generator);
 
     /// <summary>
-    /// Checks for valid target using TargetTypes and successful roll using Odds
+    /// Standard checks for valid target using WeenieTypes and successful roll using Odds
     /// </summary>
-    public virtual bool MutatesLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item = null)
+    public virtual bool CheckMutates(WorldObject item, int tier = 0)
+    {
+        if (!CheckWeenieTypeTargets(item))
+            return false;
+
+        //Roll should be last to avoid inefficiency?
+        return CheckRoll(tier);
+    }
+    /// <summary>
+    /// Checks TreasureTargets in addition to WeenieTypes and Tier roll
+    /// </summary>
+    public virtual bool CheckMutatesLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item = null)
     {
         //Check types
-        if (!ValidTreasureTargets(roll))
+        if (!CheckTreasureTargets(roll))
             return false;
 
-        if (!ValidWeenieTypeTargets(item))
-            return false;
-
-        return TryRoll(profile.Tier);
+        return CheckMutates(item, profile.Tier);
     }
-    public virtual bool MutatesCorpse(HashSet<Mutation> mutations, Creature creature = null, DamageHistoryInfo killer = null, Corpse corpse = null, WorldObject item = null)
-    {
-        if (!ValidWeenieTypeTargets(item))
-            return false;
-
-        return TryRoll();
-    }
-    public virtual bool MutatesGenerator(HashSet<Mutation> mutations, GeneratorProfile profile = null, WorldObject item = null)
-    {
-        if (!ValidWeenieTypeTargets(item))
-            return false;
-
-        //Check odds
-        return TryRoll();
-    }
-
-    //Todo: decide on throwing an error on fail?
-    public virtual bool TryMutateLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item) => false;
-    public virtual bool TryMutateCorpse(HashSet<Mutation> mutations, Creature creature, DamageHistoryInfo killer, Corpse corpse, WorldObject item) => false;
-    public virtual bool TryMutateGenerator(HashSet<Mutation> mutations, GeneratorProfile generator, WorldObject item) => false;
-    //Validation of what's available
-    private bool ValidTreasureTargets(TreasureRoll roll)
+    protected bool CheckTreasureTargets(TreasureRoll roll)
     {
         if (TreasureTargets is null)
             return true;
@@ -61,7 +45,7 @@ public abstract class Mutator
 
         return true;
     }
-    private bool ValidWeenieTypeTargets(WorldObject wo)
+    protected bool CheckWeenieTypeTargets(WorldObject wo)
     {
         if (WeenieTypeTargets is null)
             return true;
@@ -71,7 +55,7 @@ public abstract class Mutator
 
         return true;
     }
-    private bool TryRoll(int tier = 0)
+    protected bool CheckRoll(int tier = 0)
     {
         //Check odds
         if (Odds is null)
@@ -86,6 +70,23 @@ public abstract class Mutator
 
         return true;
     }
+
+    #region Collection checks to terminate early
+    //Check collection to terminate early
+    /// <summary>
+    /// Stops evaluating Corpse if fails
+    /// </summary>
+    public virtual bool CanMutateCorpse(DamageHistoryInfo killer = null, Corpse corpse = null, Creature creature = null) => true;
+    /// <summary>
+    /// Stops evaluating Generator if fails
+    /// </summary>
+    public virtual bool CanMutateGenerator(GeneratorProfile profile = null) => true;
+    #endregion
+
+    //Todo: decide on throwing an error on fail?
+    public virtual bool TryMutateLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item) => false;
+    public virtual bool TryMutateCorpse(HashSet<Mutation> mutations, Creature creature, DamageHistoryInfo killer, Corpse corpse, WorldObject item) => false;
+    public virtual bool TryMutateGenerator(HashSet<Mutation> mutations, GeneratorProfile generator, WorldObject item) => false;
 
     #region Start/Stop - Placeholders for now
     public virtual void Start()

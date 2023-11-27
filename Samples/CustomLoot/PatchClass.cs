@@ -1,11 +1,6 @@
-﻿using ACE.Database.Models.World;
-using ACE.Server.Command;
-using ACE.Server.Factories.Entity;
-using ACE.Server.Network;
-using ACE.Server.WorldObjects;
-using CustomLoot.Enums;
-using HarmonyLib;
-using System.Text;
+﻿using ACE.Server.Entity.Mutations;
+using Microsoft.Cci.Pdb;
+
 
 namespace CustomLoot;
 
@@ -29,7 +24,7 @@ public class PatchClass
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     };
 
-    private static void SaveSettings()
+    public static void SaveSettings()
     {
         string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
 
@@ -40,7 +35,7 @@ public class PatchClass
         }
     }
 
-    private static void LoadSettings()
+    public static void LoadSettings()
     {
         if (!settingsInfo.Exists)
         {
@@ -76,6 +71,9 @@ public class PatchClass
         Mod.State = ModState.Loading;
 
         LoadSettings();
+
+        if (!SpellHelper.TryInitializeSpellGroups())
+            Mod.State = ModState.Error;
 
         if (Mod.State == ModState.Error)
         {
@@ -132,11 +130,11 @@ public class PatchClass
                 mutator.Start();
 
                 //enabledPatches.Add(mutator);
-                if (mutator.IsLootMutator)
+                if (mutator.Event.HasFlag(MutationEvent.Loot))
                     mutators[MutationEvent.Loot].Add(mutator);
-                if (mutator.IsCorpseMutator)
+                if (mutator.Event.HasFlag(MutationEvent.Corpse))
                     mutators[MutationEvent.Corpse].Add(mutator);
-                if (mutator.IsGeneratorMutator)
+                if (mutator.Event.HasFlag(MutationEvent.Generator))
                     mutators[MutationEvent.Generator].Add(mutator);
 
 
@@ -173,7 +171,7 @@ public class PatchClass
     }
 
     /// <summary>
-    /// Entry point for mutation.  After loot is generated it is passed to mutators to try to change
+    /// After any loot is generated
     /// </summary>
     [HarmonyPostfix]
     [HarmonyPatch(typeof(LootGenerationFactory), nameof(LootGenerationFactory.CreateAndMutateWcid), new Type[] { typeof(TreasureDeath), typeof(TreasureRoll), typeof(bool) })]
@@ -186,8 +184,8 @@ public class PatchClass
 
         foreach (var mutator in mutators[MutationEvent.Loot])
         {
-            //Check for elligible item type
-            if (!mutator.MutatesLoot(mutations, treasureDeath, treasureRoll, __result))
+            //Check for elligible item type along with standard check
+            if (!mutator.CheckMutatesLoot(mutations, treasureDeath, treasureRoll, __result))
                 continue;
 
             //If an item was mutated add the type
@@ -205,9 +203,11 @@ public class PatchClass
     /// </summary>
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Creature), nameof(Creature.GenerateTreasure), new Type[] { typeof(DamageHistoryInfo), typeof(Corpse) })]
-    public static void PostGenerateTreasure(DamageHistoryInfo killer, Corpse corpse, ref Creature __instance, ref List<WorldObject> __result)
+    public static void PostGenerateTreasure(DamageHistoryInfo killer, Corpse corpse, Creature __instance, ref List<WorldObject> __result)
     {
-        //Todo: look at skipping based on container
+        var validMutators = mutators[MutationEvent.Corpse].Where(x => x.CanMutateCorpse(killer, corpse, __instance));
+        if (validMutators.Count() == 0) return;
+
         //!!DROPPED ITEMS in __result, the rest are moved to corpse?!!
         //foreach (var item in __result)
         foreach (var item in corpse.Inventory.Values)
@@ -215,9 +215,10 @@ public class PatchClass
             //Keeps track of what mutations have been applied
             HashSet<Mutation> mutations = new();
 
-            foreach (var mutator in mutators[MutationEvent.Corpse])
+            foreach (var mutator in validMutators)
             {
-                if (!mutator.MutatesCorpse(mutations, __instance, killer, corpse, item))
+                //Standard checks
+                if (!mutator.CheckMutates(item))
                     continue;
 
                 //If an item was mutated add the type
@@ -235,18 +236,21 @@ public class PatchClass
     /// </summary>
     [HarmonyPostfix]
     [HarmonyPatch(typeof(GeneratorProfile), nameof(GeneratorProfile.TreasureGenerator))]
-    public static void PostTreasureGenerator(ref GeneratorProfile __instance, ref List<WorldObject> __result)
+    public static void PostTreasureGenerator(GeneratorProfile __instance, ref List<WorldObject> __result)
     {
-        //Todo: look at skipping based on container
+        var validMutators = mutators[MutationEvent.Generator].Where(x => x.CanMutateGenerator(__instance));
+        if (validMutators.Count() == 0) return;
+
         //Loop through each item
         foreach (var item in __result)
         {
             //Keeps track of what mutations have been applied
             HashSet<Mutation> mutations = new();
 
-            foreach (var mutator in mutators[MutationEvent.Generator])
+            foreach (var mutator in validMutators)
             {
-                if (!mutator.MutatesGenerator(mutations, __instance, item))
+                //Standard checks
+                if (!mutator.CheckMutates(item))
                     continue;
 
                 //If an item was mutated add the type
@@ -258,4 +262,12 @@ public class PatchClass
             }
         }
     }
+
+
+    //[HarmonyPostfix]
+    //[HarmonyPatch(typeof(WorldObject), nameof(WorldObject.Generator_Generate))]
+    //public static void PostGenerator_Generate(ref WorldObject __instance)
+    //{
+    //    //Your code here
+    //}
 }
