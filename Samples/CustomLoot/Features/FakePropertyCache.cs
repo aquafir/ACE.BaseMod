@@ -19,9 +19,7 @@ public static class FakePropertyCache
         {
             player.UpdateEquipmentCache();
             //UpdateItem(player, wo, true);
-#if DEBUG
-            player.SendMessage($"\nEquipped {wo.Name}:\n{wo.DumpItem()}"); 
-#endif
+            //player.SendMessage($"\nEquipped {wo.Name}:\n{wo.DumpItem()}"); 
         }
     }
 
@@ -33,9 +31,7 @@ public static class FakePropertyCache
         {
             player.UpdateEquipmentCache();
             //UpdateItem(player, wo, true);
-#if DEBUG
-            player.SendMessage($"\nUnequipped {wo.Name}:\n{wo.DumpItem()}"); 
-#endif
+            //player.SendMessage($"\nUnequipped {wo.Name}:\n{wo.DumpItem()}"); 
         }
     }
 
@@ -80,6 +76,33 @@ public static class FakePropertyCache
 
         foreach (var item in player.EquippedObjects.Values)
             player.UpdateItem(item);
+
+        //Clamp after or during?
+        foreach(var watched in watchedFloats)
+        {
+            if (S.Settings.BonusCaps.MinFloat.TryGetValue(watched, out var min) &&
+                floatCache.TryGetValue(watched, out var value)){
+                player.SendMessage($"min {watched} from {value} to {min}");
+                floatCache[watched] = Math.Max(value, min);
+            }
+
+            if (S.Settings.BonusCaps.MaxFloat.TryGetValue(watched, out var max) &&
+                floatCache.TryGetValue(watched, out value))
+            {
+                player.SendMessage($"Max {watched} from {value} to {max}");
+                floatCache[watched] = Math.Min(value, max);
+            }
+        }
+        foreach (var watched in watchedInts)
+        {
+            if (S.Settings.BonusCaps.MinInt.TryGetValue(watched, out var min) &&
+                intCache.TryGetValue(watched, out var value))
+                intCache[watched] = Math.Max(value, min);
+
+            if (S.Settings.BonusCaps.MaxInt.TryGetValue(watched, out var max) &&
+                intCache.TryGetValue(watched, out value))
+                intCache[watched] = Math.Min(value, max);
+        }
     }
     //todo
     public static void UpdateItem(this Player player, WorldObject item, bool equipping = true)
@@ -131,18 +154,24 @@ public static class FakePropertyCache
     static readonly Dictionary<Player, Dictionary<FakeFloat, double>> cachedFloats = new();
     public static double GetCachedFake(this Player player, FakeFloat prop)
     {
-        var watch = Stopwatch.StartNew();
+        //var watch = Stopwatch.StartNew();
         var cache = player.GetOrCreateFloatCache();
 
         //Fetch or create
         if (!cache.TryGetValue(prop, out var value))
-            value = player.EquipmentBonus(prop);
+        {
+            //value = player.EquipmentBonus(prop);
+            //Update and try again
+            UpdateEquipmentCache(player);
+            value = cache.TryGetValue(prop, out value) ? value : 0;
+        }
 
-        //Watch property
-        if (watchedFloats.Add(prop))
+            //Watch property
+            if (watchedFloats.Add(prop))
             player.SendMessage($"Added {prop} to cache: {value}");
-        watch.Stop();
-        player.SendMessage($"Fetched in {watch.ElapsedTicks} ticks / {watch.ElapsedMilliseconds} ms.");
+        
+        //watch.Stop();
+        //player.SendMessage($"Fetched in {watch.ElapsedTicks} ticks / {watch.ElapsedMilliseconds} ms.");
         return value;
     }
     private static Dictionary<FakeFloat, double> GetOrCreateFloatCache(this Player player)
@@ -157,7 +186,7 @@ public static class FakePropertyCache
 
         return cache;
     }
-    public static double EquipmentBonus(this Player player, FakeFloat prop) => player.EquippedObjects.Select(x => x.Value.GetProperty(prop)).Where(x => x.HasValue).Sum() ?? 0;
+    //public static double EquipmentBonus(this Player player, FakeFloat prop) => player.EquippedObjects.Select(x => x.Value.GetProperty(prop)).Where(x => x.HasValue).Sum() ?? 0;
     #endregion
     #region Int Cache/Helpers
     static readonly HashSet<FakeInt> watchedInts = new();
@@ -168,7 +197,12 @@ public static class FakePropertyCache
 
         //Fetch or create
         if (!cache.TryGetValue(prop, out var value))
-            value = player.EquipmentBonus(prop);
+        {
+            //value = player.EquipmentBonus(prop);
+            //Update and try again
+            UpdateEquipmentCache(player);
+            value = cache.TryGetValue(prop, out value) ? value : 0;
+        }
 
         //Watch property
         if (watchedInts.Add(prop))
@@ -188,7 +222,7 @@ public static class FakePropertyCache
 
         return cache;
     }
-    public static int EquipmentBonus(this Player player, FakeInt prop) => player.EquippedObjects.Select(x => x.Value.GetProperty(prop)).Where(x => x.HasValue).Sum() ?? 0;
+    //public static int EquipmentBonus(this Player player, FakeInt prop) => player.EquippedObjects.Select(x => x.Value.GetProperty(prop)).Where(x => x.HasValue).Sum() ?? 0;
     #endregion
 
     #region Commands / Dumps -- /ecXX
@@ -288,7 +322,6 @@ public static class FakePropertyCache
     {
         var floatCache = player.GetOrCreateFloatCache();
         var intCache = player.GetOrCreateIntCache();
-        Debugger.Break();
         //For each prop in a list, get each value in a dictionary
         var dump = new StringBuilder();
         dump.Append(floatCache.DumpPlayerPropertyCache());

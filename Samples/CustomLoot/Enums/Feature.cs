@@ -28,5 +28,6 @@ public enum Feature
     FakeEquipRestriction,
     AutoLoot,
     FakeSplash,
+    FakeSpellSplitSplash,
 }
 

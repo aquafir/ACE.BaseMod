@@ -30,8 +30,6 @@ public static class SummonCreatureAsPet
         wo.RadarBehavior = RadarBehavior.ShowAlways;
         wo.RadarColor = RadarColor.Blue;
 
-        //wo.
-
         if (wo == null)
             GuidManager.RecycleDynamicGuid(guid);
 

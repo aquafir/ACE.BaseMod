@@ -31,15 +31,13 @@ public class SpellSettings
     [JsonIgnore]
     public uint TotalBuckets => FistBuckets * 3;            //One for each heights
 
-    public bool SpellsSplash { get; set; } = true;
     public int SplashCount { get; set; } = 3;
     public float SplashRange { get; set; } = 5.0f;
-    public TimeSpan SplashCooldown { get; set; } = TimeSpan.FromSeconds(5);
+    public float SplashCooldown { get; set; } = 5;
 
-    public bool SplitSpells { get; set; } = true;
     public int SplitCount { get; set; } = 5;
     public float SplitRange { get; set; } = 35.0f;
-    public TimeSpan SplitCooldown { get; set; } = TimeSpan.FromSeconds(2);
+    public float SplitCooldown { get; set; } = 10;
 
     public bool MetaEnabled { get; set; } = true;
     public double MetaScale { get; set; } = 1;

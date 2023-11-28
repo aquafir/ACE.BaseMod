@@ -33,6 +33,12 @@ public enum FakeFloat
     ItemReflectSpellChance = 10018,
     ItemXpBoost = 10019,
     ItemLuminanceBoost = 10020,
+    TimestampLastSpellSplash = 10021,
+    TimestampLastSpellSplit = 10022,
+    ItemSpellSplitRangeScale = 10023,
+    ItemSpellSplitCooldownScale = 10024,
+    ItemSpellSplashRangeScale = 10025,
+    ItemSpellSplashCooldownScale = 10026,
 }
 public enum FakeIID
 {
@@ -67,6 +73,8 @@ public enum FakeInt
     LootMagicItemMaxAmount = 10024,
     ItemReflectFlat = 10025,
     OriginalItemType = 10026,
+    ItemSpellSplitCount = 10027,
+    ItemSpellSplashCount = 10028,
 }
 public enum FakeInt64
 {

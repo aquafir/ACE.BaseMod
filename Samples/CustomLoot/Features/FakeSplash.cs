@@ -11,59 +11,55 @@ namespace CustomLoot.Features;
 [HarmonyPatchCategory(nameof(Feature.FakeSplash))]
 internal class FakeSplash
 {
-    //Players last splash / split
-    private static readonly Dictionary<Player, DateTime> _lastSplash = new();
-    private static readonly Dictionary<Player, DateTime> _lastSplit = new();
-
     #region Commands
-    [CommandHandler("meta", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 1)]
-    public static void HandleMeta(Session session, params string[] parameters)
-    {
-        //Get some scale to adjust spells by
-        if (!double.TryParse(parameters[0], out var metaScale))
-            return;
+    //[CommandHandler("meta", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 1)]
+    //public static void HandleMeta(Session session, params string[] parameters)
+    //{
+    //    //Get some scale to adjust spells by
+    //    if (!double.TryParse(parameters[0], out var metaScale))
+    //        return;
 
-        var player = session.Player;
+    //    var player = session.Player;
 
-        if (!_metaScale.ContainsKey(player))
-        {
-            _metaScale.Add(player, metaScale);
-        }
-        //Clear if modified spells (if the scale is changing?)
-        if (_playerSpells.ContainsKey(player))
-            _playerSpells[player] = new();
-        if (_playerSpellBases.ContainsKey(player))
-            _playerSpellBases[player] = new();
-
-
-        _metaScale[player] = metaScale;
-
-        player.SendMessage($"Scaling spells by {metaScale}");
-    }
-
-    [CommandHandler("splash", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, -1)]
-    public static void HandleSplash(Session session, params string[] parameters)
-    {
-        var player = session.Player;
+    //    if (!_metaScale.ContainsKey(player))
+    //    {
+    //        _metaScale.Add(player, metaScale);
+    //    }
+    //    //Clear if modified spells (if the scale is changing?)
+    //    if (_playerSpells.ContainsKey(player))
+    //        _playerSpells[player] = new();
+    //    if (_playerSpellBases.ContainsKey(player))
+    //        _playerSpellBases[player] = new();
 
 
-        if (player.CurrentAppraisalTarget is null)
-            return;
+    //    _metaScale[player] = metaScale;
 
-        var targetGuid = new ObjectGuid(player.CurrentAppraisalTarget.Value);
-        var selection = session.Player.CurrentLandblock?.GetObject(targetGuid);
+    //    player.SendMessage($"Scaling spells by {metaScale}");
+    //}
 
-        var targets = player.GetSplashTargets(selection, S.Settings.SpellSettings.SplashCount, S.Settings.SpellSettings.SplashRange);
+    //[CommandHandler("splash", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, -1)]
+    //public static void HandleSplash(Session session, params string[] parameters)
+    //{
+    //    var player = session.Player;
 
-        var sb = new StringBuilder($"\nSplash Targets:");
 
-        foreach (var target in targets)
-        {
-            sb.Append($"\n  {target?.Name} - {target?.GetDistance(selection)}");
-        }
+    //    if (player.CurrentAppraisalTarget is null)
+    //        return;
 
-        player.SendMessage(sb.ToString());
-    }
+    //    var targetGuid = new ObjectGuid(player.CurrentAppraisalTarget.Value);
+    //    var selection = session.Player.CurrentLandblock?.GetObject(targetGuid);
+
+    //    var targets = player.GetSplashTargets(selection, S.Settings.SpellSettings.SplashCount, S.Settings.SpellSettings.SplashRange);
+
+    //    var sb = new StringBuilder($"\nSplash Targets:");
+
+    //    foreach (var target in targets)
+    //    {
+    //        sb.Append($"\n  {target?.Name} - {target?.GetDistance(selection)}");
+    //    }
+
+    //    player.SendMessage(sb.ToString());
+    //}
     #endregion
 
     #region Patches
@@ -125,95 +121,6 @@ internal class FakeSplash
     //} 
     #endregion
 
-    /// <summary>
-    /// Splits or splashes a spell
-    /// </summary>
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(WorldObject), "HandleCastSpell", new Type[] {
-        typeof(Spell), typeof(WorldObject),typeof(WorldObject),typeof(WorldObject), typeof(bool), typeof(bool), typeof(bool)})]
-    public static void HandleCastSpell(Spell spell, WorldObject target, WorldObject itemCaster = null, WorldObject weapon = null, bool isWeaponSpell = false, bool fromProc = false, bool equip = false, WorldObject __instance = null)
-    {
-        //Should rework this to not patch the method if not enabled
-        if (!S.Settings.SpellSettings.SplitSpells)
-            return;
-
-        //Only players split
-        if (__instance is not Player)
-            return;
-
-        //Non-null player
-        var player = __instance as Player;
-        if (player is null)
-            return;
-
-        //Check split projectiles
-        if (spell.IsProjectile)
-        {
-            //Gate by cooldown
-            if (!_lastSplit.TryGetValue(player, out var time))
-            {
-                time = DateTime.MinValue;
-                _lastSplit.Add(player, time);
-            }
-
-            var delta = DateTime.Now - time;
-            if (delta < S.Settings.SpellSettings.SplitCooldown)
-                return;
-
-            var targets = player.GetSplashTargets(target, S.Settings.SpellSettings.SplitCount, S.Settings.SpellSettings.SplitRange);
-
-            if (targets.Count < 1)
-                return;
-
-            //Splitting is going to occur, so set the cooldown
-            _lastSplit[player] = DateTime.Now;
-
-            //Bit of debug
-            var sb = new StringBuilder($"\nSplit Targets:");
-            foreach (var t in targets)
-                sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
-            player.SendMessage(sb.ToString());
-
-            //var splitTo = Math.Min(S.Settings.SpellSettings.SplitCount, targets.Count);
-            for (var i = 0; i < targets.Count; i++)
-            {
-                __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
-            }
-        }
-        //Non-profile but harmful splashes
-        else if (spell.IsHarmful)
-        {
-            //Gate by cooldown
-            if (!_lastSplash.TryGetValue(player, out var time))
-            {
-                time = DateTime.MinValue;
-                _lastSplash.Add(player, time);
-            }
-
-            var delta = DateTime.Now - time;
-            if (delta < S.Settings.SpellSettings.SplashCooldown)
-                return;
-
-            var targets = player.GetSplashTargets(target, S.Settings.SpellSettings.SplashCount, S.Settings.SpellSettings.SplashRange);
-
-            if (targets.Count < 1)
-                return;
-
-            //Splashing is going to occur, so set the cooldown
-            _lastSplash[player] = DateTime.Now;
-
-            //Bit of debug
-            var sb = new StringBuilder($"\nSplash Targets:");
-            foreach (var t in targets)
-                sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
-            player.SendMessage(sb.ToString());
-
-            for (var i = 0; i < targets.Count; i++)
-            {
-                __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
-            }
-        }
-    }
 
     /// <summary>
     /// Adjust a spell before animations
@@ -349,9 +256,8 @@ internal class FakeSplash
         if (target.WeenieClassId % S.Settings.SpellSettings.TotalBuckets == attackBucket)
             __instance.TryCastSpell_WithRedirects(spell, target);
     }
-
     #endregion
-
+    
     #region Meta Spells
     //Meta scale of cost/damage made with /meta command
     private static readonly Dictionary<Player, double> _metaScale = new();

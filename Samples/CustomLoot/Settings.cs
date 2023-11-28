@@ -5,21 +5,21 @@ public class Settings
     public bool Verbose { get; set; } = false;
 
     #region Features / Mutators
-    public List<Feature> Features { get; set; } = new() { Feature.CorpseInfo, Feature.FakePropertyCache, };
+    public List<Feature> Features { get; set; } = new() { Feature.FakePropertyCache, };
         //Full set
         //Enum.GetValues<Feature>().ToList();
     public List<MutatorSettings> Mutators { get; set; } =
         //Select items
         new()
         {
-            new MutatorSettings(Mutation.GrowthItem) {
-            Odds = nameof(OddsGroup.Always),
-            TreasureTargets = nameof(TargetGroup.Weapon),
-            },
-            new MutatorSettings(Mutation.LocationLocked)  {
-            Odds = nameof(OddsGroup.Always),
-            TreasureTargets = nameof(TargetGroup.Weapon),
-            },
+            //new MutatorSettings(Mutation.GrowthItem) {
+            //Odds = nameof(OddsGroup.Always),
+            //TreasureTargets = nameof(TargetGroup.Weapon),
+            //},
+            //new MutatorSettings(Mutation.LocationLocked)  {
+            //Odds = nameof(OddsGroup.Always),
+            //TreasureTargets = nameof(TargetGroup.Weapon),
+            //},
         };
     //Full set
     //Enum.GetValues<Mutation>()
@@ -95,6 +95,10 @@ public class Settings
     #endregion
 
     #region Feature Settings
+    #region FakePropertyCache
+    public PropertyBonusSettings BonusCaps { get; set; } = new();
+
+    #endregion
 
     #region ProcRateOverride
     public double CloakProcRate { get; set; } = .05; //5%

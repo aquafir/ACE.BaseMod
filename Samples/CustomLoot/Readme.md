@@ -155,6 +155,7 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 * kdtree
   * aura
   * transfer falling damage if close enough
+* craft all / craft queue
 * steal->alt curr
 * spell ref
 * refl non-spell
