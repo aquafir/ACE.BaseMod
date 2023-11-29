@@ -27,7 +27,8 @@ public enum Feature
     FakeDurability,
     FakeEquipRestriction,
     AutoLoot,
-    FakeSplash,
+    FakeSpellMeta,
     FakeSpellSplitSplash,
+    FakeSpellChain,
 }
 

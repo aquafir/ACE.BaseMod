@@ -25,6 +25,9 @@ internal class FakeSpellSplitSplash
         //Check split projectiles
         if (spell.IsProjectile)
         {
+            //Todo: use something like this?
+            //if (player.GetProperty(FakeBool.CurrentlySpellSplit) ?? false)  return;
+
             //Check any split
             var splitCount = player.GetCachedFake(FakeInt.ItemSpellSplitCount);
             if (splitCount < 1) return;

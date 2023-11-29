@@ -4,7 +4,7 @@
 public enum FakeBool
 {
     GrowthItem = 10000,
-    CorpseSpawnedDungeon = 10001
+    CorpseSpawnedDungeon = 10001,
 }
 public enum FakeDID
 {
@@ -39,6 +39,8 @@ public enum FakeFloat
     ItemSpellSplitCooldownScale = 10024,
     ItemSpellSplashRangeScale = 10025,
     ItemSpellSplashCooldownScale = 10026,
+    ItemSpellMetaPower = 10027,
+    SpellChainChance = 10028,
 }
 public enum FakeIID
 {
@@ -78,8 +80,7 @@ public enum FakeInt
 }
 public enum FakeInt64
 {
-    Placeholder = 10000,
-    Pyreals = 10001
+    Pyreals = 10000
 }
 public enum FakeString
 {

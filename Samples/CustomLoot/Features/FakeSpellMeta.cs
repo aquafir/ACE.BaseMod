@@ -1,41 +1,44 @@
-﻿using static ACE.Server.WorldObjects.Player;
-using System.Text;
-using ACE.DatLoader.Entity;
+﻿using ACE.DatLoader.Entity;
 using ACE.DatLoader;
-using ACE.Entity;
 using ACE.Server.Command;
 using ACE.Server.Network;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static ACE.Server.WorldObjects.Player;
 
 namespace CustomLoot.Features;
 
-[HarmonyPatchCategory(nameof(Feature.FakeSplash))]
-internal class FakeSplash
+[HarmonyPatchCategory(nameof(Feature.FakeSpellMeta))]
+public static class FakeSpellMeta
 {
     #region Commands
-    //[CommandHandler("meta", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 1)]
-    //public static void HandleMeta(Session session, params string[] parameters)
-    //{
-    //    //Get some scale to adjust spells by
-    //    if (!double.TryParse(parameters[0], out var metaScale))
-    //        return;
+    [CommandHandler("meta", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 1)]
+    public static void HandleMeta(Session session, params string[] parameters)
+    {
+        //Get some scale to adjust spells by
+        if (!double.TryParse(parameters[0], out var metaScale))
+            return;
 
-    //    var player = session.Player;
+        var player = session.Player;
 
-    //    if (!_metaScale.ContainsKey(player))
-    //    {
-    //        _metaScale.Add(player, metaScale);
-    //    }
-    //    //Clear if modified spells (if the scale is changing?)
-    //    if (_playerSpells.ContainsKey(player))
-    //        _playerSpells[player] = new();
-    //    if (_playerSpellBases.ContainsKey(player))
-    //        _playerSpellBases[player] = new();
+        if (!_metaScale.ContainsKey(player))
+        {
+            _metaScale.Add(player, metaScale);
+        }
+        //Clear if modified spells (if the scale is changing?)
+        if (_playerSpells.ContainsKey(player))
+            _playerSpells[player] = new();
+        if (_playerSpellBases.ContainsKey(player))
+            _playerSpellBases[player] = new();
 
 
-    //    _metaScale[player] = metaScale;
+        _metaScale[player] = metaScale;
 
-    //    player.SendMessage($"Scaling spells by {metaScale}");
-    //}
+        player.SendMessage($"Scaling spells by {metaScale}");
+    }
 
     //[CommandHandler("splash", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, -1)]
     //public static void HandleSplash(Session session, params string[] parameters)
@@ -120,7 +123,6 @@ internal class FakeSplash
     //    //Debugger.Break();
     //} 
     #endregion
-
 
     /// <summary>
     /// Adjust a spell before animations
@@ -236,7 +238,7 @@ internal class FakeSplash
             return;
 
         //Todo: fix checking attack type instead of equipped?  //__instance?.AttackType == AttackType.Punches
-        if (__instance.GetEquippedWeapon() is not null)
+        if (__instance?.GetEquippedWeapon() is not null)
             return;
 
         //On quick attacks sometimes __result was null?
@@ -257,7 +259,7 @@ internal class FakeSplash
             __instance.TryCastSpell_WithRedirects(spell, target);
     }
     #endregion
-    
+
     #region Meta Spells
     //Meta scale of cost/damage made with /meta command
     private static readonly Dictionary<Player, double> _metaScale = new();
@@ -278,7 +280,7 @@ internal class FakeSplash
     /// <summary>
     /// Creates or finds a collection of modified Spell/SpellBase for a player
     /// </summary>
-    private static bool TryGetPlayerCustomSpells(Player player, out Dictionary<Spell, ACE.Database.Models.World.Spell> dbSpells, out Dictionary<Spell, SpellBase> spellBases)
+    private static bool TryGetCustomSpells(Player player, out Dictionary<Spell, ACE.Database.Models.World.Spell> dbSpells, out Dictionary<Spell, SpellBase> spellBases)
     {
         //Track tracking a players variations
         if (!_playerSpells.TryGetValue(player, out dbSpells))
@@ -299,7 +301,7 @@ internal class FakeSplash
     /// <summary>
     /// Creates or finds a variant of a spell for a player
     /// </summary>
-    private static bool TryMakeSpellVariant(Spell spell, Player player, out ACE.Database.Models.World.Spell dbSpell, double metaScale = 1)
+    private static bool TryGetSpellVariant(Spell spell, Player player, out ACE.Database.Models.World.Spell dbSpell, double metaScale = 1)
     {
         dbSpell = null;
 
@@ -323,44 +325,9 @@ internal class FakeSplash
         return true;
     }
     /// <summary>
-    /// Mutates a database template for a spell
-    /// </summary>
-    private static void ModifySpellCopy(Spell spell, ACE.Database.Models.World.Spell dbSpell, double metaScale)
-    {
-        //Do stuff for projectiles                    
-        if (spell.IsProjectile)
-        {
-            dbSpell.BaseIntensity = (int)(metaScale * spell._spell.BaseIntensity ?? 1);
-
-            var pType = SpellProjectile.GetProjectileSpellType(dbSpell.Id);
-            if (dbSpell.NumProjectiles is not null)
-                dbSpell.NumProjectiles = pType switch
-                {
-                    ProjectileSpellType.Blast => (int)(metaScale * spell._spell.NumProjectiles),
-                    ProjectileSpellType.Volley => (int)(metaScale * spell._spell.NumProjectiles),
-                    ProjectileSpellType.Wall => (int)(metaScale * spell._spell.NumProjectiles),
-                    ProjectileSpellType.Ring => (int)(metaScale * spell._spell.NumProjectiles),
-                    ProjectileSpellType.Strike => (int)(metaScale * spell._spell.NumProjectiles),
-                    _ => 1
-                };
-
-            if (dbSpell.SpreadAngle is not null)
-                dbSpell.SpreadAngle = 360f;
-            if (dbSpell.PaddingOriginY is not null)
-                dbSpell.PaddingOriginY = (float)(metaScale * spell._spell.PaddingOriginY);
-            if (dbSpell.PaddingOriginX is not null)
-                dbSpell.PaddingOriginX = (float)(metaScale * spell._spell.PaddingOriginX);
-            if (dbSpell.PaddingOriginZ is not null)
-                dbSpell.PaddingOriginZ = (float)(metaScale * spell._spell.PaddingOriginZ);
-        }
-
-
-    }
-
-    /// <summary>
     /// Creates or finds a variant of a spell for a player
     /// </summary>
-    private static bool TryMakeBaseVariant(Spell spell, Player player, out SpellBase spellbase, double metaScale = 1)
+    private static bool TryGetBaseVariant(Spell spell, Player player, out SpellBase spellbase, double metaScale = 1)
     {
         spellbase = null;
 
@@ -383,52 +350,100 @@ internal class FakeSplash
         //May want to make this fail
         return true;
     }
+
+    /// <summary>
+    /// Mutates a database template for a spell
+    /// </summary>
+    private static void ModifySpellCopy(Spell spell, ACE.Database.Models.World.Spell dbSpell, double metaScale)
+    {
+        //Do stuff for projectiles                    
+        if (spell.IsProjectile)
+        {
+            dbSpell.BaseIntensity = (int)(metaScale * spell._spell.BaseIntensity ?? 1);
+
+            var pType = SpellProjectile.GetProjectileSpellType(dbSpell.Id);
+            if (dbSpell.NumProjectiles is not null)
+                dbSpell.NumProjectiles = pType switch
+                {
+                    ProjectileSpellType.Blast => (int)(metaScale * spell._spell.NumProjectiles),
+                    ProjectileSpellType.Volley => (int)(metaScale * spell._spell.NumProjectiles),
+                    ProjectileSpellType.Wall => (int)(metaScale * spell._spell.NumProjectiles),
+                    ProjectileSpellType.Ring => (int)(metaScale * spell._spell.NumProjectiles),
+                    ProjectileSpellType.Strike => (int)(metaScale * spell._spell.NumProjectiles),
+                    _ => 1
+                };         
+            
+            if (dbSpell.SpreadAngle is not null)
+                dbSpell.SpreadAngle = 360f;
+            if (dbSpell.PaddingOriginY is not null)
+                dbSpell.PaddingOriginY = (float)(metaScale * spell._spell.PaddingOriginY);
+            if (dbSpell.PaddingOriginX is not null)
+                dbSpell.PaddingOriginX = (float)(metaScale * spell._spell.PaddingOriginX);
+            if (dbSpell.PaddingOriginZ is not null)
+                dbSpell.PaddingOriginZ = (float)(metaScale * spell._spell.PaddingOriginZ);
+        }
+
+
+    }
     /// <summary>
     /// Mutates a database template for a spell
     /// </summary>
     private static void ModifySpellBaseCopy(Spell spell, SpellBase spellbase, double metaScale)
     {
-        //Spellbase has private setters so Traverse is used to access
-        var trav = Traverse.Create(spellbase);
-
         //Todo: Think about spell components.  If spellWords field is set I don't think it's an issue?
-        trav.Field("spellWords").SetValue($"Abracazoop ({spell._spellBase.GetSpellWords(DatManager.PortalDat.SpellComponentsTable)})");
+        spellbase.spellWords = $"Abracazoop ({spell._spellBase.GetSpellWords(DatManager.PortalDat.SpellComponentsTable)})";
 
-        //SpellBase PowerMod returns Power or a max of 25 and is used for mana costs
-        trav.Property(nameof(SpellBase.Power)).SetValue(Math.Max(25, (uint)(metaScale * 25)));
-        trav.Property(nameof(SpellBase.Name)).SetValue($"{spell._spellBase.Name} ({metaScale})");
+        //Spell.PowerMod returns Power or a max of 25 and is used for mana costs
+        spellbase.Power *= (uint)(metaScale * 25);
+        spellbase.Name = $"{spell._spellBase.Name} ({metaScale})";
 
         var pType = SpellProjectile.GetProjectileSpellType(spell.Id);
         if (pType == ProjectileSpellType.Ring)
             //This will fail if not cast to a single
-            trav.Property(nameof(SpellBase.BaseRangeConstant)).SetValue((float)Math.Sqrt(metaScale * spell._spellBase.BaseRangeConstant));
+            //trav.Property(nameof(SpellBase.BaseRangeConstant)).SetValue((float)Math.Sqrt(metaScale * spell._spellBase.BaseRangeConstant));
+            spellbase.BaseRangeConstant = (float)Math.Sqrt(metaScale * spell._spellBase.BaseRangeConstant);
 
-        //Debugger.Break();
+        spellbase.BaseRangeConstant = .01f;
+        spellbase.BaseRangeMod = .01f;
     }
+
     /// <summary>
     /// Replaces a spell with a player's personalized variant of that spell if applicable
     /// </summary>
     private static void MetaSpellSwap(Spell spell, Player __instance)
     {
-        if (S.Settings.SpellSettings.MetaEnabled && _metaScale.TryGetValue(__instance, out var metaScale))
-        {
-            //Filter out spells you don't do anything with
-            if (!IsModifiable(spell))
-                return;
+        //if (S.Settings.SpellSettings.MetaEnabled && _metaScale.TryGetValue(__instance, out var metaPower))
+        //{
+        var metaPower = __instance.GetCachedFake(FakeFloat.ItemSpellMetaPower);
 
-            if (!TryGetPlayerCustomSpells(__instance, out var playerSpells, out var playerSpellBases))
-                return;
+        //Filter out spells you don't do anything with
+        if (!IsModifiable(spell))
+            return;
 
-            if (!TryMakeSpellVariant(spell, __instance, out var metaSpell, metaScale))
-                return;
+        //Todo: some spell version resolver
+        if (!TryGetCustomSpells(__instance, out var spellCache, out var spellbaseCache))
+            return;
 
-            if (!TryMakeBaseVariant(spell, __instance, out var metaSpellBase, metaScale))
-                return;
+        if (!TryGetSpellVariant(spell, __instance, out var metaSpell, metaPower))
+            return;
 
-            //Swap regular copy for cached variant
-            spell._spell = metaSpell;
-            spell._spellBase = metaSpellBase;
-        }
+        if (!TryGetBaseVariant(spell, __instance, out var metaSpellBase, metaPower))
+            return;
+
+        //Swap regular copy for cached variant
+        spell._spell = metaSpell;
+        spell._spellBase = metaSpellBase;
+        //}
     }
     #endregion
+}
+
+
+public class SpellVariant // : Spell
+{
+    //Equation that relates power?
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 }

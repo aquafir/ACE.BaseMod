@@ -7,7 +7,11 @@ internal class FakeCulling
     [HarmonyPatch(typeof(Player), nameof(Player.DamageTarget), new Type[] { typeof(Creature), typeof(WorldObject) })]
     public static void PostDamageTarget(Creature target, WorldObject damageSource, ref Player __instance, ref DamageEvent __result)
     {
-        if (!__result.HasDamage || !target.IsAlive) return;
+        if (__result is null || target is null)
+            return;
+
+        if(!__result.HasDamage || !target.IsAlive) 
+            return;
 
         //More cull = higher percent
         var cullPercent = __instance.GetCachedFake(FakeFloat.ItemPercentCull);

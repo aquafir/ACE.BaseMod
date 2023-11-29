@@ -48,10 +48,10 @@ This mod changes the loot generated objects returned by `LootGenerationFactory.C
 
 Some features or mutators depend on a utility `Feature`:
 
-* `CorpseInfo` adds additional information to a `Corpse`
-  * `FakeInt.CorpseLivingWCID`
-  * `FakeDID.CorpseLandblockId`
-  * `FakeBool.CorpseSpawnedDungeon`
+* ~~`CorpseInfo` adds additional information to a `Corpse`~~
+  * ~~`FakeInt.CorpseLivingWCID`~~
+  * ~~`FakeDID.CorpseLandblockId`~~
+  * ~~`FakeBool.CorpseSpawnedDungeon`~~
 * `FakePropertyCache` stores a cached version for a players `FakeProperty` bonus and updates on change.  Not strictly required but gives a significant performance boost.
 
 
@@ -150,7 +150,46 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 ## Scratch
 
 * skill trained/under
-* import spell split
+* Spells
+  * Custom thoughts
+    * Meteors that trigger on destroy?
+    * Outdoor only / line of sight?
+  * SpellProjectiles are WorldObjects so I can use props
+    * WO.CreateSpellProjectiles
+      * SpellProjectile.GetProjectileSpellType splits into types
+      * WO.CalculateProjectileOrigins uses the type to return a Vector3 list of locations
+      * WO.CalculateProjectileVelocity then calculates velocity *using the first Vector3 ??*
+      * `Trajectory.solve_ballistic_arc_lateral` or `Trajectory2.CalculateTrajectory` get used to calculate path depending on gravity
+    * Then launched by WO.LaunchSpellProjectiles
+    * Has
+      * OnCollideEnvironment
+      * ProjectileImpact
+      * `SpellType`
+      * SpawnPos `Position`
+      * `SpellProjectileInfo` ?
+        * Caster/Target `Position`
+        * Velocity
+      * IsWeaponSpell - true when from caster
+      * FromProc - to prevent retries
+      * 
+    * 
+  * Spell
+    * IconId
+    * Category - used for family of buffs
+    * SpellFlags - diff type flags
+  * SpellBase
+    * Lots of unused ones
+    * Name
+    * Desc
+    * Icon
+    * BaseMana
+    * BaseRange
+    * BaseRangeConstant
+    * Power - Used to determine which spell in the catgory is the strongest.
+    * MetaSpellType - subtype
+    * ManaMod - additional cost per target
+    * Duration
+    * DisplayOrder?
 * cleave
 * kdtree
   * aura

@@ -303,9 +303,6 @@ public static class SpellHelper
         );
     #endregion
 
-
-
-
     //public static T DeepClone<T>(this T input) where T : ISerializable
     //{
     //    using (var stream = new MemoryStream())
@@ -407,7 +404,6 @@ public static class SpellHelper
 
         return clone;
     }
-
 
     /// <summary>
     /// Writes a string the way SpellBase reads it
