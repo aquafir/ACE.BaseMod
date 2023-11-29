@@ -5,7 +5,7 @@ public class Settings
     public bool Verbose { get; set; } = false;
 
     #region Features / Mutators
-    public List<Feature> Features { get; set; } = new() { Feature.FakePropertyCache, };
+    public List<Feature> Features { get; set; } = new() { Feature.FakePropertyCache, Feature.MutatorHooks, };
         //Full set
         //Enum.GetValues<Feature>().ToList();
     public List<MutatorSettings> Mutators { get; set; } =
@@ -16,10 +16,9 @@ public class Settings
             //Odds = nameof(OddsGroup.Always),
             //TreasureTargets = nameof(TargetGroup.Weapon),
             //},
-            //new MutatorSettings(Mutation.LocationLocked)  {
-            //Odds = nameof(OddsGroup.Always),
-            //TreasureTargets = nameof(TargetGroup.Weapon),
-            //},
+            new MutatorSettings(Mutation.Resize)  {
+            Odds = null,
+            },
         };
     //Full set
     //Enum.GetValues<Mutation>()

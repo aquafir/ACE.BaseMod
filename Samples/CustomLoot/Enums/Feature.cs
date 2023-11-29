@@ -30,5 +30,6 @@ public enum Feature
     FakeSpellMeta,
     FakeSpellSplitSplash,
     FakeSpellChain,
+    MutatorHooks,
 }
 

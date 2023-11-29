@@ -12,5 +12,6 @@ public enum Mutation
     Set,
     ShinyPet,
     Slayer,
+    Resize,
 }
 
