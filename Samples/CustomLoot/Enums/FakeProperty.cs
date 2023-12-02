@@ -120,3 +120,10 @@ public static class FakePropertyHelper
     public static PropertyInt64 Prop(this FakeInt64 prop) => (PropertyInt64)prop;
     public static PropertyString Prop(this FakeString prop) => (PropertyString)prop;
 }
+
+
+public enum CombinationStyle
+{
+    Additive,
+    Multiplicative,
+}

@@ -6,8 +6,8 @@ public class Settings
 
     #region Features / Mutators
     public List<Feature> Features { get; set; } = new() { Feature.FakePropertyCache, Feature.MutatorHooks, };
-        //Full set
-        //Enum.GetValues<Feature>().ToList();
+    //Full set
+    //Enum.GetValues<Feature>().ToList();
     public List<MutatorSettings> Mutators { get; set; } =
         //Select items
         new()
@@ -17,6 +17,7 @@ public class Settings
             //TreasureTargets = nameof(TargetGroup.Weapon),
             //},
             new MutatorSettings(Mutation.Resize)  {
+            Events = Mutation.Resize.DefaultEvents(),
             Odds = null,
             },
         };

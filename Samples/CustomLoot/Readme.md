@@ -14,6 +14,7 @@ This mod changes the loot generated objects returned by `LootGenerationFactory.C
     * `Loot` catches all loot but misses corpse/location/etc.
     * `Corpse` modifies items in a creature corpse after `Creature.GenerateTreasure`
     * `Generator` runs after `GeneratorProfile.TreasureGenerator`
+    * `EnterWorld` runs before `WorldObject.EnterWorld`
     * Could expose things like `RollMundane` / `CreateDinnerware` / etc.
   * Different sets of valid targets are available.  Succeeds if missing.  
     Available targets are:
@@ -149,6 +150,8 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 
 ## Scratch
 
+* Attributes / Vitals
+  * CreatureVital.Base factors in Enlightenmentt
 * skill trained/under
 * Spells
   * Custom thoughts
@@ -172,7 +175,8 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
       * IsWeaponSpell - true when from caster
       * FromProc - to prevent retries
       * 
-    * 
+  * Position
+    * InFrontOf
   * Spell
     * IconId
     * Category - used for family of buffs

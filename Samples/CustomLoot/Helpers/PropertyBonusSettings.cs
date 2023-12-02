@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CustomLoot.Helpers;
+﻿namespace CustomLoot.Helpers;
 public class PropertyBonusSettings
 {
     public Dictionary<FakeInt, int> MinInt { get; set; } = new();

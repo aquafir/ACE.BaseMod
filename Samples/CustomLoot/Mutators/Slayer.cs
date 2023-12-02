@@ -1,6 +1,4 @@
-﻿using CustomLoot.Helpers;
-
-namespace CustomLoot.Mutators;
+﻿namespace CustomLoot.Mutators;
 
 public class Slayer : Mutator
 {

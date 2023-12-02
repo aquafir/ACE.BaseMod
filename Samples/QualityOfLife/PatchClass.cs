@@ -184,7 +184,6 @@ public class PatchClass
         return false;
     }
 
-
     //Fakes having more credits invested
     [HarmonyPostfix]
     [HarmonyPatch(typeof(SkillAlterationDevice), "GetTotalSpecializedCredits", new Type[] { typeof(Player) })]

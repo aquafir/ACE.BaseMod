@@ -1,9 +1,4 @@
 ﻿using ACE.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CustomLoot.Features;
 [HarmonyPatchCategory(nameof(Feature.MutatorHooks))]
@@ -19,6 +14,7 @@ internal class MutatorHooks
         mutators[MutationEvent.Corpse] = new();
         mutators[MutationEvent.Generator] = new();
         mutators[MutationEvent.Factory] = new();
+        mutators[MutationEvent.EnterWorld] = new();
 
         foreach (var mutatorOptions in S.Settings.Mutators)
         {
@@ -39,6 +35,8 @@ internal class MutatorHooks
                     mutators[MutationEvent.Generator].Add(mutator);
                 if (mutator.Event.HasFlag(MutationEvent.Factory))
                     mutators[MutationEvent.Factory].Add(mutator);
+                if (mutator.Event.HasFlag(MutationEvent.EnterWorld))
+                    mutators[MutationEvent.EnterWorld].Add(mutator);
 
 
                 if (PatchClass.Settings.Verbose)
@@ -193,7 +191,7 @@ internal class MutatorHooks
         //Keeps track of what mutations have been applied
         HashSet<Mutation> mutations = new();
 
-        foreach (var mutator in mutators[MutationEvent.Loot])
+        foreach (var mutator in mutators[MutationEvent.Factory])
         {
             //Check for elligible item type along with standard check
             if (!mutator.CheckMutates(__result))
@@ -209,4 +207,32 @@ internal class MutatorHooks
 
     }
     #endregion
+
+    //Todo: postfix?
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.EnterWorld))]
+    public static bool PreEnterWorld(ref WorldObject __instance, ref bool __result)
+    {
+        if (__instance is null) return true;
+
+        //Keeps track of what mutations have been applied
+        HashSet<Mutation> mutations = new();
+
+        foreach (var mutator in mutators[MutationEvent.EnterWorld])
+        {
+            //Check for elligible item type along with standard check
+            if (!mutator.CheckMutates(__instance))
+                continue;
+
+            //If an item was mutated add the type
+            if (mutator.TryMutateEnterWorld(mutations, __instance))
+                mutations.Add(mutator.MutationType);
+        }
+
+        if (PatchClass.Settings.Verbose && mutations.Count > 0)
+            ModManager.Log($"{__instance.Name} was mutated with: {String.Join(", ", mutations)}");
+
+        return true;
+    }
+
 }

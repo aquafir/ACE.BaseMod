@@ -1,5 +1,4 @@
-﻿using ACE.Entity;
-using ACE.Server.Command;
+﻿using ACE.Server.Command;
 using ACE.Server.Command.Handlers;
 using ACE.Server.Network;
 using System.Text;

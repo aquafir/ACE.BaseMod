@@ -1,6 +1,4 @@
-﻿using CustomLoot.Helpers;
-
-namespace CustomLoot.Features;
+﻿namespace CustomLoot.Features;
 
 [HarmonyPatchCategory(nameof(Feature.ItemLevelUpGrowth))]
 public static class ItemLevelUpGrowth

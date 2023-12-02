@@ -1,8 +1,4 @@
-﻿
-
-using CustomLoot.Helpers;
-
-namespace CustomLoot.Mutators;
+﻿namespace CustomLoot.Mutators;
 internal class LocationLocked : Mutator
 {
     //Corpse/Generators check landblock and other relevant things first to skip collection evaluation

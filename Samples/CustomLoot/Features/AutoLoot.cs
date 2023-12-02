@@ -1,5 +1,4 @@
-﻿using CustomLoot.Helpers;
-using System.Text;
+﻿using System.Text;
 
 namespace CustomLoot.Features;
 

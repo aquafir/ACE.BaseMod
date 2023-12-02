@@ -32,7 +32,6 @@ public static class TargetGroupGroupHelper
             TreasureItemType_Orig.Cloak,
             TreasureItemType_Orig.Jewelry,
             TreasureItemType_Orig.Weapon,
-
         },
         TargetGroup.Wearables => new[]
         {

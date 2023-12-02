@@ -2,11 +2,6 @@
 using ACE.DatLoader;
 using ACE.Server.Command;
 using ACE.Server.Network;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static ACE.Server.WorldObjects.Player;
 
 namespace CustomLoot.Features;
@@ -400,7 +395,6 @@ public static class FakeSpellMeta
         var pType = SpellProjectile.GetProjectileSpellType(spell.Id);
         if (pType == ProjectileSpellType.Ring)
             //This will fail if not cast to a single
-            //trav.Property(nameof(SpellBase.BaseRangeConstant)).SetValue((float)Math.Sqrt(metaScale * spell._spellBase.BaseRangeConstant));
             spellbase.BaseRangeConstant = (float)Math.Sqrt(metaScale * spell._spellBase.BaseRangeConstant);
 
         spellbase.BaseRangeConstant = .01f;

@@ -88,6 +88,7 @@ public abstract class Mutator
     public virtual bool TryMutateCorpse(HashSet<Mutation> mutations, Creature creature, DamageHistoryInfo killer, Corpse corpse, WorldObject item) => false;
     public virtual bool TryMutateGenerator(HashSet<Mutation> mutations, GeneratorProfile generator, WorldObject item) => false;
     public virtual bool TryMutateFactory(HashSet<Mutation> mutations, WorldObject item) => false;
+    public virtual bool TryMutateEnterWorld(HashSet<Mutation> mutations, WorldObject item) => false;
 
     #region Start/Stop - Placeholders for now
     public virtual void Start()
@@ -101,15 +102,4 @@ public abstract class Mutator
 
     }
     #endregion
-}
-
-[Flags]
-public enum MutationEvent
-{
-    Loot            = 0x1,  //LootGenerationFactory.CreateRandomLootObjects_New
-    Corpse          = 0x2,  //Creature.GenerateTreasure
-    Generator       = 0x4,  //GeneratorProfile.TreasureGenerator
-    Factory         = 0x8,  //WeenieFactory different creates.  Probably more expensive
-    Containers = Corpse | Generator,
-    //Factory = 0x4,  //LootGenerationFactory.CreateRandomLootObjects
 }

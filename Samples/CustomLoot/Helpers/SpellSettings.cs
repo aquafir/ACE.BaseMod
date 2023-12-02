@@ -1,13 +1,4 @@
-﻿using ACE.DatLoader;
-using ACE.DatLoader.Entity;
-using ACE.Entity;
-using ACE.Server.Command;
-using ACE.Server.Network;
-using System;
-using System.Text;
-using static ACE.Server.WorldObjects.Player;
-
-namespace CustomLoot.Helpers;
+﻿namespace CustomLoot.Helpers;
 
 public class SpellSettings
 {

@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
-
-namespace CustomLoot.Helpers;
+﻿namespace CustomLoot.Helpers;
 
 public static class Helpers
 {
