@@ -1,10 +1,13 @@
 ﻿using ACE.DatLoader.FileTypes;
+using ACE.Entity;
 using ACE.Entity.Enum.Properties;
 using ACE.Server.Entity.Actions;
 using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
+using ACE.Server.Physics.Animation;
 using ACE.Server.WorldObjects;
 using Iced.Intel.EncoderInternal;
+using MotionTable = ACE.DatLoader.FileTypes.MotionTable;
 
 namespace QualityOfLife;
 
@@ -106,6 +109,81 @@ public class PatchClass
         if (Settings.OverrideAnimations)
             Mod.Harmony.PatchCategory(Settings.AnimationOverrideCategory);
     }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Player), nameof(Player.HandleActionTeleToMarketPlace))]
+    public static bool PreHandleActionTeleToMarketPlace(ref Player __instance)
+    {
+        if (__instance.IsOlthoiPlayer)
+        {
+            __instance.Session.Network.EnqueueSend(new GameEventWeenieError(__instance.Session, WeenieError.OlthoiCanOnlyRecallToLifestone));
+            return false;
+        }
+
+        if (__instance.PKTimerActive)
+        {
+            __instance.Session.Network.EnqueueSend(new GameEventWeenieError(__instance.Session, WeenieError.YouHaveBeenInPKBattleTooRecently));
+            return false;
+        }
+
+        if (__instance.RecallsDisabled)
+        {
+            __instance.Session.Network.EnqueueSend(new GameEventWeenieError(__instance.Session, WeenieError.ExitTrainingAcademyToUseCommand));
+            return false;
+        }
+
+        if (__instance.TooBusyToRecall)
+        {
+            __instance.Session.Network.EnqueueSend(new GameEventWeenieError(__instance.Session, WeenieError.YoureTooBusy));
+            return false;
+        }
+
+        if (__instance.CombatMode != CombatMode.NonCombat)
+        {
+            // this should be handled by a different thing, probably a function that forces player into peacemode
+            var updateCombatMode = new GameMessagePrivateUpdatePropertyInt(__instance, PropertyInt.CombatMode, (int)CombatMode.NonCombat);
+            __instance.SetCombatMode(CombatMode.NonCombat);
+            __instance.Session.Network.EnqueueSend(updateCombatMode);
+        }
+
+        __instance.EnqueueBroadcast(new GameMessageSystemChat($"{__instance.Name} is recalling to the marketplace.", ChatMessageType.Recall), Player.LocalBroadcastRange, ChatMessageType.Recall);
+
+        __instance.SendMotionAsCommands(MotionCommand.MarketplaceRecall, MotionStance.NonCombat);
+
+        var startPos = new Position(__instance.Location);
+
+        // TODO: (OptimShi): Actual animation length is longer than in retail. 18.4s
+        ActionChain mpChain = new ActionChain();
+        var animLength = DatManager.PortalDat.ReadFromDat<MotionTable>(__instance.MotionTableId).GetAnimationLength(MotionCommand.MarketplaceRecall);
+        mpChain.AddDelaySeconds(animLength);
+        //mpChain.AddDelaySeconds(14);
+
+        //resolve player
+        var player = PlayerManager.FindByGuid(__instance.Guid) as Player;
+        if (player is null)
+            return false;
+
+        // Then do teleport
+        __instance.IsBusy = true;
+        mpChain.AddAction(__instance, () =>
+        {
+            player.IsBusy = false;
+            var endPos = new Position(player.Location);
+        if (startPos.SquaredDistanceTo(endPos) > Player.RecallMoveThresholdSq)
+            {
+                player.Session.Network.EnqueueSend(new GameEventWeenieError(player.Session, WeenieError.YouHaveMovedTooFar));
+                return;
+            }
+
+            player.Teleport(Player.MarketplaceDrop);
+        });
+
+        // Set the chain to run
+        mpChain.EnqueueChain();
+
+        return false;
+    }
+
 
     //Fakes having more credits invested
     [HarmonyPostfix]
