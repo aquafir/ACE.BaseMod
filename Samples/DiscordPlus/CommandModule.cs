@@ -4,18 +4,19 @@ using ACE.Server.Managers;
 using ACE.Server.Physics.Command;
 using Discord;
 using Discord.Commands;
+using Discord.Interactions;
 using Discord.WebSocket;
 using System;
 
 public class CommandModule : ModuleBase<SocketCommandContext>
 {
     //https://discordnet.dev/guides/text_commands/intro.html
-    [Command("runas")]
-    [Summary("Issue chat command using approved list of Discord IDs as an online user?")]
+    [SlashCommand("runas", "Run command as player")]
+    [Discord.Commands.Summary("Issue chat command using approved list of Discord IDs as an online user?")]
     public async Task RunAsPlayer(
-        [Summary("Player to run command")]
+        [Discord.Commands.Summary("Player to run command")]
         string player,
-        [Summary("Command to run")]
+        [Discord.Commands.Summary("Command to run")]
         string command)
     {
         if (PatchClass.Settings.DevIds.Contains(Context.User.Id))
@@ -25,9 +26,9 @@ public class CommandModule : ModuleBase<SocketCommandContext>
     }
 
     [Command("run")]
-    [Summary("Issue chat command using approved list of Discord IDs?")]
+    [Discord.Commands.Summary("Issue chat command using approved list of Discord IDs?")]
     public async Task RunAsDev(
-        [Summary("Command to run")]
+        [Discord.Commands.Summary("Command to run")]
         string command)
     {
         if (PatchClass.Settings.DevIds.Contains(Context.User.Id))

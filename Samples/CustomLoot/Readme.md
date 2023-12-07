@@ -150,8 +150,13 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 
 ## Scratch
 
+* Flat vs. multi
+* Clamp in cache or return?
+* Bonus based on height / size
 * Attributes / Vitals
   * CreatureVital.Base factors in Enlightenmentt
+* Vendor AlternateCurrency
+  * Award based on scaled difficulty
 * skill trained/under
 * Spells
   * Custom thoughts

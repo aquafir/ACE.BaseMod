@@ -1,19 +1,16 @@
-﻿using ACE.DatLoader.Entity;
-using ACE.Entity.Enum;
-using ACE.Server.Managers;
-using ACE.Server.Network;
+﻿using ACE.Server.Managers;
 using ACE.Server.Network.GameEvent.Events;
 using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.WorldObjects;
 using Discord;
 using Discord.Commands;
+using Discord.Interactions;
 using Discord.WebSocket;
-using Mono.Cecil;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
-using System.Reflection.Metadata;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Timers;
+using TokenType = Discord.TokenType;
 
 namespace DiscordPlus;
 
@@ -22,6 +19,14 @@ public class DiscordRelay
     private DiscordSocketClient _client;
     private IMessageChannel _channel;
     private CommandService _commands;
+    private IServiceProvider _services;
+    private IConfiguration _configuration;
+
+    private readonly DiscordSocketConfig _socketConfig = new()
+    {
+        GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMembers,
+        AlwaysDownloadUsers = true,
+    };
 
     private ConcurrentQueue<string> _outgoingMessages;
     private System.Timers.Timer _batchTimer;
@@ -31,9 +36,34 @@ public class DiscordRelay
     private TimeSpan _userCheckInterval = TimeSpan.FromSeconds(5);
 
     #region Startup / Shutdown / Ready / Disconnect
-    public async void Initialize()
+    public async Task RunAsync()
     {
+        _configuration = new ConfigurationBuilder()
+        //   .AddEnvironmentVariables(prefix: "DC_")
+        //   .AddJsonFile("appsettings.json", optional: true)
+        .Build();
+
+        _services = new ServiceCollection()
+            .AddSingleton(_configuration)
+            .AddSingleton(_socketConfig)
+            .AddSingleton<DiscordSocketClient>()
+            .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
+            .AddSingleton<InteractionHandler>()
+            .BuildServiceProvider();
+
         ModManager.Log("Initializing Discord relay...");
+        var client = _services.GetRequiredService<DiscordSocketClient>();
+
+        client.Log += LogAsync;
+
+        // Here we can initialize the service that will register and execute our commands
+        await _services.GetRequiredService<InteractionHandler>()
+            .InitializeAsync();
+
+        // Bot token can be provided from the Configuration object we set up earlier
+        await client.LoginAsync(TokenType.Bot, PatchClass.Settings.BOT_TOKEN);
+        await client.StartAsync();
+
 
         //Set up outgoing message queue
         _outgoingMessages = new ConcurrentQueue<string>();
@@ -45,18 +75,14 @@ public class DiscordRelay
         };
         _batchTimer.Elapsed += SendQueuedMessages;
 
-        //https://discordnet.dev/faq/basics/client-basics.html
-        var config = new DiscordSocketConfig()
-        {
-            GatewayIntents = GatewayIntents.All     // My intents were messing things up for a while
-            //GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent 
-        };
-        _client = new DiscordSocketClient(config);
+        ////https://discordnet.dev/faq/basics/client-basics.html
+        //_client = new DiscordSocketClient();
+        //_client.Ready += OnReady;
 
-        await _client.LoginAsync(Discord.TokenType.Bot, PatchClass.Settings.BOT_TOKEN);
-        await _client.StartAsync();
+        //await _client.LoginAsync(Discord.TokenType.Bot, PatchClass.Settings.BOT_TOKEN);
+        //await _client.StartAsync();
 
-        _client.Ready += OnReady;
+        Task.Delay(-1).GetAwaiter().GetResult();
     }
 
     internal async Task Shutdown()
@@ -102,8 +128,9 @@ public class DiscordRelay
             LogLevel = LogSeverity.Info,
             CaseSensitiveCommands = false,
         });
-        await _commands.AddModuleAsync(typeof(CommandModule), null);
 
+        await _commands.AddModuleAsync(typeof(CommandModule), null);
+        await _commands.AddModuleAsync(typeof(SlashCommandModule), _services);
         //Set up relay
         _client.MessageReceived += OnDiscordChat;
         _client.Disconnected += Discord_Disconnected;
@@ -129,10 +156,12 @@ public class DiscordRelay
     /// <returns></returns>
     private async Task OnDiscordChat(SocketMessage arg)
     {
+        Debugger.Break();
         //Ignore system messages
         var msg = arg as SocketUserMessage;
         if (msg is null)
             return;
+
 
         //Check for chat in approved channel
         if (msg.Channel.Id == PatchClass.Settings.RELAY_CHANNEL_ID)
@@ -392,4 +421,7 @@ public class DiscordRelay
         return fakeSender;
     }
     #endregion
+
+    private async Task LogAsync(LogMessage message)
+    => Console.WriteLine(message.ToString());
 }

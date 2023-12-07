@@ -1,14 +1,14 @@
-﻿namespace DiscordPlus
-{
-    public class Settings
-    {
-        //Supply credentials
-        public ulong RELAY_CHANNEL_ID { get; set; } = 800000000000000000;
-        public string BOT_TOKEN { get; set; } = "";
-        public int MAX_MESSAGE_LENGTH { get; set; } = 10000;
-        public double MESSAGE_INTERVAL { get; set; } = 10000;
-        public string PREFIX { get; set; } = "~";
+﻿namespace DiscordPlus;
 
-        public List<ulong> DevIds { get; set; } = new ();
-    }
+public class Settings
+{
+    //Supply credentials
+    public ulong RELAY_CHANNEL_ID { get; set; } = 800000000000000000;           //Channel to listen to
+    public ulong GUILD_ID { get; set; } = 800000000000000000;                   //Guild to register commands to, since global takes time
+    public string BOT_TOKEN { get; set; } = "";                                 //Bot credentials
+    public int MAX_MESSAGE_LENGTH { get; set; } = 10000;
+    public double MESSAGE_INTERVAL { get; set; } = 10000;
+    public string PREFIX { get; set; } = "~";
+
+    public List<ulong> DevIds { get; set; } = new ();
 }
