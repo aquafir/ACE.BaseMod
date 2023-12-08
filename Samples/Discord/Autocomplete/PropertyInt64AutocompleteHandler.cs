@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Discord.Modules;
+namespace Discord.Autocomplete;
 
 /// <summary>
 /// Autocomplete for full property
 /// </summary>
-public class PropertyStringAutocompleteHandler : AutocompleteHandler
+public class PropertyInt64AutocompleteHandler : AutocompleteHandler
 {
     public override async Task<AutocompletionResult> GenerateSuggestionsAsync(IInteractionContext context, IAutocompleteInteraction autocompleteInteraction, IParameterInfo parameter, IServiceProvider services)
     {
@@ -26,7 +26,7 @@ public class PropertyStringAutocompleteHandler : AutocompleteHandler
         var name = option.Value.ToString();
 
         // max - 25 suggestions at a time (API limit)
-        IEnumerable<AutocompleteResult> results = Enum.GetNames<PropertyString>()
+        IEnumerable<AutocompleteResult> results = Enum.GetNames<PropertyBool>()
             .Where(x => x.Contains(name, StringComparison.OrdinalIgnoreCase))
             .Take(25)
             .Select(x => new AutocompleteResult(x, x));
@@ -38,7 +38,7 @@ public class PropertyStringAutocompleteHandler : AutocompleteHandler
 /// <summary>
 /// Autocomplete based on Player's property values
 /// </summary>
-public class PlayerPropertyStringAutocompleteHandler : AutocompleteHandler
+public class PlayerPropertyInt64AutocompleteHandler : AutocompleteHandler
 {
     public override async Task<AutocompletionResult> GenerateSuggestionsAsync(IInteractionContext context, IAutocompleteInteraction autocompleteInteraction, IParameterInfo parameter, IServiceProvider services)
     {
@@ -61,9 +61,10 @@ public class PlayerPropertyStringAutocompleteHandler : AutocompleteHandler
             return AutocompletionResult.FromError(InteractionCommandError.Unsuccessful, "Unable to find player.");
 
         //Use target's properties
-        IEnumerable<AutocompleteResult> results = player.GetAllPropertyString().Keys
+        IEnumerable<AutocompleteResult> results = player.GetAllPropertyInt64().Keys
             .Take(25)   //API max of 25
             .Select(x => x.ToString())
+            //.Cast<string>()   Crashing?
             .Where(x => x.Contains(option.Value?.ToString(), StringComparison.OrdinalIgnoreCase))
             .Select(x => new AutocompleteResult(x, x));
 
@@ -74,7 +75,7 @@ public class PlayerPropertyStringAutocompleteHandler : AutocompleteHandler
 /// <summary>
 /// Autocomplete based on Player's last appraised object's property values
 /// </summary>
-public class SelectedPropertyStringAutocompleteHandler : AutocompleteHandler
+public class SelectedPropertyInt64AutocompleteHandler : AutocompleteHandler
 {
     public override async Task<AutocompletionResult> GenerateSuggestionsAsync(IInteractionContext context, IAutocompleteInteraction autocompleteInteraction, IParameterInfo parameter, IServiceProvider services)
     {
@@ -102,7 +103,7 @@ public class SelectedPropertyStringAutocompleteHandler : AutocompleteHandler
             return AutocompletionResult.FromError(InteractionCommandError.Unsuccessful, "Unable to find selection.");
 
         //Use target's properties
-        IEnumerable<AutocompleteResult> results = target.GetAllPropertyString().Keys
+        IEnumerable<AutocompleteResult> results = target.GetAllPropertyInt64().Keys
             .Select(x => x.ToString())
             .Take(25)   //API max of 25
             .Where(x => x.Contains(option.Value?.ToString(), StringComparison.OrdinalIgnoreCase))

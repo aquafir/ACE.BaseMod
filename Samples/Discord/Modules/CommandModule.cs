@@ -1,4 +1,5 @@
 using ACE.Server.Network.GameAction.Actions;
+using Discord.Autocomplete;
 using System.Linq;
 using SummaryAttribute = Discord.Interactions.SummaryAttribute;
 

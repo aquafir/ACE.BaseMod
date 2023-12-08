@@ -23,7 +23,7 @@ public class PatchClass
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
-    private static Discord _discord;
+    public static Discord DiscordRelay;
 
     private void SaveSettings()
     {
@@ -73,8 +73,8 @@ public class PatchClass
         LoadSettings();
 
         //Start Dscord
-        _discord = new Discord();
-        _discord.RunAsync()
+        DiscordRelay = new Discord();
+        DiscordRelay.RunAsync()
             .GetAwaiter()
             .GetResult();
 
@@ -91,7 +91,7 @@ public class PatchClass
     public void Shutdown()
     {
         if (Mod.State == ModState.Running)
-            Task.Run(async () => await _discord.Shutdown());
+            Task.Run(async () => await DiscordRelay.Shutdown());
 
             //If the mod is making changes that need to be saved use this and only manually edit settings when the patch is not active.
             //SaveSettings();
@@ -108,7 +108,7 @@ public class PatchClass
     public static void HandleTurbineChatRelay(ChatNetworkBlobType chatNetworkBlobType, ChatNetworkBlobDispatchType chatNetworkBlobDispatchType, uint channel, string senderName, string message, uint senderID, ChatType chatType)
     {
         ModManager.Log($"Routing message from {senderName}:\n\t{message}");
-        _discord.RelayIngameChat(message, senderName, chatType, channel, senderID, chatNetworkBlobType, chatNetworkBlobDispatchType);
+        DiscordRelay.RelayIngameChat(message, senderName, chatType, channel, senderID, chatNetworkBlobType, chatNetworkBlobDispatchType);
     }
 
 
@@ -127,7 +127,7 @@ public class PatchClass
         if (PlayerManager.GetOnlinePlayer(target) is null)
         {
             ModManager.Log($"Trying to message offline player {target} through Discord:\n  {msg}");
-            _discord.RelayIngameDirectMessage(target, msg, session);
+            DiscordRelay.RelayIngameDirectMessage(target, msg, session);
             return false;
         }
 

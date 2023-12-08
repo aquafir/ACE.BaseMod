@@ -1,4 +1,5 @@
-﻿using GroupAttribute = Discord.Interactions.GroupAttribute;
+﻿using Discord.Autocomplete;
+using GroupAttribute = Discord.Interactions.GroupAttribute;
 using SummaryAttribute = Discord.Interactions.SummaryAttribute;
 
 namespace Discord.Modules;

@@ -15,13 +15,12 @@ using System.Threading.Tasks;
 using System.Timers;
 
 namespace Discord;
-internal class Discord
+public class Discord
 {
     private DiscordSocketClient _client;
     private readonly IConfiguration _configuration;
     private readonly IServiceProvider _services;
     private IMessageChannel _channel;
-
 
     private readonly DiscordSocketConfig _socketConfig = new()
     {
@@ -142,11 +141,10 @@ internal class Discord
     /// <summary>
     /// Receives and routes messages from Discord
     /// </summary>
-    /// <param name="arg"></param>
-    /// <returns></returns>
     public async Task OnDiscordChat(SocketMessage arg)
     {
         var content = arg.Content;
+
         //Ignore system messages
         var msg = arg as SocketUserMessage;
         if (msg is null)
@@ -184,36 +182,34 @@ internal class Discord
         var name = DiscordName(match.Groups["name"].Value);
         var message = match.Groups["message"].Value.Trim();
 
-        var targetPlayer = PlayerManager.GetOnlinePlayer(name);
+        SayToTarget(msg.Author.Username, name, message);
+    }
+    public async Task SayToTarget(string speaker, string target, string message)
+    {
+        //Get target and recipient
+        var targetPlayer = PlayerManager.GetOnlinePlayer(target);
         if (targetPlayer is null)
         {
             //Response
             return;
         }
-
-        var fakeSender = GetDiscordFakePlayer(msg);
+        var fakeSender = GetDiscordFakePlayer(speaker);
 
         //Message with a name/clickable response
         var tellEvent = new GameEventTell(targetPlayer.Session, message, fakeSender.Name, fakeSender.Guid.Full, targetPlayer.Guid.Full, ChatMessageType.Tell);
         targetPlayer.Session.Network.EnqueueSend(tellEvent);
-
-        //Message with no prefix
-        //player.SendMessage(message, ChatMessageType.Tell);
     }
+
     /// <summary>
     /// Broadcast general chat
     /// </summary>
     public async Task RelayDiscordGeneralChat(SocketUserMessage msg)
     {
-        //Skip command messages
-        if (msg.Content.StartsWith("!"))
-            return;
-
-        //Check if the server has disabled general chat
-        //if (PropertyManager.GetBool("chat_disable_general").Item)
-        //    return;
-
-        var fakeSender = GetDiscordFakePlayer(msg);
+        SayToGeneralChat(msg.Author.Username, msg.Content);
+    }
+    public async Task SayToGeneralChat(string speaker, string message)
+    {
+        var fakeSender = GetDiscordFakePlayer(speaker);
 
         //Construct message
         //ModManager.Log($"Trying to send message from Discord:\n\t{msg.Author.Username}: {msg.Content}");
@@ -223,7 +219,7 @@ internal class Discord
             TurbineChatChannel.General,
             fakeSender.Name, //Use prefix to filter out messages the relay is sending
                              //"~Discord",
-            msg.Content,
+            message,
             fakeSender.Guid.Full,
             ChatType.General);
 
@@ -234,14 +230,11 @@ internal class Discord
             if (!recipient.GetCharacterOption(CharacterOption.ListenToGeneralChat))
                 return;
 
-            //Todo: think about how to handle squelches?
-            //if (recipient.SquelchManager.Squelches.Contains(session.Player, ChatMessageType.AllChannels))
-            //    continue;
-
             //ModManager.Log($"Sending to recipient {recipient.Name}");
             recipient.Session.Network.EnqueueSend(chatMessage);
         }
     }
+
     #endregion
 
     #region ACE --> Discord
@@ -375,14 +368,15 @@ internal class Discord
     /// Todo: Decide if GUID should just be generated every time, skipping the FakePlayer
     /// Discord user's fake in-game identity.  
     /// </summary>
-    private Dictionary<ulong, FakePlayer> _fakePlayers = new();
-    private FakePlayer GetDiscordFakePlayer(SocketUserMessage msg)
+    private Dictionary<string, FakePlayer> _fakePlayers = new();
+    private FakePlayer GetDiscordFakePlayer(SocketUserMessage msg) => GetDiscordFakePlayer(msg.Author.Username);
+    private FakePlayer GetDiscordFakePlayer(string name)
     {
         //Creature a fake player to use with chat clicks / r?
-        if (!_fakePlayers.TryGetValue(msg.Author.Id, out var fakeSender))
+        if (!_fakePlayers.TryGetValue(name, out var fakeSender))
         {
-            fakeSender = new FakePlayer(ACEName(msg.Author.Username));
-            _fakePlayers.Add(msg.Author.Id, fakeSender);
+            fakeSender = new FakePlayer(ACEName(name));
+            _fakePlayers.Add(name, fakeSender);
         }
 
         return fakeSender;

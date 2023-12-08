@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Discord.Autocomplete;
 
 namespace Discord.Modules;
 public class ChatCommandModule : InteractionModuleBase<SocketInteractionContext>
@@ -17,16 +18,32 @@ public class ChatCommandModule : InteractionModuleBase<SocketInteractionContext>
         [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
         string message
         )
-
     {
-        var p = PlayerManager.FindByName(player ?? "") as Player;
-        if (p is null)
-            await RespondAsync($"Could not find {player}");
+        var user = this.Context?.User?.Username;
+
+        if (String.IsNullOrEmpty(user))
+            await RespondAsync("Unable to find the user of this command.");
         else
         {
-            p.SendMessage(message);
+            PatchClass.DiscordRelay.SayToTarget(Context.User.Username, player ?? "", message);
             await RespondAsync();
-            DeleteOriginalResponseAsync();
         }
     }
+
+    [SlashCommand("g", "Message gen chat?")]
+    public async Task ChatCommand(
+    string message
+    )
+    {
+        var user = this.Context?.User?.Username;
+        
+        if (String.IsNullOrEmpty(user))
+            await RespondAsync("Unable to find the user of this command.");
+        else
+        {
+            PatchClass.DiscordRelay.SayToGeneralChat(Context.User.Username, message);
+            await RespondAsync();
+        }
+    }
+
 }
