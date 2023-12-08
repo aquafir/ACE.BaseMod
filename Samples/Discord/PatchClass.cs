@@ -1,4 +1,8 @@
-﻿using System.Text.Encodings.Web;
+﻿using ACE.Common.Extensions;
+using ACE.Server.Network.GameAction.Actions;
+using ACE.Server.Network.GameMessages.Messages;
+using System.Reactive.Linq.ObservableImpl;
+using System.Text.Encodings.Web;
 
 namespace Discord;
 
@@ -19,6 +23,7 @@ public class PatchClass
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
+    private static Discord _discord;
 
     private void SaveSettings()
     {
@@ -68,7 +73,8 @@ public class PatchClass
         LoadSettings();
 
         //Start Dscord
-        new Discord().RunAsync()
+        _discord = new Discord();
+        _discord.RunAsync()
             .GetAwaiter()
             .GetResult();
 
@@ -84,16 +90,64 @@ public class PatchClass
 
     public void Shutdown()
     {
-        //if (Mod.State == ModState.Running)
-        // Shut down enabled mod...
+        if (Mod.State == ModState.Running)
+            Task.Run(async () => await _discord.Shutdown());
 
-        //If the mod is making changes that need to be saved use this and only manually edit settings when the patch is not active.
-        //SaveSettings();
+            //If the mod is making changes that need to be saved use this and only manually edit settings when the patch is not active.
+            //SaveSettings();
 
-        if (Mod.State == ModState.Error)
+            if (Mod.State == ModState.Error)
             ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
     }
     #endregion
 
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(GameMessageTurbineChat), MethodType.Constructor,
+       new Type[] { typeof(ChatNetworkBlobType), typeof(ChatNetworkBlobDispatchType), typeof(uint), typeof(string), typeof(string), typeof(uint), typeof(ChatType) })]
+    public static void HandleTurbineChatRelay(ChatNetworkBlobType chatNetworkBlobType, ChatNetworkBlobDispatchType chatNetworkBlobDispatchType, uint channel, string senderName, string message, uint senderID, ChatType chatType)
+    {
+        ModManager.Log($"Routing message from {senderName}:\n\t{message}");
+        _discord.RelayIngameChat(message, senderName, chatType, channel, senderID, chatNetworkBlobType, chatNetworkBlobDispatchType);
+    }
+
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(GameActionTell), nameof(GameActionTell.Handle), new Type[] { typeof(ClientMessage), typeof(Session) })]
+    public static bool HandleTellRelay(ClientMessage clientMessage, Session session)
+    {
+        //Todo: think about ways to reduce redundancy
+        var position = clientMessage.Payload.BaseStream.Position;
+        var msg = clientMessage.Payload.ReadString16L();
+        var target = clientMessage.Payload.ReadString16L();
+        //Rewind what was read
+        clientMessage.Payload.BaseStream.Position = position;
+        target = target.Trim();
+
+        if (PlayerManager.GetOnlinePlayer(target) is null)
+        {
+            ModManager.Log($"Trying to message offline player {target} through Discord:\n  {msg}");
+            _discord.RelayIngameDirectMessage(target, msg, session);
+            return false;
+        }
+
+        return true;
+    }
+
+
+
+    //[HarmonyPrefix]
+    //[HarmonyPatch(typeof(Player), nameof(Player.SendChatMessage), new Type[] { typeof(WorldObject), typeof(string), typeof(ChatMessageType) })]
+    //public static bool SendChatMessage(WorldObject source, string msg, ChatMessageType msgType)
+    //{
+    //    Debugger.Break();
+    //    if(PlayerManager.GetOnlinePlayer(source.Guid) is null)
+    //    {
+    //        ModManager.Log("Trying to message offline player through Discord");
+    //        return false;
+    //    }
+
+    //    return true;
+    //}
 }
 

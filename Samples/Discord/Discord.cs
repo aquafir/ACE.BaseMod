@@ -25,8 +25,8 @@ internal class Discord
 
     private readonly DiscordSocketConfig _socketConfig = new()
     {
-        //GatewayIntents = GatewayIntents.All,
-        GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMembers,
+        GatewayIntents = GatewayIntents.All,
+        //GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMembers | GatewayIntents.MessageContent,
         AlwaysDownloadUsers = true,
         LogGatewayIntentWarnings = false,
         LogLevel = LogSeverity.Critical,    //Spamming something otherwise?
@@ -86,12 +86,6 @@ internal class Discord
         await Task.Delay(Timeout.Infinite);
     }
 
-    private async Task LogAsync(LogMessage message)
-        => Console.WriteLine(message.ToString());
-
-
-
-
     private async Task OnReady()
     {
         ModManager.Log("Logged in to Discord...");
@@ -112,7 +106,7 @@ internal class Discord
         _batchTimer.Enabled = true;
 
         //Say hi
-        await _channel.SendMessageAsync("ACE Chat Relay is online.");
+        //await _channel.SendMessageAsync("ACE Chat Relay is online.");
     }
 
     private async Task Discord_Disconnected(Exception arg)
@@ -150,13 +144,13 @@ internal class Discord
     /// </summary>
     /// <param name="arg"></param>
     /// <returns></returns>
-    private async Task OnDiscordChat(SocketMessage arg)
+    public async Task OnDiscordChat(SocketMessage arg)
     {
+        var content = arg.Content;
         //Ignore system messages
         var msg = arg as SocketUserMessage;
         if (msg is null)
             return;
-
 
         //Check for chat in approved channel
         if (msg.Channel.Id == PatchClass.Settings.RELAY_CHANNEL_ID && !msg.Author.IsBot)
@@ -176,7 +170,7 @@ internal class Discord
     /// <summary>
     /// Send a message to an in-game player when the bot gets a private messages
     /// </summary>
-    private async Task RelayDiscordPrivateChat(SocketUserMessage msg)
+    public async Task RelayDiscordPrivateChat(SocketUserMessage msg)
     {
         var match = Regex.Match(msg.Content, @"/t (?<name>[+\w]+),(?<message>.*)");
 
@@ -209,7 +203,7 @@ internal class Discord
     /// <summary>
     /// Broadcast general chat
     /// </summary>
-    private async Task RelayDiscordGeneralChat(SocketUserMessage msg)
+    public async Task RelayDiscordGeneralChat(SocketUserMessage msg)
     {
         //Skip command messages
         if (msg.Content.StartsWith("!"))
@@ -395,4 +389,7 @@ internal class Discord
     }
     #endregion
 
+
+    private async Task LogAsync(LogMessage message)
+    => Console.WriteLine(message.ToString());
 }
