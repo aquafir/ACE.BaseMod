@@ -76,7 +76,7 @@ public class Discord
             .InitializeAsync();
 
         // Bot token can be provided from the Configuration object we set up earlier
-        await _client.LoginAsync(TokenType.Bot, "MTAzODc0MTk1MTYzNTI3MTcxMA.GiMqNe.0zKrTWfXP2X12DG-SMtSkmscCG5zKD_NuGZksg");
+        await _client.LoginAsync(TokenType.Bot, PatchClass.Settings.BOT_TOKEN);
         await _client.StartAsync();
 
         await OnReady();
