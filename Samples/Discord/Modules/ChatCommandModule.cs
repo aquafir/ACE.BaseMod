@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Discord.Autocomplete;
-
-namespace Discord.Modules;
+﻿namespace Discord.Modules;
 public class ChatCommandModule : InteractionModuleBase<SocketInteractionContext>
 {
     public InteractionService Commands { get; set; }

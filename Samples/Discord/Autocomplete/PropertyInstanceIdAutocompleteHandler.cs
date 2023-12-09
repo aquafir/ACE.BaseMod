@@ -1,11 +1,4 @@
-﻿using ACE.Entity.Enum.Properties;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Discord.Autocomplete;
+﻿namespace Discord.Autocomplete;
 
 /// <summary>
 /// Autocomplete for full property

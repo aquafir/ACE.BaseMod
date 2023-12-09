@@ -1,17 +1,11 @@
 ﻿using ACE.Server.Network.GameEvent.Events;
 using ACE.Server.Network.GameMessages.Messages;
 using Discord.Commands;
-using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace Discord;
@@ -135,9 +129,6 @@ public class Discord
         }
     }
 
-
-
-    #region Discord --> ACE (Chat and DM)
     /// <summary>
     /// Receives and routes messages from Discord
     /// </summary>
@@ -149,6 +140,38 @@ public class Discord
         var msg = arg as SocketUserMessage;
         if (msg is null)
             return;
+
+        //if(msg.Attachments.Count > 0)
+        //    await ScanAttachments(msg);
+
+
+        //// Check if the message is a command based on the prefix 
+        ////Todo: decide how to split between DM commands and general commands
+        //int argPos = 0;
+        //if (msg.HasCharPrefix('!', ref argPos) ||
+        //    msg.HasMentionPrefix(_client.CurrentUser, ref argPos))
+        //{
+        //    // Create a WebSocket-based command context based on the message
+        //    var context = new SocketCommandContext(_client, msg);
+
+        //    // Execute the command with the command context we just
+        //    //await _commands.ExecuteAsync(
+        //    //    context: context,
+        //    //    argPos: argPos,
+        //    //    services: null);
+
+        //    //Different handling may be needed if command prefixes fall back to being sent to chat instead of skipping
+        //    return;
+        //}
+
+        //Check for chat in approved channel
+        if (msg.Channel.Id == PatchClass.Settings.RELAY_CHANNEL_ID)
+        {
+            //General chat to approved channels -- use this approach to split Discord channel --> Game channel?
+            if (!msg.Author.IsBot)
+                RelayDiscordGeneralChat(msg);
+            return;
+        }
 
         //Check for chat in approved channel
         if (msg.Channel.Id == PatchClass.Settings.RELAY_CHANNEL_ID && !msg.Author.IsBot)
@@ -165,6 +188,49 @@ public class Discord
             return;
         }
     }
+
+    private async Task ScanAttachments(SocketUserMessage? msg)
+    {
+        foreach (var attachment in msg.Attachments)
+        {
+            //Size cap of 1 mb
+            if (attachment.Size > 1_000_000)
+                continue;
+
+            try {
+                if (attachment.Filename.EndsWith(".utl"))
+                {
+                    //By username?
+                    var path = PatchClass.Settings.LootProfileUseUsername ?
+                        Path.Combine(PatchClass.Settings.LootProfilePath, msg.Author.Username) :
+                    PatchClass.Settings.LootProfilePath;
+                    Directory.CreateDirectory(path);    //Checks anyways, ensure path exists
+
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.Timeout = TimeSpan.FromSeconds(10);
+
+                        var stream = await client.GetStreamAsync(attachment.Url);
+                        var filePath = Path.Combine(path, attachment.Filename);
+
+                        // Use the stream as needed (e.g., save to a file)
+                        using (var fileStream = File.Create(filePath))
+                        {
+                            await stream.CopyToAsync(fileStream);
+                            await this._channel.SendMessageAsync($"Downloaded loot profile: {attachment.Filename}");
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                ModManager.Log($"Failed to download attachment.");
+            }
+        }
+    }
+
+
+    #region Discord --> ACE (Chat and DM)
     /// <summary>
     /// Send a message to an in-game player when the bot gets a private messages
     /// </summary>
@@ -383,7 +449,6 @@ public class Discord
     }
     #endregion
 
-
     private async Task LogAsync(LogMessage message)
-    => Console.WriteLine(message.ToString());
+    => Console.WriteLine(message.ToString());    
 }

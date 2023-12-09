@@ -1,5 +1,3 @@
-using Discord.Interactions;
-using Discord.Modules;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 

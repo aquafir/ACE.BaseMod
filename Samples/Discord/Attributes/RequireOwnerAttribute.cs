@@ -1,5 +1,3 @@
-using Discord.Interactions;
-
 namespace Discord.Attributes;
 
 public class RequireOwnerAttribute : PreconditionAttribute

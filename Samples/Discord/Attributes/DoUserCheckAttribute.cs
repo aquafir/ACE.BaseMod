@@ -1,4 +1,3 @@
-using Discord.Interactions;
 using Discord.WebSocket;
 
 namespace Discord.Attributes;

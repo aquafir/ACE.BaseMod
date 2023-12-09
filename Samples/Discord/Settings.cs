@@ -10,4 +10,7 @@ public class Settings
     public string PREFIX { get; set; } = "~";
 
     public List<ulong> DevIds { get; set; } = new();
+
+    public string LootProfilePath { get; } = Path.Combine(ModManager.ModPath, "LootProfiles");//Path.Combine(Mod.ModPath, "LootProfiles");
+    public bool LootProfileUseUsername { get; set; } = true;
 }

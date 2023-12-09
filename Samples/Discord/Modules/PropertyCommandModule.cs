@@ -1,6 +1,5 @@
-﻿using Discord.Autocomplete;
-using GroupAttribute = Discord.Interactions.GroupAttribute;
-using SummaryAttribute = Discord.Interactions.SummaryAttribute;
+﻿using Newtonsoft.Json.Linq;
+using System;
 
 namespace Discord.Modules;
 
@@ -10,23 +9,6 @@ public class PropertyCommandModule : InteractionModuleBase<SocketInteractionCont
     [Group("set", "Set property values")]
     public class ModGroup : InteractionModuleBase<SocketInteractionContext>
     {
-        //[SlashCommand("bool2", "Modify player")]
-        //public async Task ModifyBool2(
-        //   [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
-        //   [Summary("PropType"), Autocomplete(typeof(PlayerPropertyBoolAutocompleteHandler))] string prop
-        //   )
-        //{
-        //    var p = PlayerManager.FindByName(player ?? "") as Player;
-        //    if (p is null)
-        //        await RespondAsync($"Could not find {player}");
-
-        //    if (Enum.TryParse<PropertyBool>(prop, out var propEnum))
-        //    {
-        //        var val = p.GetProperty(propEnum);
-        //        await RespondAsync($"Got {propEnum} of {player}: {val}");
-        //    }
-        //}
-
         [SlashCommand("bool", "Modify last appraised")]
         public async Task ModifyBool(
             [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
@@ -47,17 +29,18 @@ public class PropertyCommandModule : InteractionModuleBase<SocketInteractionCont
                 {
                     var old = target.GetProperty(propEnum);
                     target.SetProperty(propEnum, value);
+                    target.EnqueueBroadcastUpdateObject();
                     await RespondAsync($"{target.Name}'s {propEnum}: {old.ToString() ?? "null"}->{value}");
                 }
             }
         }
 
-        [SlashCommand("string", "Modify last appraised")]
-        public async Task ModifyString(
-            [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
-            [Summary("Prop"), Autocomplete(typeof(SelectedPropertyStringAutocompleteHandler))] string prop,
-            string value
-            )
+        [SlashCommand("did", "Modify last appraised")]
+        public async Task ModifyDataId(
+    [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
+    [Summary("Prop"), Autocomplete(typeof(SelectedPropertyDataIdAutocompleteHandler))] string prop,
+    uint value
+    )
         {
             var p = PlayerManager.FindByName(player ?? "") as Player;
             if (p is null)
@@ -68,16 +51,120 @@ public class PropertyCommandModule : InteractionModuleBase<SocketInteractionCont
                 await RespondAsync($"{player} missing");
             else
             {
-                if (Enum.TryParse<PropertyString>(prop, out var propEnum))
+                if (Enum.TryParse<PropertyDataId>(prop, out var propEnum))
                 {
                     var old = target.GetProperty(propEnum);
                     target.SetProperty(propEnum, value);
-                    p.UpdateProperty(target, propEnum, value, true);                    
+                    target.EnqueueBroadcastUpdateObject();
                     await RespondAsync($"{target.Name}'s {propEnum}: {old.ToString() ?? "null"}->{value}");
                 }
             }
         }
 
+        [SlashCommand("iid", "Modify last appraised")]
+        public async Task ModifyInstanceId(
+    [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
+    [Summary("Prop"), Autocomplete(typeof(SelectedPropertyInstanceIdAutocompleteHandler))] string prop,
+    uint value
+    )
+        {
+            var p = PlayerManager.FindByName(player ?? "") as Player;
+            if (p is null)
+                await RespondAsync($"Could not find {player}");
+
+            var target = p.FindObject(p.RequestedAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
+            if (target is null)
+                await RespondAsync($"{player} missing");
+            else
+            {
+                if (Enum.TryParse<PropertyInstanceId>(prop, out var propEnum))
+                {
+                    var old = target.GetProperty(propEnum);
+                    target.SetProperty(propEnum, value);
+                    target.EnqueueBroadcastUpdateObject();
+                    await RespondAsync($"{target.Name}'s {propEnum}: {old.ToString() ?? "null"}->{value}");
+                }
+            }
+        }
+
+        [SlashCommand("int", "Modify last appraised")]
+        public async Task ModifyInt(
+    [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
+    [Summary("Prop"), Autocomplete(typeof(SelectedPropertyIntAutocompleteHandler))] string prop,
+    int value
+    )
+        {
+            var p = PlayerManager.FindByName(player ?? "") as Player;
+            if (p is null)
+                await RespondAsync($"Could not find {player}");
+
+            var target = p.FindObject(p.RequestedAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
+            if (target is null)
+                await RespondAsync($"{player} missing");
+            else
+            {
+                if (Enum.TryParse<PropertyInt>(prop, out var propEnum))
+                {
+                    var old = target.GetProperty(propEnum);
+                    target.SetProperty(propEnum, value);
+                    target.EnqueueBroadcastUpdateObject();
+                    await RespondAsync($"{target.Name}'s {propEnum}: {old.ToString() ?? "null"}->{value}");
+                }
+            }
+        }
+
+        [SlashCommand("int64", "Modify last appraised")]
+        public async Task ModifyInt64(
+    [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
+    [Summary("Prop"), Autocomplete(typeof(SelectedPropertyInt64AutocompleteHandler))] string prop,
+    long value
+    )
+        {
+            var p = PlayerManager.FindByName(player ?? "") as Player;
+            if (p is null)
+                await RespondAsync($"Could not find {player}");
+
+            var target = p.FindObject(p.RequestedAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
+            if (target is null)
+                await RespondAsync($"{player} missing");
+            else
+            {
+                if (Enum.TryParse<PropertyInt64>(prop, out var propEnum))
+                {
+                    var old = target.GetProperty(propEnum);
+                    target.SetProperty(propEnum, value);
+                    target.EnqueueBroadcastUpdateObject();
+                    await RespondAsync($"{target.Name}'s {propEnum}: {old.ToString() ?? "null"}->{value}");
+                }
+            }
+        }
+
+    [SlashCommand("string", "Modify last appraised")]
+    public async Task ModifyString(
+        [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
+        [Summary("Prop"), Autocomplete(typeof(SelectedPropertyStringAutocompleteHandler))] string prop,
+        string value
+        )
+    {
+        var p = PlayerManager.FindByName(player ?? "") as Player;
+        if (p is null)
+            await RespondAsync($"Could not find {player}");
+
+        var target = p.FindObject(p.RequestedAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
+        if (target is null)
+            await RespondAsync($"{player} missing");
+        else
+        {
+            if (Enum.TryParse<PropertyString>(prop, out var propEnum))
+            {
+                var old = target.GetProperty(propEnum);
+                target.SetProperty(propEnum, value);
+                target.EnqueueBroadcastUpdateObject();
+                p.UpdateProperty(target, propEnum, value, true);
+                await RespondAsync($"{target.Name}'s {propEnum}: {old.ToString() ?? "null"}->{value}");
+            }
+        }
+    }
     }
 
     [Group("get", "View properties")]
@@ -108,4 +195,40 @@ public class PropertyCommandModule : InteractionModuleBase<SocketInteractionCont
             await RespondAsync($"{player} {prop}");
         }
     }
+
+    [Group("search", "Find items")]
+    public class SearchGroup : InteractionModuleBase<SocketInteractionContext>
+    {
+        //Search player's last appraised for item?  Or just player themself?
+        [SlashCommand("name", "Search by name regex")]
+        public async Task ModifyBool(
+            [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
+            [Summary("Query"), Autocomplete(typeof(SearchByNameAutocompleteHandler))] uint query
+            )
+        {
+            var p = PlayerManager.FindByName(player ?? "") as Player;
+            if (p is null)
+                await RespondAsync($"Could not find {player}");
+
+            var target = p.FindObject(query, Player.SearchLocations.Everywhere, out _, out _, out _);
+            if (target is null)
+                await RespondAsync($"{query} missing");
+            else
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine($"Name: {target.Name}");
+                sb.AppendLine($"Guid: {query}");
+                sb.AppendLine($"Bools:\n{String.Join("\n", target.GetAllPropertyBools().Select(x => $"{x.Key} = {x.Value}"))}");
+                sb.AppendLine($"\nInts:\n{String.Join("\n", target.GetAllPropertyInt().Select(x => $"{x.Key} = {x.Value}"))}");
+                sb.AppendLine($"\nInt64s:\n{String.Join("\n", target.GetAllPropertyInt64().Select(x => $"{x.Key} = {x.Value}"))}");
+                sb.AppendLine($"\nStrings:\n{String.Join("\n", target.GetAllPropertyString().Select(x => $"{x.Key} = {x.Value}"))}");
+
+                await RespondAsync($"{sb.ToString()}");
+                //await RespondAsync($"Guid of item: {query}");
+
+
+            }
+        }
+    }
+
 }

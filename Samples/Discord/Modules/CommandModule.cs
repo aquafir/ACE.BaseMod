@@ -1,10 +1,4 @@
-using ACE.Server.Network.GameAction.Actions;
-using Discord.Autocomplete;
-using System.Linq;
-using SummaryAttribute = Discord.Interactions.SummaryAttribute;
-
 namespace Discord.Modules;
-
 
 // Interaction modules must be public and inherit from an IInteractionModuleBase
 public class CommandModule : InteractionModuleBase<SocketInteractionContext>
@@ -19,6 +13,101 @@ public class CommandModule : InteractionModuleBase<SocketInteractionContext>
     {
         _handler = handler;
     }
+
+    //https://discordnet.dev/guides/text_commands/intro.html
+    [SlashCommand("runas", "Run command as player")]
+    public async Task RunAsPlayer(
+        [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
+        [Summary("Command"), Autocomplete(typeof(AceCommandAutocompleteHandler))] string command,
+        [Summary("Params")] string args
+        )
+    {
+        if (PatchClass.Settings.DevIds.Contains(Context.User.Id))
+        {
+            if (!await Helpers.TryIssueACECommand(command, player))
+                await Context.Channel.SendMessageAsync($"Failed to run command.");
+        }
+    }
+
+    [SlashCommand("run", "Run command as admin")]
+    public async Task RunAsDev(
+        [Summary("Command")] string command
+        )
+    {
+        if (PatchClass.Settings.DevIds.Contains(Context.User.Id))
+        {
+            if (!await Helpers.TryIssueACECommand(command))
+                await Context.Channel.SendMessageAsync($"Failed to run command.");
+        }
+    }
+
+    [Group("upload", "Upload things")]
+    public class UploadGroup : InteractionModuleBase<SocketInteractionContext>
+    {
+        [SlashCommand("loot", "Upload loot profile")]
+        public async Task UploadLoot(
+            [Summary("profile")] IAttachment attachment
+            )
+        {
+            //Size cap of 1 mb
+            if (attachment.Size > 1_000_000)
+                RespondAsync("File is too large.");
+
+            try
+            {
+                if (!attachment.Filename.EndsWith(".utl"))
+                {
+                    RespondAsync("Not a loot profile extension.");
+                }
+                else
+                {
+                    //By username?
+                    var path = PatchClass.Settings.LootProfileUseUsername ?
+                        Path.Combine(PatchClass.Settings.LootProfilePath, Context.User.Username) :
+                    PatchClass.Settings.LootProfilePath;
+                    Directory.CreateDirectory(path);    //Checks anyways, ensure path exists
+
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.Timeout = TimeSpan.FromSeconds(10);
+
+                        var stream = await client.GetStreamAsync(attachment.Url);
+                        var filePath = Path.Combine(path, attachment.Filename);
+
+                        // Use the stream as needed (e.g., save to a file)
+                        using (var fileStream = File.Create(filePath))
+                        {
+                            await stream.CopyToAsync(fileStream);
+                            await RespondAsync($"Downloaded loot profile: {attachment.Filename}");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ModManager.Log($"Failed to download attachment.");
+            }
+        }
+    }
+
+
+
+    //[SlashCommand("kick", "Kick a player")]
+    //public async Task KickPlayer(
+    //[Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player)
+    //{
+    //    var p = PlayerManager.FindByName(player ?? "") as Player;
+    //    if (p is null)
+    //    {
+    //        await RespondAsync($"Could not find {player}");
+    //    }
+    //    else
+    //    {
+    //        //p.Die();
+    //        //p.Session.Terminate(ACE.Server.Network.Enum.SessionTerminationReason.AccountBooted);
+    //        await RespondAsync($"Kicked {player}");
+    //    }
+    //}
 
     #region Unused Command References
     // You can use a number of parameter types in you Slash Command handlers (string, int, double, bool, IUser, IChannel, IMentionable, IRole, Enums) by default. Optionally,
@@ -90,65 +179,4 @@ public class CommandModule : InteractionModuleBase<SocketInteractionContext>
     #endregion
 
 
-    // you need to add `Autocomplete` attribute before parameter to add autocompletion to it
-    [SlashCommand("auto", "command_description")]
-    public async Task ExampleCommand(
-        //[Summary("Query")] string query,
-        [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player)
-        => await RespondAsync($"Your choice: {player}");
-
-
-    [SlashCommand("kick", "Kick a player")]
-    public async Task KickPlayer(
-    //[Summary("Query")] string query,
-    [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player)
-    {
-        var p = PlayerManager.FindByName(player ?? "") as Player;
-        if (p is null)
-        {
-            await RespondAsync($"Could not find {player}");
-        }
-        else
-        {
-            //p.Die();
-            //p.Session.Terminate(ACE.Server.Network.Enum.SessionTerminationReason.AccountBooted);
-            await RespondAsync($"Kicked {player}");
-        }
-    }
-}
-
-
-public class PropertyTypeAutocompleteHandler : AutocompleteHandler
-{
-    static readonly string[] types = Enum.GetNames<PropertyType>();
-
-    public override async Task<AutocompletionResult> GenerateSuggestionsAsync(IInteractionContext context, IAutocompleteInteraction autocompleteInteraction, IParameterInfo parameter, IServiceProvider services)
-    {
-        var o = autocompleteInteraction.Data.Options;
-        var option = autocompleteInteraction.Data.Options.Where(x => x.Name == "propType")?.FirstOrDefault();
-        if (option is null)
-            return AutocompletionResult.FromError(InteractionCommandError.ParseFailed, "No parameter named propType.  Contact Bot smith.");
-
-        var name = option.Value.ToString();
-
-
-        //var message = parameter as SocketMessage;
-        var results = types.Where(x => x.Contains(name, StringComparison.OrdinalIgnoreCase))
-            .Select(x => new AutocompleteResult(x, x));//x.Guid.ToString()));
-
-        // max - 25 suggestions at a time (API limit)
-        return AutocompletionResult.FromSuccess(results.Take(25));
-    }
-}
-
-
-public enum PropertyType
-{
-    Float,
-    Bool,
-    String,
-    DataId,
-    InstanceId,
-    Int,
-    Int64
 }
