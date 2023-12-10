@@ -24,6 +24,9 @@ public class CommandModule : InteractionModuleBase<SocketInteractionContext>
     {
         if (PatchClass.Settings.DevIds.Contains(Context.User.Id))
         {
+            if (!String.IsNullOrEmpty(args))
+                command += " " + args;
+
             if (!await Helpers.TryIssueACECommand(command, player))
                 await Context.Channel.SendMessageAsync($"Failed to run command.");
         }
@@ -31,66 +34,19 @@ public class CommandModule : InteractionModuleBase<SocketInteractionContext>
 
     [SlashCommand("run", "Run command as admin")]
     public async Task RunAsDev(
-        [Summary("Command")] string command
+        [Summary("Command"), Autocomplete(typeof(AceCommandAutocompleteHandler))] string command,
+        [Summary("Params")] string args
         )
     {
         if (PatchClass.Settings.DevIds.Contains(Context.User.Id))
         {
+            if (!String.IsNullOrEmpty(args))
+                command += " " + args;
+
             if (!await Helpers.TryIssueACECommand(command))
                 await Context.Channel.SendMessageAsync($"Failed to run command.");
         }
     }
-
-    [Group("upload", "Upload things")]
-    public class UploadGroup : InteractionModuleBase<SocketInteractionContext>
-    {
-        [SlashCommand("loot", "Upload loot profile")]
-        public async Task UploadLoot(
-            [Summary("profile")] IAttachment attachment
-            )
-        {
-            //Size cap of 1 mb
-            if (attachment.Size > 1_000_000)
-                RespondAsync("File is too large.");
-
-            try
-            {
-                if (!attachment.Filename.EndsWith(".utl"))
-                {
-                    RespondAsync("Not a loot profile extension.");
-                }
-                else
-                {
-                    //By username?
-                    var path = PatchClass.Settings.LootProfileUseUsername ?
-                        Path.Combine(PatchClass.Settings.LootProfilePath, Context.User.Username) :
-                    PatchClass.Settings.LootProfilePath;
-                    Directory.CreateDirectory(path);    //Checks anyways, ensure path exists
-
-                    using (HttpClient client = new HttpClient())
-                    {
-                        client.Timeout = TimeSpan.FromSeconds(10);
-
-                        var stream = await client.GetStreamAsync(attachment.Url);
-                        var filePath = Path.Combine(path, attachment.Filename);
-
-                        // Use the stream as needed (e.g., save to a file)
-                        using (var fileStream = File.Create(filePath))
-                        {
-                            await stream.CopyToAsync(fileStream);
-                            await RespondAsync($"Downloaded loot profile: {attachment.Filename}");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ModManager.Log($"Failed to download attachment.");
-            }
-        }
-    }
-
-
 
     //[SlashCommand("kick", "Kick a player")]
     //public async Task KickPlayer(
@@ -177,6 +133,4 @@ public class CommandModule : InteractionModuleBase<SocketInteractionContext>
     //    => await RespondAsync(text: $":wave: {Context.User} said hi to you, <@{user.Id}>!");
 
     #endregion
-
-
 }

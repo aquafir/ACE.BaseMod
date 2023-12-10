@@ -106,7 +106,7 @@ public class PatchClass
        new Type[] { typeof(ChatNetworkBlobType), typeof(ChatNetworkBlobDispatchType), typeof(uint), typeof(string), typeof(string), typeof(uint), typeof(ChatType) })]
     public static void HandleTurbineChatRelay(ChatNetworkBlobType chatNetworkBlobType, ChatNetworkBlobDispatchType chatNetworkBlobDispatchType, uint channel, string senderName, string message, uint senderID, ChatType chatType)
     {
-        ModManager.Log($"Routing message from {senderName}:\n\t{message}");
+        //ModManager.Log($"Routing message from {senderName}:\n\t{message}");
         DiscordRelay.RelayIngameChat(message, senderName, chatType, channel, senderID, chatNetworkBlobType, chatNetworkBlobDispatchType);
     }
 
@@ -125,7 +125,7 @@ public class PatchClass
 
         if (PlayerManager.GetOnlinePlayer(target) is null)
         {
-            ModManager.Log($"Trying to message offline player {target} through Discord:\n  {msg}");
+            //ModManager.Log($"Trying to message offline player {target} through Discord:\n  {msg}");
             DiscordRelay.RelayIngameDirectMessage(target, msg, session);
             return false;
         }

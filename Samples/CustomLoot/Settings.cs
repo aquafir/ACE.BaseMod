@@ -104,6 +104,12 @@ public class Settings
     public double CloakProcRate { get; set; } = .05; //5%
     public float AetheriaProcRate { get; set; } = .05f;
     #endregion
+
+
+    #region AutoLoot
+    public string LootProfilePath { get; } = Path.Combine(ModManager.ModPath, "LootProfiles");//Path.Combine(Mod.ModPath, "LootProfiles");
+    public bool LootProfileUseUsername { get; set; } = true;
+    #endregion
     #endregion
 
     public SpellSettings SpellSettings { get; set; } = new();
@@ -129,4 +135,5 @@ public class Settings
     public Dictionary<string, SpellId[]> SpellGroups { get; set; } = Enum.GetValues<SpellGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     public Dictionary<string, Augment[]> AugmentGroups { get; set; } = Enum.GetValues<AugmentGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     #endregion
+
 }
