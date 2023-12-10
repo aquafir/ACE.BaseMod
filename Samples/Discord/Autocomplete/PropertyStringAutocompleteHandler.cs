@@ -90,7 +90,7 @@ public class SelectedPropertyStringAutocompleteHandler : AutocompleteHandler
         if (player is null)
             return AutocompletionResult.FromError(InteractionCommandError.Unsuccessful, "Unable to find player.");
 
-        var targetID = player.RequestedAppraisalTarget ?? 0;
+        var targetID = player.CurrentAppraisalTarget ?? 0;
         var target = player.FindObject(targetID, Player.SearchLocations.Everywhere, out _, out _, out _);
         if (target is null)
             return AutocompletionResult.FromError(InteractionCommandError.Unsuccessful, "Unable to find selection.");

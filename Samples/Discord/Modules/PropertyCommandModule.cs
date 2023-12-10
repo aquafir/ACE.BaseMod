@@ -20,7 +20,7 @@ public class PropertyCommandModule : InteractionModuleBase<SocketInteractionCont
             if (p is null)
                 await RespondAsync($"Could not find {player}");
 
-            var target = p.FindObject(p.RequestedAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
+            var target = p.FindObject(p.CurrentAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
             if (target is null)
                 await RespondAsync($"{player} missing");
             else
@@ -46,7 +46,7 @@ public class PropertyCommandModule : InteractionModuleBase<SocketInteractionCont
             if (p is null)
                 await RespondAsync($"Could not find {player}");
 
-            var target = p.FindObject(p.RequestedAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
+            var target = p.FindObject(p.CurrentAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
             if (target is null)
                 await RespondAsync($"{player} missing");
             else
@@ -72,7 +72,7 @@ public class PropertyCommandModule : InteractionModuleBase<SocketInteractionCont
             if (p is null)
                 await RespondAsync($"Could not find {player}");
 
-            var target = p.FindObject(p.RequestedAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
+            var target = p.FindObject(p.CurrentAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
             if (target is null)
                 await RespondAsync($"{player} missing");
             else
@@ -87,6 +87,33 @@ public class PropertyCommandModule : InteractionModuleBase<SocketInteractionCont
             }
         }
 
+        [SlashCommand("float", "Modify last appraised")]
+        public async Task ModifyFloat(
+[Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
+[Summary("Prop"), Autocomplete(typeof(SelectedPropertyFloatAutocompleteHandler))] string prop,
+double value
+)
+        {
+            var p = PlayerManager.FindByName(player ?? "") as Player;
+            if (p is null)
+                await RespondAsync($"Could not find {player}");
+
+            var target = p.FindObject(p.CurrentAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
+            if (target is null)
+                await RespondAsync($"{player} missing");
+            else
+            {
+                if (Enum.TryParse<PropertyFloat>(prop, out var propEnum))
+                {
+                    var old = target.GetProperty(propEnum);
+                    target.SetProperty(propEnum, value);
+                    target.EnqueueBroadcastUpdateObject();
+                    await RespondAsync($"{target.Name}'s {propEnum}: {old.ToString() ?? "null"}->{value}");
+                }
+            }
+        }
+
+
         [SlashCommand("int", "Modify last appraised")]
         public async Task ModifyInt(
     [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
@@ -98,7 +125,7 @@ public class PropertyCommandModule : InteractionModuleBase<SocketInteractionCont
             if (p is null)
                 await RespondAsync($"Could not find {player}");
 
-            var target = p.FindObject(p.RequestedAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
+            var target = p.FindObject(p.CurrentAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
             if (target is null)
                 await RespondAsync($"{player} missing");
             else
@@ -124,7 +151,7 @@ public class PropertyCommandModule : InteractionModuleBase<SocketInteractionCont
             if (p is null)
                 await RespondAsync($"Could not find {player}");
 
-            var target = p.FindObject(p.RequestedAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
+            var target = p.FindObject(p.CurrentAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
             if (target is null)
                 await RespondAsync($"{player} missing");
             else
@@ -150,7 +177,7 @@ public class PropertyCommandModule : InteractionModuleBase<SocketInteractionCont
         if (p is null)
             await RespondAsync($"Could not find {player}");
 
-        var target = p.FindObject(p.RequestedAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
+        var target = p.FindObject(p.CurrentAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
         if (target is null)
             await RespondAsync($"{player} missing");
         else
@@ -218,15 +245,14 @@ public class PropertyCommandModule : InteractionModuleBase<SocketInteractionCont
                 var sb = new StringBuilder();
                 sb.AppendLine($"Name: {target.Name}");
                 sb.AppendLine($"Guid: {query}");
-                sb.AppendLine($"Bools:\n{String.Join("\n", target.GetAllPropertyBools().Select(x => $"{x.Key} = {x.Value}"))}");
-                sb.AppendLine($"\nInts:\n{String.Join("\n", target.GetAllPropertyInt().Select(x => $"{x.Key} = {x.Value}"))}");
-                sb.AppendLine($"\nInt64s:\n{String.Join("\n", target.GetAllPropertyInt64().Select(x => $"{x.Key} = {x.Value}"))}");
-                sb.AppendLine($"\nStrings:\n{String.Join("\n", target.GetAllPropertyString().Select(x => $"{x.Key} = {x.Value}"))}");
+                sb.AppendLine($"*Bools:*\n{String.Join("\n", target.GetAllPropertyBools().Select(x => $"{x.Key} = {x.Value}"))}");
+                sb.AppendLine($"\n*Floats:*\n{String.Join("\n", target.GetAllPropertyFloat().Select(x => $"{x.Key} = {x.Value}"))}");
+                sb.AppendLine($"\n*Ints:*\n{String.Join("\n", target.GetAllPropertyInt().Select(x => $"{x.Key} = {x.Value}"))}");
+                sb.AppendLine($"\n*Int64s:*\n{String.Join("\n", target.GetAllPropertyInt64().Select(x => $"{x.Key} = {x.Value}"))}");
+                sb.AppendLine($"\n*Strings:*\n{String.Join("\n", target.GetAllPropertyString().Select(x => $"{x.Key} = {x.Value}"))}");
 
                 await RespondAsync($"{sb.ToString()}");
                 //await RespondAsync($"Guid of item: {query}");
-
-
             }
         }
     }
