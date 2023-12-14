@@ -16,7 +16,7 @@ public static class ItemLevelUpGrowth
         var storedType = item.GetProperty(FakeInt.OriginalItemType);
         if (storedType is null) return;
         var itemType = (TreasureItemType_Orig)storedType;
-
+        
 
         for (int level = prevItemLevel+1; level <= item.ItemLevel; level++)
         {
@@ -35,9 +35,11 @@ public static class ItemLevelUpGrowth
     {
         //Try to get an augment for level, checking for fixed level then pool
         Augment augment = 0;
-        if (!S.Settings.GrowthFixedLevelAugments.TryGetValue(itemType, out var levelAugments) || !levelAugments.TryGetValue(level, out augment))
+        //if (!S.Settings.GrowthFixedLevelAugments.TryGetValue(itemType, out var levelAugments) || !levelAugments.TryGetValue(level, out augment))
+        if (!S.Settings.GrowthFixedLevelAugments.TryGetValue(item.WeenieType, out var levelAugments) || !levelAugments.TryGetValue(level, out augment))
         {
-            if (!S.Settings.GrowthAugments.TryGetValue(itemType, out var augmentGroup))
+            //if (!S.Settings.GrowthAugments.TryGetValue(itemType, out var augmentGroup))
+            if (!S.Settings.GrowthAugments.TryGetValue(item.WeenieType, out var augmentGroup))
                 return false;
 
             if (!S.Settings.AugmentGroups.TryGetValue(augmentGroup, out var augmentPool))

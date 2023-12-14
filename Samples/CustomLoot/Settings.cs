@@ -5,21 +5,24 @@ public class Settings
     public bool Verbose { get; set; } = false;
 
     #region Features / Mutators
-    public List<Feature> Features { get; set; } = new() { Feature.FakePropertyCache, Feature.MutatorHooks, };
+    public List<Feature> Features { get; set; } = new() { 
+        Feature.FakePropertyCache, 
+        Feature.MutatorHooks, 
+    };
     //Full set
     //Enum.GetValues<Feature>().ToList();
     public List<MutatorSettings> Mutators { get; set; } =
         //Select items
         new()
         {
-            //new MutatorSettings(Mutation.GrowthItem) {
-            //Odds = nameof(OddsGroup.Always),
-            //TreasureTargets = nameof(TargetGroup.Weapon),
-            //},
-            new MutatorSettings(Mutation.Resize)  {
-            Events = Mutation.Resize.DefaultEvents(),
-            Odds = null,
+            new MutatorSettings(Mutation.GrowthItem) {
+            Odds = nameof(OddsGroup.Always),
+            TreasureTargets = nameof(TargetGroup.Weapon),
             },
+            //new MutatorSettings(Mutation.Resize)  {
+            //Events = Mutation.Resize.DefaultEvents(),
+            //Odds = null,
+            //},
         };
     //Full set
     //Enum.GetValues<Mutation>()
@@ -33,15 +36,25 @@ public class Settings
     #region Mutator Settings
     #region GrowthItem
     //Type -> List of eligible augments on growth
-    public Dictionary<TreasureItemType_Orig, string> GrowthAugments { get; set; } = new()
+    public Dictionary<WeenieType, string> GrowthAugments { get; set; } = new()
     {
-        [TreasureItemType_Orig.Weapon] = nameof(AugmentGroup.Weapon),
-        [TreasureItemType_Orig.Armor] = nameof(AugmentGroup.Armor),
+        [WeenieType.MeleeWeapon] = nameof(AugmentGroup.Weapon),
+        [WeenieType.Caster] = nameof(AugmentGroup.Weapon),
+        [WeenieType.MissileLauncher] = nameof(AugmentGroup.Weapon),
+        [WeenieType.Clothing] = nameof(AugmentGroup.Armor),
     };
     //Type->Level-fixed augments.  Should it be groups instead?
-    public Dictionary<TreasureItemType_Orig, Dictionary<int, Augment>> GrowthFixedLevelAugments { get; set; } = new()
+    public Dictionary<WeenieType, Dictionary<int, Augment>> GrowthFixedLevelAugments { get; set; } = new()
     {
-        [TreasureItemType_Orig.Weapon] = new Dictionary<int, Augment>()
+        [WeenieType.MeleeWeapon] = new Dictionary<int, Augment>()
+        {
+            [1] = Augment.RendAll,
+        },
+        [WeenieType.Caster] = new Dictionary<int, Augment>()
+        {
+            [1] = Augment.RendAll,
+        },
+        [WeenieType.MissileLauncher] = new Dictionary<int, Augment>()
         {
             [1] = Augment.RendAll,
         }

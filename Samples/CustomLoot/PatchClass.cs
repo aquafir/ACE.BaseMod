@@ -71,8 +71,8 @@ public class PatchClass
 
         LoadSettings();
 
-        if (!SpellHelper.TryInitializeSpellGroups())
-            Mod.State = ModState.Error;
+        //if (!SpellHelper.TryInitializeSpellGroups())
+        //    Mod.State = ModState.Error;
 
         if (Mod.State == ModState.Error)
         {
