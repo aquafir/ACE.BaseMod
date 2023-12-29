@@ -31,5 +31,7 @@ public enum Feature
     FakeSpellSplitSplash,
     FakeSpellChain,
     MutatorHooks,
+    Hardcore,
+    Ironman,
 }
 

@@ -14,6 +14,7 @@ public enum Mutation
     Slayer,
     Resize,
     AutoScale,
+    IronmanLocked,
 }
 
 [Flags]

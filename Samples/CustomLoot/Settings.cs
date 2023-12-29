@@ -6,8 +6,10 @@ public class Settings
 
     #region Features / Mutators
     public List<Feature> Features { get; set; } = new() { 
-        Feature.FakePropertyCache, 
+        //Feature.FakePropertyCache, 
         Feature.MutatorHooks, 
+        Feature.Hardcore,
+        Feature.Ironman,
     };
     //Full set
     //Enum.GetValues<Feature>().ToList();
@@ -15,10 +17,15 @@ public class Settings
         //Select items
         new()
         {
-            new MutatorSettings(Mutation.GrowthItem) {
-            Odds = nameof(OddsGroup.Always),
-            TreasureTargets = nameof(TargetGroup.Weapon),
-            },
+            new MutatorSettings(Mutation.IronmanLocked)
+            {
+                Events = MutationEvent.Containers,
+            }
+            //new MutatorSettings(Mutation.GrowthItem) {
+            //Odds = nameof(OddsGroup.Always),
+            //TreasureTargets = nameof(TargetGroup.Weapon),
+            //Events = MutationEvent.Containers
+            //},
             //new MutatorSettings(Mutation.Resize)  {
             //Events = Mutation.Resize.DefaultEvents(),
             //Odds = null,
@@ -118,10 +125,16 @@ public class Settings
     public float AetheriaProcRate { get; set; } = .05f;
     #endregion
 
-
     #region AutoLoot
     public string LootProfilePath { get; } = Path.Combine(ModManager.ModPath, "LootProfiles");//Path.Combine(Mod.ModPath, "LootProfiles");
     public bool LootProfileUseUsername { get; set; } = true;
+    #endregion
+
+
+    #region Hardcore
+    public float HardcoreSecondsBetweenDeathAllowed { get; set; } = 60;
+    public int HardcoreStartingLives { get; set; } = 5;
+
     #endregion
     #endregion
 

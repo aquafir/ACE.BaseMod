@@ -4,11 +4,7 @@ using ACE.Entity.Models;
 using ACE.Server.Network.GameEvent.Events;
 using ACE.Server.Network.GameMessages.Messages;
 using ACE.Server.WorldObjects.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using static ACE.Server.WorldObjects.Player;
 
 namespace CustomLoot.Helpers;

@@ -2,7 +2,6 @@
 using ACE.Entity;
 using ACE.Entity.Models;
 using ACE.Server.Managers;
-using ACE.Server.Network;
 
 namespace CustomLoot.Mutators;
 

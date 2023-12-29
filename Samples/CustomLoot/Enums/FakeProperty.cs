@@ -5,6 +5,8 @@ public enum FakeBool
 {
     GrowthItem = 10000,
     CorpseSpawnedDungeon = 10001,
+    Ironman = 10002,
+    Hardcore = 10003,
 }
 public enum FakeDID
 {
@@ -41,6 +43,12 @@ public enum FakeFloat
     ItemSpellSplashCooldownScale = 10026,
     ItemSpellMetaPower = 10027,
     SpellChainChance = 10028,
+
+
+
+    //Goal value
+    ItemWieldRequirementValue1 = 20000,
+    TimestampLastPlayerDeath = 20001,
 }
 public enum FakeIID
 {
@@ -77,7 +85,16 @@ public enum FakeInt
     OriginalItemType = 10026,
     ItemSpellSplitCount = 10027,
     ItemSpellSplashCount = 10028,
+
+    //PropertyEnum?
+    ItemWieldRequirementType1 = 20000,
+    //Compare
+    ItemWieldRequirementKey1 = 20001,
+    //Comparer
+    ItemWieldRequirementCompareType1 = 20002,
+    HardcoreLives = 20003,
 }
+
 public enum FakeInt64
 {
     Pyreals = 10000
