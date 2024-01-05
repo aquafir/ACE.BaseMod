@@ -2,7 +2,6 @@
 
 public class UploadModule : InteractionModuleBase<SocketInteractionContext>
 {
-
     [Group("upload", "Upload things")]
     public class UploadGroup : InteractionModuleBase<SocketInteractionContext>
     {

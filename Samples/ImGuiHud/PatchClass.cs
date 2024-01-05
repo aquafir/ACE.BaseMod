@@ -1,10 +1,4 @@
-﻿using ACE.Common.Extensions;
-using ACE.Server.Network.GameAction.Actions;
-using ACE.Server.Network.GameMessages.Messages;
-using System.Diagnostics;
-using System.Text.Encodings.Web;
-
-namespace Discord;
+﻿namespace ImGuiTest;
 
 [HarmonyPatch]
 public class PatchClass
@@ -23,7 +17,6 @@ public class PatchClass
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
-    public static Discord DiscordRelay;
 
     private void SaveSettings()
     {
@@ -72,12 +65,7 @@ public class PatchClass
         Mod.State = ModState.Loading;
         LoadSettings();
 
-        //Start Dscord
-        DiscordRelay = new Discord();
-        DiscordRelay.RunAsync()
-            .GetAwaiter()
-            .GetResult();
-
+        StartImGui();
 
         if (Mod.State == ModState.Error)
         {
@@ -91,7 +79,7 @@ public class PatchClass
     public void Shutdown()
     {
         if (Mod.State == ModState.Running)
-            Task.Run(async () => await DiscordRelay.Shutdown());
+            StopImGui();
 
         //If the mod is making changes that need to be saved use this and only manually edit settings when the patch is not active.
         //SaveSettings();
@@ -101,16 +89,25 @@ public class PatchClass
     }
     #endregion
 
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(GameMessageTurbineChat), MethodType.Constructor,
-       new Type[] { typeof(ChatNetworkBlobType), typeof(ChatNetworkBlobDispatchType), typeof(uint), typeof(string), typeof(string), typeof(uint), typeof(ChatType) })]
-    public static void HandleTurbineChatRelay(ChatNetworkBlobType chatNetworkBlobType, ChatNetworkBlobDispatchType chatNetworkBlobDispatchType, uint channel, string senderName, string message, uint senderID, ChatType chatType)
+    private void StartImGui()
     {
         try
         {
-            //ModManager.Log($"Routing message from {senderName}:\n\t{message}");
-            DiscordRelay.RelayIngameChat(message, senderName, chatType, channel, senderID, chatNetworkBlobType, chatNetworkBlobDispatchType);
+            Task.Run(async () => StartOverlay()).GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            ModManager.Log(ex.Message, ModManager.LogLevel.Error);
+        }
+    }
+    private void StopImGui()
+    {
+        try
+        {
+            Overlay?.Close();
+            Thread.Sleep(1000);
+            Overlay?.Dispose();
+            Thread.Sleep(1000);
         }
         catch (Exception ex)
         {
@@ -118,46 +115,34 @@ public class PatchClass
         }
     }
 
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(GameActionTell), nameof(GameActionTell.Handle), new Type[] { typeof(ClientMessage), typeof(Session) })]
-    public static bool HandleTellRelay(ClientMessage clientMessage, Session session)
+    public static GUI Overlay;
+    private static async Task<GUI> StartOverlay()
     {
-        try
-        {
-            //Todo: think about ways to reduce redundancy
-            var position = clientMessage.Payload.BaseStream.Position;
-            var msg = clientMessage.Payload.ReadString16L();
-            var target = clientMessage.Payload.ReadString16L();
-            //Rewind what was read
-            clientMessage.Payload.BaseStream.Position = position;
-            target = target.Trim();
-
-
-            if (PlayerManager.GetOnlinePlayer(target) is null)
-            {
-                //ModManager.Log($"Trying to message offline player {target} through Discord:\n  {msg}");
-                DiscordRelay.RelayIngameDirectMessage(target, msg, session);
-                return false;
-            }
-        }
-        catch (Exception ex)
-        {
-            ModManager.Log(ex.Message, ModManager.LogLevel.Error);
-        }
-        return true;
+        Overlay = new();
+        await Overlay.Run();
+        return Overlay;
     }
 
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Player), nameof(Player.SendChatMessage), new Type[] { typeof(WorldObject), typeof(string), typeof(ChatMessageType) })]
-    public static bool SendChatMessage(WorldObject source, string msg, ChatMessageType msgType)
+    [CommandHandler("close", AccessLevel.Admin, CommandHandlerFlag.None, 0)]
+    public static void HandleSelect(Session session, params string[] parameters)
     {
-        if (PlayerManager.GetOnlinePlayer(source.Guid) is null)
-        {
-            ModManager.Log("Trying to message offline player through Discord");
-            return false;
-        }
-
-        return true;
+        Overlay.Close();
+        Overlay.Run();
+        //ImGui.ShowFontSelector("Foo");
     }
+
+    [CommandHandler("start", AccessLevel.Admin, CommandHandlerFlag.None, 0)]
+    public static void HandleOpen(Session session, params string[] parameters)
+    {
+        Overlay.Start();
+        //ImGui.ShowFontSelector("Foo");
+    }
+    [CommandHandler("run", AccessLevel.Admin, CommandHandlerFlag.None, 0)]
+    public static void HandleRun(Session session, params string[] parameters)
+    {
+        Overlay.Run();
+        //ImGui.ShowFontSelector("Foo");
+    }
+
 }
 

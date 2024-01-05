@@ -1,4 +1,6 @@
-﻿namespace Discord.Modules;
+﻿using System.Diagnostics;
+
+namespace Discord.Modules;
 public class ChatCommandModule : InteractionModuleBase<SocketInteractionContext>
 {
     public InteractionService Commands { get; set; }
@@ -22,14 +24,14 @@ public class ChatCommandModule : InteractionModuleBase<SocketInteractionContext>
             await RespondAsync();
         }
     }
-
+    
     [SlashCommand("g", "Message gen chat?")]
     public async Task ChatCommand(
     string message
     )
     {
+        Debugger.Break();
         var user = this.Context?.User?.Username;
-        
         if (String.IsNullOrEmpty(user))
             await RespondAsync("Unable to find the user of this command.");
         else

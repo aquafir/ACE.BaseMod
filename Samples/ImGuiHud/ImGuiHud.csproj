@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<OutputPath>C:\ACE\Mods\$(AssemblyName)</OutputPath>
@@ -10,9 +10,20 @@
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<PublicizeAll>true</PublicizeAll>
-	</PropertyGroup>
+	
+	
+	<ItemGroup>
+		<Publicize Include="ACE.Server" />
+		<Publicize Include="ACE.Database" />
+		<Publicize Include="ACE.Entity" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Publicize Include="ACE.Server" />
+		<Publicize Include="ACE.Database" />
+		<Publicize Include="ACE.Entity" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<Compile Remove=".template.config\**" />
@@ -21,13 +32,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Modules\PropertyCommandModule.cs" />
-	  <Compile Remove="Modules\SearchCommandModule.cs" />
-	  <Compile Remove="Modules\UploadModule.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Discord.Net" Version="3.13.0" />
 		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -37,8 +41,6 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

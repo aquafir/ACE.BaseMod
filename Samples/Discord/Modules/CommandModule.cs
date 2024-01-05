@@ -1,3 +1,6 @@
+using ACE.Server.WorldObjects;
+using System.Diagnostics;
+
 namespace Discord.Modules;
 
 // Interaction modules must be public and inherit from an IInteractionModuleBase
@@ -19,7 +22,7 @@ public class CommandModule : InteractionModuleBase<SocketInteractionContext>
     public async Task RunAsPlayer(
         [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
         [Summary("Command"), Autocomplete(typeof(AceCommandAutocompleteHandler))] string command,
-        [Summary("Params")] string args
+        [Summary("Params")] string args = ""
         )
     {
         if (PatchClass.Settings.DevIds.Contains(Context.User.Id))
@@ -29,13 +32,17 @@ public class CommandModule : InteractionModuleBase<SocketInteractionContext>
 
             if (!await Helpers.TryIssueACECommand(command, player))
                 await Context.Channel.SendMessageAsync($"Failed to run command.");
+            else
+                await Context.Channel.SendMessageAsync($"As {player} issued {command}");
         }
+        else
+            await Context.Channel.SendMessageAsync($"Not authorized to run commands.");
     }
 
     [SlashCommand("run", "Run command as admin")]
     public async Task RunAsDev(
         [Summary("Command"), Autocomplete(typeof(AceCommandAutocompleteHandler))] string command,
-        [Summary("Params")] string args
+        [Summary("Params")] string args = ""
         )
     {
         if (PatchClass.Settings.DevIds.Contains(Context.User.Id))
@@ -45,7 +52,11 @@ public class CommandModule : InteractionModuleBase<SocketInteractionContext>
 
             if (!await Helpers.TryIssueACECommand(command))
                 await Context.Channel.SendMessageAsync($"Failed to run command.");
+            else
+                await Context.Channel.SendMessageAsync($"Issued {command}");
         }
+        else
+            await Context.Channel.SendMessageAsync($"Not authorized to run commands.");
     }
 
     //[SlashCommand("kick", "Kick a player")]

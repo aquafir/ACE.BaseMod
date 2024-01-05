@@ -2,7 +2,7 @@
   "solution": {
     "path": "ACE.BaseMod.sln",
     "projects": [
-      "Samples\\CustomLoot\\CustomLoot.csproj"
+      "Samples\\Discord\\Discord.csproj"
     ]
   }
 }

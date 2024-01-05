@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Timers;
 
@@ -78,11 +79,12 @@ public class Discord
         await Task.Delay(Timeout.Infinite);
     }
 
+
     private async Task OnReady()
     {
         ModManager.Log("Logged in to Discord...");
 
-        //Grab the channel to be used for relaying messages        
+        //Grab the channel to be used for relaying messages
         _channel = await _client.GetChannelAsync(PatchClass.Settings.RELAY_CHANNEL_ID) as IMessageChannel;
         if (_channel is null)
         {
@@ -98,7 +100,7 @@ public class Discord
         _batchTimer.Enabled = true;
 
         //Say hi
-        //await _channel.SendMessageAsync("ACE Chat Relay is online.");
+        await _channel.SendMessageAsync("ACE Chat Relay is online.");
     }
 
     private async Task Discord_Disconnected(Exception arg)
@@ -323,26 +325,39 @@ public class Discord
             }
 
             //If they aren't, fetch users for the server?
-            await foreach (var userAsync in _channel.GetUsersAsync())
+            try
             {
-                foreach (var u in userAsync)
+                //TODO: figure out why channel users was an issue
+                var guild = _client.GetGuild(PatchClass.Settings.GUILD_ID) as IGuild;
+                var users = await guild.GetUsersAsync();
+                foreach(var u in users)
+                //await foreach (var userAsync in _channel.GetUsersAsync())
                 {
-                    //Todo: decide how to map usernames to lookup names
-                    if (_users.ContainsKey(u.Username))
-                        continue;
+                    //foreach (var u in userAsync)
+                    //{
+                        //Todo: decide how to map usernames to lookup names
+                        if (_users.ContainsKey(u.Username))
+                            continue;
 
-                    //May only want to keep the ID?
-                    _users.Add(u.Username, u);
-                    ModManager.Log($"Found user {u.Username} - {u.Id} - {u.Status}");
+                        //May only want to keep the ID?
+                        _users.Add(u.Username, u);
+                        ModManager.Log($"Found user {u.Username} - {u.Id} - {u.Status}");
+                    //}
+                }
+
+                //If the user still isn't found a message can't be sent
+                if (!_users.TryGetValue(userName, out user))
+                {
+                    ModManager.Log($"User {userName} not found.  Message not sent.");
+                    var statusMessage = new GameEventWeenieError(session, WeenieError.CharacterNotAvailable);
+                    session.Network.EnqueueSend(statusMessage);
+                    return;
                 }
             }
-
-            //If the user still isn't found a message can't be sent
-            if (!_users.TryGetValue(userName, out user))
+            catch(Exception ex)
             {
-                ModManager.Log($"User {userName} not found.  Message not sent.");
-                var statusMessage = new GameEventWeenieError(session, WeenieError.CharacterNotAvailable);
-                session.Network.EnqueueSend(statusMessage);
+                ModManager.Log($"Failed to find Discord user {userName}", ModManager.LogLevel.Error);
+
                 return;
             }
         }
@@ -357,7 +372,6 @@ public class Discord
             session.Network.EnqueueSend(new GameMessageSystemChat($"You tell {userName}, \"{message}\"", ChatMessageType.OutgoingTell));
 
         //Not handling afk / squelches
-
         //var tell = new GameEventTell(targetPlayer.Session, message, session.Player.GetNameWithSuffix(), session.Player.Guid.Full, targetPlayer.Guid.Full, ChatMessageType.Tell);
         //targetPlayer.Session.Network.EnqueueSend(tell
     }

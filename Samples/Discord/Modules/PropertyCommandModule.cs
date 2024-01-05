@@ -3,6 +3,7 @@
 public class PropertyCommandModule : InteractionModuleBase<SocketInteractionContext>
 {
     // [Group] will create a command group. [SlashCommand]s and [ComponentInteraction]s will be registered with the group prefix
+    //[RequireRole(Settings.RequiredRole, Group = "set")]
     [Group("set", "Set property values")]
     public class ModGroup : InteractionModuleBase<SocketInteractionContext>
     {
@@ -163,32 +164,32 @@ double value
             }
         }
 
-    [SlashCommand("string", "Modify last appraised")]
-    public async Task ModifyString(
-        [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
-        [Summary("Prop"), Autocomplete(typeof(SelectedPropertyStringAutocompleteHandler))] string prop,
-        string value
-        )
-    {
-        var p = PlayerManager.FindByName(player ?? "") as Player;
-        if (p is null)
-            await RespondAsync($"Could not find {player}");
-
-        var target = p.FindObject(p.CurrentAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
-        if (target is null)
-            await RespondAsync($"{player} missing");
-        else
+        [SlashCommand("string", "Modify last appraised")]
+        public async Task ModifyString(
+            [Summary("Player"), Autocomplete(typeof(PlayerAutocompleteHandler))] string player,
+            [Summary("Prop"), Autocomplete(typeof(SelectedPropertyStringAutocompleteHandler))] string prop,
+            string value
+            )
         {
-            if (Enum.TryParse<PropertyString>(prop, out var propEnum))
+            var p = PlayerManager.FindByName(player ?? "") as Player;
+            if (p is null)
+                await RespondAsync($"Could not find {player}");
+
+            var target = p.FindObject(p.CurrentAppraisalTarget ?? 0, Player.SearchLocations.Everywhere, out _, out _, out _);
+            if (target is null)
+                await RespondAsync($"{player} missing");
+            else
             {
-                var old = target.GetProperty(propEnum);
-                target.SetProperty(propEnum, value);
-                target.EnqueueBroadcastUpdateObject();
-                p.UpdateProperty(target, propEnum, value, true);
-                await RespondAsync($"{target.Name}'s {propEnum}: {old.ToString() ?? "null"}->{value}");
+                if (Enum.TryParse<PropertyString>(prop, out var propEnum))
+                {
+                    var old = target.GetProperty(propEnum);
+                    target.SetProperty(propEnum, value);
+                    target.EnqueueBroadcastUpdateObject();
+                    p.UpdateProperty(target, propEnum, value, true);
+                    await RespondAsync($"{target.Name}'s {propEnum}: {old.ToString() ?? "null"}->{value}");
+                }
             }
         }
-    }
     }
 
     //[Group("get", "View properties")]
