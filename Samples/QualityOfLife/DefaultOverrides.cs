@@ -2,7 +2,7 @@
 
 namespace QualityOfLife;
 
-[HarmonyPatchCategory(Settings.DefaultOverrideCategory)]
+[HarmonyPatchCategory(nameof(DefaultOverrides))]
 internal static class DefaultOverrides
 {
     [HarmonyPrefix]

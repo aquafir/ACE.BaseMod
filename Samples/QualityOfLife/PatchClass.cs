@@ -104,10 +104,14 @@ public class PatchClass
     private static void PatchCategories()
     {
         if (Settings.OverrideDefaultProperties)
-            Mod.Harmony.PatchCategory(Settings.DefaultOverrideCategory);
+            Mod.Harmony.PatchCategory(nameof(DefaultOverrides));
 
         if (Settings.OverrideAnimations)
-            Mod.Harmony.PatchCategory(Settings.AnimationOverrideCategory);
+            Mod.Harmony.PatchCategory(nameof(AnimationOverrides));
+
+        if (Settings.OverrideAnimations)
+            Mod.Harmony.PatchCategory(nameof(Fellowship));
+
     }
 
     [HarmonyPrefix]

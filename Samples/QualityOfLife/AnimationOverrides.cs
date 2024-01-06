@@ -2,7 +2,7 @@
 
 namespace QualityOfLife;
 
-[HarmonyPatchCategory(Settings.AnimationOverrideCategory)]
+[HarmonyPatchCategory(nameof(AnimationOverrides))]
 internal static class AnimationOverrides
 {
 
