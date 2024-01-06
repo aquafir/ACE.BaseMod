@@ -8,6 +8,7 @@ using ACE.DatLoader.Entity;
 using ACE.Server.Network.GameAction.Actions;
 using ACE.Server.Factories;
 using ACE.Server.Command.Handlers;
+using ACE.Server.Entity.Mutations;
 
 namespace Ironman;
 
@@ -161,7 +162,6 @@ public static class FakeIronman
         player.SendUpdatedSkills();
 
         //Add items
-        Debugger.Break();
         player.GiveIronmanItems(primary);
     }
 
@@ -216,7 +216,24 @@ public static class FakeIronman
         player.SendMessage("You're no longer participating in Ironman");
     }
 
-    #region Flag on Emote/Vendor
+    #region Flag on Corpse/Emote/Vendor
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Creature), nameof(Creature.GenerateTreasure), new Type[] { typeof(DamageHistoryInfo), typeof(Corpse) })]
+    public static void PostGenerateTreasure(DamageHistoryInfo killer, Corpse corpse, Creature __instance, List<WorldObject> __result)
+    {
+        if (killer is null || killer.TryGetPetOwnerOrAttacker() is not Player player)
+            return;
+
+        if (player.GetProperty(FakeBool.Ironman) != true)
+            return;
+
+        //foreach (var item in __result)
+        foreach (var item in corpse.Inventory.Values)
+            item.SetProperty(FakeBool.Ironman, true);
+
+        //player.SendMessage($"Claimed corpse");
+    }
+
     //Add Ironman to emote given items
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Player), nameof(Player.TryCreateForGive), new Type[] { typeof(WorldObject), typeof(WorldObject) })]
@@ -259,6 +276,7 @@ public static class FakeIronman
     [HarmonyPatch(typeof(Player), nameof(Player.TryCreateInInventoryWithNetworking), new Type[] { typeof(WorldObject), typeof(Container) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Out })]
     public static bool PreTryCreateInInventoryWithNetworking(WorldObject item, Container container, ref Player __instance, ref bool __result)
     {
+        //Skip non-Ironman players
         if (__instance is null || __instance.GetProperty(FakeBool.Ironman) != true)
             return true;
 
