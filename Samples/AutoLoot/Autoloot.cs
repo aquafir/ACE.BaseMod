@@ -117,7 +117,7 @@ public class AutoLoot
                 return;
 
             watch.Stop();
-            sb.Append($"\n=====Looted {looted} items in {watch.ElapsedMilliseconds} ms=====");
+            sb.Append($"\n=====Looted {looted}/{items.Count} items in {watch.ElapsedMilliseconds} ms=====");
 
             player.SendMessage(sb.ToString());
         }
