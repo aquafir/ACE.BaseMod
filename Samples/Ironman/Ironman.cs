@@ -292,6 +292,7 @@ public static class FakeIronman
         return true;
     }
 
+    //Verify container / pickup check
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Player), nameof(Player.HandleActionPutItemInContainer_Verify), new Type[] { typeof(uint), typeof(uint), typeof(int), typeof(Container), typeof(WorldObject), typeof(Container), typeof(Container), typeof(bool) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Out, ArgumentType.Out, ArgumentType.Out, ArgumentType.Out, ArgumentType.Out })]
     public static void PreHandleActionPutItemInContainer_Verify(uint itemGuid, uint containerGuid, int placement, Container itemRootOwner, WorldObject item, Container containerRootOwner, Container container, bool itemWasEquipped, ref Player __instance, ref bool __result)
@@ -306,7 +307,6 @@ public static class FakeIronman
             __result = false;
         }
     }
-
 
     //Check enchantments
     [HarmonyPrefix]
