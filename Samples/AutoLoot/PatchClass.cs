@@ -3,8 +3,6 @@ using ACE.Server.Network;
 using AutoLoot.Loot;
 namespace AutoLoot;
 
-#
-
 [HarmonyPatch]
 public class PatchClass
 {
