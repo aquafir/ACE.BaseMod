@@ -10,6 +10,7 @@
 		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
+
 	<PropertyGroup>
 		<PublicizeAll>true</PublicizeAll>
 	</PropertyGroup>

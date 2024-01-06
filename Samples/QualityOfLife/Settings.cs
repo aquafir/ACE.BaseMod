@@ -11,7 +11,6 @@ public class Settings
     public int MaxSpecCredits { get; set; } = 70;
 
     #region Animations
-    public const string AnimationOverrideCategory = "AnimationOverride";
     public bool OverrideAnimations { get; set; } = true;
     public Dictionary<MotionCommand, float> AnimationSpeeds { get; set; } = new()
     {
@@ -24,7 +23,6 @@ public class Settings
     #endregion
 
     #region Properties
-    public const string DefaultOverrideCategory = "DefaultOverride";
     public bool OverrideDefaultProperties { get; set; } = true;
     public Dictionary<PropertyInt64, long> Int64Defaults { get; set; } = new()
     {
@@ -38,7 +36,31 @@ public class Settings
     };
     public Dictionary<PropertyBool, bool> BoolDefaults { get; set; } = new()
     {
-    }; 
+    };
     #endregion
 
+    #region Fellow
+    public bool PatchFellowships { get; set; } = true;
+    public bool SendDetails { get; set; } = true;
+    public int MaxMembers { get; set; } = 2;
+
+    public Dictionary<int, double> SharePercent { get; set; } = new()
+    {
+        [1] = 1.0,
+        [2] = .75,
+        [3] = .6,
+        [4] = .55,
+        [5] = .5,
+        [6] = .45,
+        [7] = .4,
+        [8] = .35,
+        [9] = .3,
+    };
+    public double DefaultShare { get; set; } = 0;
+
+    public long EvenShareLevel = 50;  //fellowship_even_share_level
+
+    //Setting readonly wasn't working, bit more involved with some hardcoded kill tasks
+    //public int MaxDistance { get; set; } = 600;
+    #endregion
 }
