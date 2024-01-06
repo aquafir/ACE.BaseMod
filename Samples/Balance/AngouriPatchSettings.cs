@@ -6,7 +6,7 @@ public partial class AngouriPatchSettings
 {
     //public PatchType Type { get; set; }
     public string PatchType { get; set; }
-    public bool Enabled { get; set; } = true;
+    public bool Enabled { get; set; } = false;
     public string Formula { get; set; }
 
     public AngouriPatchSettings() { }

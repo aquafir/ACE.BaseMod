@@ -34,7 +34,6 @@ namespace Balance.Patches
         [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.GetCriticalStrikeMod), new Type[] { typeof(CreatureSkill), typeof(bool) })]
         public static bool PreGetCriticalStrikeMod(CreatureSkill skill, bool isPvP, ref WorldObject __instance, ref float __result)
         {
-            Debugger.Break();
             //Don't apply to pvp
             if (isPvP) return true;
 

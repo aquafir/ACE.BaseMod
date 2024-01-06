@@ -14,7 +14,6 @@ public abstract class AngouriMathPatch : IPatchable
     //static Func<double, int> func;
     #endregion
 
-
     #region Start/Stop
     public virtual void Start()
     {
