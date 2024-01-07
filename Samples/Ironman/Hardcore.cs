@@ -3,7 +3,7 @@ using CustomLoot.Enums;
 
 namespace Ironman;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(Hardcore))]
 public class Hardcore
 {
     [HarmonyPostfix]

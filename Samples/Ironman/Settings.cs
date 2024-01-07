@@ -17,6 +17,9 @@ public class Settings
 
     public List<string> Restrictions { get; set; } = new()
     {
+        nameof(ForceSkillPlan),
+        nameof(ForceTemplatePlayer),
+        nameof(Hardcore),
         nameof(RestrictAllegiance),
         nameof(RestrictContainerVerify),
         nameof(RestrictCreateInInventory),
@@ -72,8 +75,15 @@ public class Settings
         //Skill.HeavyWeapons,
         //Skill.FinesseWeapons,
 
-        Skill.Alchemy,
+        //Pretrained
         //Skill.ArcaneLore,
+        //Skill.Jump,
+        //Skill.Loyalty,
+        //Skill.MagicDefense,
+        //Skill.Run,
+        //Skill.Salvaging,
+
+        Skill.Alchemy,
         Skill.ArmorTinkering,
         Skill.AssessCreature,
         Skill.AssessPerson,
@@ -86,19 +96,14 @@ public class Settings
         Skill.Healing,
         Skill.ItemEnchantment,
         Skill.ItemTinkering,
-        //Skill.Jump,
         Skill.Leadership,
         Skill.LifeMagic,
         Skill.Lockpick,
-        //Skill.Loyalty,
-        //Skill.MagicDefense,
         Skill.MagicItemTinkering,
         Skill.ManaConversion,
         Skill.MeleeDefense,
         Skill.MissileDefense,
         Skill.Recklessness,
-        //Skill.Run,
-        //Skill.Salvaging,
         Skill.Shield,
         Skill.SneakAttack,
         Skill.Summoning,
