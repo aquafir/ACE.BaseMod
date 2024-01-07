@@ -94,6 +94,9 @@ public class PatchClass
             return;
         }
 
+        PatchFlaggingCategories();
+        PatchRestrictionCategories();
+
         Mod.State = ModState.Running;
     }
 
@@ -109,6 +112,19 @@ public class PatchClass
             ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
     }
     #endregion
+
+
+    private void PatchFlaggingCategories()
+    {
+        foreach (var p in Settings.FlagItemEvents)
+            Mod.Harmony.PatchCategory(p);
+    }
+    private void PatchRestrictionCategories()
+    {
+        foreach (var p in Settings.Restrictions)
+            Mod.Harmony.PatchCategory(p);
+    }
+
 
     private const string NAME_SUFFIX = "-Im";
 

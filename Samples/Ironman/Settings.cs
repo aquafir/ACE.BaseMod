@@ -1,5 +1,7 @@
 ﻿using System.Net;
 using System.Text;
+using Ironman.FlagEvents;
+using Ironman.Restrictions;
 
 namespace Ironman;
 
@@ -10,8 +12,27 @@ public class Settings
 
     public int CreditsToPlanFor { get; set; } = 50;
 
-    public float HardcoreSecondsBetweenDeathAllowed { get; set; } = 60*60*24*7;
+    public float HardcoreSecondsBetweenDeathAllowed { get; set; } = 60 * 60 * 24 * 7;
     public int HardcoreStartingLives { get; set; } = 1;
+
+    public List<string> Restrictions { get; set; } = new()
+    {
+        nameof(RestrictAllegiance),
+        nameof(RestrictContainerVerify),
+        nameof(RestrictCreateInInventory),
+        nameof(RestrictEnchantments),
+        nameof(RestrictEquip),
+        nameof(RestrictFellowship),
+        //nameof(),
+    };
+    public List<string> FlagItemEvents { get; set; } = new()
+    {
+        nameof(FlagChest),
+        nameof(FlagCorpseItems),
+        nameof(FlagEmoteItems),
+        nameof(FlagVendorItems),
+        //nameof(),
+    };
 
     public Dictionary<Skill, List<string>> SkillItems = new()
     {
@@ -84,3 +105,5 @@ public class Settings
         Skill.WeaponTinkering,
     };
 }
+
+

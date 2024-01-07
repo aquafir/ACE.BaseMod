@@ -1,6 +1,5 @@
 ﻿using ACE.Database;
 using ACE.Entity.Enum.Properties;
-using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
 using ACE.Server.Network;
 using CustomLoot.Enums;
@@ -172,7 +171,7 @@ public static class FakeIronman
         if (!PatchClass.Settings.SkillItems.TryGetValue(primary, out var items) || items is null)
             return;
 
-        foreach(var item in items)
+        foreach (var item in items)
         {
             AdminCommands.HandleCI(player.Session, item.Split(" "));
         }
@@ -218,196 +217,10 @@ public static class FakeIronman
         player.SendMessage("You're no longer participating in Ironman");
     }
 
-    #region Flag on Corpse/Emote/Vendor
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(Creature), nameof(Creature.GenerateTreasure), new Type[] { typeof(DamageHistoryInfo), typeof(Corpse) })]
-    public static void PostGenerateTreasure(DamageHistoryInfo killer, Corpse corpse, Creature __instance, List<WorldObject> __result)
-    {
-        if (killer is null || killer.TryGetPetOwnerOrAttacker() is not Player player)
-            return;
-
-        if (player.GetProperty(FakeBool.Ironman) != true)
-            return;
-
-        //foreach (var item in __result)
-        foreach (var item in corpse.Inventory.Values)
-            item.SetProperty(FakeBool.Ironman, true);
-
-        //player.SendMessage($"Claimed corpse");
-    }
-
-    //Add Ironman to emote given items
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Player), nameof(Player.TryCreateForGive), new Type[] { typeof(WorldObject), typeof(WorldObject) })]
-    public static void PreTryCreateForGive(WorldObject giver, WorldObject itemBeingGiven, ref Player __instance, ref bool __result)
-    {
-        if (__instance is null || itemBeingGiven is null)
-            return;
-
-        if (__instance.GetProperty(FakeBool.Ironman) == true)
-            itemBeingGiven.SetProperty(FakeBool.Ironman, true);
-
-        __instance.SendMessage($"{itemBeingGiven.Name} now Ironman");
-    }
-
-    //Add Ironman to vendor items?
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Player), nameof(Player.FinalizeBuyTransaction), new Type[] { typeof(Vendor), typeof(List<WorldObject>), typeof(List<WorldObject>), typeof(uint) })]
-    public static void PreFinalizeBuyTransaction(Vendor vendor, List<WorldObject> genericItems, List<WorldObject> uniqueItems, uint cost, ref Player __instance)
-    {
-        if (__instance is null || __instance.GetProperty(FakeBool.Ironman) != true)
-            return;
-
-        foreach (var item in genericItems)
-        {
-            item.SetProperty(FakeBool.Ironman, true);
-            __instance.SendMessage($"{item.Name} now Ironman");
-        }
-        foreach (var item in uniqueItems)
-        {
-            item.SetProperty(FakeBool.Ironman, true);
-            __instance.SendMessage($"{item.Name} now Ironman");
-        }
-    }
-
-    #endregion
-
-    #region Restrictions
-    //Check on add to inventory
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Player), nameof(Player.TryCreateInInventoryWithNetworking), new Type[] { typeof(WorldObject), typeof(Container) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Out })]
-    public static bool PreTryCreateInInventoryWithNetworking(WorldObject item, Container container, ref Player __instance, ref bool __result)
-    {
-        //Skip non-Ironman players
-        if (__instance is null || __instance.GetProperty(FakeBool.Ironman) != true)
-            return true;
-
-        if (item.GetProperty(FakeBool.Ironman) != true)
-        {
-            __result = false;
-            __instance.SendMessage($"{item.Name} unable to be added to inventory of non-Ironman");
-            return false;
-        }
-
-        return true;
-    }
-
-    //Verify container / pickup check
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(Player), nameof(Player.HandleActionPutItemInContainer_Verify), new Type[] { typeof(uint), typeof(uint), typeof(int), typeof(Container), typeof(WorldObject), typeof(Container), typeof(Container), typeof(bool) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Out, ArgumentType.Out, ArgumentType.Out, ArgumentType.Out, ArgumentType.Out })]
-    public static void PreHandleActionPutItemInContainer_Verify(uint itemGuid, uint containerGuid, int placement, Container itemRootOwner, WorldObject item, Container containerRootOwner, Container container, bool itemWasEquipped, ref Player __instance, ref bool __result)
-    {
-        //Many parameters will not be populated in a prefix.  Runs other checks first
-        //If the container is Ironman and the item is not reject it
-        if (containerRootOwner is Player player && player?.GetProperty(FakeBool.Ironman) == true && item?.GetProperty(FakeBool.Ironman) != true)
-        {
-            player.Session.Network.EnqueueSend(new GameEventWeenieError(player.Session, WeenieError.YoureTooBusy));
-            player.Session.Network.EnqueueSend(new GameEventInventoryServerSaveFailed(player.Session, itemGuid));
-            player.SendMessage($"Unable to loot non-Ironman {item?.Name}");
-            __result = false;
-        }
-    }
-
-    //Check enchantments
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.CreateEnchantment), new Type[] { typeof(WorldObject), typeof(WorldObject), typeof(WorldObject), typeof(Spell), typeof(bool), typeof(bool), typeof(bool) })]
-    public static bool PreCreateEnchantment(WorldObject target, WorldObject caster, WorldObject weapon, Spell spell, bool equip, bool fromProc, bool isWeaponSpell, ref WorldObject __instance)
-    {
-        if (target is Player player && player.GetProperty(FakeBool.Ironman) == true && caster.GetProperty(FakeBool.Ironman) != true)
-        {
-            player.SendMessage($"{caster.Name} failed to cast {spell.Name ?? ""} on you.  Blame Ironmode");
-
-            if (caster is Player p)
-                p.SendMessage($"Failed to cast {spell.Name ?? ""} on {player.Name}. Blame Ironmode");
-
-            return false;
-        }
-
-        return true;
-    }
-
-    //Check allegiance
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Player), nameof(Player.IsPledgable), new Type[] { typeof(Player) })]
-    public static bool PreIsPledgable(Player target, ref Player __instance, ref bool __result)
-    {
-        if (target.GetProperty(FakeBool.Ironman) == true && __instance.GetProperty(FakeBool.Ironman) != true)
-        {
-            __instance.SendMessage($"You can't swear to {target.Name}.  Blame Ironmode");
-            __instance.Session.Network.EnqueueSend(new GameEventWeenieError(__instance.Session, WeenieError.OlthoiCannotJoinAllegiance));
-            __result = false;
-            return false;
-        }
-
-        return true;
-    }
-
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Player), nameof(Player.FellowshipRecruit), new Type[] { typeof(Player) })]
-    public static bool PreFellowshipRecruit(Player newPlayer, ref Player __instance)
-    {
-        if (newPlayer.GetProperty(FakeBool.Ironman) == true && __instance.GetProperty(FakeBool.Ironman) != true)
-        {
-            __instance.SendMessage($"You can't recruit {newPlayer.Name}.  Blame Ironmode");
-            __instance.Session.Network.EnqueueSend(new GameEventWeenieError(__instance.Session, WeenieError.FellowshipIllegalLevel));
-            return false;
-        }
-
-        return true;
-    }
-
-
-    //Check on wield
-    //[HarmonyPrefix]
-    //[HarmonyPatch(typeof(Player), nameof(Player.CheckWieldRequirements), new Type[] { typeof(WorldObject) })]
-    //public static bool PreCheckWieldRequirementsCustom(WorldObject item, ref Player __instance, ref WeenieError __result)
-    //{
-    //    //Add check only to Ironman players
-    //    if (__instance is null || __instance.GetProperty(FakeBool.Ironman) != true)
-    //        return true;
-
-    //    if (item.GetProperty(FakeBool.Ironman) != true)
-    //    {
-    //        __instance.SendMessage($"Unable to wield non-Ironman items!");
-
-    //        __result = WeenieError.BeWieldedFailure;
-    //        return false;
-    //    }
-
-    //    //Do regular checks
-    //    return true;
-    //} 
-    #endregion
-
-    #region Chests
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(Chest), nameof(Chest.Unlock), new Type[] { typeof(uint), typeof(uint), typeof(int) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Ref })]
-    public static void PostUnlock(uint unlockerGuid, uint playerLockpickSkillLvl, int difficulty, ref Chest __instance, ref UnlockResults __result)
-=> HandleClaimChest(unlockerGuid, __instance, __result);
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(Chest), nameof(Chest.Unlock), new Type[] { typeof(uint), typeof(Key), typeof(string) })]
-    public static void PostUnlock(uint unlockerGuid, Key key, string keyCode, ref Chest __instance, ref UnlockResults __result)
-        => HandleClaimChest(unlockerGuid, __instance, __result);
-
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(Chest), nameof(Chest.Reset), new Type[] { typeof(double?) })]
-    public static void PostReset(double? resetTimestamp, ref Chest __instance) => __instance.RemoveProperty(FakeBool.Ironman);
-
-    //Claim a container by unlocking it
-    public static void HandleClaimChest(uint unlockerGuid, Chest container, UnlockResults result)
-    {
-        //Only care about successful unlocks
-        if (result != UnlockResults.UnlockSuccess) return;
-
-        //Check for Ironman players
-        if (PlayerManager.GetOnlinePlayer(unlockerGuid) is not Player player || player.GetProperty(FakeBool.Ironman) != true)
-            return;
-
-        ClaimContainer(container, player);
-    }
-    #endregion
-
-    public static void ClaimContainer(Container container, Player player)
+    /// <summary>
+    /// Flag all items in Container for Ironman
+    /// </summary>
+    public static void SetClaimedBy(this Container container, Player player)
     {
         foreach (var item in container.Inventory.Values)
             item.SetProperty(FakeBool.Ironman, true);
