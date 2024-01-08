@@ -113,7 +113,6 @@ public class PatchClass
     }
     #endregion
 
-
     private void PatchFlaggingCategories()
     {
         foreach (var p in Settings.FlagItemEvents)

@@ -1,10 +1,11 @@
-﻿using ACE.Server.Managers;
+﻿using ACE.Entity.Enum.Properties;
+using ACE.Server.Managers;
 using CustomLoot.Enums;
 
 namespace Ironman;
 
 [HarmonyPatchCategory(nameof(Hardcore))]
-public class Hardcore
+public static class Hardcore
 {
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Player), nameof(Player.OnDeath), new Type[] { typeof(DamageHistoryInfo), typeof(DamageType), typeof(bool) })]
@@ -38,6 +39,32 @@ public class Hardcore
             return;
         }
 
+        //Handle perma-death
+        PlayerManager.BroadcastToChannelFromConsole(Channel.Advocate1, $"{player.Name} has met an untimely demise at the hands of {lastDamager.Name ?? ""}!");
+        if (PatchClass.Settings.QuarantineOnDeath)
+        {
+
+        }
+        else
+            player.PermaDeath();
+    }
+
+    public static void QuarantinePlayer(this Player player)
+    {
+        //Wipe positions
+        foreach (var position in Enum.GetValues<PositionType>())
+            player.SetPosition(position, null);
+
+
+    }
+
+
+    /// <summary>
+    /// Log off and permanently delete the player
+    /// </summary>
+    /// <param name="player"></param>
+    public static void PermaDeath(this Player player)
+    {
         //Taken from /deletecharacter
         player.Character.DeleteTime = (ulong)Time.GetUnixTime();
         player.Character.IsDeleted = true;
@@ -45,12 +72,10 @@ public class Hardcore
         player.Session.LogOffPlayer(true);
         PlayerManager.HandlePlayerDelete(player.Character.Id);
 
-        PlayerManager.BroadcastToChannelFromConsole(Channel.Advocate1, $"{__instance.Name} has met an untimely demise at the hands of {lastDamager.Name ?? ""}!");
-
         var success = PlayerManager.ProcessDeletedPlayer(player.Character.Id);
         if (success)
-            ModManager.Log($"Successfully deleted character {__instance.Name} (0x{__instance.Guid}).");
+            ModManager.Log($"Successfully deleted character {player.Name} (0x{player.Guid}).");
         else
-            ModManager.Log($"Unable to delete character {__instance.Name} (0x{__instance.Guid}) due to PlayerManager failure.");
+            ModManager.Log($"Unable to delete character {player.Name} (0x{player.Guid}) due to PlayerManager failure.");
     }
 }

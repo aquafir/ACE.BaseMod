@@ -99,4 +99,17 @@ public static class IronmanCommands
 
         player.SendMessage($"\n{player.GetProperty(FakeString.IronmanPlan)}\n\n{player.GetProperty(FakeString.IronmanFullPlan)}");
     }
+
+
+    [CommandHandler("t1", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
+    public static void HandleT1(Session session, params string[] parameters)
+    {
+        var player = session.Player;
+        //if (player is null || player.GetProperty(FakeBool.Ironman) != true)
+        //    return;
+
+        player.QuarantinePlayer();
+
+        //player.SendMessage($"\n{player.GetProperty(FakeString.IronmanPlan)}\n\n{player.GetProperty(FakeString.IronmanFullPlan)}");
+    }
 }

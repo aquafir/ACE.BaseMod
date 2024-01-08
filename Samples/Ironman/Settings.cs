@@ -14,6 +14,7 @@ public class Settings
 
     public float HardcoreSecondsBetweenDeathAllowed { get; set; } = 60 * 60 * 24 * 7;
     public int HardcoreStartingLives { get; set; } = 1;
+    public bool QuarantineOnDeath { get; set; } = true;
 
     public List<string> Restrictions { get; set; } = new()
     {
