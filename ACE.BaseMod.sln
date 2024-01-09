@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.32916.344
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACE.BaseMod", "ACE.BaseMod\ACE.BaseMod.csproj", "{7C075293-3A0D-434E-8AB0-5666BAFDFC2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACE.BaseMod", "Templates\ACE.BaseMod\ACE.BaseMod.csproj", "{7C075293-3A0D-434E-8AB0-5666BAFDFC2C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{B26E1345-5594-4F16-828C-C4994FD6AC02}"
 EndProject
@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloCommand", "Samples\Hel
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Achievements", "Samples\Achievements\Achievements.csproj", "{52C4D74A-299D-465E-8A10-C3B548C4E7DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACE.SimpleMod", "ACE.SimpleMod\ACE.SimpleMod.csproj", "{81A57CA3-E9CD-46FB-9267-BA0642D0E158}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACE.SimpleMod", "Templates\ACE.SimpleMod\ACE.SimpleMod.csproj", "{81A57CA3-E9CD-46FB-9267-BA0642D0E158}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Balance", "Samples\Balance\Balance.csproj", "{1F9F454A-1CC8-4C39-B688-96F29721E542}"
 EndProject
@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Scratchpad", "_Scratchpad\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalAPI", "Samples\MinimalAPI\MinimalAPI.csproj", "{B6A5A655-483A-4956-8907-AA3664643FA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACE.Web", "ACE.Web\ACE.Web.csproj", "{5F24F52F-AEBB-488E-B65D-56F9A50CE886}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACE.Web", "Templates\ACE.Web\ACE.Web.csproj", "{5F24F52F-AEBB-488E-B65D-56F9A50CE886}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebToLua", "Samples\WebToLua\WebToLua.csproj", "{7B69A2D2-79DA-405D-9D49-4B5E0BB95CA8}"
 EndProject
@@ -59,17 +59,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tinkering", "Samples\Tinker
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatFilter", "Samples\ChatFilter\ChatFilter.csproj", "{628E565B-9F4C-4E46-AAF9-C94F584F0E50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACE.CatMod", "ACE.CatMod\ACE.CatMod.csproj", "{FF41F305-0FE1-4983-8D37-1BF75EDE76B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACE.CatMod", "Templates\ACE.CatMod\ACE.CatMod.csproj", "{FF41F305-0FE1-4983-8D37-1BF75EDE76B1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discord", "Samples\Discord\Discord.csproj", "{D67F4D7A-D3B9-4E32-BF2F-91BE5387B65F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImGuiHud", "Samples\ImGuiHud\ImGuiHud.csproj", "{67C30F44-7E28-4A2B-B9A6-D936033C660A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImGuiHud", "Samples\ImGuiHud\ImGuiHud.csproj", "{67C30F44-7E28-4A2B-B9A6-D936033C660A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ironman", "Samples\Ironman\Ironman.csproj", "{B9934C58-E038-4CC4-99AA-5F2F85EDA16B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ironman", "Samples\Ironman\Ironman.csproj", "{B9934C58-E038-4CC4-99AA-5F2F85EDA16B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoLoot", "Samples\AutoLoot\AutoLoot.csproj", "{A2F9BFCD-A39B-44FC-948A-C51874259E15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoLoot", "Samples\AutoLoot\AutoLoot.csproj", "{A2F9BFCD-A39B-44FC-948A-C51874259E15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyEnlightenment", "Samples\EasyEnlightenment\EasyEnlightenment.csproj", "{28A2508B-AE44-47EA-BE0A-4561544FDC93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyEnlightenment", "Samples\EasyEnlightenment\EasyEnlightenment.csproj", "{28A2508B-AE44-47EA-BE0A-4561544FDC93}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{C2B15DDD-998C-4A7C-ADE1-A7F21B896D59}"
 EndProject
