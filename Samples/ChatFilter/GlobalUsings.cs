@@ -25,3 +25,6 @@ global using ACE.Server.Entity.Actions;
 global using ACE.Server.Managers;
 global using ACE.Server.Network.GameAction.Actions;
 global using ACE.Server.Network.GameMessages.Messages;
+
+global using ACE.Shared;
+global using ACE.Shared.Helpers;
