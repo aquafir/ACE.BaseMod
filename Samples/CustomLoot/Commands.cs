@@ -46,13 +46,4 @@ public static class Commands
         }
 
     }
-
-
-    public static void DeleteItem(this Player player, WorldObject wo)
-    {
-        wo.DeleteObject(player);
-        player.Session.Network.EnqueueSend(new GameMessageDeleteObject(wo));
-
-        //PlayerManager.BroadcastToAuditChannel(session.Player, $"{session.Player.Name} has deleted 0x{wo.Guid}:{wo.Name}");
-    }
 }

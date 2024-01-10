@@ -20,3 +20,6 @@ global using System.Text.Json;
 global using Mutation = CustomLoot.Enums.Mutation;
 global using Spell = ACE.Server.Entity.Spell;
 global using S = CustomLoot.PatchClass;
+
+global using ACE.Shared;
+global using ACE.Shared.Helpers;

@@ -136,4 +136,11 @@ public static class InventoryExtensions
 
         player.SendMessage($"Inventory wiped.");
     }
+
+    public static void DeleteItem(this Player player, WorldObject wo)
+    {
+        wo.DeleteObject(player);
+        //Unsure if needed?
+        //player.Session.Network.EnqueueSend(new GameMessageDeleteObject(wo));
+    }
 }

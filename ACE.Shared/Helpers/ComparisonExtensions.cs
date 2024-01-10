@@ -29,4 +29,40 @@ public static class ComparisonExtensions
 
         return success;
     }
+
+    public static bool VerifyRequirement(this CompareType comparison, double? prop, double? targetValue)
+    {
+
+        return comparison switch
+        {
+            CompareType.GreaterThan => (prop ?? 0) > targetValue,
+            CompareType.GreaterThanEqual => (prop ?? 0) >= targetValue,
+            CompareType.LessThan => (prop ?? 0) < targetValue,
+            CompareType.LessThanEqual => (prop ?? 0) <= targetValue,
+            CompareType.NotEqual => (prop ?? 0) != targetValue,
+            CompareType.Equal => (prop ?? 0) == targetValue,
+            CompareType.NotEqualNotExist => (prop == null || prop.Value != targetValue),    //Todo, not certain about the inversion.  I'm tired.
+            CompareType.NotExist => prop is null,
+            CompareType.Exist => prop is not null,
+            CompareType.NotHasBits => ((int)(prop ?? 0) & (int)targetValue) == 0,
+            CompareType.HasBits => ((int)(prop ?? 0) & (int)targetValue) == (int)targetValue,
+            _ => true,
+        };
+    }
+
+    public static string Friendly(this CompareType type) => type switch
+    {
+        CompareType.GreaterThan => ">",
+        CompareType.LessThanEqual => "<=",
+        CompareType.LessThan => "<",
+        CompareType.GreaterThanEqual => ">=",
+        CompareType.NotEqual => "!=",
+        CompareType.NotEqualNotExist => "!=??",
+        CompareType.Equal => "==",
+        CompareType.NotExist => "??",
+        CompareType.Exist => "?",
+        CompareType.NotHasBits => "!B",
+        CompareType.HasBits => "B",
+        _ => "",
+    };
 }

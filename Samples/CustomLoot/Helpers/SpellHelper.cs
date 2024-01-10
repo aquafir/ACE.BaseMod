@@ -153,7 +153,7 @@ public static class SpellHelper
     private static void CreateRelatedSpellGroups()
     {
         var portalDat = new PortalDatDatabase(S.Settings.SpellSettings.PortalDatPath, false);
-            
+
         //var spells = !PatchClass.Settings.SpellSettings.OnlyPlayerSpells ?
         //    portalDat.SpellTable.Spells :
         //    //Restrict SpellTable to player spells.  PlayerSpellTable is sorted for binary search
@@ -164,11 +164,11 @@ public static class SpellHelper
         foreach (uint i in Player.PlayerSpellTable) {
             var spell = new Spell(i);
             var sBase = portalDat.SpellTable.Spells[i];
-            if(spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.Beneficial) && !spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.SelfTargeted)
+            if (spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.Beneficial) && !spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.SelfTargeted)
                 //Require researchable for any < 6
                 && (spell.Level > 6 || !spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.NotResearchable))
                 && (sBase.MetaSpellType == SpellType.Enchantment))
-            spells.Add(i, sBase);
+                spells.Add(i, sBase);
         }
 
         //var groups = spells.OrderBy(s => new Spell(s.Key).Level).GroupBy(x => new
@@ -313,143 +313,4 @@ public static class SpellHelper
     //        return (T)formatter.Deserialize(stream);
     //    }
     //}
-
-
-    public static byte[] ObjectToByteArray(object objectData)
-    {
-        if (objectData == null)
-            return null;
-        var binaryFormatter = new BinaryFormatter();
-        var memoryStream = new MemoryStream();
-        binaryFormatter.Serialize(memoryStream, objectData);
-        
-        return memoryStream.ToArray();
-    }
-
-    public static object ByteArrayToObject(byte[] arrayBytes)
-    {
-        if (arrayBytes == null) return Encoding.UTF8.GetBytes(string.Empty);
-        var memoryStream = new MemoryStream();
-        var binaryFormatter = new BinaryFormatter();
-        memoryStream.Write(arrayBytes, 0, arrayBytes.Length);
-        memoryStream.Seek(0, SeekOrigin.Begin);
-        var obj = binaryFormatter.Deserialize(memoryStream);
-        return obj;
-    }
-
-    public static SpellBase DeepClone(this SpellBase spellBase)
-    {
-        //return spellBase.CloneJson<SpellBase>();
-        //SpellBase clone = ByteArrayToObject(ObjectToByteArray(spellBase)) as SpellBase;
-
-        var clone = new SpellBase();
-
-        MemoryStream ms = new();
-        BinaryWriter writer = new(ms);
-        BinaryReader reader = new(ms);
-
-        writer.WriteObfuscatedString(spellBase.Name);
-        writer.WriteObfuscatedString(spellBase.Desc);
-
-        writer.Write((uint)spellBase.School);
-        writer.Write((uint)spellBase.Icon);
-        writer.Write((uint)spellBase.Category);
-        writer.Write((uint)spellBase.Bitfield);
-        writer.Write((uint)spellBase.BaseMana);
-        writer.Write((float)spellBase.BaseRangeConstant);
-        writer.Write((float)spellBase.BaseRangeMod);
-        writer.Write((uint)spellBase.Power);
-        writer.Write((float)spellBase.SpellEconomyMod);
-        writer.Write((uint)spellBase.FormulaVersion);
-        writer.Write((float)spellBase.ComponentLoss);
-        writer.Write((uint)spellBase.MetaSpellType);
-        writer.Write((uint)spellBase.MetaSpellId);
-
-        switch (spellBase.MetaSpellType)
-        {
-            case SpellType.Enchantment:
-            case SpellType.FellowEnchantment:
-                writer.Write((double)spellBase.Duration);
-                writer.Write((float)spellBase.DegradeModifier);
-                writer.Write((float)spellBase.DegradeLimit);
-                break;
-            case SpellType.PortalSummon:
-                writer.Write((double)spellBase.PortalLifetime);
-                break;
-        }
-
-        // TODO: Fix components
-        for (int j = 0; j < 8; j++)
-        {
-            //if (j < spellBase.Formula.Count)
-            //    writer.Write(spellBase.Formula[j]);
-            //else
-                writer.Write(0u);
-        }
-
-        writer.Write((uint)spellBase.CasterEffect);
-
-        writer.Write((float)spellBase.CasterEffect);
-        writer.Write((float)spellBase.TargetEffect);
-        writer.Write((float)spellBase.FizzleEffect);
-        writer.Write((double)spellBase.RecoveryInterval);
-        writer.Write((float)spellBase.RecoveryAmount);
-        writer.Write((uint)spellBase.DisplayOrder);
-        writer.Write((uint)spellBase.NonComponentTargetType);
-        writer.Write((uint)spellBase.ManaMod);
-
-        ms.Position = 0;
-
-        clone.Unpack(reader);
-
-        return clone;
-    }
-
-    /// <summary>
-    /// Writes a string the way SpellBase reads it
-    /// </summary>
-    private static void WriteObfuscatedString(this BinaryWriter writer, string spellBase)
-    {
-        writer.Write((UInt16)spellBase.Length);
-        //System.Text.Encoding.GetEncoding(1252).GetString(spellBase.Name);
-        for (var i = 0; i < spellBase.Length; i++)
-        {
-            // flip the bytes in the string to redo the obfuscation: i.e. 0xAB => 0xBA
-            byte obfsByte = (byte)((spellBase[i] >> 4) | (spellBase[i] << 4));
-            writer.Write(obfsByte);
-        }
-
-        // Aligns to the next DWORD boundary.
-        writer.Align();
-        //long alignDelta = writer.BaseStream.Position % 4;
-
-        //for (var i = 0; i < writer.BaseStream.Position % 4; i++)
-        //    writer.Write((byte)0);
-    }
-
-    /// <summary>
-    /// Perform a deep Copy of the object, using Json as a serialization method. NOTE: Private members are not cloned using this method.
-    /// </summary>
-    /// <typeparam name="T">The type of object being copied.</typeparam>
-    /// <param name="source">The object instance to copy.</param>
-    /// <returns>The copied object.</returns>
-    //public static T CloneJson<T>(this T source)
-    //{
-    //    // Don't serialize a null object, simply return the default for that object
-    //    if (ReferenceEquals(source, null)) return default;
-
-    //    // initialize inner objects individually
-    //    // for example in default constructor some list property initialized with some values,
-    //    // but in 'source' these items are cleaned -
-    //    // without ObjectCreationHandling.Replace default constructor values will be added to result
-    //    var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };
-
-    //    return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), deserializeSettings);
-    //}
-
-    public static T Clone<T>(this T source) //where T : ISerializable
-    {
-        var serialized = System.Text.Json.JsonSerializer.Serialize(source);
-        return System.Text.Json.JsonSerializer.Deserialize<T>(serialized);
-    }
 }
