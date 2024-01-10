@@ -101,7 +101,6 @@ public static class IronmanCommands
         player.SendMessage($"\n{player.GetProperty(FakeString.IronmanPlan)}\n\n{player.GetProperty(FakeString.IronmanFullPlan)}");
     }
 
-
     [CommandHandler("ti", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
     public static void HandleTI(Session session, params string[] parameters)
     {
@@ -153,13 +152,11 @@ public static class IronmanCommands
         t += $"\n{player.HeritageGroup} - {player.Gender} - {player.EyesPaletteDID}";
         player.SendMessage(t);
     }
+    
     [CommandHandler("t4", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
     public static void HandleT4(Session session, params string[] parameters)
     {
-        var player = session.Player;
-        var hg = player.HeritageGroup;
-        Debugger.Break();
-
+        //Player.
         //player.RollIronmanAppearance();
     }
 }

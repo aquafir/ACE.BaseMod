@@ -15,6 +15,7 @@ global using ACE.Server.WorldObjects.Entity;
 global using HarmonyLib;
 
 global using ACE.Shared;
+global using ACE.Shared.Helpers;
 
 global using System;
 global using System.Diagnostics;
@@ -27,3 +28,4 @@ global using System.Text.Json.Serialization;
 global using ACE.Server.Managers;
 global using ACE.Database.Models.Shard;
 global using ACE.Database;
+

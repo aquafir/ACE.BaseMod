@@ -8,51 +8,50 @@ namespace Ironman;
 [HarmonyPatch]
 public static class FakeIronman
 {
-    public static bool TryAdvanceSkill(this Player player, Skill skill)
+    public static void InitializeIronman(this Player player)
     {
-        if (player.GetCreatureSkill(skill) is not CreatureSkill s)
-            return false;
+        //Randomize appearance / attrs / skills
+        player.RollIronmanAppearance();
+        player.RollIronmanAttributes();
+        player.RollIronmanSkills();
 
-        bool success = s.AdvancementClass == SkillAdvancementClass.Trained ?
-            player.SpecializeSkill(skill) : player.TrainSkill(skill);
+        //Wipe inventory
+        player.WipeInventory(true);
 
-        return success;
+        //Give items before Ironman applied
+        foreach(var skill  in player.Skills.Where(x => x.Value.AdvancementClass == SkillAdvancementClass.Specialized))
+            player.GiveIronmanItems(skill.Key);
+
+        //Set lives/Ironman props
+        player.ApplyIronmanProperty();
+
+        //Welcome them
+        player.SendMessage(PatchClass.Settings.WelcomeMessage);
+        for (var i = 0; i < 20; i++)
+            player.PlayParticleEffect(Enum.GetValues<PlayScript>().Random(), player.Guid, i * .02f);
     }
 
-    public static void SendUpdatedSkills(this Player player)
-    {
-        //Update the player
-        foreach (var skill in player.Skills)
-        {
-            var sType = skill.Key;
-            var sac = skill.Value.AdvancementClass;
-            if (sac != SkillAdvancementClass.Trained && sac != SkillAdvancementClass.Specialized)
-                continue;
-
-            GameMessagePrivateUpdateSkill gameMessagePrivateUpdateSkill = new GameMessagePrivateUpdateSkill(player, player.GetCreatureSkill(sType));
-            GameMessageSystemChat gameMessageSystemChat = new GameMessageSystemChat($"{sType.ToSentence()} {(sac == SkillAdvancementClass.Trained ? "trained" : "specialized")}.", ChatMessageType.Advancement);
-            player.Session.Network.EnqueueSend(gameMessagePrivateUpdateSkill, gameMessageSystemChat);
-        }
-        GameMessagePrivateUpdatePropertyInt gameMessagePrivateUpdatePropertyInt = new GameMessagePrivateUpdatePropertyInt(player, PropertyInt.AvailableSkillCredits, player.AvailableSkillCredits.GetValueOrDefault());
-        player.Session.Network.EnqueueSend(gameMessagePrivateUpdatePropertyInt);
-    }
-
-    //Remove all skills then generate up to max credits a plan
+    /// <summary>
+    /// Remove all skills then generate up to max credits a plan
+    /// </summary>
     public static void RollIronmanSkills(this Player player)
     {
         //Untrain skills
         //Enlightenment.RemoveSkills(player);
-        int num = Enum.GetNames(typeof(Skill)).Length;
-        for (int i = 1; i < num; i++)
-        {
-            Skill skill = (Skill)i;
-            player.ResetSkill(skill);
-        }
-        player.AvailableExperience = 0L;
-        player.Session.Network.EnqueueSend(new GameMessagePrivateUpdatePropertyInt64(player, PropertyInt64.AvailableExperience, 0L));
-        HeritageGroupCG heritageGroupCG = DatManager.PortalDat.CharGen.HeritageGroups[(uint)player.Heritage.Value];
-        player.AvailableSkillCredits = (int)heritageGroupCG.SkillCredits;
-        player.Session.Network.EnqueueSend(new GameMessagePrivateUpdatePropertyInt(player, PropertyInt.AvailableSkillCredits, player.AvailableSkillCredits.GetValueOrDefault()));
+        //player.ResetSkills();
+        player.ResetLikeEnlightenment();
+
+        //int num = Enum.GetNames(typeof(Skill)).Length;
+        //for (int i = 1; i < num; i++)
+        //{
+        //    Skill skill = (Skill)i;
+        //    player.ResetSkill(skill);
+        //}
+        //player.AvailableExperience = 0L;
+        //player.Session.Network.EnqueueSend(new GameMessagePrivateUpdatePropertyInt64(player, PropertyInt64.AvailableExperience, 0L));
+        //HeritageGroupCG heritageGroupCG = DatManager.PortalDat.CharGen.HeritageGroups[(uint)player.Heritage.Value];
+        //player.AvailableSkillCredits = (int)heritageGroupCG.SkillCredits;
+        //player.Session.Network.EnqueueSend(new GameMessagePrivateUpdatePropertyInt(player, PropertyInt.AvailableSkillCredits, player.AvailableSkillCredits.GetValueOrDefault()));
 
 
         //Local copy of the skill pool
@@ -70,7 +69,9 @@ public static class FakeIronman
         //Train MC if magic was rolled or spec a different skill if not
         HashSet<Skill> trained = new();
         var second = (primary == Skill.WarMagic || primary == Skill.VoidMagic || primary == Skill.LifeMagic) ?
-            Skill.ManaConversion : pool.Random();
+            Skill.ManaConversion : pool.Where(x => !Settings.AugmentSpecializations.Contains(x)).ToArray().Random();
+
+
 
         player.TrainSkill(second);
         trained.Add(second);
@@ -163,10 +164,15 @@ public static class FakeIronman
         if (!PatchClass.Settings.SkillItems.TryGetValue(primary, out var items) || items is null)
             return;
 
+        player.SetProperty(FakeBool.Ironman, false);
         foreach (var item in items)
-        {
-            AdminCommands.HandleCI(player.Session, item.Split(" "));
-        }
+            player.CreateItems(item);
+
+        player.SetProperty(FakeBool.Ironman, true);
+        foreach (var item in player.Inventory.Values)
+            item.SetProperty(FakeBool.Ironman, true);
+        //foreach(var item in player.EquippedObjects.Values)
+        //    item.SetProperty(FakeBool.Ironman, true);
     }
 
     /// <summary>
@@ -190,19 +196,24 @@ public static class FakeIronman
         }
     }
 
+    /// <summary>
+    /// Randomize heritage/gender/appearance
+    /// </summary>
+    /// <param name="player"></param>
     public static void RollIronmanAppearance(this Player player)
     {
         if (player is null)
             return;
 
         player.RandomizeAppearance();        
-
         player.EnqueueBroadcastUpdateObject();
-
-        player.SendMessage($"");
     }
 
-    public static void ApplyIronman(this Player player)
+    /// <summary>
+    /// Add Ironman property and related mode setup
+    /// </summary>
+    /// <param name="player"></param>
+    public static void ApplyIronmanProperty(this Player player)
     {
         if (player is null)
             return;
@@ -222,6 +233,10 @@ public static class FakeIronman
             $"\nYou have {PatchClass.Settings.HardcoreStartingLives} remaining and {PatchClass.Settings.HardcoreSecondsBetweenDeathAllowed} seconds between deaths.");
     }
 
+    /// <summary>
+    /// Remove Ironman status
+    /// </summary>
+    /// <param name="player"></param>
     public static void RemoveIronman(this Player player)
     {
         if (player is null)
@@ -257,44 +272,4 @@ public static class FakeIronman
 
         player.SendMessage(sb.ToString());
     }
-
-    #region Commands
-    //[CommandHandler("iron", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 0)]
-    //public static void HandleIronman(Session session, params string[] parameters)
-    //{
-    //    var player = session.Player;
-
-    //    if (player is null)
-    //        return;
-
-    //    if (player.GetProperty(FakeBool.Ironman) == true)
-    //    {
-    //        player.SendMessage($"You are already an Ironman.");
-    //        return;
-    //    }
-
-    //    player.SetProperty(FakeInt.HardcoreLives, S.Settings.HardcoreStartingLives);
-    //    player.SetProperty(FakeFloat.TimestampLastPlayerDeath, Time.GetUnixTime());
-    //    player.SetProperty(FakeBool.Ironman, true);
-    //    player.SetProperty(FakeBool.Hardcore, true);
-    //    player.RadarColor = RadarColor.Sentinel;
-    //    player.SendMessage($"You're now participating in Ironman.  Stay safe!  Unless you rolled trash" +
-    //        $"\nYou have {S.Settings.HardcoreStartingLives} remaining and {S.Settings.HardcoreSecondsBetweenDeathAllowed} seconds between deaths.");
-    //}
-
-    //[CommandHandler("uniron", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-    //public static void HandleUnIronman(Session session, params string[] parameters)
-    //{
-    //    var player = session.Player;
-
-    //    if (player is null)
-    //        return;
-
-    //    player.SetProperty(FakeBool.Ironman, false);
-    //    player.SetProperty(FakeBool.Hardcore, false);
-    //    player.RadarColor = RadarColor.Default;
-    //    player.SendMessage("You're no longer participating in Ironman");
-    //}
-
-    #endregion
 }

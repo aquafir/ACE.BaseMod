@@ -23,43 +23,43 @@ public class ForceTemplatePlayer
         //characterCreateInfo.Name = $"ø{characterCreateInfo.Name}";
 
         //Randomize heritage / appearance
-        PlayerFactoryEx.RandomizeHeritage(characterCreateInfo);
+        //PlayerFactoryEx.RandomizeHeritage(characterCreateInfo);
 
-        characterCreateInfo.Appearance.ShirtStyle = 0;
-        characterCreateInfo.Appearance.PantsStyle = 0;
-        characterCreateInfo.Appearance.HeadgearStyle = 0;
-        characterCreateInfo.Appearance.FootwearStyle = 0;
+        //characterCreateInfo.Appearance.ShirtStyle = 0;
+        //characterCreateInfo.Appearance.PantsStyle = 0;
+        //characterCreateInfo.Appearance.HeadgearStyle = 0;
+        //characterCreateInfo.Appearance.FootwearStyle = 0;
 
-        //Set primary attr
-        var primaryAttr = ThreadSafeRandom.Next(0, 5);
-        characterCreateInfo.CoordinationAbility = 46;
-        characterCreateInfo.EnduranceAbility = 46;
-        characterCreateInfo.FocusAbility = 46;
-        characterCreateInfo.QuicknessAbility = 46;
-        characterCreateInfo.SelfAbility = 46;
-        characterCreateInfo.StrengthAbility = 46;
+        ////Set primary attr
+        //var primaryAttr = ThreadSafeRandom.Next(0, 5);
+        //characterCreateInfo.CoordinationAbility = 46;
+        //characterCreateInfo.EnduranceAbility = 46;
+        //characterCreateInfo.FocusAbility = 46;
+        //characterCreateInfo.QuicknessAbility = 46;
+        //characterCreateInfo.SelfAbility = 46;
+        //characterCreateInfo.StrengthAbility = 46;
 
-        switch (primaryAttr)
-        {
-            case 0:
-                characterCreateInfo.CoordinationAbility = 100;
-                break;
-            case 1:
-                characterCreateInfo.EnduranceAbility = 100;
-                break;
-            case 2:
-                characterCreateInfo.FocusAbility = 100;
-                break;
-            case 3:
-                characterCreateInfo.QuicknessAbility = 100;
-                break;
-            case 4:
-                characterCreateInfo.SelfAbility = 100;
-                break;
-            case 5:
-                characterCreateInfo.StrengthAbility = 100;
-                break;
-        }
+        //switch (primaryAttr)
+        //{
+        //    case 0:
+        //        characterCreateInfo.CoordinationAbility = 100;
+        //        break;
+        //    case 1:
+        //        characterCreateInfo.EnduranceAbility = 100;
+        //        break;
+        //    case 2:
+        //        characterCreateInfo.FocusAbility = 100;
+        //        break;
+        //    case 3:
+        //        characterCreateInfo.QuicknessAbility = 100;
+        //        break;
+        //    case 4:
+        //        characterCreateInfo.SelfAbility = 100;
+        //        break;
+        //    case 5:
+        //        characterCreateInfo.StrengthAbility = 100;
+        //        break;
+        //}
 
         //Reset skills seemed like a pain to do here
         pendingFinalization.Add(guid.Full);
@@ -84,25 +84,7 @@ public class ForceTemplatePlayer
         actionChain.AddDelaySeconds(5);
         actionChain.AddAction(session.Player, () =>
         {
-            //Set lives/Ironman props
-            player.ApplyIronman();
 
-            //Roll skills
-            player.RollIronmanSkills();
-
-            //player.GiveIronmanItems()
-            //foreach(var item in player.Inventory.Values)
-            //    item.SetProperty(FakeBool.Ironman, true);
-            //foreach(var item in player.EquippedObjects.Values)
-            //    item.SetProperty(FakeBool.Ironman, true);
-
-            player.WipeInventory(true);
-
-
-            //Welcome them
-            player.SendMessage(PatchClass.Settings.WelcomeMessage);
-            for (var i = 0; i < 20; i++)
-                player.PlayParticleEffect(Enum.GetValues<PlayScript>().Random(), player.Guid, i * .02f);
         });
         actionChain.EnqueueChain();
     }

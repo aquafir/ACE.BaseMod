@@ -4,7 +4,7 @@
     "projects": [
       "ACE.Shared\\ACE.Shared.csproj",
       "Samples\\CustomLoot\\CustomLoot.csproj",
-      "Samples\\ImGuiHud\\ImGuiHud.csproj"
+      "Samples\\Ironman\\Ironman.csproj"
     ]
   }
 }

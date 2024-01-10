@@ -63,6 +63,14 @@ public class Settings
         Skill.FinesseWeapons,
     };
 
+    public static readonly HashSet<Skill> AugmentSpecializations = new() {
+        Skill.Salvaging,
+        Skill.ArmorTinkering,
+        Skill.ItemTinkering,
+        Skill.MagicItemTinkering,
+        Skill.WeaponTinkering,
+    };
+
     public List<Skill> SecondarySkillPool { get; set; } = new()
     {
         //No dupes

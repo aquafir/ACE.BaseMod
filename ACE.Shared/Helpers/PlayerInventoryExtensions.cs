@@ -3,7 +3,7 @@ using static ACE.Server.WorldObjects.Player;
 
 namespace ACE.Shared.Helpers;
 
-public static class InventoryExtensions
+public static class PlayerInventoryExtensions
 {
     public static bool TryTakeItems(this Player player, uint weenieClassId, int amount = 1)
     {
@@ -123,6 +123,21 @@ public static class InventoryExtensions
         return false;
     }
 
+    /// <summary>
+    /// Remove any equipped items
+    /// </summary>
+    /// <param name="player"></param>
+    public static void DequipAllItems(this Player player)
+    {
+        var equippedObjects = player.EquippedObjects.Keys.ToList();
+
+        foreach (var equippedObject in equippedObjects)
+            player.HandleActionPutItemInContainer(equippedObject.Full, player.Guid.Full, 0);
+    }
+
+    /// <summary>
+    /// Remove items from inventory and optionally equipment
+    /// </summary>
     public static void WipeInventory(this Player player, bool equipment = false)
     {
         foreach (var item in player.Inventory.Values)
@@ -137,6 +152,9 @@ public static class InventoryExtensions
         player.SendMessage($"Inventory wiped.");
     }
 
+    /// <summary>
+    /// Delete an item from a player's inventory
+    /// </summary>
     public static void DeleteItem(this Player player, WorldObject wo)
     {
         wo.DeleteObject(player);

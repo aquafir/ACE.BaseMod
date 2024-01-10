@@ -6,6 +6,20 @@ namespace ACE.Shared.Helpers;
 
 public static class PlayerExtensions
 {
+    /// <summary>
+    /// Try to trains or specializes a skill depending on its status
+    /// </summary>
+    public static bool TryAdvanceSkill(this Player player, Skill skill)
+    {
+        if (player.GetCreatureSkill(skill) is not CreatureSkill s)
+            return false;
+
+        bool success = s.AdvancementClass == SkillAdvancementClass.Trained ?
+            player.SpecializeSkill(skill) : player.TrainSkill(skill);
+
+        return success;
+    }
+
     private static PositionType[] wipedPositions =
 {
         PositionType.Undef,

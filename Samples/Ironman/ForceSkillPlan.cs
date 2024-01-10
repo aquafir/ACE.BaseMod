@@ -55,5 +55,4 @@ public class ForceSkillPlan
         __instance.SetProperty(FakeString.IronmanPlan, String.Join(';', plan.Skip(i)));
         __instance.SendUpdatedSkills();
     }
-
 }
