@@ -50,6 +50,7 @@ public enum FakeFloat
     //Goal value
     ItemWieldRequirementValue1 = 20000,
     TimestampLastPlayerDeath = 20001,
+    QuestBonus = 20002,
 }
 public enum FakeIID
 {
