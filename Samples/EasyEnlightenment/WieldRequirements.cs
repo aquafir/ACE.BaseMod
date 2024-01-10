@@ -7,7 +7,7 @@ public class WieldRequirements
     [HarmonyPatch(typeof(Player), "CheckWieldRequirements", new Type[] { typeof(WorldObject) })]
     public static bool PreCheckWieldRequirements(WorldObject item, ref Player __instance, ref WeenieError __result)
     {
-        var req = item.GetProperty(PatchClass.Settings.WieldRequirementEnlightenments);
+        var req = item.GetProperty(FakeInt.ItemWieldRequirementEnlightenments);
         if (req is null)
             return true;
 

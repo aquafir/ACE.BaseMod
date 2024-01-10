@@ -8,6 +8,7 @@ public enum FakeBool
     Ironman = 10002,
     Hardcore = 10003,
     ShadowBanned = 10004,
+    UsingNewLuminance = 10005,
 }
 public enum FakeDID
 {
@@ -96,6 +97,7 @@ public enum FakeInt
     ItemWieldRequirementCompareType1 = 20002,
     HardcoreLives = 20003,
     ChatInfractions = 20004,
+    ItemWieldRequirementEnlightenments = 20005,
 }
 
 public enum FakeInt64

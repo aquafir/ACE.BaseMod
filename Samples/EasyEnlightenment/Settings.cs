@@ -17,7 +17,7 @@ public class Settings
         [PropertyFloat.CriticalFrequency] = .01,
     };
 
-    public PropertyBool UsingNewLuminance { get; set; } = (PropertyBool)11111;
+    //public PropertyBool UsingNewLuminance { get; set; } = (PropertyBool)11111;
     public int SkillCreditAmount { get; set; } = 1;
     public int SkillCreditInterval { get; set; } = 5;
     public bool SkipNormalBroadcast { get; set; } = false;
@@ -26,5 +26,5 @@ public class Settings
     public long MaxLumPerEnlightenment { get; set; } = 500000;
 
     public bool PatchWieldRequirements { get; set; } = true;
-    public PropertyInt WieldRequirementEnlightenments => (PropertyInt)29999;
+    //public PropertyInt WieldRequirementEnlightenments => (PropertyInt)29999;
 }

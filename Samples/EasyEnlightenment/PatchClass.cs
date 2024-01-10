@@ -99,7 +99,7 @@ public class PatchClass
     {
         var player = session.Player;
 
-        if (player.GetProperty(Settings.UsingNewLuminance) ?? true)
+        if (player.GetProperty(FakeBool.UsingNewLuminance) ?? true)
         {
             player.SendMessage($"You're already using the new enlightenment system.");
             return;
@@ -112,7 +112,7 @@ public class PatchClass
             Enlightenment.AddPerks(null, player);
 
         player.SendMessage($"You're on the new system with {oldEnlightenment} enlightenments.");
-        player.SetProperty(Settings.UsingNewLuminance, true);
+        player.SetProperty(FakeBool.UsingNewLuminance, true);
     }
 
     [HarmonyPrefix]
