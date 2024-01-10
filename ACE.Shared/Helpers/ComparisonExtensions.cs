@@ -2,7 +2,7 @@
 
 namespace ACE.Shared.Helpers;
 
-public static class ComparisonHelpers
+public static class ComparisonExtensions
 {
     public static bool Compare(this CompareType compareType, double? prop, double val, Player player, string failMsg = "")
     {

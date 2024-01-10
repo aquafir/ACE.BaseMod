@@ -8,6 +8,17 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<PublicizeAll>true</PublicizeAll>
+	</PropertyGroup>
+
+	<ItemGroup>
+    <PackageReference Include="Krafs.Publicizer" Version="2.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="ACE.Adapter">
       <HintPath>C:\ACE\Server\ACE.Adapter.dll</HintPath>

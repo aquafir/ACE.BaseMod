@@ -17,7 +17,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="SpawnHelper.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

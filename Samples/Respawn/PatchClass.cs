@@ -209,11 +209,11 @@ namespace Respawn
                 player.SendMessage(sb.ToString());
         }
 
-        [CommandHandler("gens", AccessLevel.Admin, CommandHandlerFlag.None)]
-        public static void HandleDumpGens(Session session, params string[] parameters)
-        {
-            SpawnHelper.GenerateLandblockCreatureCounts(true);
-        }
+        //[CommandHandler("gens", AccessLevel.Admin, CommandHandlerFlag.None)]
+        //public static void HandleDumpGens(Session session, params string[] parameters)
+        //{
+        //    SpawnHelper.GenerateLandblockCreatureCounts(true);
+        //}
         #endregion
 
         #region Patches
