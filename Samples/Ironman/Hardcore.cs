@@ -1,8 +1,4 @@
-﻿using ACE.Entity.Enum.Properties;
-using ACE.Server.Managers;
-using CustomLoot.Enums;
-
-namespace Ironman;
+﻿namespace Ironman;
 
 [HarmonyPatchCategory(nameof(Hardcore))]
 public static class Hardcore
@@ -49,33 +45,5 @@ public static class Hardcore
             player.PermaDeath();
     }
 
-    public static void QuarantinePlayer(this Player player)
-    {
-        //Wipe positions
-        foreach (var position in Enum.GetValues<PositionType>())
-            player.SetPosition(position, null);
 
-
-    }
-
-
-    /// <summary>
-    /// Log off and permanently delete the player
-    /// </summary>
-    /// <param name="player"></param>
-    public static void PermaDeath(this Player player)
-    {
-        //Taken from /deletecharacter
-        player.Character.DeleteTime = (ulong)Time.GetUnixTime();
-        player.Character.IsDeleted = true;
-        player.CharacterChangesDetected = true;
-        player.Session.LogOffPlayer(true);
-        PlayerManager.HandlePlayerDelete(player.Character.Id);
-
-        var success = PlayerManager.ProcessDeletedPlayer(player.Character.Id);
-        if (success)
-            ModManager.Log($"Successfully deleted character {player.Name} (0x{player.Guid}).");
-        else
-            ModManager.Log($"Unable to delete character {player.Name} (0x{player.Guid}) due to PlayerManager failure.");
-    }
 }

@@ -1,6 +1,4 @@
-﻿using CustomLoot.Enums;
-
-namespace Ironman.FlagEvents;
+﻿namespace Ironman.FlagEvents;
 
 [HarmonyPatchCategory(nameof(FlagEmoteItems))]
 public static class FlagEmoteItems

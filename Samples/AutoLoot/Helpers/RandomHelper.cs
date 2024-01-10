@@ -34,16 +34,16 @@ public static class RandomHelper
                     {
                         PropKey = ThreadSafeRandom.Next(0, 200),
                         TargetValue = ThreadSafeRandom.Next(0, 200),
-                        PropType = valEnum.GetRandom(),
-                        Type = compareEnum.GetRandom(),
+                        PropType = valEnum.Random(),
+                        Type = compareEnum.Random(),
                     });
 
                 if (stringReqs)
                 {
                     StringRequirement sReq = new()
                     {
-                        Prop = stringEnum.GetRandom(),
-                        Value = randomWords.GetRandom(),
+                        Prop = stringEnum.Random(),
+                        Value = randomWords.Random(),
                     };
                     //sReq.Initialize(); 
                     sReqs.Add(sReq);
@@ -54,7 +54,7 @@ public static class RandomHelper
             {
                 ValueReqs = vReqs,
                 StringReqs = sReqs,
-                Action = actionEnum.GetRandom(),
+                Action = actionEnum.Random(),
             };
 
             if (valReqs && vReqs.Count > 0)

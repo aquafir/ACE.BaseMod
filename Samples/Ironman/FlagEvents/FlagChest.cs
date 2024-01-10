@@ -1,7 +1,4 @@
-﻿using ACE.Server.Managers;
-using CustomLoot.Enums;
-
-namespace Ironman.FlagEvents;
+﻿namespace Ironman.FlagEvents;
 
 [HarmonyPatchCategory(nameof(FlagChest))]
 public static class FlagChest

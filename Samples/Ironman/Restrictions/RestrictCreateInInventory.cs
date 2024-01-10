@@ -1,6 +1,4 @@
-﻿using CustomLoot.Enums;
-
-namespace Ironman.Restrictions;
+﻿namespace Ironman.Restrictions;
 
 //Check on add to inventory
 [HarmonyPatchCategory(nameof(RestrictCreateInInventory))]

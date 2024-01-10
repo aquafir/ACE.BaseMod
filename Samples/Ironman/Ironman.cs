@@ -1,15 +1,7 @@
-﻿using ACE.Database;
-using ACE.Entity.Enum.Properties;
+﻿using ACE.Entity.Enum.Properties;
 using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.Network;
-using CustomLoot.Enums;
 using ACE.DatLoader.Entity;
-using ACE.Server.Network.GameAction.Actions;
-using ACE.Server.Factories;
 using ACE.Server.Command.Handlers;
-using ACE.Server.Entity.Mutations;
-using ACE.Entity;
-using ACE.Server.WorldObjects;
 
 namespace Ironman;
 
@@ -175,6 +167,39 @@ public static class FakeIronman
         {
             AdminCommands.HandleCI(player.Session, item.Split(" "));
         }
+    }
+
+    /// <summary>
+    /// Roll a random primary attribute
+    /// </summary>
+    /// <param name="player"></param>
+    public static void RollIronmanAttributes(this Player player)
+    {
+        if (player is null)
+            return;
+
+        PropertyAttribute primary = (PropertyAttribute)ThreadSafeRandom.Next(1, 6);        
+        foreach(var attr in Enum.GetValues<PropertyAttribute>())
+        {
+            if (attr == PropertyAttribute.Undef) continue;
+
+            var pAttr = player.Attributes[attr];
+            pAttr.StartingValue = attr == primary ? 100u : 46u;
+
+            player.Session.Network.EnqueueSend(new GameMessagePrivateUpdateAttribute(player, pAttr));
+        }
+    }
+
+    public static void RollIronmanAppearance(this Player player)
+    {
+        if (player is null)
+            return;
+
+        player.RandomizeAppearance();        
+
+        player.EnqueueBroadcastUpdateObject();
+
+        player.SendMessage($"");
     }
 
     public static void ApplyIronman(this Player player)

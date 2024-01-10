@@ -1,6 +1,4 @@
-﻿using CustomLoot.Enums;
-
-namespace Ironman.FlagEvents;
+﻿namespace Ironman.FlagEvents;
 
 [HarmonyPatchCategory(nameof(FlagVendorItems))]
 public static class FlagVendorItems
@@ -24,5 +22,4 @@ public static class FlagVendorItems
             __instance.SendMessage($"{item.Name} now Ironman");
         }
     }
-
 }

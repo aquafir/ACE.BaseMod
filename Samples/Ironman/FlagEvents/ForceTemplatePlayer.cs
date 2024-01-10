@@ -1,10 +1,8 @@
 ﻿using ACE.Database.Entity;
-using ACE.Database.Models.Shard;
 using ACE.Entity;
 using ACE.Entity.Models;
 using ACE.Server.Entity.Actions;
 using ACE.Server.Factories;
-using ACE.Server.Managers;
 using static ACE.Server.Factories.PlayerFactory;
 using Biota = ACE.Entity.Models.Biota;
 
@@ -26,6 +24,11 @@ public class ForceTemplatePlayer
 
         //Randomize heritage / appearance
         PlayerFactoryEx.RandomizeHeritage(characterCreateInfo);
+
+        characterCreateInfo.Appearance.ShirtStyle = 0;
+        characterCreateInfo.Appearance.PantsStyle = 0;
+        characterCreateInfo.Appearance.HeadgearStyle = 0;
+        characterCreateInfo.Appearance.FootwearStyle = 0;
 
         //Set primary attr
         var primaryAttr = ThreadSafeRandom.Next(0, 5);
@@ -86,6 +89,15 @@ public class ForceTemplatePlayer
 
             //Roll skills
             player.RollIronmanSkills();
+
+            //player.GiveIronmanItems()
+            //foreach(var item in player.Inventory.Values)
+            //    item.SetProperty(FakeBool.Ironman, true);
+            //foreach(var item in player.EquippedObjects.Values)
+            //    item.SetProperty(FakeBool.Ironman, true);
+
+            player.WipeInventory(true);
+
 
             //Welcome them
             player.SendMessage(PatchClass.Settings.WelcomeMessage);

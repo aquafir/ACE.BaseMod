@@ -1,6 +1,6 @@
-﻿namespace Ironman;
+﻿namespace ACE.Shared.Helpers;
 
-public static class RandomHelper
+public static class RandomExtensions
 {
     static Random random = new Random();
 
@@ -9,6 +9,17 @@ public static class RandomHelper
     {
         // Return a random item.
         return items[random.Next(0, items.Length)];
+    }
+
+    public static bool TryGetRandom<T>(this T[] array, out T value)
+    {
+        value = default;
+
+        if (array == null || array.Length == 0)
+            return false;
+
+        value = array[random.Next(array.Length)];
+        return true;
     }
 
     public static T Random<T>(this List<T> collection)

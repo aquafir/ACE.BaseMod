@@ -29,6 +29,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Helpers\ExtendHelpers.cs" />
+	  <Compile Remove="Helpers\Helpers.cs" />
+	  <Compile Remove="Helpers\PropertyExtensions.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -38,6 +44,10 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,5 +1,4 @@
 ﻿using ACE.Server.Network.GameMessages.Messages;
-using CustomLoot.Enums;
 using static ACE.Server.Mods.ModManager;
 
 namespace Ironman;

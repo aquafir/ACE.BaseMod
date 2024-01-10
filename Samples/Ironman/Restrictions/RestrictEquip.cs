@@ -1,6 +1,4 @@
-﻿using CustomLoot.Enums;
-
-namespace Ironman.Restrictions;
+﻿namespace Ironman.Restrictions;
 
 [HarmonyPatchCategory(nameof(RestrictEquip))]
 public static class RestrictEquip

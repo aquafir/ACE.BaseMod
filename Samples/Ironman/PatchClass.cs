@@ -1,25 +1,5 @@
-﻿using ACE.Database;
-using ACE.Database.Entity;
-using ACE.Database.Models.Shard;
-using ACE.DatLoader.Entity;
-using ACE.Entity;
-using ACE.Entity.Enum;
-using ACE.Entity.Enum.Properties;
-using ACE.Entity.Models;
-using ACE.Server.Entity.Actions;
-using ACE.Server.Factories;
-using ACE.Server.Managers;
-using ACE.Server.Network.Enum;
-using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.Network.Handlers;
-using ACE.Server.WorldObjects;
-using CustomLoot.Enums;
-using Microsoft.EntityFrameworkCore;
+﻿using ACE.Entity.Models;
 using System.Runtime.CompilerServices;
-using static ACE.Server.Factories.PlayerFactory;
-using static ACE.Server.Mods.ModManager;
-using static System.Net.Mime.MediaTypeNames;
-using Biota = ACE.Entity.Models.Biota;
 
 namespace Ironman;
 
