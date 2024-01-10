@@ -9,6 +9,7 @@ public enum FakeBool
     CorpseSpawnedDungeon = 10001,
     Ironman = 10002,
     Hardcore = 10003,
+    ShadowBanned = 10004,
 }
 public enum FakeDID
 {
@@ -95,6 +96,7 @@ public enum FakeInt
     //Comparer
     ItemWieldRequirementCompareType1 = 20002,
     HardcoreLives = 20003,
+    ChatInfractions = 20004,
 }
 
 public enum FakeInt64

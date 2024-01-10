@@ -7,13 +7,13 @@ namespace ChatFilter;
 
 public static class Helper
 {
-    public static bool IsShadowBanned(this Player player) => player.GetProperty(PatchClass.Settings.ShadowBanProperty) ?? false;
-    public static void SetShadowBanned(this Player player, bool value = true) => player.SetProperty(PatchClass.Settings.ShadowBanProperty, value);
+    public static bool IsShadowBanned(this Player player) => player.GetProperty(FakeBool.ShadowBanned) ?? false;
+    public static void SetShadowBanned(this Player player, bool value = true) => player.SetProperty(FakeBool.ShadowBanned, value);
 
 
-    public static int ChatInfractionCount(this Player player) => player.GetProperty(PatchClass.Settings.ChatInfractionsProperty) ?? 0;
-    public static void SetChatInfractionCount(this Player player, int count) => player.SetProperty(PatchClass.Settings.ChatInfractionsProperty, count);
-    public static void IncreaseChatInfractionCount(this Player player, int count = 1) => player.SetProperty(PatchClass.Settings.ChatInfractionsProperty, player.ChatInfractionCount() + count);
+    public static int ChatInfractionCount(this Player player) => player.GetProperty(FakeInt.ChatInfractions) ?? 0;
+    public static void SetChatInfractionCount(this Player player, int count) => player.SetProperty(FakeInt.ChatInfractions, count);
+    public static void IncreaseChatInfractionCount(this Player player, int count = 1) => player.SetProperty(FakeInt.ChatInfractions, player.ChatInfractionCount() + count);
     public static bool GagPlayer(this Player player)
     {
         if (player == null || !PatchClass.Settings.GagPlayer)

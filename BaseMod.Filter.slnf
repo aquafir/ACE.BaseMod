@@ -2,7 +2,27 @@
   "solution": {
     "path": "ACE.BaseMod.sln",
     "projects": [
-      "Samples\\Discord\\Discord.csproj"
+      "ACE.Shared\\ACE.Shared.csproj",
+      "Samples\\ChatFilter\\ChatFilter.csproj",
+      "Samples\\CleaveTranspiler\\CleaveTranspiler.csproj",
+      "Samples\\ConnectionLimit\\ConnectionLimit.csproj",
+      "Samples\\CriticalOverride\\CriticalOverride.csproj",
+      "Samples\\CustomLoot\\CustomLoot.csproj",
+      "Samples\\Discord\\Discord.csproj",
+      "Samples\\EasyEnlightenment\\EasyEnlightenment.csproj",
+      "Samples\\ExtendACE\\ExtendACE.csproj",
+      "Samples\\HelloCommand\\HelloCommand.csproj",
+      "Samples\\ImGuiHud\\ImGuiHud.csproj",
+      "Samples\\MinimalAPI\\MinimalAPI.csproj",
+      "Samples\\PlayerSave\\PlayerSave.csproj",
+      "Samples\\QualityOfLife\\QualityOfLife.csproj",
+      "Samples\\QuestBonus\\QuestBonus.csproj",
+      "Samples\\Raise\\Raise.csproj",
+      "Samples\\Respawn\\Respawn.csproj",
+      "Samples\\Saves\\Saves.csproj",
+      "Samples\\Spells\\Spells.csproj",
+      "Samples\\Tinkering\\Tinkering.csproj",
+      "Samples\\WebToLua\\WebToLua.csproj"
     ]
   }
 }
