@@ -30,7 +30,7 @@ public class CommandModule : InteractionModuleBase<SocketInteractionContext>
             if (!String.IsNullOrEmpty(args))
                 command += " " + args;
 
-            if (!await Helpers.TryIssueACECommand(command, player))
+            if (!await CommandHelpers.TryIssueACECommand(command, player))
                 await Context.Channel.SendMessageAsync($"Failed to run command.");
             else
                 await Context.Channel.SendMessageAsync($"As {player} issued {command}");
@@ -50,7 +50,7 @@ public class CommandModule : InteractionModuleBase<SocketInteractionContext>
             if (!String.IsNullOrEmpty(args))
                 command += " " + args;
 
-            if (!await Helpers.TryIssueACECommand(command))
+            if (!await CommandHelpers.TryIssueACECommand(command))
                 await Context.Channel.SendMessageAsync($"Failed to run command.");
             else
                 await Context.Channel.SendMessageAsync($"Issued {command}");

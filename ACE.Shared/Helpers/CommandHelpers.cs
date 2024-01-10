@@ -1,5 +1,5 @@
-﻿namespace Discord;
-public static class Helpers
+﻿namespace ACE.Shared.Helpers;
+public static class CommandHelpers
 {
     public static async Task<bool> TryIssueACECommand(string commandLine, string playerName = null)
     {
@@ -9,7 +9,7 @@ public static class Helpers
         Session session = null;
 
         //Try to get player session if name provided
-        if (!String.IsNullOrWhiteSpace(playerName))
+        if (!string.IsNullOrWhiteSpace(playerName))
         {
             var player = PlayerManager.GetOnlinePlayer(playerName);
             if (player is null)

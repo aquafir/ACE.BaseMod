@@ -16,3 +16,6 @@ global using Discord.Autocomplete;
 
 global using GroupAttribute = Discord.Interactions.GroupAttribute;
 global using SummaryAttribute = Discord.Interactions.SummaryAttribute;
+
+global using ACE.Shared;
+global using ACE.Shared.Helpers;
