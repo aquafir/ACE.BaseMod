@@ -29,3 +29,7 @@ global using System.IO.Compression;
 global using ACE.Database.Entity;
 global using System.Collections.Concurrent;
 global using ACE.Entity;
+
+
+global using ACE.Shared;
+global using ACE.Shared.Helpers;

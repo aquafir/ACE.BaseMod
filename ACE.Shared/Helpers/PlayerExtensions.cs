@@ -1,6 +1,4 @@
 ﻿using ACE.DatLoader.FileTypes;
-using ACE.Entity;
-using ACE.Entity.Enum.Properties;
 using ACE.Server.Command.Handlers;
 using ACE.Server.Network.GameMessages.Messages;
 

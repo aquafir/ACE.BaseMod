@@ -59,4 +59,8 @@
 	  </None>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
+	</ItemGroup>
+
 </Project>

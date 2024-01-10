@@ -1,6 +1,4 @@
-﻿using ACE.Entity.Enum.Properties;
-
-namespace ACE.Shared;
+﻿namespace ACE.Shared;
 
 //!!!!Very important to avoid using properties ACE or other Mods uses!!!!
 public enum FakeBool
