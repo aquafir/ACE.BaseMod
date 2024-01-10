@@ -14,3 +14,6 @@ global using System.Reflection;
 global using System.Text.Encodings.Web;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
+
+global using ACE.Shared;
+global using ACE.Shared.Helpers;

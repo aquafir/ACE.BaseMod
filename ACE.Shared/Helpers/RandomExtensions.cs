@@ -32,4 +32,9 @@ public static class RandomExtensions
         int randomIndex = random.Next(collection.Count);
         return collection[randomIndex];
     }
+
+
+    public static T GetRandom<T>(this IEnumerable<T> list) => list.GetRandomElements<T>(1).FirstOrDefault();
+    public static List<T> GetRandomElements<T>(this IEnumerable<T> list, int elementsCount) =>
+        list.OrderBy(arg => Guid.NewGuid()).Take(elementsCount).ToList();
 }
