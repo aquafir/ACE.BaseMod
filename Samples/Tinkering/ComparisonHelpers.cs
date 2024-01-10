@@ -2,7 +2,7 @@
 
 namespace Tinkering;
 
-public static class Helpers
+public static class ComparisonHelpers
 {
     public static bool Compare(this CompareType compareType, double? prop, double val, Player player, string failMsg = "")
     {
