@@ -37,3 +37,5 @@ global using static AngouriMath.Entity;
 global using Balance;
 global using Balance.Patches;
 
+global using ACE.Shared.Helpers;
+global using ACE.Shared;

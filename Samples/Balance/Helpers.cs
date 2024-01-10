@@ -7,12 +7,6 @@ using static AngouriMath.Entity.Number;
 
 namespace Balance;
 
-public static class NetworkHelpers
-{    
-    public static int ActiveConnections(this Player player) => NetworkManager.GetSessionEndpointTotalByAddressCount(player.Session.EndPointC2S.Address);
-}
-
-
 public static class AngouriHelpers
 {
     /// <summary>
