@@ -153,10 +153,27 @@ public static class IronmanCommands
         player.SendMessage(t);
     }
     
-    [CommandHandler("t4", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleT4(Session session, params string[] parameters)
+    [CommandHandler("ironman", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
+    public static void HandleIronman(Session session, params string[] parameters)
     {
-        //Player.
-        //player.RollIronmanAppearance();
+        var player = session.Player;
+
+        if (player is null) return;
+
+        if(player.Level > 1)
+        {
+
+        }
+
+        if (player.GetProperty(FakeBool.Ironman) != true && )
+        {
+            obj.SetProperty(FakeBool.Ironman, true);
+            player.SendMessage($"{obj.Name} is now Iron");
+        }
+        else
+        {
+            obj.SetProperty(FakeBool.Ironman, false);
+            player.SendMessage($"{obj.Name} is no longer Iron");
+        }
     }
 }

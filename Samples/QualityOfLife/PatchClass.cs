@@ -90,11 +90,11 @@ public class PatchClass
 
     public static void Shutdown()
     {
-        //if (Mod.State == ModState.Running)
-        // Shut down enabled mod...
-
-        //If the mod is making changes that need to be saved use this and only manually edit settings when the patch is not active.
-        //SaveSettings();
+        if (Mod.State == ModState.Running)
+        {
+            if (Settings.Patches.Contains(Patches.Fellowship))
+                Fellowships.RestoreFellowSettings();
+        }
 
         if (Mod.State == ModState.Error)
             ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
@@ -104,9 +104,12 @@ public class PatchClass
     private static void PatchCategories()
     {
         //Assume names patch Patches enum
-        foreach(var patch in Settings.Patches)
+        foreach (var patch in Settings.Patches)
             Mod.Harmony.PatchCategory(patch.ToString());
-        }
+
+        if (Settings.Patches.Contains(Patches.Fellowship))
+            Fellowships.SetFellowshipSettings();
+    }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Player), nameof(Player.HandleActionTeleToMarketPlace))]
@@ -167,7 +170,7 @@ public class PatchClass
         {
             player.IsBusy = false;
             var endPos = new Position(player.Location);
-        if (startPos.SquaredDistanceTo(endPos) > Player.RecallMoveThresholdSq)
+            if (startPos.SquaredDistanceTo(endPos) > Player.RecallMoveThresholdSq)
             {
                 player.Session.Network.EnqueueSend(new GameEventWeenieError(player.Session, WeenieError.YouHaveMovedTooFar));
                 return;

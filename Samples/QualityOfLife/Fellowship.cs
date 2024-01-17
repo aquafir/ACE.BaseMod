@@ -1,4 +1,5 @@
 ﻿using ACE.Server.Managers;
+using Iced.Intel.EncoderInternal;
 
 namespace QualityOfLife;
 
@@ -6,22 +7,22 @@ namespace QualityOfLife;
 public class Fellowships
 {
     private static long evenShare;
-    private static void SetFellowshipSettings()
+    public static void SetFellowshipSettings()
     {
         Fellowship.MaxFellows = S.Settings.Fellowship.MaxMembers;
+        ModManager.Log($"Set max fellow members to {Fellowship.MaxFellows}");
 
         //Use the property for share level
         //Could overwrite CalculateXPSharing()
         evenShare = PropertyManager.GetLong("fellowship_even_share_level").Item;
         PropertyManager.ModifyLong("fellowship_even_share_level", S.Settings.Fellowship.EvenShareLevel);
-
-        //Use a utility class of Harmony to set the value of a readonly?
-        //Traverse.Create<Fellowship>().Field(nameof(Fellowship.MaxDistance)).SetValue(S.Settings.Fellowship.MaxDistance);
     }
 
-    private static void RestoreFellowSettings()
+    public static void RestoreFellowSettings()
     {
         Fellowship.MaxFellows = 9;
+        ModManager.Log($"Restored max fellow members to {Fellowship.MaxFellows}");
+
         PropertyManager.ModifyLong("fellowship_even_share_level", evenShare);
         //Traverse.Create<Fellowship>().Field(nameof(Fellowship.MaxDistance)).SetValue(600);        
     }
@@ -123,6 +124,42 @@ public class Fellowships
 
     static double GetFellowshipShare(int members) =>
         S.Settings.Fellowship.SharePercent.TryGetValue(members, out var share) ? share : S.Settings.Fellowship.DefaultShare;
+
+
+    [CommandHandler("fship", AccessLevel.Advocate, CommandHandlerFlag.RequiresWorld)]
+    public static void HandleIronman(Session session, params string[] parameters)
+    {
+        try
+        {
+            var player = session.Player;
+            var lb = player.CurrentLandblock;
+
+            if(player.Fellowship is null)
+            {
+                player.SendMessage($"Create a fellowship first.");
+                return;
+            }
+
+            var list = parameters.Length > 0 ?
+                PlayerManager.GetAllOnline().Where(x => x.Fellowship is null && x.Guid != player.Guid && x.Name.Contains(parameters[0], StringComparison.OrdinalIgnoreCase)) :
+                lb.GetPlayers().Where(x => x.Fellowship is null && x.Guid != player.Guid);
+
+            if(list.Count() == 0)
+            {
+                player.SendMessage($"No players found.");
+                return;
+            }
+
+            foreach (var p in list)
+            {
+                player.Fellowship.AddFellowshipMember(player, p);
+                player.SendMessage($"Inviting {p.Name}");
+
+                //Todo: stop at max?
+            }
+        }
+        catch(Exception ex) { ModManager.Log(ex.Message, ModManager.LogLevel.Error); }
+    }
 }
 
 public class FellowshipSettings

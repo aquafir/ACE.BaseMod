@@ -29,6 +29,13 @@ Each patch category must be present in `Patches` to be enabled, otherwise they w
 
 
 
+The `/fship` command is added:
+
+* `/fship`  invites all in the current landblock
+* `/fship [part of name]` invites all online matching the parameter
+
+
+
 ### Recklessness
 
 * `PowerLow` / `PowerHigh` set the min/max ranges for using Recklessness.
