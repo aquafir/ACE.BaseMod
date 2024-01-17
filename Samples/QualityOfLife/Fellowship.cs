@@ -8,15 +8,15 @@ public class Fellowships
     private static long evenShare;
     private static void SetFellowshipSettings()
     {
-        Fellowship.MaxFellows = PatchClass.Settings.MaxMembers;
+        Fellowship.MaxFellows = S.Settings.Fellowship.MaxMembers;
 
         //Use the property for share level
         //Could overwrite CalculateXPSharing()
         evenShare = PropertyManager.GetLong("fellowship_even_share_level").Item;
-        PropertyManager.ModifyLong("fellowship_even_share_level", PatchClass.Settings.EvenShareLevel);
+        PropertyManager.ModifyLong("fellowship_even_share_level", S.Settings.Fellowship.EvenShareLevel);
 
         //Use a utility class of Harmony to set the value of a readonly?
-        //Traverse.Create<Fellowship>().Field(nameof(Fellowship.MaxDistance)).SetValue(PatchClass.Settings.MaxDistance);
+        //Traverse.Create<Fellowship>().Field(nameof(Fellowship.MaxDistance)).SetValue(S.Settings.Fellowship.MaxDistance);
     }
 
     private static void RestoreFellowSettings()
@@ -34,7 +34,7 @@ public class Fellowships
         if (inviter == null || newMember == null)
             return false;
 
-        if (PatchClass.Settings.SendDetails)
+        if (S.Settings.Fellowship.SendDetails)
         {
             var details = $"\n{inviter.Name} wants to add {newMember.Name} to {__instance.FellowshipName}.\nShareXP: {GetFellowshipShare(__instance.GetFellowshipMembers().Count + 1)}";
             inviter.SendMessage(details);
@@ -64,7 +64,7 @@ public class Fellowships
         //    }
         //}
 
-        //if (__instance.FellowshipMembers.Count == PatchClass.Settings.MaxMembers)
+        //if (__instance.FellowshipMembers.Count == S.Settings.Fellowship.MaxMembers)
         ////if (__instance.FellowshipMembers.Count == Fellowship.MaxFellows)
         //{
         //    inviter.Session.Network.EnqueueSend(new GameEventWeenieError(inviter.Session, WeenieError.YourFellowshipIsFull));
@@ -114,7 +114,7 @@ public class Fellowships
     public static bool PreGetMemberSharePercent(ref Fellowship __instance, ref double __result)
     {
         //If you don't have enough shares specified use the default
-        //__result = PatchClass.Settings.SharePercent.TryGetValue(__instance.GetFellowshipMembers().Count, out var share) ? share : PatchClass.Settings.DefaultShare;
+        //__result = S.Settings.Fellowship.SharePercent.TryGetValue(__instance.GetFellowshipMembers().Count, out var share) ? share : S.Settings.Fellowship.DefaultShare;
         __result = GetFellowshipShare(__instance.GetFellowshipMembers().Count);
 
         //Return false to override
@@ -122,5 +122,27 @@ public class Fellowships
     }
 
     static double GetFellowshipShare(int members) =>
-        PatchClass.Settings.SharePercent.TryGetValue(members, out var share) ? share : PatchClass.Settings.DefaultShare;
+        S.Settings.Fellowship.SharePercent.TryGetValue(members, out var share) ? share : S.Settings.Fellowship.DefaultShare;
+}
+
+public class FellowshipSettings
+{
+    public bool SendDetails { get; set; } = true;
+    public int MaxMembers { get; set; } = 2;
+
+    public Dictionary<int, double> SharePercent { get; set; } = new()
+    {
+        [1] = 1.0,
+        [2] = .75,
+        [3] = .6,
+        [4] = .55,
+        [5] = .5,
+        [6] = .45,
+        [7] = .4,
+        [8] = .35,
+        [9] = .3,
+    };
+    public double DefaultShare { get; set; } = 0;
+
+    public long EvenShareLevel = 50;  //fellowship_even_share_level
 }

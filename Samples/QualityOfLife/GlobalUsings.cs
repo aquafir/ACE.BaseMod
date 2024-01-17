@@ -27,3 +27,6 @@ global using System.Text.Json.Serialization;
 
 global using ACE.Shared;
 global using ACE.Shared.Helpers;
+
+//...I should really fix this some day
+global using S = QualityOfLife.PatchClass;

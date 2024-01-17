@@ -6,13 +6,20 @@ Combined mod of some basic convenience features.
 
 
 
+Each patch category must be present in `Patches` to be enabled, otherwise they will make no changes to ACE:
 
+```
+  "Patches": [
+    "animations",
+    "defaults",
+    "fellowship",
+    "recklessness"
+  ],
+```
 
 
 
 ### Fellowship
-
-If `PatchFellowships` is true this will be enabled:
 
 * `MaxMembers` sets max fellowship members
 * `SharePercent` is a dictionary of the number of members and the share percent
@@ -22,9 +29,16 @@ If `PatchFellowships` is true this will be enabled:
 
 
 
+### Recklessness
+
+* `PowerLow` / `PowerHigh` set the min/max ranges for using Recklessness.
+* `RatingTrained` / `RatingSpecialized` set the bonuses to rating.
+
+
+
 ### Animations
 
-If `OverrideAnimations`  is set, whenever an [animation](https://github.com/ACEmulator/ACE/blob/fdfdec9f0a16bbcbb89a9120ce4f889520a51708/Source/ACE.Entity/Enum/MotionCommand.cs#L7) is set to something from a `null` value, if a default is in `AnimationSpeeds` it will instead be set to that.
+Whenever an [animation](https://github.com/ACEmulator/ACE/blob/fdfdec9f0a16bbcbb89a9120ce4f889520a51708/Source/ACE.Entity/Enum/MotionCommand.cs#L7) is set to something from a `null` value, if a default is in `AnimationSpeeds` it will instead be set to that.
 
 * Intercepts `MotionTable.GetAnimationLength`
 
@@ -41,7 +55,7 @@ If `OverrideAnimations`  is set, whenever an [animation](https://github.com/ACEm
 
 ### Property Defaults
 
-If `OverrideDefaultProperties` is set, whenever a property is set to something from a `null` value, if a default is in the corresponding property dictionary it will instead be set to that.
+Whenever a property is set to something from a `null` value, if a default is in the corresponding property dictionary it will instead be set to that.
 
 
 

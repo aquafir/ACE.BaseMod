@@ -37,22 +37,8 @@ public static class FakeIronman
     public static void RollIronmanSkills(this Player player)
     {
         //Untrain skills
-        //Enlightenment.RemoveSkills(player);
         //player.ResetSkills();
         player.ResetLikeEnlightenment();
-
-        //int num = Enum.GetNames(typeof(Skill)).Length;
-        //for (int i = 1; i < num; i++)
-        //{
-        //    Skill skill = (Skill)i;
-        //    player.ResetSkill(skill);
-        //}
-        //player.AvailableExperience = 0L;
-        //player.Session.Network.EnqueueSend(new GameMessagePrivateUpdatePropertyInt64(player, PropertyInt64.AvailableExperience, 0L));
-        //HeritageGroupCG heritageGroupCG = DatManager.PortalDat.CharGen.HeritageGroups[(uint)player.Heritage.Value];
-        //player.AvailableSkillCredits = (int)heritageGroupCG.SkillCredits;
-        //player.Session.Network.EnqueueSend(new GameMessagePrivateUpdatePropertyInt(player, PropertyInt.AvailableSkillCredits, player.AvailableSkillCredits.GetValueOrDefault()));
-
 
         //Local copy of the skill pool
         List<Skill> pool = new(PatchClass.Settings.SecondarySkillPool);
@@ -70,8 +56,6 @@ public static class FakeIronman
         HashSet<Skill> trained = new();
         var second = (primary == Skill.WarMagic || primary == Skill.VoidMagic || primary == Skill.LifeMagic) ?
             Skill.ManaConversion : pool.Where(x => !Settings.AugmentSpecializations.Contains(x)).ToArray().Random();
-
-
 
         player.TrainSkill(second);
         trained.Add(second);

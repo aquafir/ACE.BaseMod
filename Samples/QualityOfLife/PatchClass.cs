@@ -103,16 +103,10 @@ public class PatchClass
 
     private static void PatchCategories()
     {
-        if (Settings.OverrideDefaultProperties)
-            Mod.Harmony.PatchCategory(nameof(DefaultOverrides));
-
-        if (Settings.OverrideAnimations)
-            Mod.Harmony.PatchCategory(nameof(AnimationOverrides));
-
-        if (Settings.OverrideAnimations)
-            Mod.Harmony.PatchCategory(nameof(Fellowship));
-
-    }
+        //Assume names patch Patches enum
+        foreach(var patch in Settings.Patches)
+            Mod.Harmony.PatchCategory(patch.ToString());
+        }
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Player), nameof(Player.HandleActionTeleToMarketPlace))]
@@ -194,41 +188,12 @@ public class PatchClass
     public static void PostGetTotalSpecializedCredits(Player player, ref SkillAlterationDevice __instance, ref int __result)
         => __result = Math.Max(0, __result + (70 - PatchClass.Settings.MaxSpecCredits));
 
-    //Rewrite suicide
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Player), "HandleSuicide", new Type[] { typeof(int), typeof(int) })]
-    public static bool PreHandleSuicide(int numDeaths, int step, ref Player __instance)
-    {
-        // PatchClass.Settings.SuicideSeconds
-
-        if (!__instance.suicideInProgress || numDeaths != __instance.NumDeaths)
-            return false;
-
-        if (step < Player.SuicideMessages.Count)
-        {
-            //Laaaaame approach but needed to use the same anonymous method
-            if (PlayerManager.GetOnlinePlayer(__instance.Guid) is not Player p)
-                return true;
-
-            p.EnqueueBroadcast(new GameMessageHearSpeech(Player.SuicideMessages[step], p.GetNameWithSuffix(), p.Guid.Full, ChatMessageType.Speech), Player.LocalBroadcastRange);
-
-            var suicideChain = new ActionChain();
-            suicideChain.AddDelaySeconds(PatchClass.Settings.DieSeconds);
-            suicideChain.AddAction(p, () => p.HandleSuicide(numDeaths, step + 1));
-            suicideChain.EnqueueChain();
-        }
-        else
-            __instance.Die(new DamageHistoryInfo(__instance), __instance.DamageHistory.TopDamager);
-
-        //Return true to execute original
-        return false;
-    }
 
     [CommandHandler("setlum", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 0, "Sets luminance to the max if unlocked")]
     public static void HandleSetProperty(Session session, params string[] parameters)
     {
         var player = session.Player;
-        if (player.MaximumLuminance is not null && Settings.Int64Defaults.TryGetValue(PropertyInt64.MaximumLuminance, out var value))
+        if (player.MaximumLuminance is not null && S.Settings.Defaults.Int64Defaults.TryGetValue(PropertyInt64.MaximumLuminance, out var value))
         {
             player.MaximumLuminance = value;
             player.SendMessage($"Your luminance is now {value}");

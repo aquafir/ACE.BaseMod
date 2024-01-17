@@ -1,5 +1,6 @@
 ﻿using ACE.Database.Entity;
 using ACE.Entity;
+using ACE.Entity.Enum.Properties;
 using ACE.Entity.Models;
 using ACE.Server.Entity.Actions;
 using ACE.Server.Factories;
@@ -62,7 +63,7 @@ public class ForceTemplatePlayer
         //}
 
         //Reset skills seemed like a pain to do here
-        pendingFinalization.Add(guid.Full);
+        //pendingFinalization.Add(guid.Full);
     }
 
     //Tracks created but unfinished players
@@ -72,8 +73,11 @@ public class ForceTemplatePlayer
     public static void PostDoPlayerEnterWorld(Session session, Character character, Biota playerBiota, PossessedBiotas possessedBiotas)
     {
         //Check for finalizing / grab the player
-        if (!pendingFinalization.Contains(character.Id))
+        if (character.TotalLogins > 1 || session.Player.GetProperty(PropertyString.Template) == "Adventurer")
             return;
+
+        //if (!pendingFinalization.Contains(character.Id))
+        //    return;
 
         var player = PlayerManager.GetOnlinePlayer(character.Id);
         if (player is null)
@@ -82,10 +86,7 @@ public class ForceTemplatePlayer
 
         var actionChain = new ActionChain();
         actionChain.AddDelaySeconds(5);
-        actionChain.AddAction(session.Player, () =>
-        {
-
-        });
+        actionChain.AddAction(session.Player, () => player.InitializeIronman());
         actionChain.EnqueueChain();
     }
 
