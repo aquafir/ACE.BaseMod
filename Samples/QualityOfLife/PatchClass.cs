@@ -92,7 +92,7 @@ public class PatchClass
     {
         if (Mod.State == ModState.Running)
         {
-            if (Settings.Patches.Contains(Patches.Fellowship))
+            if (Settings.Patches.Contains(Patches.Fellowships))
                 Fellowships.RestoreFellowSettings();
         }
 
@@ -107,7 +107,7 @@ public class PatchClass
         foreach (var patch in Settings.Patches)
             Mod.Harmony.PatchCategory(patch.ToString());
 
-        if (Settings.Patches.Contains(Patches.Fellowship))
+        if (Settings.Patches.Contains(Patches.Fellowships))
             Fellowships.SetFellowshipSettings();
     }
 

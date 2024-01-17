@@ -20,6 +20,6 @@ public enum Patches
 {
     Animations,
     Defaults,
-    Fellowship,
+    Fellowships,
     Recklessness,
 }
