@@ -1,5 +1,7 @@
 ﻿using ACE.Server.Managers;
+using ACE.Server.Network.GameMessages.Messages;
 using Iced.Intel.EncoderInternal;
+using MonoMod.Core.Platforms.Architectures;
 
 namespace QualityOfLife;
 
@@ -41,63 +43,114 @@ public class Fellowships
             inviter.SendMessage(details);
             newMember.SendMessage(details);
         }
-        return true;
+        //return true;
 
         //Method rewrite
-        //if (__instance.IsLocked)
-        //{
+        if (__instance.IsLocked)
+        {
 
-        //    if (!__instance.DepartedMembers.TryGetValue(newMember.Guid.Full, out var timeDeparted))
-        //    {
-        //        inviter.Session.Network.EnqueueSend(new GameEventWeenieErrorWithString(inviter.Session, WeenieErrorWithString.LockedFellowshipCannotRecruit_, newMember.Name));
-        //        //newMember.SendWeenieError(WeenieError.LockedFellowshipCannotRecruitYou);
-        //        return false;
-        //    }
-        //    else
-        //    {
-        //        var timeLimit = Time.GetDateTimeFromTimestamp(timeDeparted).AddSeconds(600);
-        //        if (DateTime.UtcNow > timeLimit)
-        //        {
-        //            inviter.Session.Network.EnqueueSend(new GameEventWeenieErrorWithString(inviter.Session, WeenieErrorWithString.LockedFellowshipCannotRecruit_, newMember.Name));
-        //            //newMember.SendWeenieError(WeenieError.LockedFellowshipCannotRecruitYou);
-        //            return false;
-        //        }
-        //    }
-        //}
+            if (!__instance.DepartedMembers.TryGetValue(newMember.Guid.Full, out var timeDeparted))
+            {
+                inviter.Session.Network.EnqueueSend(new GameEventWeenieErrorWithString(inviter.Session, WeenieErrorWithString.LockedFellowshipCannotRecruit_, newMember.Name));
+                //newMember.SendWeenieError(WeenieError.LockedFellowshipCannotRecruitYou);
+                return false;
+            }
+            else
+            {
+                var timeLimit = Time.GetDateTimeFromTimestamp(timeDeparted).AddSeconds(600);
+                if (DateTime.UtcNow > timeLimit)
+                {
+                    inviter.Session.Network.EnqueueSend(new GameEventWeenieErrorWithString(inviter.Session, WeenieErrorWithString.LockedFellowshipCannotRecruit_, newMember.Name));
+                    //newMember.SendWeenieError(WeenieError.LockedFellowshipCannotRecruitYou);
+                    return false;
+                }
+            }
+        }
 
-        //if (__instance.FellowshipMembers.Count == S.Settings.Fellowship.MaxMembers)
-        ////if (__instance.FellowshipMembers.Count == Fellowship.MaxFellows)
-        //{
-        //    inviter.Session.Network.EnqueueSend(new GameEventWeenieError(inviter.Session, WeenieError.YourFellowshipIsFull));
-        //    return false;
-        //}
+        if (__instance.FellowshipMembers.Count == S.Settings.Fellowship.MaxMembers)
+        //if (__instance.FellowshipMembers.Count == Fellowship.MaxFellows)
+        {
+            inviter.Session.Network.EnqueueSend(new GameEventWeenieError(inviter.Session, WeenieError.YourFellowshipIsFull));
+            return false;
+        }
 
-        //if (newMember.Fellowship != null || __instance.FellowshipMembers.ContainsKey(newMember.Guid.Full))
-        //{
-        //    inviter.Session.Network.EnqueueSend(new GameMessageSystemChat($"{newMember.Name} is already a member of a Fellowship.", ChatMessageType.Broadcast));
-        //}
-        //else
-        //{
-        //    if (PropertyManager.GetBool("fellow_busy_no_recruit").Item && newMember.IsBusy)
-        //    {
-        //        inviter.Session.Network.EnqueueSend(new GameMessageSystemChat($"{newMember.Name} is busy.", ChatMessageType.Broadcast));
-        //        return false;
-        //    }
+        if (newMember.Fellowship != null || __instance.FellowshipMembers.ContainsKey(newMember.Guid.Full))
+        {
+            inviter.Session.Network.EnqueueSend(new GameMessageSystemChat($"{newMember.Name} is already a member of a Fellowship.", ChatMessageType.Broadcast));
+        }
+        else
+        {
+            if (PropertyManager.GetBool("fellow_busy_no_recruit").Item && newMember.IsBusy)
+            {
+                inviter.Session.Network.EnqueueSend(new GameMessageSystemChat($"{newMember.Name} is busy.", ChatMessageType.Broadcast));
+                return false;
+            }
 
-        //    if (newMember.GetCharacterOption(CharacterOption.AutomaticallyAcceptFellowshipRequests))
-        //    {
-        //        __instance.AddConfirmedMember(inviter, newMember, true);
-        //    }
-        //    else
-        //    {
-        //        if (!newMember.ConfirmationManager.EnqueueSend(new Confirmation_Fellowship(inviter.Guid, newMember.Guid), inviter.Name))
-        //        {
-        //            inviter.Session.Network.EnqueueSend(new GameMessageSystemChat($"{newMember.Name} is busy.", ChatMessageType.Broadcast));
-        //        }
-        //    }
-        //}
+            if (newMember.GetCharacterOption(CharacterOption.AutomaticallyAcceptFellowshipRequests))
+            {
+                __instance.AddConfirmedMember(inviter, newMember, true);
+            }
+            else
+            {
+                if (!newMember.ConfirmationManager.EnqueueSend(new Confirmation_Fellowship(inviter.Guid, newMember.Guid), inviter.Name))
+                {
+                    inviter.Session.Network.EnqueueSend(new GameMessageSystemChat($"{newMember.Name} is busy.", ChatMessageType.Broadcast));
+                }
+            }
+        }
         return false;
     }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Fellowship), nameof(Fellowship.AddConfirmedMember), new Type[] { typeof(Player), typeof(Player), typeof(bool) })]
+    public static bool PreAddConfirmedMember(Player inviter, Player player, bool response, ref Fellowship __instance)
+    {
+        if (inviter == null || inviter.Session == null || inviter.Session.Player == null || player == null) return false;
+
+        if (!response)
+        {
+            // player clicked 'no' on the fellowship popup
+            inviter.Session.Network.EnqueueSend(new GameMessageSystemChat($"{player.Name} declines your invite", ChatMessageType.Fellowship));
+            inviter.Session.Network.EnqueueSend(new GameEventWeenieError(inviter.Session, WeenieError.FellowshipDeclined));
+            return false;
+        }
+
+        if (__instance.FellowshipMembers.Count == Fellowship.MaxFellows)
+        {
+            inviter.Session.Network.EnqueueSend(new GameEventWeenieError(inviter.Session, WeenieError.YourFellowshipIsFull));
+            return false;
+        }
+
+        __instance.FellowshipMembers.TryAdd(player.Guid.Full, new WeakReference<Player>(player));
+        player.Fellowship = inviter.Fellowship;
+
+        __instance.CalculateXPSharing();
+
+        var fellowshipMembers = __instance.GetFellowshipMembers();
+
+        foreach (var member in fellowshipMembers.Values.Where(i => i.Guid != player.Guid))
+            member.Session.Network.EnqueueSend(new GameEventFellowshipUpdateFellow(member.Session, player, __instance.ShareXP));
+
+        if (__instance.ShareLoot)
+        {
+            foreach (var member in fellowshipMembers.Values.Where(i => i.Guid != player.Guid))
+            {
+                member.Session.Network.EnqueueSend(new GameMessageSystemChat($"{player.Name} has given you permission to loot his or her kills.", ChatMessageType.Broadcast));
+                member.Session.Network.EnqueueSend(new GameMessageSystemChat($"{player.Name} may now loot your kills.", ChatMessageType.Broadcast));
+
+                player.Session.Network.EnqueueSend(new GameMessageSystemChat($"{member.Name} has given you permission to loot his or her kills.", ChatMessageType.Broadcast));
+                player.Session.Network.EnqueueSend(new GameMessageSystemChat($"{member.Name} may now loot your kills.", ChatMessageType.Broadcast));
+            }
+        }
+
+        __instance.UpdateAllMembers();
+
+        if (inviter.CurrentMotionState.Stance == MotionStance.NonCombat) // only do this motion if inviter is at peace, other times motion is skipped. 
+            inviter.SendMotionAsCommands(MotionCommand.BowDeep, MotionStance.NonCombat);
+
+        return false;
+    }
+
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Fellowship), nameof(Fellowship.GetDistanceScalar), new Type[] { typeof(Player), typeof(Player), typeof(XpType) })]
