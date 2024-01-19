@@ -16,15 +16,7 @@
 		<None Remove=".template.config\**" />
 	</ItemGroup>
 
-	<PropertyGroup>
-		<PublicizeAll>true</PublicizeAll>
-	</PropertyGroup>
-
 	<ItemGroup>
-		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
 			<PrivateAssets>all</PrivateAssets>
