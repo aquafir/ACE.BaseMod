@@ -191,7 +191,7 @@ public class PatchClass
         switch (command)
         {
             case Transaction.List:
-                player.SendMessage($"You have {player.GetBanked(Settings.LuminanceProperty):N} luminance.");
+                player.SendMessage($"You have {player.GetBanked(Settings.LuminanceProperty):N00} luminance.");
                 break;
             case Transaction.Give:
                 var available = player.AvailableLuminance ?? 0;
@@ -199,7 +199,7 @@ public class PatchClass
                 if(player.SpendLuminance(available))
                 {
                     player.IncBanked(Settings.LuminanceProperty, (int)available);
-                    player.SendMessage($"Stored {available} luminance.  You now have {player.GetBanked(Settings.LuminanceProperty):N}.");
+                    player.SendMessage($"Stored {available} luminance.  You now have {player.GetBanked(Settings.LuminanceProperty):N00}.");
                     return;
                 }
                 break;
@@ -211,7 +211,7 @@ public class PatchClass
 
                 player.GrantLuminance(withdraw, XpType.Admin, ShareType.None);
                 player.IncBanked(Settings.LuminanceProperty, -withdraw);
-                player.SendMessage($"You've withdrawn {withdraw} luminance.  You now have {player.GetBanked(Settings.LuminanceProperty):N}.");
+                player.SendMessage($"You've withdrawn {withdraw} luminance.  You now have {player.GetBanked(Settings.LuminanceProperty):N00}.");
                 break;
         }
     }
@@ -233,7 +233,7 @@ public class PatchClass
         switch (command)
         {
             case Transaction.List:
-                player.SendMessage($"You have {player.GetBanked(Settings.CashProperty):N}.\nCurrencies: {Currencies}");
+                player.SendMessage($"You have {player.GetBanked(Settings.CashProperty):N00}.\nCurrencies: {Currencies}");
                 return;
             //Deposit everything
             case Transaction.Give:
@@ -255,7 +255,7 @@ public class PatchClass
                 }
 
                 player.IncBanked(Settings.CashProperty, total);
-                player.SendMessage($"Deposited {itemCount} currency items for {total:N}.  You have {player.GetBanked(Settings.CashProperty):N}");
+                player.SendMessage($"Deposited {itemCount} currency items for {total:N00}.  You have {player.GetBanked(Settings.CashProperty):N00}");
                 return;
 
             case Transaction.Take:
@@ -293,10 +293,10 @@ public class PatchClass
                 if (player.TryCreateItems($"{currency.Id} {amount}"))
                 {
                     player.IncBanked(Settings.CashProperty, -cost);
-                    player.SendMessage($"Withdrew {amount} {currency.Name} for {cost}.  You have {player.GetBanked(Settings.CashProperty):N} remaining.");
+                    player.SendMessage($"Withdrew {amount} {currency.Name} for {cost}.  You have {player.GetBanked(Settings.CashProperty):N00} remaining.");
                 }
                 else
-                    player.SendMessage($"Failed to withdraw {amount} {currency.Name} for {cost}.  You have {player.GetBanked(Settings.CashProperty):N} remaining.");
+                    player.SendMessage($"Failed to withdraw {amount} {currency.Name} for {cost}.  You have {player.GetBanked(Settings.CashProperty):N00} remaining.");
                 return;
         }
     }

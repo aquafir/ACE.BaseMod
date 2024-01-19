@@ -6,8 +6,13 @@ public class Settings
     public List<BankItem> Items { get; set; } = new()
     {
         new ("MMD", 20630, 40000),
-        new ("Concentrated Fire Oil", 9346, 40001),
-        new ("Fire Oil", 4750, 40002),
+        new ("Infused Amber Shard",52968, 40001),
+        new ("Small Olthoi Venom Sac", 36376, 40002),
+        new ("A'nekshay Token", 44240, 40003),
+        new ("Ornate Gear Marker", 43142, 40004),
+        new ("Colosseum Coin",36518, 40005),
+        new ("Ancient Mhoire Coin", 35383, 40006),
+        new ("Promissory Note", 43901, 40007),
     };
     //Reduces amount to a cap
     public bool ExcessSetToMax { get; set; } = true;
@@ -40,3 +45,5 @@ public class Settings
 
 public record BankItem(string Name, uint Id, int Prop);
 public record CurrencyItem(string Name, uint Id, int Value);
+
+
