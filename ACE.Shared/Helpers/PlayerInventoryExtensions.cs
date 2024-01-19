@@ -5,30 +5,26 @@ namespace ACE.Shared.Helpers;
 
 public static class PlayerInventoryExtensions
 {
+    /// <summary>
+    /// Attempts to take an amount of items with a WCID from a player. Based on EmoteType.TakeItems
+    /// </summary>
     public static bool TryTakeItems(this Player player, uint weenieClassId, int amount = 1)
     {
         if (player is null) return false;
 
         if (amount < 1)
         {
-            ModManager.Log($"Invalid amount of items to take: {amount} of WCID {weenieClassId}", ModManager.LogLevel.Warn);
+            //ModManager.Log($"Invalid amount of items to take: {amount} of WCID {weenieClassId}", ModManager.LogLevel.Warn);
             return false;
         }
 
-        if (player.GetNumInventoryItemsOfWCID(weenieClassId) > 0 && player.TryConsumeFromInventoryWithNetworking(weenieClassId, amount == -1 ? int.MaxValue : amount)
-            || player.GetNumEquippedObjectsOfWCID(weenieClassId) > 0 && player.TryConsumeFromEquippedObjectsWithNetworking(weenieClassId, amount == -1 ? int.MaxValue : amount))
-        {
-            var itemTaken = DatabaseManager.World.GetCachedWeenie(weenieClassId);
-            if (itemTaken != null)
-            {
-                var amt = amount == -1 ? "all" : amount.ToString();
-                var msg = $"You hand over {amount} of your {itemTaken.GetPluralName()}.";
+        //Only try to consume from inventory, not equipped
+        //|| player.GetNumEquippedObjectsOfWCID(weenieClassId) > 0 && player.TryConsumeFromEquippedObjectsWithNetworking(weenieClassId, amount == -1 ? int.MaxValue : amount))
+        var owned = player.GetNumInventoryItemsOfWCID(weenieClassId);
+        if (owned < 0 || owned < amount)
+            return false;
 
-                player.Session.Network.EnqueueSend(new GameMessageSystemChat(msg, ChatMessageType.Broadcast));
-                return true;
-            }
-        }
-        return true;
+        return player.TryConsumeFromInventoryWithNetworking(weenieClassId, amount);
     }
 
     /// <summary>
