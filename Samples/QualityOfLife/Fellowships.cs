@@ -8,7 +8,7 @@ namespace QualityOfLife;
 [HarmonyPatchCategory(nameof(Fellowships))]
 public class Fellowships
 {
-    private static long evenShare;
+    //private static long evenShare;
     public static void SetFellowshipSettings()
     {
         Fellowship.MaxFellows = S.Settings.Fellowship.MaxMembers;
@@ -16,8 +16,8 @@ public class Fellowships
 
         //Use the property for share level
         //Could overwrite CalculateXPSharing()
-        evenShare = PropertyManager.GetLong("fellowship_even_share_level").Item;
-        PropertyManager.ModifyLong("fellowship_even_share_level", S.Settings.Fellowship.EvenShareLevel);
+        //evenShare = PropertyManager.GetLong("fellowship_even_share_level").Item;
+        //PropertyManager.ModifyLong("fellowship_even_share_level", S.Settings.Fellowship.EvenShareLevel);
     }
 
     public static void RestoreFellowSettings()
@@ -25,7 +25,7 @@ public class Fellowships
         Fellowship.MaxFellows = 9;
         ModManager.Log($"Restored max fellow members to {Fellowship.MaxFellows}");
 
-        PropertyManager.ModifyLong("fellowship_even_share_level", evenShare);
+        //PropertyManager.ModifyLong("fellowship_even_share_level", evenShare);
         //Traverse.Create<Fellowship>().Field(nameof(Fellowship.MaxDistance)).SetValue(600);        
     }
 
@@ -234,5 +234,5 @@ public class FellowshipSettings
     };
     public double DefaultShare { get; set; } = 0;
 
-    public long EvenShareLevel { get; set; } = 50;  //fellowship_even_share_level
+    //public long EvenShareLevel { get; set; } = 50;  //fellowship_even_share_level
 }
