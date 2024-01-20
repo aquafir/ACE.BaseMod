@@ -187,7 +187,7 @@ public class Fellowships
             var player = session.Player;
             var lb = player.CurrentLandblock;
 
-            if(player.Fellowship is null)
+            if (player.Fellowship is null)
             {
                 player.SendMessage($"Create a fellowship first.");
                 return;
@@ -197,7 +197,7 @@ public class Fellowships
                 PlayerManager.GetAllOnline().Where(x => x.Fellowship is null && x.Guid != player.Guid && x.Name.Contains(parameters[0], StringComparison.OrdinalIgnoreCase)) :
                 lb.GetPlayers().Where(x => x.Fellowship is null && x.Guid != player.Guid);
 
-            if(list.Count() == 0)
+            if (list.Count() == 0)
             {
                 player.SendMessage($"No players found.");
                 return;
@@ -211,7 +211,7 @@ public class Fellowships
                 //Todo: stop at max?
             }
         }
-        catch(Exception ex) { ModManager.Log(ex.Message, ModManager.LogLevel.Error); }
+        catch (Exception ex) { ModManager.Log(ex.Message, ModManager.LogLevel.Error); }
     }
 }
 
@@ -234,5 +234,5 @@ public class FellowshipSettings
     };
     public double DefaultShare { get; set; } = 0;
 
-    public long EvenShareLevel = 50;  //fellowship_even_share_level
+    public long EvenShareLevel { get; set; } = 50;  //fellowship_even_share_level
 }
