@@ -9,7 +9,7 @@ public class Settings
     public double Interval { get;  set; } = 10;
 
     //Landblocks that are exempt
-    public readonly HashSet<ushort> ExemptLandblocks = new()
+    public HashSet<ushort> ExemptLandblocks { get; set; } = new()
         {
             //MP
             0x016C,
