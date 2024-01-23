@@ -111,7 +111,7 @@ namespace ConnectionLimit
 
 
                 //Count other landblocks
-                var address = player.Session.EndPoint.Address;
+                var address = player.Session.EndPointC2S.Address;
                 if (!connections.ContainsKey(address))
                     connections.Add(address, 1);
                 else connections[address]++;

@@ -24,7 +24,9 @@ Each patch category must be present in `Patches` to be enabled, otherwise they w
 * `MaxMembers` sets max fellowship members
 * `SharePercent` is a dictionary of the number of members and the share percent
 * `DefaultShare` is what is used if a specific share percent is not found
-* `EvenShareLevel` sets the level at which experience is shared evenly
+* ~~`EvenShareLevel` sets the level at which experience is shared evenly~~ 
+  * Removed to respect non-default settings.  All it does is set/restore a server property
+
 * `SendDetails` displays relevant information to players when recruiting.
 
 
