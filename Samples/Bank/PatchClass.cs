@@ -82,6 +82,9 @@ public class PatchClass
             return;
         }
 
+        if (Settings.VendorsUseBank)
+            Mod.Harmony.PatchCategory(nameof(Debit));
+
         Mod.State = ModState.Running;
     }
 

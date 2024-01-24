@@ -24,7 +24,7 @@ namespace Bank;
 /// <summary>
 /// Overrides purchase w/pyreals and alt currency
 /// </summary>
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(Debit))]
 public class Debit
 {
     //Send the player the held and banked currency/alt coins
@@ -141,7 +141,7 @@ public class Debit
             var used = (int)Math.Min(cash, amount);
             __instance.IncCash(-used);
 
-            __instance.SendMessage($"Used {used} pyreals from bank of the {amount} needed.  {cash - used} remaining.");
+            __instance.SendMessage($"Used {used:N0} pyreals from bank of the {amount:N0} needed.  {cash - used:N0} remaining.");
             amount -= (uint)used;
 
         }
@@ -157,7 +157,7 @@ public class Debit
                 var used = (int)Math.Min(banked, amount);
                 __instance.IncBanked(bankEntry.Prop, -used);
 
-                __instance.SendMessage($"Used {used} {bankEntry.Name} from bank of the {amount} needed.  {banked - used} remaining.");
+                __instance.SendMessage($"Used {used:N0} {bankEntry.Name} from bank of the {amount} needed.  {banked - used:N0} remaining.");
                 amount -= (uint)used;
             }
         }
