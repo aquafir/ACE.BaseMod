@@ -238,15 +238,17 @@ public class PatchClass
             //Deposit everything
             case Transaction.Give:
                 //Get coins and tradenotes
-                var cashItems = player.Inventory.Where(x => x.Value.WeenieType == WeenieType.Coin || x.Value.WeenieClassName.StartsWith("tradenote"));
+                //var cashItems = player.Inventory.Where(x => x.Value.WeenieClassId == Player.coinStackWcid || x.Value.WeenieClassName.StartsWith("tradenote"));
+                var cashItems = player.AllItems().Where(x => x.WeenieClassId == Player.coinStackWcid || x.WeenieClassName.StartsWith("tradenote"));
 
                 var total = cashItems.Select(x => x.Value.Value)?.Sum() ?? 0;
                 var itemCount = cashItems.Count();
+                //Debugger.Break();
 
                 foreach (var item in cashItems)
                 {
                     //Remove and if it fails don't count the value of the item
-                    if (!player.TryRemoveFromInventoryWithNetworking(item.Key, out var consumed, Player.RemoveFromInventoryAction.ConsumeItem))
+                    if (!player.TryRemoveFromInventoryWithNetworking(item.Guid, out var consumed, Player.RemoveFromInventoryAction.ConsumeItem))
                     {
                         //Log?
                         total -= consumed.Value ?? 0;
@@ -332,11 +334,14 @@ public class PatchClass
 
         player.SendMessage($"Unable to deposit {amount}.  You have {player.GetNumInventoryItemsOfWCID(item.Id)} {item.Name}");
     }
-
 }
 
 public static class BankExtensions
 {
+    public static long GetCash(this Player player) => player.GetBanked(PatchClass.Settings.CashProperty);
+    public static void IncCash(this Player player, int amount) 
+        => player.IncBanked(PatchClass.Settings.CashProperty, amount);
+
     public static long GetBanked(this Player player, int prop) =>
         player.GetProperty((PropertyInt64)prop) ?? 0;
     public static void IncBanked(this Player player, int prop, int amount) =>

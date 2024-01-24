@@ -1,69 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ACE.Shared.Props;
+﻿namespace ACE.Shared.Props;
 public static class PropertyIntExtensions
 {
     /// <summary>
     /// Returns the friendly name for a property, such as an Enum name or DateTime.  If missing returns null
     /// </summary>
-    public static string Friendly(this WorldObject wo, PropertyInt key) => wo.TryGet(key, out var value) ? key.Friendly(value) : null;
-    public static bool TryGetFriendly(this WorldObject wo, PropertyInt key, out string friendly) => wo.TryGet(key, out var value) ?
-        (friendly = key.Friendly(value)) is not null :
-        (friendly = null) is not null;
+    //public static string Friendly(this WorldObject wo, PropertyInt key) => wo.TryGet(key, out var value) ? key.Friendly(value) : null;
+    //public static bool TryGetFriendly(this WorldObject wo, PropertyInt key, out string friendly) => wo.TryGet(key, out var value) ?
+    //    (friendly = key.Friendly(value)) is not null :
+    //    (friendly = null) is not null;
 
-    /// <summary>
-    /// Returns the friendly name for a property, such as an Enum name or DateTime.  If missing returns null
-    /// </summary>
-    public static string Friendly(this PropertyInt key, int value) => key switch
-    {
-        PropertyInt.GeneratorEndTime => DateTimeOffset.FromUnixTimeSeconds(value).DateTime.ToString(CultureInfo.InvariantCulture),
-        PropertyInt.GeneratorStartTime => DateTimeOffset.FromUnixTimeSeconds(value).DateTime.ToString(CultureInfo.InvariantCulture),
-        //Default to trying to look up an enum name
-        _ => _enums.TryGetValue(key, out var type) ? type.GetEnumName(value) ?? value.ToString() : null,
-    };
-    public static bool TryGetFriendly(this PropertyInt key, int value, out string friendly) => (friendly = key.Friendly(value)) is not null;
-
-    /// <summary>
-    /// Tries to find the Enum associated with a property key
-    /// </summary>
-    public static bool TryGetEnum(this PropertyInt key, out Type enumType) => _enums.TryGetValue(key, out enumType);
-
-    /// <summary>
-    /// Returns a descriptive label for a property, defaulting to the name of the property
-    /// </summary>
-    public static string Label(this PropertyInt key) => _labels.TryGetValue(key, out var label) ? label : key.ToString();
-
-    /// <summary>
-    /// Returns a formatted version of the WorldObject's property value if a format string exists, the value if it does not, and an empty string if the value is missing.
-    /// </summary>
-    //public static string Format(this WorldObject wo, PropertyInt prop)
+    ///// <summary>
+    ///// Returns the friendly name for a property, such as an Enum name or DateTime.  If missing returns null
+    ///// </summary>
+    //public static string Friendly(this PropertyInt key, int value) => key switch
     //{
-    //    //Return if value missing
-    //    if (!wo.TryGet(prop, out var value))
-    //        return null;  //String.Empty no more efficient
+    //    PropertyInt.GeneratorEndTime => DateTimeOffset.FromUnixTimeSeconds(value).DateTime.ToString(CultureInfo.InvariantCulture),
+    //    PropertyInt.GeneratorStartTime => DateTimeOffset.FromUnixTimeSeconds(value).DateTime.ToString(CultureInfo.InvariantCulture),
+    //    //Default to trying to look up an enum name
+    //    _ => _enums.TryGetValue(key, out var type) ? type.GetEnumName(value) ?? value.ToString() : null,
+    //};
+    //public static bool TryGetFriendly(this PropertyInt key, int value, out string friendly) => (friendly = key.Friendly(value)) is not null;
 
-    //    return prop.Format(value);
+    ///// <summary>
+    ///// Tries to find the Enum associated with a property key
+    ///// </summary>
+    //public static bool TryGetEnum(this PropertyInt key, out Type enumType) => _enums.TryGetValue(key, out enumType);
+
+    ///// <summary>
+    ///// Returns a descriptive label for a property, defaulting to the name of the property
+    ///// </summary>
+    //public static string Label(this PropertyInt key) => _labels.TryGetValue(key, out var label) ? label : key.ToString();
+
+    ///// <summary>
+    ///// Returns a formatted version of the WorldObject's property value if a format string exists, the value if it does not, and an empty string if the value is missing.
+    ///// </summary>
+    ////public static string Format(this WorldObject wo, PropertyInt prop)
+    ////{
+    ////    //Return if value missing
+    ////    if (!wo.TryGet(prop, out var value))
+    ////        return null;  //String.Empty no more efficient
+
+    ////    return prop.Format(value);
+    ////}
+    ///// <summary>
+    ///// Returns a formatted version of a property value
+    ///// </summary>
+    //public static string Format(this PropertyInt prop, params object[] values)
+    //{
+    //    //Prefer friendly name if available?
+    //    if (prop.TryGetFriendly((int)values[0], out var friendly))
+    //        values[0] = friendly;
+
+    //    //Use a format string if it exists?
+    //    if (_formatStrings.TryGetValue(prop, out var format))
+    //        return String.Format(format, values);
+
+    //    return values[0].ToString();
     //}
-    /// <summary>
-    /// Returns a formatted version of a property value
-    /// </summary>
-    public static string Format(this PropertyInt prop, params object[] values)
-    {
-        //Prefer friendly name if available?
-        if (prop.TryGetFriendly((int)values[0], out var friendly))
-            values[0] = friendly;
-
-        //Use a format string if it exists?
-        if (_formatStrings.TryGetValue(prop, out var format))
-            return String.Format(format, values);
-
-        return values[0].ToString();
-    }
 
     static readonly Dictionary<PropertyInt, string> _formatStrings = new()
     {
@@ -133,7 +126,7 @@ public static class PropertyIntExtensions
         [PropertyInt.PaletteTemplate] = typeof(PaletteTemplate),
         [PropertyInt.ParentLocation] = typeof(ParentLocation),
         [PropertyInt.PCAPRecordedPlacement] = typeof(Placement),
-        [PropertyInt.PhysicsState] = typeof(UtilityBelt.Common.Enums.PhysicsState),
+        [PropertyInt.PhysicsState] = typeof(PhysicsState),
         [PropertyInt.Placement] = typeof(Placement),
         [PropertyInt.PlacementPosition] = typeof(Placement),
         [PropertyInt.PlayerKillerStatus] = typeof(PlayerKillerStatus),

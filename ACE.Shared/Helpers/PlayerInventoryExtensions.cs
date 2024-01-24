@@ -1,4 +1,5 @@
 ﻿using ACE.Server.Network.GameMessages.Messages;
+using ACE.Server.WorldObjects;
 using static ACE.Server.WorldObjects.Player;
 
 namespace ACE.Shared.Helpers;
@@ -26,6 +27,25 @@ public static class PlayerInventoryExtensions
 
         return player.TryConsumeFromInventoryWithNetworking(weenieClassId, amount);
     }
+
+    /// <summary>
+    /// Returns inventory including side packs
+    /// </summary>
+    public static List<WorldObject> AllItems(this Player player)
+    {
+        if (player is null) return new();
+
+        List<WorldObject> items = new(player.Inventory.Values);
+
+        var containers = player.Inventory.Values.OfType<Container>().ToList();
+        containers.Sort((a, b) => (a.Placement ?? 0).CompareTo(b.Placement ?? 0));
+
+        foreach (var sidePack in containers)
+            items.AddRange(sidePack.Inventory.Values);
+
+        return items;
+    }
+
 
     /// <summary>
     /// Repurpose the fumble command (Dequip commands failed)
