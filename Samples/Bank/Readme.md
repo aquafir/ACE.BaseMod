@@ -31,6 +31,16 @@ The available commands are:
 
 
 
+
+If `VendorsUseBank` is true transactions will use banked items to complete the transaction first.
+
+If `ExcessSetToMax` is true a quantity exceeding the max amount will be reduced to the max amount.
+
+
+
+
+
+
 ### Demos
 
 
@@ -43,5 +53,4 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/09161459-0ed1-4a43-9c4c-c
 
 
 https://github.com/aquafir/ACE.BaseMod/assets/83029060/fbee854d-5859-4b1b-9594-073891ed3e7d
-
 
