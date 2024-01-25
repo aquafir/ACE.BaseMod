@@ -3,6 +3,7 @@
 public class Settings
 {
     public bool VendorsUseBank { get; set; } = true;
+    public bool DirectDeposit { get; set; } = true;
 
     //WCID - PropInt64
     public List<BankItem> Items { get; set; } = new()

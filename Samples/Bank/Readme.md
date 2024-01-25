@@ -32,9 +32,11 @@ The available commands are:
 
 
 
-If `VendorsUseBank` is true transactions will use banked items to complete the transaction first.
+### Settings
 
-If `ExcessSetToMax` is true a quantity exceeding the max amount will be reduced to the max amount.
+* `DirectDeposit` will cause coin sales to be added to the bank instead of using pyreal stacks
+* `VendorsUseBank` will use banked items to complete the transaction first
+* `ExcessSetToMax` will reduce a quantity exceeding the max to the max amount
 
 
 

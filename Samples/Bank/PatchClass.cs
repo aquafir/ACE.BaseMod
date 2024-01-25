@@ -85,6 +85,9 @@ public class PatchClass
         if (Settings.VendorsUseBank)
             Mod.Harmony.PatchCategory(nameof(Debit));
 
+        if (Settings.DirectDeposit)
+            Mod.Harmony.PatchCategory(nameof(DirectDeposit));
+
         Mod.State = ModState.Running;
     }
 
