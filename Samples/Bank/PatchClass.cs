@@ -120,16 +120,9 @@ public class PatchClass
             return;
         }
 
-        //if (parameters.Length == 0 || !Enum.TryParse<Transaction>(parameters[0], true, out var command))
-        //{
-        //    player.SendMessage($"Usage: <command> [name|id [amount=1|*]]\nAvailable commands: {Commands}");
-        //    return;
-        //}
-
         //Parse weenie / amount if relevant to command
         if ((verb == Transaction.Give || verb == Transaction.Take))
         {
-            //if (parameters.Length < 1)
             if(String.IsNullOrWhiteSpace(name))
             {
                 player.SendMessage($"Specify the name or WCID of the item to transact with.");
@@ -138,7 +131,6 @@ public class PatchClass
 
 
             //Try to parse weenie
-            //var name = parameters.ParseName();
             var query = int.TryParse(name, out var wcid) ?
                 Settings.Items.Where(x => x.Id == wcid) :
                 Settings.Items.Where(x => x.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase));
@@ -149,24 +141,6 @@ public class PatchClass
                 player.SendMessage($"Unable to find matching item: {name}");
                 return;
             }
-
-            //Parse amount or default to 1
-            //var amount = 1;
-            //if (parameters.Length > 2)
-            //{
-            //    //Try wildcard first
-            //    var amountParam = parameters.LastOrDefault() ?? "";
-            //    if (amountParam == "*")
-            //        amount = command == Transaction.Give ? player.GetNumInventoryItemsOfWCID(item.Id) : (int)player.GetBanked(item.Prop);
-            //    //Try to parse quantity
-            //    else if (!int.TryParse(amountParam, out amount))
-            //    {
-            //        player.SendMessage($"Unable to parse amount from: {amountParam}, defaulting to 1");
-            //        amount = 1;
-            //        //return;
-            //    }
-            //}
-            //var amount = parameters.ParseQuantity();
 
             //Take the cap if it's smaller
             if (wildcardAmount || Settings.ExcessSetToMax)
@@ -203,14 +177,14 @@ public class PatchClass
         if (player is null) return;
 
         //Try to parse a valid command
-        if (parameters.Length == 0 || !Enum.TryParse<Transaction>(parameters[0], true, out var command))
+        if (parameters.Length == 0 || !Enum.TryParse<Transaction>(parameters[0], true, out var verb))
         {
             player.SendMessage($"Usage: <command>: {Commands}");
             return;
         }
 
 
-        switch (command)
+        switch (verb)
         {
             case Transaction.List:
                 player.SendMessage($"You have {player.GetBanked(Settings.LuminanceProperty):N00} luminance.");
@@ -251,14 +225,6 @@ public class PatchClass
             return;
         }
 
-        //Try to parse a valid command
-        //if (parameters.Length == 0 || !Enum.TryParse<Transaction>(parameters[0], true, out var command))
-        //{
-        //    player.SendMessage($"Usage: <command> [name|id [amount=1]]\nAvailable commands: {Commands}");
-        //    return;
-        //}
-
-
         switch (verb)
         {
             case Transaction.List:
@@ -267,12 +233,10 @@ public class PatchClass
             //Deposit everything
             case Transaction.Give:
                 //Get coins and tradenotes
-                //var cashItems = player.Inventory.Where(x => x.Value.WeenieClassId == Player.coinStackWcid || x.Value.WeenieClassName.StartsWith("tradenote"));
                 var cashItems = player.AllItems().Where(x => x.WeenieClassId == Player.coinStackWcid || x.WeenieClassName.StartsWith("tradenote"));
 
                 var total = cashItems.Select(x => x.Value.Value)?.Sum() ?? 0;
                 var itemCount = cashItems.Count();
-                //Debugger.Break();
 
                 foreach (var item in cashItems)
                 {
@@ -291,7 +255,6 @@ public class PatchClass
                 return;
 
             case Transaction.Take:
-                //if (parameters.Length < 2)
                 if (String.IsNullOrWhiteSpace(name))
                 {
                     player.SendMessage($"Specify currency.");
@@ -299,23 +262,12 @@ public class PatchClass
                 }
 
                 //Parse currency
-                //var name = parameters.ParseName();
                 var currency = Settings.Currencies.Where(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                 if (currency is null || name == "")
                 {
                     player.SendMessage($"Unable to find currency: {name}");
                     return;
                 }
-
-                //Parse amount
-                //var amount = 1;
-                //var amountParam = parameters.LastOrDefault() ?? "";
-                //if (!int.TryParse(amountParam, out amount)) //parameters.Length == 3 && 
-                //{
-                //    player.SendMessage($"Unable to parse amount: {amountParam}");
-                //    return;
-                //}
-
 
                 //Withdraw amount
                 int cost = amount * currency.Value;
