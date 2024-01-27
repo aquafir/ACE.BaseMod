@@ -8,8 +8,8 @@ public class Settings
     public List<Feature> Features { get; set; } = new() { 
         //Feature.FakePropertyCache, 
         Feature.MutatorHooks, 
-        Feature.Hardcore,
-        Feature.Ironman,
+        //Feature.Hardcore,
+        //Feature.Ironman,
     };
     //Full set
     //Enum.GetValues<Feature>().ToList();
@@ -17,15 +17,15 @@ public class Settings
         //Select items
         new()
         {
-            new MutatorSettings(Mutation.IronmanLocked)
-            {
-                Events = MutationEvent.Containers,
-            }
-            //new MutatorSettings(Mutation.GrowthItem) {
-            //Odds = nameof(OddsGroup.Always),
-            //TreasureTargets = nameof(TargetGroup.Weapon),
-            //Events = MutationEvent.Containers
-            //},
+            //new MutatorSettings(Mutation.IronmanLocked)
+            //{
+            //    Events = MutationEvent.Containers,
+            //}
+            new MutatorSettings(Mutation.GrowthItem) {
+            Odds = nameof(OddsGroup.Always),
+            TreasureTargets = nameof(TargetGroup.Weapon),
+            Events = MutationEvent.Containers
+            },
             //new MutatorSettings(Mutation.Resize)  {
             //Events = Mutation.Resize.DefaultEvents(),
             //Odds = null,
@@ -130,7 +130,6 @@ public class Settings
     public bool LootProfileUseUsername { get; set; } = true;
     #endregion
 
-
     #region Hardcore
     public float HardcoreSecondsBetweenDeathAllowed { get; set; } = 60;
     public int HardcoreStartingLives { get; set; } = 5;
@@ -161,5 +160,4 @@ public class Settings
     public Dictionary<string, SpellId[]> SpellGroups { get; set; } = Enum.GetValues<SpellGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     public Dictionary<string, Augment[]> AugmentGroups { get; set; } = Enum.GetValues<AugmentGroup>().ToDictionary(x => x.ToString(), x => x.SetOf());
     #endregion
-
 }

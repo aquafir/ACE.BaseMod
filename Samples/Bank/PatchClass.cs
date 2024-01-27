@@ -249,8 +249,7 @@ public class PatchClass
                     }
                 }
 
-                player.IncBanked(Settings.CashProperty, total);
-                player.UpdateCoinValue();
+                player.IncCash(total);
                 player.SendMessage($"Deposited {itemCount} currency items for {total:N00}.  You have {player.GetBanked(Settings.CashProperty):N00}");
                 return;
 
@@ -285,13 +284,13 @@ public class PatchClass
 
                 if (player.TryCreateItems($"{currency.Id} {amount}"))
                 {
-                    player.IncBanked(Settings.CashProperty, -cost);
+                    player.IncCash(-cost);
                     player.SendMessage($"Withdrew {amount} {currency.Name} for {cost}.  You have {player.GetBanked(Settings.CashProperty):N00} remaining.");
                 }
                 else
                     player.SendMessage($"Failed to withdraw {amount} {currency.Name} for {cost}.  You have {player.GetBanked(Settings.CashProperty):N00} remaining.");
 
-                player.UpdateCoinValue();
+                //player.UpdateCoinValue();
                 return;
         }
     }
@@ -333,12 +332,15 @@ public static class BankExtensions
 {
     public static long GetCash(this Player player) => player.GetBanked(PatchClass.Settings.CashProperty);
     public static void IncCash(this Player player, int amount)
-        => player.IncBanked(PatchClass.Settings.CashProperty, amount);
+    {
+        player.IncBanked(PatchClass.Settings.CashProperty, amount);
+        player.UpdateCoinValue();
+    }
 
     public static long GetBanked(this Player player, int prop) =>
         player.GetProperty((PropertyInt64)prop) ?? 0;
     public static void IncBanked(this Player player, int prop, int amount) =>
-            player.SetProperty((PropertyInt64)prop, player.GetBanked(prop) + amount);
+        player.SetProperty((PropertyInt64)prop, player.GetBanked(prop) + amount);
 
 
 

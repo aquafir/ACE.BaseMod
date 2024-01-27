@@ -98,19 +98,6 @@ public class Debit
         }
         else
         {
-            //Update the player coinvalue
-            //session.Player.UpdateCoinValue
-
-            //Otherwise pretend pyreals are the alt currency?
-            //Does not work.  Issue on client side
-            //var currency = (uint)(session.Player.CoinValue + session.Player.GetCash()); //Player.coinStackWcid
-            //var pluralName = "pyreals";
-
-            //__instance.Writer.Write(currency + altCurrencySpent);
-
-            //// the plural name of alt currency
-            //__instance.Writer.WriteString16L(pluralName);
-
             //Original
             __instance.Writer.Write(0);
             __instance.Writer.WriteString16L(string.Empty);
