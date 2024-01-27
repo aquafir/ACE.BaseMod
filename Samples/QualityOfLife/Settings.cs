@@ -22,4 +22,5 @@ public enum Patches
     Defaults,
     Fellowships,
     Recklessness,
+    PermanentObjects,
 }

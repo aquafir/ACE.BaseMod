@@ -9,6 +9,10 @@ public enum FakeBool
     Hardcore = 10003,
     ShadowBanned = 10004,
     UsingNewLuminance = 10005,
+    /// <summary>
+    /// Permanent objects will not be removed when a landblock respawns
+    /// </summary>
+    Permanent = 10006,
 }
 public enum FakeDID
 {
