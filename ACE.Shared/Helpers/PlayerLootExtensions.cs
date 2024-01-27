@@ -20,12 +20,12 @@ public static class PlayerLootExtensions
         if (weenie == null)
             return false;
 
-        ushort amount = 0;
+        uint amount = 0;
         int? palette = null;
         float? shade = null;
 
         //Parse quantity if available
-        if (parameters.Length > 1 && !ushort.TryParse(parameters[1], out amount) || amount == 0)
+        if (parameters.Length < 2 || !uint.TryParse(parameters[1], out amount) || amount == 0)
             return false;
 
         //Parse palette
@@ -68,7 +68,7 @@ public static class PlayerLootExtensions
         {
             //Set size and update remaining
             var stack = Math.Min(amount, stackSize);
-            obj.SetStackSize(stack);
+            obj.SetStackSize((ushort)stack);    //Use uint for large stacks like pyreals and convert to shorts for native support
             amount -= stack;
 
             //Try to add

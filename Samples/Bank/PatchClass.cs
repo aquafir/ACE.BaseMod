@@ -8,6 +8,7 @@ using ACE.Shared.Helpers;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 
 namespace Bank;
 
@@ -113,53 +114,68 @@ public class PatchClass
         var player = session.Player;
 
         //Try to parse a valid command
-        if (parameters.Length == 0 || !Enum.TryParse<Transaction>(parameters[0], true, out var command))
+        if (!parameters.TryParseCommand(out var verb, out var name, out var amount, out var wildcardAmount))
         {
-            player.SendMessage($"Usage: <command> [name|id [amount=1|*]]\nAvailable commands: {Commands}");
+            player.SendMessage($"Usage: <command> [name|id [amount=1]]\nAvailable commands: {Commands}");
             return;
         }
 
+        //if (parameters.Length == 0 || !Enum.TryParse<Transaction>(parameters[0], true, out var command))
+        //{
+        //    player.SendMessage($"Usage: <command> [name|id [amount=1|*]]\nAvailable commands: {Commands}");
+        //    return;
+        //}
+
         //Parse weenie / amount if relevant to command
-        if ((command == Transaction.Give || command == Transaction.Take))
+        if ((verb == Transaction.Give || verb == Transaction.Take))
         {
-            if (parameters.Length < 1)
+            //if (parameters.Length < 1)
+            if(String.IsNullOrWhiteSpace(name))
             {
                 player.SendMessage($"Specify the name or WCID of the item to transact with.");
                 return;
             }
 
+
             //Try to parse weenie
-            var query = int.TryParse(parameters[1], out var wcid) ?
+            //var name = parameters.ParseName();
+            var query = int.TryParse(name, out var wcid) ?
                 Settings.Items.Where(x => x.Id == wcid) :
-                Settings.Items.Where(x => x.Name.StartsWith(parameters[1], StringComparison.OrdinalIgnoreCase));
+                Settings.Items.Where(x => x.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase));
 
             var item = query.FirstOrDefault();
             if (item is null)
             {
-                player.SendMessage($"Unable to find matching item: {parameters[1]}");
+                player.SendMessage($"Unable to find matching item: {name}");
                 return;
             }
 
             //Parse amount or default to 1
-            var amount = 1;
-            if (parameters.Length > 2)
-            {
-                //Try wildcard first
-                if (parameters[2] == "*")
-                    amount = command == Transaction.Give ? player.GetNumInventoryItemsOfWCID(item.Id) : (int)player.GetBanked(item.Prop);
-                //Try to parse quantity
-                else if (!int.TryParse(parameters[2], out amount))
-                {
-                    player.SendMessage($"Unable to parse amount from: {parameters[2]}");
-                    return;
-                }
-            }
+            //var amount = 1;
+            //if (parameters.Length > 2)
+            //{
+            //    //Try wildcard first
+            //    var amountParam = parameters.LastOrDefault() ?? "";
+            //    if (amountParam == "*")
+            //        amount = command == Transaction.Give ? player.GetNumInventoryItemsOfWCID(item.Id) : (int)player.GetBanked(item.Prop);
+            //    //Try to parse quantity
+            //    else if (!int.TryParse(amountParam, out amount))
+            //    {
+            //        player.SendMessage($"Unable to parse amount from: {amountParam}, defaulting to 1");
+            //        amount = 1;
+            //        //return;
+            //    }
+            //}
+            //var amount = parameters.ParseQuantity();
 
             //Take the cap if it's smaller
-            if (Settings.ExcessSetToMax)
-                amount = Math.Min(amount, command == Transaction.Give ? player.GetNumInventoryItemsOfWCID(item.Id) : (int)player.GetBanked(item.Prop));
+            if (wildcardAmount || Settings.ExcessSetToMax)
+            {
+                var held = verb == Transaction.Give ? player.GetNumInventoryItemsOfWCID(item.Id) : (int)player.GetBanked(item.Prop);
+                amount = Math.Min(amount, held);
+            }
 
-            if (command == Transaction.Take)
+            if (verb == Transaction.Take)
                 HandleWithdraw(player, item, amount);
             else
                 HandleDeposit(player, item, amount);
@@ -168,7 +184,7 @@ public class PatchClass
         }
 
         //Handle other commands
-        switch (command)
+        switch (verb)
         {
             case Transaction.List:
                 var sb = new StringBuilder("\nBanked items:");
@@ -202,7 +218,7 @@ public class PatchClass
             case Transaction.Give:
                 var available = player.AvailableLuminance ?? 0;
 
-                if(player.SpendLuminance(available))
+                if (player.SpendLuminance(available))
                 {
                     player.IncBanked(Settings.LuminanceProperty, (int)available);
                     player.SendMessage($"Stored {available} luminance.  You now have {player.GetBanked(Settings.LuminanceProperty):N00}.");
@@ -228,15 +244,22 @@ public class PatchClass
         var player = session.Player;
         if (player is null) return;
 
-        //Try to parse a valid command
-        if (parameters.Length == 0 || !Enum.TryParse<Transaction>(parameters[0], true, out var command))
+
+        if (!parameters.TryParseCommand(out var verb, out var name, out var amount, out var wildcardAmount))
         {
             player.SendMessage($"Usage: <command> [name|id [amount=1]]\nAvailable commands: {Commands}");
             return;
         }
 
+        //Try to parse a valid command
+        //if (parameters.Length == 0 || !Enum.TryParse<Transaction>(parameters[0], true, out var command))
+        //{
+        //    player.SendMessage($"Usage: <command> [name|id [amount=1]]\nAvailable commands: {Commands}");
+        //    return;
+        //}
 
-        switch (command)
+
+        switch (verb)
         {
             case Transaction.List:
                 player.SendMessage($"You have {player.GetBanked(Settings.CashProperty):N00}.\nCurrencies: {Currencies}");
@@ -263,37 +286,47 @@ public class PatchClass
                 }
 
                 player.IncBanked(Settings.CashProperty, total);
+                player.UpdateCoinValue();
                 player.SendMessage($"Deposited {itemCount} currency items for {total:N00}.  You have {player.GetBanked(Settings.CashProperty):N00}");
                 return;
 
             case Transaction.Take:
-                if (parameters.Length < 2)
+                //if (parameters.Length < 2)
+                if (String.IsNullOrWhiteSpace(name))
                 {
                     player.SendMessage($"Specify currency.");
                     return;
                 }
 
                 //Parse currency
-                var currency = Settings.Currencies.Where(x => x.Name.Equals(parameters[1], StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-                if (currency is null)
+                //var name = parameters.ParseName();
+                var currency = Settings.Currencies.Where(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+                if (currency is null || name == "")
                 {
-                    player.SendMessage($"Unable to find currency: {parameters[1]}");
+                    player.SendMessage($"Unable to find currency: {name}");
                     return;
                 }
 
                 //Parse amount
-                var amount = 1;
-                if (parameters.Length == 3 && !int.TryParse(parameters[2], out amount))
-                {
-                    player.SendMessage($"Unable to parse amount: {parameters[2]}");
-                    return;
-                }
+                //var amount = 1;
+                //var amountParam = parameters.LastOrDefault() ?? "";
+                //if (!int.TryParse(amountParam, out amount)) //parameters.Length == 3 && 
+                //{
+                //    player.SendMessage($"Unable to parse amount: {amountParam}");
+                //    return;
+                //}
+
 
                 //Withdraw amount
                 int cost = amount * currency.Value;
                 long stored = player.GetBanked(Settings.CashProperty);
+
+
                 if (stored < cost)
                 {
+                    //Todo: decide on withdrawing cap?
+                    //if(wildcardAmount || Settings.ExcessSetToMax)
+
                     player.SendMessage($"Insufficient funds: {cost} < {stored}");
                     return;
                 }
@@ -305,6 +338,8 @@ public class PatchClass
                 }
                 else
                     player.SendMessage($"Failed to withdraw {amount} {currency.Name} for {cost}.  You have {player.GetBanked(Settings.CashProperty):N00} remaining.");
+
+                player.UpdateCoinValue();
                 return;
         }
     }
@@ -345,13 +380,92 @@ public class PatchClass
 public static class BankExtensions
 {
     public static long GetCash(this Player player) => player.GetBanked(PatchClass.Settings.CashProperty);
-    public static void IncCash(this Player player, int amount) 
+    public static void IncCash(this Player player, int amount)
         => player.IncBanked(PatchClass.Settings.CashProperty, amount);
 
     public static long GetBanked(this Player player, int prop) =>
         player.GetProperty((PropertyInt64)prop) ?? 0;
     public static void IncBanked(this Player player, int prop, int amount) =>
             player.SetProperty((PropertyInt64)prop, player.GetBanked(prop) + amount);
+
+
+
+
+    //Parsing
+    static readonly string[] USAGES = new string[] {
+        $@"(?<verb>{Transaction.List})$",
+        //First check amount first cause I suck with regex
+        $@"(?<verb>{Transaction.Give}|{Transaction.Take}) (?<name>.+)\s+(?<amount>(\*|\d+))$",
+        $@"(?<verb>{Transaction.Give}|{Transaction.Take}) (?<name>.+)$",
+        // /cash doesn't have named item
+        $@"(?<verb>{Transaction.Give})$",
+    };
+    //Join usages in a regex pattern
+    static string Pattern => String.Join("|", USAGES.Select(x => $"({x})"));
+    static Regex CommandRegex = new(Pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    public static bool TryParseCommand(this string[] parameters, out Transaction verb, out string name, out int amount, out bool wildcardAmount)
+    {
+        //Set defaults
+        amount = 1;
+        verb = 0;
+        name = null;
+        wildcardAmount = false;
+
+        //Debugger.Break();
+        //Check for valid command
+        var match = CommandRegex.Match(String.Join(" ", parameters));
+        if (!match.Success)
+            return false;
+
+        //Parse verb
+        if (!Enum.TryParse<Transaction>(match.Groups["verb"].Value, true, out verb))
+            return false;
+
+        //Set name
+        name = match.Groups["name"].Value;
+
+        //Parse amount if available
+        if (int.TryParse(match.Groups["amount"].Value, out var parsedAmount))
+            amount = parsedAmount;
+        else if (match.Groups["amount"].Value == "*")
+        {
+            amount = int.MaxValue;
+            wildcardAmount = true;
+        }
+
+        return true;
+    }
+
+    //Support for spaces in names
+    public static string ParseName(this string[] param, int skip = 1, int atEnd = 0) => (param.Length - skip - atEnd > 0) ?
+        String.Join(" ", param.Skip(skip).Take(param.Length - atEnd - skip)) : "";
+
+    //Parse quantity from last parameter supporting wildcards
+    public static bool TryParseAmount(this string[] param, out int amount, int max = int.MaxValue)
+    {
+        var last = param.LastOrDefault() ?? "";
+
+        //Default to 1
+        amount = 1;
+
+        bool success = true;
+
+        //Check for wildcards/other handling
+        if (last == "*")
+            amount = int.MaxValue;
+        else if (int.TryParse(last, out var parsedAmount))
+            amount = parsedAmount;
+        //Amount was not parsed
+        else
+            success = false;
+
+        //Wildcards will always use the max value, parsed ints will use the setting
+        if (PatchClass.Settings.ExcessSetToMax || last == "*")
+            amount = Math.Min(max, amount);
+
+        return success;
+    }
 }
 
 public enum Transaction

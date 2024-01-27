@@ -137,7 +137,7 @@ public static class SpellExtensions
     /// </summary>
     private static void WriteObfuscatedString(this BinaryWriter writer, string spellBase)
     {
-        writer.Write((ushort)spellBase.Length);
+        writer.Write((uint)spellBase.Length);
         //System.Text.Encoding.GetEncoding(1252).GetString(spellBase.Name);
         for (var i = 0; i < spellBase.Length; i++)
         {

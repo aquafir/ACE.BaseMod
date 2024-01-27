@@ -27,6 +27,30 @@ namespace Bank;
 [HarmonyPatchCategory(nameof(Debit))]
 public class Debit
 {
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Player), nameof(Player.UpdateCoinValue), new Type[] { typeof(bool) })]
+    public static bool PreUpdateCoinValue(bool sendUpdateMessageIfChanged, ref Player __instance)
+    {
+        int coins = 0;
+
+        foreach (var coinStack in __instance.GetInventoryItemsOfTypeWeenieType(WeenieType.Coin))
+            coins += coinStack.Value ?? 0;
+
+        coins += (int)__instance.GetCash();
+
+        if (sendUpdateMessageIfChanged && __instance.CoinValue == coins)
+            sendUpdateMessageIfChanged = false;
+
+        __instance.CoinValue = coins;
+
+        if (sendUpdateMessageIfChanged)
+            __instance.Session.Network.EnqueueSend(new GameMessagePrivateUpdatePropertyInt(__instance, PropertyInt.CoinValue, __instance.CoinValue ?? 0));
+        return false;
+    }
+
+
+
     //Send the player the held and banked currency/alt coins
     [HarmonyPrefix]
     [HarmonyPatch(typeof(GameEventApproachVendor), MethodType.Constructor, new Type[] { typeof(Session), typeof(Vendor), typeof(uint) })]
@@ -74,6 +98,9 @@ public class Debit
         }
         else
         {
+            //Update the player coinvalue
+            //session.Player.UpdateCoinValue
+
             //Otherwise pretend pyreals are the alt currency?
             //Does not work.  Issue on client side
             //var currency = (uint)(session.Player.CoinValue + session.Player.GetCash()); //Player.coinStackWcid
