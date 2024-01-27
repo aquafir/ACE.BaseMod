@@ -179,7 +179,7 @@ public class Fellowships
         S.Settings.Fellowship.SharePercent.TryGetValue(members, out var share) ? share : S.Settings.Fellowship.DefaultShare;
 
 
-    [CommandHandler("fship", AccessLevel.Advocate, CommandHandlerFlag.RequiresWorld)]
+    [CommandHandler("fship", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
     public static void HandleIronman(Session session, params string[] parameters)
     {
         try

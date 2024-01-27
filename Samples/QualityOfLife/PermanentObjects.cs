@@ -32,4 +32,16 @@ public class PermanentObjects
         return false;
     }
 
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Container), nameof(Container.ClearUnmanagedInventory), new Type[] { typeof(bool) })]
+    public static bool PreClearUnmanagedInventory(bool forceSave, ref Container __instance, ref bool __result)
+    {
+        if (__instance.GetProperty(FakeBool.Permanent) != true)
+            return true;
+
+        __result = false;
+        return false;
+    }
+
 }

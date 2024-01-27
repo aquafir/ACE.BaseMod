@@ -105,7 +105,10 @@ public class PatchClass
     {
         //Assume names patch Patches enum
         foreach (var patch in Settings.Patches)
+        {
             Mod.Harmony.PatchCategory(patch.ToString());
+            ModManager.Log($"QoL enabling: {patch}");
+        }
 
         if (Settings.Patches.Contains(Patches.Fellowships))
             Fellowships.SetFellowshipSettings();
