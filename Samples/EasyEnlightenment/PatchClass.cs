@@ -272,5 +272,28 @@ public class PatchClass
 
         return false;
     }
+
+    //Override lum check for minimums
+    //Todo: improve this
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Enlightenment), nameof(Enlightenment.VerifyLumAugs), new Type[] { typeof(Player) })]
+    public static bool PreVerifyLumAugs(Player player, ref Enlightenment __instance, ref bool __result)
+    {
+        //Have all luminance auras(crafting aura included) except the 2 skill credit auras. (20 million total luminance)
+        __result =
+        player.LumAugAllSkills >= 10 &&
+        player.LumAugSurgeChanceRating >= 5 &&
+        player.LumAugCritDamageRating >= 5 &&
+        player.LumAugCritReductionRating >= 5 &&
+        player.LumAugDamageRating >= 5 &&
+        player.LumAugDamageReductionRating >= 5 &&
+        player.LumAugItemManaUsage >= 5 &&
+        player.LumAugItemManaGain >= 5 &&
+        player.LumAugHealingRating >= 5 &&
+        player.LumAugSkilledCraft >= 5 &&
+        player.LumAugSkilledSpec >= 5;
+
+        return false;
+    }
 }
 
