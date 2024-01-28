@@ -13,6 +13,7 @@ public enum FakeBool
     /// Permanent objects will not be removed when a landblock respawns
     /// </summary>
     Permanent = 10006,
+    BankUsesDirectDeposit = 10007,
 }
 public enum FakeDID
 {

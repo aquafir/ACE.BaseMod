@@ -32,9 +32,13 @@ The available commands are:
 
 
 
+
+
 ### Settings
 
 * `DirectDeposit` will cause coin sales to be added to the bank instead of using pyreal stacks
+  * `/ddt` will toggle a players use of this feature in case the server wants it enabled but a player does not
+
 * `VendorsUseBank` will use banked items to complete the transaction first
 * `ExcessSetToMax` will reduce a quantity exceeding the max to the max amount
 
@@ -66,5 +70,4 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/f7932ee2-1dd6-440a-b5d7-0
 
 
 https://github.com/aquafir/ACE.BaseMod/assets/83029060/692a2488-0a27-4f04-9a11-566495c17a77
-
 

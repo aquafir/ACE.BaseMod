@@ -4,6 +4,16 @@ namespace CustomLoot.Enums;
 
 public enum Augment
 {
+    //Function
+    ArmorLevel,
+    ArmorModVsPierce,
+    ArmorModVsSlash,
+    ArmorModVsBludgeon,
+    ArmorModVsAcid,
+    ArmorModVsFire,
+    ArmorModVsCold,
+    ArmorModVsElectric,
+
     //Armor
     Steel,
     Alabaster,

@@ -1,14 +1,32 @@
 ﻿using ACE.Server.Network.GameMessages.Messages;
+using ACE.Server.WorldObjects;
+using ACE.Shared;
 using static ACE.Server.WorldObjects.Player;
 
 namespace Bank;
 [HarmonyPatchCategory(nameof(DirectDeposit))]
 public class DirectDeposit
 {
-    [HarmonyPrefix]
+    //Command to opt out
+    [CommandHandler("ddt", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
+    public static void HandleBank(Session session, params string[] parameters)
+    {
+        var player = session.Player;
+
+        var dd = player.GetProperty(FakeBool.BankUsesDirectDeposit) ?? true;
+
+        player.SetProperty(FakeBool.BankUsesDirectDeposit, !dd);
+
+        player.SendMessage($"You are using {(dd ? "no longer" : "now")} direct deposit.");
+    }
+
+        [HarmonyPrefix]
     [HarmonyPatch(typeof(Player), nameof(Player.HandleActionSellItem), new Type[] { typeof(uint), typeof(List<ItemProfile>) })]
     public static bool PreHandleActionSellItem(uint vendorGuid, List<ItemProfile> itemProfiles, ref Player __instance)
     {
+        if (__instance is null || __instance.GetProperty(FakeBool.BankUsesDirectDeposit) == false)
+            return true;
+
         if (__instance.IsBusy)
         {
             __instance.SendUseDoneEvent(WeenieError.YoureTooBusy);
