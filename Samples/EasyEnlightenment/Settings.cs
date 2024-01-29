@@ -27,4 +27,7 @@ public class Settings
 
     public bool PatchWieldRequirements { get; set; } = true;
     //public PropertyInt WieldRequirementEnlightenments => (PropertyInt)29999;
+
+    public int BaseLumAugmentationsRequired { get; set; } = 65;
+    public int LumAugmentationsRequiredPerEnlightenment { get; set; } = 0;
 }

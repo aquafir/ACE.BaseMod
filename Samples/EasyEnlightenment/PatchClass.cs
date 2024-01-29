@@ -246,7 +246,7 @@ public class PatchClass
             player.Session.Network.EnqueueSend(new GameMessageSystemChat($"You must be level 275 for enlightenment.", ChatMessageType.Broadcast));
             __result = false;
         }
-        else if (Settings.RequireAllLuminanceAuras && !Enlightenment.VerifyLumAugs(player))
+        else if (Settings.RequireAllLuminanceAuras && !VerifyLumAugs(player))
         {
             player.Session.Network.EnqueueSend(new GameMessageSystemChat($"You must have all luminance auras for enlightenment.", ChatMessageType.Broadcast));
             __result = false;
@@ -275,25 +275,24 @@ public class PatchClass
 
     //Override lum check for minimums
     //Todo: improve this
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(Enlightenment), nameof(Enlightenment.VerifyLumAugs), new Type[] { typeof(Player) })]
-    public static bool PreVerifyLumAugs(Player player, ref Enlightenment __instance, ref bool __result)
+    public static bool VerifyLumAugs(Player player)//, ref Enlightenment __instance, ref bool __result)
     {
         //Have all luminance auras(crafting aura included) except the 2 skill credit auras. (20 million total luminance)
-        __result =
-        player.LumAugAllSkills >= 10 &&
-        player.LumAugSurgeChanceRating >= 5 &&
-        player.LumAugCritDamageRating >= 5 &&
-        player.LumAugCritReductionRating >= 5 &&
-        player.LumAugDamageRating >= 5 &&
-        player.LumAugDamageReductionRating >= 5 &&
-        player.LumAugItemManaUsage >= 5 &&
-        player.LumAugItemManaGain >= 5 &&
-        player.LumAugHealingRating >= 5 &&
-        player.LumAugSkilledCraft >= 5 &&
-        player.LumAugSkilledSpec >= 5;
+        var lumAugCredits = 0;
 
-        return false;
+        lumAugCredits += player.LumAugAllSkills;
+        lumAugCredits += player.LumAugSurgeChanceRating;
+        lumAugCredits += player.LumAugCritDamageRating;
+        lumAugCredits += player.LumAugCritReductionRating;
+        lumAugCredits += player.LumAugDamageRating;
+        lumAugCredits += player.LumAugDamageReductionRating;
+        lumAugCredits += player.LumAugItemManaUsage;
+        lumAugCredits += player.LumAugItemManaGain;
+        lumAugCredits += player.LumAugHealingRating;
+        lumAugCredits += player.LumAugSkilledCraft;
+        lumAugCredits += player.LumAugSkilledSpec;
+
+        return lumAugCredits >= Settings.BaseLumAugmentationsRequired + player.Enlightenment * Settings.LumAugmentationsRequiredPerEnlightenment;
     }
 }
 
