@@ -3,8 +3,7 @@
     "path": "ACE.BaseMod.sln",
     "projects": [
       "ACE.Shared\\ACE.Shared.csproj",
-      "Samples\\Bank\\Bank.csproj",
-      "Samples\\Ironman\\Ironman.csproj"
+      "Samples\\CustomLoot\\CustomLoot.csproj"
     ]
   }
 }

@@ -17,15 +17,19 @@ public class Settings
         //Select items
         new()
         {
+            new MutatorSettings(Mutation.Enlightened) {
+            Odds = nameof(OddsGroup.Always),
+            Events = MutationEvent.Containers | MutationEvent.EnterWorld
+            },
             //new MutatorSettings(Mutation.IronmanLocked)
             //{
             //    Events = MutationEvent.Containers,
             //}
-            new MutatorSettings(Mutation.GrowthItem) {
-            Odds = nameof(OddsGroup.Always),
-            TreasureTargets = nameof(TargetGroup.Weapon),
-            Events = MutationEvent.Containers
-            },
+            //new MutatorSettings(Mutation.GrowthItem) {
+            //Odds = nameof(OddsGroup.Always),
+            //TreasureTargets = nameof(TargetGroup.Weapon),
+            //Events = MutationEvent.Containers
+            //},
             //new MutatorSettings(Mutation.Resize)  {
             //Events = Mutation.Resize.DefaultEvents(),
             //Odds = null,

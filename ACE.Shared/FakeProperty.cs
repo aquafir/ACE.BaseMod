@@ -103,6 +103,7 @@ public enum FakeInt
     HardcoreLives = 20003,
     ChatInfractions = 20004,
     ItemWieldRequirementEnlightenments = 20005,
+    DifficultyTier = 20006,
 }
 
 public enum FakeInt64

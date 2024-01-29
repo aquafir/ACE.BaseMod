@@ -15,6 +15,7 @@ public enum Mutation
     Resize,
     AutoScale,
     IronmanLocked,
+    Enlightened,
 }
 
 [Flags]
