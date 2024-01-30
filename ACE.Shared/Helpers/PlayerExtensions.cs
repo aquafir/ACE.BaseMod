@@ -1,6 +1,7 @@
 ﻿using ACE.DatLoader.FileTypes;
 using ACE.Server.Command.Handlers;
 using ACE.Server.Network.GameMessages.Messages;
+using ACE.Server.WorldObjects;
 
 namespace ACE.Shared.Helpers;
 
@@ -62,6 +63,146 @@ public static class PlayerExtensions
             ModManager.Log($"Successfully deleted character {player.Name} (0x{player.Guid}).");
         else
             ModManager.Log($"Unable to delete character {player.Name} (0x{player.Guid}) due to PlayerManager failure.");
+    }
+
+    public static void CloneAppearance(this Player source, Creature target)
+    {
+        if (source is null || target is null)
+            return;
+
+        var cg = DatManager.PortalDat.CharGen;
+
+        //Parse missing heritages?
+        if (!source.Heritage.HasValue)
+        {
+            if (!string.IsNullOrEmpty(source.HeritageGroupName) && Enum.TryParse(source.HeritageGroupName.Replace("'", ""), true, out HeritageGroup heritage))
+                source.Heritage = (int)heritage;
+        }
+        if (!target.Heritage.HasValue)
+        {
+            if (!string.IsNullOrEmpty(target.HeritageGroupName) && Enum.TryParse(target.HeritageGroupName.Replace("'", ""), true, out HeritageGroup heritage2))
+                target.Heritage = (int)heritage2;
+        }
+
+        //Parse missing genders?
+        if (!source.Gender.HasValue)
+        {
+            if (!string.IsNullOrEmpty(source.Sex) && Enum.TryParse(source.Sex, true, out Gender gender))
+                source.Gender = (int)gender;
+        }
+        if (!target.Gender.HasValue)
+        {
+            if (!string.IsNullOrEmpty(target.Sex) && Enum.TryParse(target.Sex, true, out Gender gender2))
+                target.Gender = (int)gender2;
+        }
+
+        if (!source.Heritage.HasValue || !source.Gender.HasValue || !target.Heritage.HasValue || !target.Gender.HasValue)
+            return;
+
+        //Copy gender/heritage
+        target.Heritage = source.Heritage;
+        target.Gender = source.Gender;          //Need HG to know if they have a gender?
+
+        //Get heritage groups
+        if (!cg.HeritageGroups.TryGetValue((uint)source.Heritage.Value, out var hg))
+            return;
+        if (!cg.HeritageGroups.TryGetValue((uint)target.Heritage.Value, out var hg2))
+            return;
+
+        //Copy
+        target.HeritageGroup = (HeritageGroup)source.Heritage;
+        target.HeritageGroupName = hg.Name;
+
+        //Get sex
+        if (!hg.Genders.TryGetValue((int)source.Gender, out var sex))
+            return;
+
+        //source.PaletteBaseId = sex.BasePalette;
+
+        //var appearance = new Appearance
+        //{
+        //    HairStyle = 1,
+        //    HairColor = 1,
+        //    HairHue = 1,
+        //    EyeColor = 1,
+        //    Eyes = 1,
+        //    Mouth = 1,
+        //    Nose = 1,
+        //    SkinHue = 1
+        //};
+
+        //// Get the hair first, because we need to know if you're bald, and that's the name of that tune!
+        //if (sex.HairStyleList.Count > 1)
+        //{
+        //    if (PropertyManager.GetBool("npc_hairstyle_fullrange").Item)
+        //        appearance.HairStyle = (uint)ThreadSafeRandom.Next(0, sex.HairStyleList.Count - 1);
+        //    else
+        //        appearance.HairStyle = (uint)ThreadSafeRandom.Next(0, Math.Min(sex.HairStyleList.Count - 1, 8)); // retail range data compiled by OptimShi
+        //}
+        //else
+        //    appearance.HairStyle = 0;
+
+        //if (sex.HairStyleList.Count < appearance.HairStyle)
+        //    return;
+
+        //var hairstyle = sex.HairStyleList[Convert.ToInt32(appearance.HairStyle)];
+
+        //appearance.HairColor = (uint)ThreadSafeRandom.Next(0, sex.HairColorList.Count - 1);
+        //appearance.HairHue = ThreadSafeRandom.Next(0.0f, 1.0f);
+        //appearance.EyeColor = (uint)ThreadSafeRandom.Next(0, sex.EyeColorList.Count - 1);
+        //appearance.Eyes = (uint)ThreadSafeRandom.Next(0, sex.EyeStripList.Count - 1);
+        //appearance.Mouth = (uint)ThreadSafeRandom.Next(0, sex.MouthStripList.Count - 1);
+        //appearance.Nose = (uint)ThreadSafeRandom.Next(0, sex.NoseStripList.Count - 1);
+        //appearance.SkinHue = ThreadSafeRandom.Next(0.0f, 1.0f);
+
+        //// Certain races (Undead, Tumeroks, Others?) have multiple body styles available. This is controlled via the "hair style".
+        ////if (hairstyle.AlternateSetup > 0)
+        ////    character.SetupTableId = hairstyle.AlternateSetup;
+
+        //source.EyesTextureDID = sex.GetEyeTexture(appearance.Eyes, hairstyle.Bald);
+        //source.DefaultEyesTextureDID = sex.GetDefaultEyeTexture(appearance.Eyes, hairstyle.Bald);
+        //source.NoseTextureDID = sex.GetNoseTexture(appearance.Nose);
+        //source.DefaultNoseTextureDID = sex.GetDefaultNoseTexture(appearance.Nose);
+        //source.MouthTextureDID = sex.GetMouthTexture(appearance.Mouth);
+        //source.DefaultMouthTextureDID = sex.GetDefaultMouthTexture(appearance.Mouth);
+        //source.HeadObjectDID = sex.GetHeadObject(appearance.HairStyle);
+
+        //// Skin is stored as PaletteSet (list of Palettes), so we need to read in the set to get the specific palette
+        //var skinPalSet = DatManager.PortalDat.ReadFromDat<PaletteSet>(sex.SkinPalSet);
+        //source.SkinPaletteDID = skinPalSet.GetPaletteID(appearance.SkinHue);
+
+        //// Hair is stored as PaletteSet (list of Palettes), so we need to read in the set to get the specific palette
+        //var hairPalSet = DatManager.PortalDat.ReadFromDat<PaletteSet>(sex.HairColorList[Convert.ToInt32(appearance.HairColor)]);
+        //source.HairPaletteDID = hairPalSet.GetPaletteID(appearance.HairHue);
+
+        //// Eye Color
+        //source.EyesPaletteDID = sex.EyeColorList[Convert.ToInt32(appearance.EyeColor)];
+
+        //// pull character data from the dat file
+        //source.SetProperty(PropertyDataId.MotionTable, sex.MotionTable);
+        //source.SetProperty(PropertyDataId.SoundTable, sex.SoundTable);
+        //source.SetProperty(PropertyDataId.PhysicsEffectTable, sex.PhysicsTable);
+        //source.SetProperty(PropertyDataId.Setup, sex.SetupID);
+        //source.SetProperty(PropertyDataId.PaletteBase, sex.BasePalette);
+        //source.SetProperty(PropertyDataId.CombatTable, sex.CombatTable);
+
+        //// Check the character scale
+        //if (sex.Scale != 100)
+        //    source.SetProperty(PropertyFloat.DefaultScale, sex.Scale / 100.0f); // Scale is stored as a percentage
+
+        //// Olthoi and Gear Knights have a "Body Style" instead of a hair style. These styles have multiple model/texture changes, instead of a single head/hairstyle.
+        //// Storing this value allows us to send the proper appearance ObjDesc
+        //if (hairstyle.ObjDesc.AnimPartChanges.Count > 1)
+        //    source.SetProperty(PropertyInt.Hairstyle, (int)appearance.HairStyle);
+
+        //// Certain races (Undead, Tumeroks, Others?) have multiple body styles available. This is controlled via the "hair style".
+        //if (hairstyle.AlternateSetup > 0)
+        //    source.SetProperty(PropertyDataId.Setup, hairstyle.AlternateSetup);
+
+        //// HeadObject can be null if we're dealing with GearKnight or Olthoi
+        //var headObject = sex.GetHeadObject(appearance.HairStyle);
+        //if (headObject != null)
+        //    source.SetProperty(PropertyDataId.HeadObject, (uint)headObject);
     }
 
     /// <summary>
