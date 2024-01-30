@@ -187,7 +187,7 @@ public class PatchClass
         switch (verb)
         {
             case Transaction.List:
-                player.SendMessage($"You have {player.GetBanked(Settings.LuminanceProperty):N00} luminance.");
+                player.SendMessage($"You have {player.GetBanked(Settings.LuminanceProperty):N0} luminance.");
                 break;
             case Transaction.Give:
                 var available = player.AvailableLuminance ?? 0;
@@ -195,7 +195,7 @@ public class PatchClass
                 if (player.SpendLuminance(available))
                 {
                     player.IncBanked(Settings.LuminanceProperty, (int)available);
-                    player.SendMessage($"Stored {available} luminance.  You now have {player.GetBanked(Settings.LuminanceProperty):N00}.");
+                    player.SendMessage($"Stored {available} luminance.  You now have {player.GetBanked(Settings.LuminanceProperty):N0}.");
                     return;
                 }
                 break;
@@ -207,7 +207,7 @@ public class PatchClass
 
                 player.GrantLuminance(withdraw, XpType.Admin, ShareType.None);
                 player.IncBanked(Settings.LuminanceProperty, -withdraw);
-                player.SendMessage($"You've withdrawn {withdraw} luminance.  You now have {player.GetBanked(Settings.LuminanceProperty):N00}.");
+                player.SendMessage($"You've withdrawn {withdraw} luminance.  You now have {player.GetBanked(Settings.LuminanceProperty):N0}.");
                 break;
         }
     }
@@ -228,14 +228,15 @@ public class PatchClass
         switch (verb)
         {
             case Transaction.List:
-                player.SendMessage($"You have {player.GetBanked(Settings.CashProperty):N00}.\nCurrencies: {Currencies}");
+                player.SendMessage($"You have {player.GetBanked(Settings.CashProperty):N0}.\nCurrencies: {Currencies}");
                 return;
             //Deposit everything
             case Transaction.Give:
                 //Get coins and tradenotes
                 var cashItems = player.AllItems().Where(x => x.WeenieClassId == Player.coinStackWcid || x.WeenieClassName.StartsWith("tradenote"));
-
-                var total = cashItems.Select(x => x.Value.Value)?.Sum() ?? 0;
+                long total = 0;
+                foreach(var item in cashItems)
+                    total += item.Value ?? 0;
                 var itemCount = cashItems.Count();
 
                 foreach (var item in cashItems)
@@ -250,7 +251,7 @@ public class PatchClass
                 }
 
                 player.IncCash(total);
-                player.SendMessage($"Deposited {itemCount} currency items for {total:N00}.  You have {player.GetBanked(Settings.CashProperty):N00}");
+                player.SendMessage($"Deposited {itemCount} currency items for {total:N0}.  You have {player.GetBanked(Settings.CashProperty):N0}");
                 return;
 
             case Transaction.Take:
@@ -269,10 +270,11 @@ public class PatchClass
                 }
 
                 //Withdraw amount
-                int cost = amount * currency.Value;
+                long cost = (long)amount * currency.Value;
+                
+                //Check for overflow?
+                
                 long stored = player.GetBanked(Settings.CashProperty);
-
-
                 if (stored < cost)
                 {
                     //Todo: decide on withdrawing cap?
@@ -285,10 +287,10 @@ public class PatchClass
                 if (player.TryCreateItems($"{currency.Id} {amount}"))
                 {
                     player.IncCash(-cost);
-                    player.SendMessage($"Withdrew {amount} {currency.Name} for {cost}.  You have {player.GetBanked(Settings.CashProperty):N00} remaining.");
+                    player.SendMessage($"Withdrew {amount} {currency.Name} for {cost:N0}.  You have {player.GetBanked(Settings.CashProperty):N0} remaining.");
                 }
                 else
-                    player.SendMessage($"Failed to withdraw {amount} {currency.Name} for {cost}.  You have {player.GetBanked(Settings.CashProperty):N00} remaining.");
+                    player.SendMessage($"Failed to withdraw {amount} {currency.Name} for {cost:N0}.  You have {player.GetBanked(Settings.CashProperty):N0} remaining.");
 
                 //player.UpdateCoinValue();
                 return;
@@ -320,18 +322,18 @@ public class PatchClass
         if (player.TryTakeItems(item.Id, amount))
         {
             player.IncBanked(item.Prop, amount);
-            player.SendMessage($"Deposited {amount} {item.Name}. {player.GetBanked(item.Prop)} banked, {player.GetNumInventoryItemsOfWCID(item.Id)} held");
+            player.SendMessage($"Deposited {amount:N0} {item.Name}. {player.GetBanked(item.Prop)} banked, {player.GetNumInventoryItemsOfWCID(item.Id):N0} held");
             return;
         }
 
-        player.SendMessage($"Unable to deposit {amount}.  You have {player.GetNumInventoryItemsOfWCID(item.Id)} {item.Name}");
+        player.SendMessage($"Unable to deposit {amount:N0}.  You have {player.GetNumInventoryItemsOfWCID(item.Id):N0} {item.Name}");
     }
 }
 
 public static class BankExtensions
 {
     public static long GetCash(this Player player) => player.GetBanked(PatchClass.Settings.CashProperty);
-    public static void IncCash(this Player player, int amount)
+    public static void IncCash(this Player player, long amount)
     {
         player.IncBanked(PatchClass.Settings.CashProperty, amount);
         player.UpdateCoinValue();
@@ -339,7 +341,7 @@ public static class BankExtensions
 
     public static long GetBanked(this Player player, int prop) =>
         player.GetProperty((PropertyInt64)prop) ?? 0;
-    public static void IncBanked(this Player player, int prop, int amount) =>
+    public static void IncBanked(this Player player, int prop, long amount) =>
         player.SetProperty((PropertyInt64)prop, player.GetBanked(prop) + amount);
 
 

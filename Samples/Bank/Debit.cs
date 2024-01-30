@@ -32,12 +32,13 @@ public class Debit
     [HarmonyPatch(typeof(Player), nameof(Player.UpdateCoinValue), new Type[] { typeof(bool) })]
     public static bool PreUpdateCoinValue(bool sendUpdateMessageIfChanged, ref Player __instance)
     {
-        int coins = 0;
+        long banked = __instance.GetCash();
 
         foreach (var coinStack in __instance.GetInventoryItemsOfTypeWeenieType(WeenieType.Coin))
-            coins += coinStack.Value ?? 0;
+            banked += coinStack.Value ?? 0;
 
-        coins += (int)__instance.GetCash();
+        //Cap at max int
+        int coins = banked > int.MaxValue ? int.MaxValue : (int)banked;
 
         if (sendUpdateMessageIfChanged && __instance.CoinValue == coins)
             sendUpdateMessageIfChanged = false;
