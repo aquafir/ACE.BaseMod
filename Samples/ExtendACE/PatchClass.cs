@@ -181,20 +181,4 @@ public class PatchClass
     {
         session.Player.Health.StartingValue = 10000000;
     }
-
-    [CommandHandler("tt", AccessLevel.Sentinel, CommandHandlerFlag.RequiresWorld, 1)]
-    public static void HandleT(Session session, params string[] parameters)
-    {
-        var p = session.Player;
-        var m = new Motion(MotionStance.NonCombat);
-
-        //p.FailCast(false);
-        //p.HandleActionCancelAttack();
-
-        //p.Stun(uint.Parse(parameters[0]));
-
-        //  var time = p.ExecuteMotion(m);
-        //var time = p.ExecuteMotionPersist(m);
-        // p.SendMessage($"{time}");
-    }
 }

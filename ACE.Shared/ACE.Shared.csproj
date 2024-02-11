@@ -10,6 +10,9 @@
 
 	<PropertyGroup>
 		<PublicizeAll>true</PublicizeAll>
+		<Title>ACE.Shared</Title>
+		<Description>Shared utility code and enums for the ACEmulator modding framework.</Description>
+		<PackageId>ACEmulator.$(AssemblyName)</PackageId>
 	</PropertyGroup>
 
 	<ItemGroup>

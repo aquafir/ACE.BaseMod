@@ -2,6 +2,8 @@
 global using ACE.Database.Models.World;
 global using ACE.Entity.Enum.Properties;
 global using ACE.Entity.Enum;
+global using ACE.Entity.Models;
+global using ACE.Entity;
 global using ACE.Server.Entity;
 global using ACE.Server.Factories.Entity;
 global using ACE.Server.Factories.Enum;
@@ -13,13 +15,17 @@ global using CustomLoot.Enums;
 global using CustomLoot.Helpers;
 global using HarmonyLib;
 global using System.Diagnostics;
+global using System.Reflection;
 global using System.Text.Encodings.Web;
 global using System.Text.Json.Serialization;
 global using System.Text.Json;
+global using Expansion.Creatures;
+
+global using ACE.Shared;
+global using ACE.Shared.Helpers;
 //Aliases for polluted types
 global using Mutation = CustomLoot.Enums.Mutation;
 global using Spell = ACE.Server.Entity.Spell;
 global using S = CustomLoot.PatchClass;
+global using Weenie = ACE.Entity.Models.Weenie;
 
-global using ACE.Shared;
-global using ACE.Shared.Helpers;
