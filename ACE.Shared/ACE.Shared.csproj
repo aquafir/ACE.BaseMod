@@ -13,6 +13,7 @@
 		<Title>ACE.Shared</Title>
 		<Description>Shared utility code and enums for the ACEmulator modding framework.</Description>
 		<PackageId>ACEmulator.$(AssemblyName)</PackageId>
+		<PackageReadmeFile>README.md</PackageReadmeFile>		
 	</PropertyGroup>
 
 	<ItemGroup>

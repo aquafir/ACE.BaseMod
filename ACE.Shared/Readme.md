@@ -1,1 +1,0 @@
-Shared code and enums for [ACE.BaseMod](https://github.com/aquafir/ACE.BaseMod/)
