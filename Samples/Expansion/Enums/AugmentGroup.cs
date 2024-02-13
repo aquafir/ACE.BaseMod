@@ -1,6 +1,6 @@
 ﻿using ACE.Server.Managers;
 
-namespace CustomLoot.Enums;
+namespace Expansion.Enums;
 
 public enum Augment
 {

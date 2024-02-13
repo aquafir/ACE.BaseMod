@@ -1,4 +1,4 @@
-﻿namespace CustomLoot.Enums;
+﻿namespace Expansion.Enums;
 
 /// <summary>
 /// MATCH THE CLASS NAME OF THE MUTATOR

@@ -1,6 +1,6 @@
 ﻿using ACE.Server.Managers;
 
-namespace CustomLoot.Features;
+namespace Expansion.Features;
 
 [HarmonyPatchCategory(nameof(Feature.Hardcore))]
 public class Hardcore

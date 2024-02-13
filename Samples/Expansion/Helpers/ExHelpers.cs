@@ -2,7 +2,7 @@
 using ACE.Server.WorldObjects.Entity;
 using System.Text;
 using static ACE.Server.WorldObjects.Player;
-using ExtendACE.Creatures;
+using Expansion.Creatures;
 using ACE.Server.Physics;
 using ACE.Database;
 using ACE.Server.Network.GameMessages.Messages;
@@ -11,7 +11,7 @@ namespace Expansion.Helpers;
 
 public static class CreatureExHelpers
 {
-    public static CreatureEx Create(this Creatures.CreatureType type, Biota biota) => type switch
+    public static CreatureEx Create(this Creatures.CreatureExType type, Biota biota) => type switch
     {
         //Creatures.CreatureType.Accurate => new Accurate(biota),
         //Creatures.CreatureType.Avenger => new Avenger(biota),
@@ -44,36 +44,36 @@ public static class CreatureExHelpers
         //Creatures.CreatureType.Warder => new Warder(biota),
         _ => new CreatureEx(biota),             // throw new NotImplementedException(),
     };
-    public static CreatureEx Create(this Creatures.CreatureType type, Weenie weenie, ObjectGuid guid) => type switch
+    public static CreatureEx Create(this Creatures.CreatureExType type, Weenie weenie, ObjectGuid guid) => type switch
     {
-        Creatures.CreatureType.Accurate => new Accurate(weenie, guid),
+        Creatures.CreatureExType.Accurate => new Accurate(weenie, guid),
         //Creatures.CreatureType.Avenger => new Avenger(weenie, guid),
         //Creatures.CreatureType.Bard => new Bard(weenie, guid),
-        Creatures.CreatureType.Boss => new Boss(weenie, guid),
-        Creatures.CreatureType.Berserker => new Berserker(weenie, guid),
-        Creatures.CreatureType.Comboer => new Comboer(weenie, guid),
-        Creatures.CreatureType.Drainer => new Drainer(weenie, guid),
-        Creatures.CreatureType.Duelist => new Duelist(weenie, guid),
-        Creatures.CreatureType.Evader => new Evader(weenie, guid),
-        Creatures.CreatureType.Exploding => new Exploder(weenie, guid),
-        Creatures.CreatureType.Healer => new Creatures.Healer(weenie, guid),
-        Creatures.CreatureType.Merger => new Merger(weenie, guid),
+        Creatures.CreatureExType.Boss => new Boss(weenie, guid),
+        Creatures.CreatureExType.Berserker => new Berserker(weenie, guid),
+        Creatures.CreatureExType.Comboer => new Comboer(weenie, guid),
+        Creatures.CreatureExType.Drainer => new Drainer(weenie, guid),
+        Creatures.CreatureExType.Duelist => new Duelist(weenie, guid),
+        Creatures.CreatureExType.Evader => new Evader(weenie, guid),
+        Creatures.CreatureExType.Exploding => new Exploder(weenie, guid),
+        Creatures.CreatureExType.Healer => new Creatures.Healer(weenie, guid),
+        Creatures.CreatureExType.Merger => new Merger(weenie, guid),
         //Creatures.CreatureType.Necromancer => new Necromancer(weenie, guid),
         //Creatures.CreatureType.Poisoner => new Poisoner(weenie, guid),
-        Creatures.CreatureType.Puppeteer => new Puppeteer(weenie, guid),
+        Creatures.CreatureExType.Puppeteer => new Puppeteer(weenie, guid),
         //Creatures.CreatureType.Reaper => new Reaper(weenie, guid),
-        Creatures.CreatureType.Rogue => new Rogue(weenie, guid),
+        Creatures.CreatureExType.Rogue => new Rogue(weenie, guid),
         //Creatures.CreatureType.Runner => new Runner(weenie, guid),
-        Creatures.CreatureType.Shielded => new Shielded(weenie, guid),
-        Creatures.CreatureType.SpellBreaker => new SpellBreaker(weenie, guid),
-        Creatures.CreatureType.SpellThief => new SpellThief(weenie, guid),
+        Creatures.CreatureExType.Shielded => new Shielded(weenie, guid),
+        Creatures.CreatureExType.SpellBreaker => new SpellBreaker(weenie, guid),
+        Creatures.CreatureExType.SpellThief => new SpellThief(weenie, guid),
         //Creatures.CreatureType.Splitter => new Splitter(weenie, guid),
         //Creatures.CreatureType.Stomper => new Stomper(weenie, guid),
-        Creatures.CreatureType.Stunner => new Stunner(weenie, guid),
+        Creatures.CreatureExType.Stunner => new Stunner(weenie, guid),
         //Creatures.CreatureType.Suppresser => new Suppresser(weenie, guid),
-        Creatures.CreatureType.Tank => new Tank(weenie, guid),
-        Creatures.CreatureType.Vampire => new Vampire(weenie, guid),
-        Creatures.CreatureType.Warder => new Warder(weenie, guid),
+        Creatures.CreatureExType.Tank => new Tank(weenie, guid),
+        Creatures.CreatureExType.Vampire => new Vampire(weenie, guid),
+        Creatures.CreatureExType.Warder => new Warder(weenie, guid),
         _ => new Stunner(weenie, guid),      //throw new NotImplementedException(),
     };
 }

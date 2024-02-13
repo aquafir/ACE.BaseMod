@@ -1,4 +1,4 @@
-﻿namespace CustomLoot.Features;
+﻿namespace Expansion.Features;
 
 [HarmonyPatchCategory(nameof(Feature.FakeReflection))]
 internal class FakeReflection

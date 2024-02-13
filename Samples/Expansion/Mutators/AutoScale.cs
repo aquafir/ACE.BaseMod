@@ -3,7 +3,7 @@ using ACE.Entity;
 using ACE.Entity.Models;
 using ACE.Server.Managers;
 
-namespace CustomLoot.Mutators;
+namespace Expansion.Mutators;
 
 [HarmonyPatchCategory(nameof(Mutation.AutoScale))]  //Mutator categories not used, just convenience for generating enum or a placeholder
 public class AutoScale : Mutator

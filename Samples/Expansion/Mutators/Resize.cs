@@ -1,4 +1,4 @@
-﻿namespace CustomLoot.Mutators;
+﻿namespace Expansion.Mutators;
 
 public class Resize : Mutator
 {

@@ -3,7 +3,7 @@ using ACE.Server.Command.Handlers;
 using ACE.Server.Network;
 using System.Text;
 
-namespace CustomLoot.Features;
+namespace Expansion.Features;
 
 [HarmonyPatchCategory(nameof(Feature.FakePropertyCache))]
 public static class FakePropertyCache

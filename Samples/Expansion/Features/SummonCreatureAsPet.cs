@@ -1,7 +1,7 @@
 ﻿using ACE.Database;
 using ACE.Server.Managers;
 
-namespace CustomLoot.Features;
+namespace Expansion.Features;
 
 [HarmonyPatchCategory(nameof(Feature.SummonCreatureAsPet))]
 public static class SummonCreatureAsPet

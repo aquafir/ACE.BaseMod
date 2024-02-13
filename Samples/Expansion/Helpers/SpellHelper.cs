@@ -6,7 +6,7 @@ using System.Text;
 using ACE.DatLoader;
 using ACE.Server.Network;
 
-namespace CustomLoot.Helpers;
+namespace Expansion.Helpers;
 
 public static class SpellHelper
 {

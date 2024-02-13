@@ -150,7 +150,7 @@ public static class FakeIronman
 
         player.SetProperty(FakeBool.Ironman, false);
         foreach (var item in items)
-            player.CreateItems(item);
+            player.TryCreateItems(item);
 
         player.SetProperty(FakeBool.Ironman, true);
         foreach (var item in player.Inventory.Values)

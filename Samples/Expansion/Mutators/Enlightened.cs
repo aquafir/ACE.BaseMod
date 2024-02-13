@@ -2,9 +2,9 @@
 using ACE.Entity;
 using ACE.Entity.Models;
 using ACE.Server.Managers;
-using CustomLoot.Features;
+using Expansion.Features;
 
-namespace CustomLoot.Mutators;
+namespace Expansion.Mutators;
 
 [HarmonyPatchCategory(nameof(Mutation.Enlightened))]  //Mutator categories not used, just convenience for generating enum or a placeholder
 public class Enlightened : Mutator

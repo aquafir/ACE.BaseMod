@@ -4,7 +4,7 @@ using ACE.Server.Command;
 using ACE.Server.Network;
 using static ACE.Server.WorldObjects.Player;
 
-namespace CustomLoot.Features;
+namespace Expansion.Features;
 
 [HarmonyPatchCategory(nameof(Feature.FakeSpellMeta))]
 public static class FakeSpellMeta

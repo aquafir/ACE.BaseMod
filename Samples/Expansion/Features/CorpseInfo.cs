@@ -3,7 +3,7 @@ using ACE.Entity.Models;
 using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
 
-namespace CustomLoot.Features;
+namespace Expansion.Features;
 
 //Corpse generation sucks.  Long method and it doesn't track the type of corpse.
 [HarmonyPatchCategory(nameof(Feature.CorpseInfo))]

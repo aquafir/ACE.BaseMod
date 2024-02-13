@@ -1,6 +1,6 @@
 ﻿//using ACE.Server.WorldObjects.Entity;
 
-//namespace CustomLoot.Features;
+//namespace Expansion.Features;
 
 //[HarmonyPatchCategory(nameof(Feature.FakeAttributes))]
 //internal class FakeAttributes

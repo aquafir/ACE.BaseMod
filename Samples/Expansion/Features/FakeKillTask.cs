@@ -1,7 +1,7 @@
 ﻿using ACE.Entity;
 using ACE.Server.Managers;
 
-namespace CustomLoot.Features;
+namespace Expansion.Features;
 
 [HarmonyPatchCategory(nameof(Feature.FakeKillTask))]
 internal class FakeKillTask

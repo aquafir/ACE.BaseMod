@@ -1,4 +1,4 @@
-﻿namespace CustomLoot;
+﻿namespace Expansion;
 
 public class Settings
 {
@@ -140,6 +140,8 @@ public class Settings
 
     #endregion
     #endregion
+
+    public double CreatureChance { get; set; } = .5;
 
     public SpellSettings SpellSettings { get; set; } = new();
 

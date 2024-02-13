@@ -1,7 +1,7 @@
-﻿using CustomLoot.Features;
+﻿using Expansion.Features;
 
 
-namespace CustomLoot;
+namespace Expansion;
 
 [HarmonyPatch]
 public class PatchClass

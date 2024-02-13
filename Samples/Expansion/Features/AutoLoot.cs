@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace CustomLoot.Features;
+namespace Expansion.Features;
 
 [HarmonyPatchCategory(nameof(Feature.AutoLoot))]
 internal class AutoLoot

@@ -8,6 +8,7 @@
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<PlatformTarget>x64</PlatformTarget>
 	</PropertyGroup>
 
 	
@@ -32,6 +33,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="ClickableTransparentOverlay" Version="9.3.0" />
+		<PackageReference Include="ImGui.NET" Version="1.90.1.1" />
 		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -44,7 +47,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
+		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

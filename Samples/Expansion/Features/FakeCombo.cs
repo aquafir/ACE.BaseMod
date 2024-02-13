@@ -1,6 +1,6 @@
 ﻿using ACE.Server.WorldObjects.Managers;
 
-namespace CustomLoot.Features;
+namespace Expansion.Features;
 
 [HarmonyPatchCategory(nameof(Feature.FakeCombo))]
 public static class FakeCombo

@@ -9,7 +9,7 @@
 //using ACE.Server.Network.Enum;
 //using Mono.Cecil;
 
-//namespace CustomLoot.Features;
+//namespace Expansion.Features;
 
 //[HarmonyPatchCategory(nameof(Feature.FakeDurability))]
 //public static class FakeDurability

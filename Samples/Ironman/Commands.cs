@@ -165,15 +165,15 @@ public static class IronmanCommands
 
         }
 
-        if (player.GetProperty(FakeBool.Ironman) != true && )
+        if (player.GetProperty(FakeBool.Ironman) != true)
         {
-            obj.SetProperty(FakeBool.Ironman, true);
-            player.SendMessage($"{obj.Name} is now Iron");
+            player.SetProperty(FakeBool.Ironman, true);
+            player.SendMessage($"{player.Name} is now Iron");
         }
         else
         {
-            obj.SetProperty(FakeBool.Ironman, false);
-            player.SendMessage($"{obj.Name} is no longer Iron");
+            player.SetProperty(FakeBool.Ironman, false);
+            player.SendMessage($"{player.Name} is no longer Iron");
         }
     }
 }

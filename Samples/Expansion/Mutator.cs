@@ -1,4 +1,4 @@
-﻿namespace CustomLoot;
+﻿namespace Expansion;
 
 //[HarmonyPatch]
 //[HarmonyPatchCategory(nameof(Mutator))]

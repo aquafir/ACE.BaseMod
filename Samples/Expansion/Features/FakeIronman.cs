@@ -9,7 +9,7 @@ using ACE.Server.WorldObjects;
 using System.Collections.Concurrent;
 using System.Text;
 
-namespace CustomLoot.Features;
+namespace Expansion.Features;
 
 [HarmonyPatchCategory(nameof(Feature.Ironman))]
 public class FakeIronman

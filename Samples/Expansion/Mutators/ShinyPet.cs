@@ -3,7 +3,7 @@ using ACE.Entity.Models;
 using ACE.Server.Entity.Actions;
 using ACE.Server.Managers;
 
-namespace CustomLoot.Mutators;
+namespace Expansion.Mutators;
 
 public class ShinyPet : Mutator
 {

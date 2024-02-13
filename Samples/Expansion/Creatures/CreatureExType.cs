@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-public enum CreatureType
+public enum CreatureExType
 {
     Accurate,
     //Avenger,

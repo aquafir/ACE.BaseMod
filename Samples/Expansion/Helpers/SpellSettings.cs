@@ -1,4 +1,4 @@
-﻿namespace CustomLoot.Helpers;
+﻿namespace Expansion.Helpers;
 
 public class SpellSettings
 {

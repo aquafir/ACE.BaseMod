@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using static ACE.Server.Factories.PlayerFactory;
-using Weenie = ACE.Entity.Models.Weenie;
+//using Weenie = ACE.Entity.Models.Weenie;
 
 namespace Expansion.Creatures;
 
@@ -88,8 +88,8 @@ public class CreatureEx : Creature
         return false;
     }
 
-    protected static int possibleCreatureTypes = Enum.GetValues<CreatureType>().Length;
-    protected static CreatureType RandomCreatureType() => (CreatureType)ThreadSafeRandom.Next(0, possibleCreatureTypes);
+    protected static int possibleCreatureTypes = Enum.GetValues<CreatureExType>().Length;
+    protected static CreatureExType RandomCreatureType() => (CreatureExType)ThreadSafeRandom.Next(0, possibleCreatureTypes);
     //Creatures.CreatureType.Boss; 
 
     public static CreatureEx RollCreature(Weenie weenie, ObjectGuid guid) => RandomCreatureType().Create(weenie, guid);

@@ -1,4 +1,4 @@
-﻿namespace CustomLoot;
+﻿namespace Expansion;
 
 /// <summary>
 /// Patch settings are used to serialized patches

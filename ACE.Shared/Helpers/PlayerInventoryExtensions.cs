@@ -46,7 +46,6 @@ public static class PlayerInventoryExtensions
         return items;
     }
 
-
     /// <summary>
     /// Repurpose the fumble command (Dequip commands failed)
     /// </summary>

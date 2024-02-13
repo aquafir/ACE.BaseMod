@@ -11,8 +11,8 @@ global using ACE.Server.Factories.Tables;
 global using ACE.Server.Factories;
 global using ACE.Server.Mods;
 global using ACE.Server.WorldObjects;
-global using CustomLoot.Enums;
-global using CustomLoot.Helpers;
+global using Expansion.Enums;
+global using Expansion.Helpers;
 global using HarmonyLib;
 global using System.Diagnostics;
 global using System.Reflection;
@@ -24,8 +24,8 @@ global using Expansion.Creatures;
 global using ACE.Shared;
 global using ACE.Shared.Helpers;
 //Aliases for polluted types
-global using Mutation = CustomLoot.Enums.Mutation;
+global using Mutation = Expansion.Enums.Mutation;
 global using Spell = ACE.Server.Entity.Spell;
-global using S = CustomLoot.PatchClass;
+global using S = Expansion.PatchClass;
 global using Weenie = ACE.Entity.Models.Weenie;
 

@@ -6,7 +6,7 @@ using ACE.Server.Network.GameMessages.Messages;
 using System.Runtime.CompilerServices;
 using static Microsoft.EntityFrameworkCore.Query.Internal.NavigationExpandingExpressionVisitor;
 
-namespace CustomLoot.Helpers;
+namespace Expansion.Helpers;
 public static class Commands
 {
     //Todo: remove in release
