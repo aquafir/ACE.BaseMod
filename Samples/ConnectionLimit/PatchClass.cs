@@ -116,7 +116,11 @@ namespace ConnectionLimit
                     connections.Add(address, 1);
                 else connections[address]++;
 
-                if (connections[address] > Settings.MaxNonExempt)
+
+                //Maximum connections are from ExemptIPAddress in Config.js or if not present the default value MaxNonExempt
+                int maxConnections = Settings.ExemptIPAddresses.ContainsKey(address.ToString()) ? Settings.ExemptIPAddresses[address.ToString()] : Settings.MaxNonExempt;
+
+                if (connections[address] > maxConnections)
                 {
                     player.SendMessage($"Booting due to exceeding {Settings.MaxNonExempt} allowed outside of exempt areas.");
                     player.Session.LogOffPlayer();
