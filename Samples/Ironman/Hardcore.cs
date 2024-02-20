@@ -15,8 +15,8 @@ public static class Hardcore
             return;
 
         //Check death interval
-        var lastDeath = player.GetProperty(FakeFloat.TimestampLastPlayerDeath) ?? 0;
         var current = Time.GetUnixTime();
+        var lastDeath = player.GetProperty(FakeFloat.TimestampLastPlayerDeath) ?? current;
         var lapsed = current - lastDeath;
         player.SetProperty(FakeFloat.TimestampLastPlayerDeath, Time.GetUnixTime());
 
