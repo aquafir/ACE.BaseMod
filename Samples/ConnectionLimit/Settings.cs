@@ -8,6 +8,9 @@ public class Settings
     //Number of seconds between checking
     public double Interval { get;  set; } = 10;
 
+    //IP addresses with the number of allowed connections that are exempt
+    public Dictionary<string, int> ExemptIPAddresses { get; set; } = new();
+
     //Landblocks that are exempt
     public HashSet<ushort> ExemptLandblocks { get; set; } = new()
         {
