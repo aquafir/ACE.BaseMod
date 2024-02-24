@@ -1,4 +1,4 @@
-## CustomLoot
+## Expansion
 
 This mod changes the loot generated objects returned by `LootGenerationFactory.CreateAndMutateWcid`
 

@@ -5,7 +5,7 @@
 /// </summary>
 public class MutatorSettings
 {
-    public const string NAMESPACE = $"CustomLoot.Mutators";
+    public const string NAMESPACE = $"Expansion.Mutators";
     //public string PatchType { get; set; }
     public Mutation PatchType { get; set; }
     public bool Enabled { get; set; } = false;
