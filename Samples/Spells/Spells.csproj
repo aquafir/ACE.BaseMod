@@ -81,7 +81,7 @@
 	</Target>
 
 	<!--More cleanup in Release mode?-->
-	<Target Name="CleanupFilesRelease" AfterTargets="CleanupFiles">
+	<Target Name="CleanupFilesRelease" AfterTargets="CleanupFiles" Condition="$(ConfigurationName) == Release">
 		<ItemGroup>
 			<FilesToDelete Include="$(OutDir)*.deps.json" />
 			<FilesToDelete Include="$(OutDir)*runtimeconfig.json" />
