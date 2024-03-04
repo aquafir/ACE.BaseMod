@@ -157,7 +157,13 @@ public class PatchClass
     public static void PreDecrement(string quest, int amount, ref QuestManager __instance)
     {
         var questName = QuestManager.GetQuestName(quest);
+        if (questName is null)
+            return;
+
         var qst = __instance.GetQuest(questName);
+        if (qst is null)
+            return;
+
         if (qst.NumTimesCompleted == 1 && __instance.Creature is Player player)
         {
             player.IncQuestPoints(qst.Value());
@@ -172,7 +178,13 @@ public class PatchClass
     public static void PreErase(string questFormat, ref QuestManager __instance)
     {
         var questName = QuestManager.GetQuestName(questFormat);
+        if (questName is null)
+            return;
+
         var qst = __instance.GetQuest(questName);
+        if (qst is null)
+            return;
+
         if (qst.NumTimesCompleted == 1 && __instance.Creature is Player player)
         {
             player.IncQuestPoints(-1 * qst.Value());

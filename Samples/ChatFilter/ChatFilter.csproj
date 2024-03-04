@@ -19,7 +19,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.0" />
 		<PackageReference Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
 			<PrivateAssets>all</PrivateAssets>
@@ -82,5 +81,4 @@
 	<ItemGroup>
 	  <None Include="M:\Projects\ACE.BaseMod\Samples\ChatFilter\.editorconfig" />
 	</ItemGroup>
-
 </Project>

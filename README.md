@@ -22,6 +22,8 @@ Verbs are:
 
 #### Todo
 
+* Mod repository
+* Support selective adding of commands with attributes
 * Possibly [Reverse patches](https://harmony.pardeike.net/articles/reverse-patching.html) to snapshot/restore any patched methods. `TryCreateILCopy` might be relevant.
 * Good example for using [Finalizer patches](https://harmony.pardeike.net/articles/patching-finalizer.html) to eat tricky and inconsequential exceptions.
 * Exposing capabilities of mods to other mods
