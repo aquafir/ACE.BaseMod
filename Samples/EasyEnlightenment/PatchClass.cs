@@ -1,6 +1,7 @@
 ﻿using ACE.Entity.Enum.Properties;
 using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
+using ACE.Server.WorldObjects;
 
 namespace EasyEnlightenment;
 
@@ -113,6 +114,26 @@ public class PatchClass
 
         player.SendMessage($"You're on the new system with {oldEnlightenment} enlightenments.");
         player.SetProperty(FakeBool.UsingNewLuminance, true);
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Enlightenment), nameof(Enlightenment.RemoveAbility), new Type[] { typeof(Player) })]
+    public static bool PreRemoveAbility(Player player, ref Enlightenment __instance)
+    {
+        if (Settings.RemoveSociety)
+            Enlightenment.RemoveSociety(player);
+        if(Settings.RemoveLuminance)
+            Enlightenment.RemoveLuminance(player);
+        if (Settings.RemoveAetheria)
+            Enlightenment.RemoveAetheria(player);
+        if (Settings.RemoveAttributes)
+            Enlightenment.RemoveAttributes(player);
+        if (Settings.RemoveSkills)
+            Enlightenment.RemoveSkills(player);
+        if (Settings.RemoveLevel)
+            Enlightenment.RemoveLevel(player);
+
+        return false;
     }
 
     [HarmonyPrefix]

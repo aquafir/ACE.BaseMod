@@ -1,4 +1,5 @@
 ﻿using ACE.Entity.Enum.Properties;
+using ACE.Server.WorldObjects;
 
 namespace EasyEnlightenment;
 
@@ -8,6 +9,14 @@ public class Settings
     public int MaxEnlightenments { get;  set; } = 5;
     public bool RequireSocietyMaster { get;  set; } = true;
     public bool RequireAllLuminanceAuras { get;  set; } = true;
+
+    public bool RemoveSociety { get; set; } = true;
+    public bool RemoveLuminance { get; set; } = true;
+    public bool RemoveAetheria { get; set; } = true;
+    public bool RemoveAttributes { get; set; } = true;
+    public bool RemoveSkills { get; set; } = true;
+    public bool RemoveLevel { get; set; } = true;
+
     public Dictionary<PropertyInt, int> IntAugments { get; set; } = new() { 
         [PropertyInt.LumAugCritDamageRating] = 1,
         [PropertyInt.CritRating] = 2,

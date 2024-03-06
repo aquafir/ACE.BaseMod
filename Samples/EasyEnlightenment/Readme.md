@@ -11,7 +11,14 @@ Adds flexibility to enlightenments.
 * `SkipResetCertificate` prevents item creation
 * `MaxLumBase` / `MaxLumPerEnlightenment`
 
+Change what is removed on enlightenment with:
 
+* `RemoveSociety`
+* `RemoveLuminance`
+* `RemoveAetheria`
+* `RemoveAttributes`
+* `RemoveSkills`
+* `RemoveLevel`
 
 The `newlum` command allows a conversion from a previous system to a modified one.  Players will be flagged as being on the new system after conversion.
 
