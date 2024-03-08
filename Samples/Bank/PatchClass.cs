@@ -22,7 +22,7 @@ public class PatchClass
     static string settingsPath => Path.Combine(Mod.ModPath, "Settings.json");
     private FileInfo settingsInfo = new(settingsPath);
 
-    private JsonSerializerOptions _serializeOptions = new()
+    private System.Text.Json.JsonSerializerOptions _serializeOptions = new()
     {
         WriteIndented = true,
         AllowTrailingCommas = true,

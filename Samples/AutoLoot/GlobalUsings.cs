@@ -14,7 +14,6 @@ global using System.Text.RegularExpressions;
 global using uTank2.LootPlugins;
 //Aliases for polluted types
 global using Action = AutoLoot.Loot.Action;
-
-
+global using JsonSerializerOptions = System.Text.Json.JsonSerializerOptions;
 global using ACE.Shared;
 global using ACE.Shared.Helpers;

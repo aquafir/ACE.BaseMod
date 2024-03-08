@@ -21,10 +21,6 @@
 	<ItemGroup>
 		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.0" />
 		<PackageReference Include="Lib.Harmony" Version="2.3.1.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
