@@ -61,7 +61,12 @@
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore">
 			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.dll</HintPath>
-			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
+			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
+		</Reference>
+		<Reference Include="Microsoft.EntityFrameworkCore.Relational">
+			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
