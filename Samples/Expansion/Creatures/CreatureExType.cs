@@ -18,6 +18,8 @@ public enum CreatureExType
     //Poisoner,
     Puppeteer,
     //Reaper,
+    //Revenger,
+    //Revenant,
     Rogue,
     //Runner,
     Shielded,

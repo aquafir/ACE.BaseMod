@@ -23,15 +23,24 @@ internal class CreatureFollow
         if (player is null) return;
 
         var followers = player.GetSplashTargets(player, 20, 20).Where(x => x.MonsterState == Creature.State.Awake);
+
+        if (followers.Count() == 0)
+            return;
+
         player.SendMessage($"Followed by {followers.Count()} creatures!");
 
         foreach (var f in followers)
         {
-            var newBiota = WorldObjectFactory.CreateNewWorldObject(f.Weenie);
-            newBiota.Location = new(newPosition);
-            f.Destroy();
-            newBiota.EnterWorld();
-            ModManager.Log($"{newBiota.Name} following {player.Name} to {newPosition}");
+            //Approach with a custom CreatureEx
+            var next = new Revenant(f.Weenie, player);
+            next.Stalk();
+
+            //Create new Creature copy nearby
+            //var newBiota = WorldObjectFactory.CreateNewWorldObject(f.Weenie);
+            //newBiota.Location = new(newPosition);
+            //f.Destroy();
+            //newBiota.EnterWorld();
+            //ModManager.Log($"{newBiota.Name} following {player.Name} to {newPosition}");
         }
     }
 
