@@ -13,7 +13,6 @@ public class Revenant : CreatureEx
     public Revenant(Weenie weenie, Player target) : base(weenie, GuidManager.NewDynamicGuid())
     {
         PermaTarget = target;
-        var guid = GuidManager.NewDynamicGuid();
     }
 
     //ObjectGuid PermaTarget;
@@ -23,7 +22,6 @@ public class Revenant : CreatureEx
     protected override void Initialize()
     {
         Name = "Stalking " + Name;
-
         base.Initialize();
     }
 
@@ -38,17 +36,13 @@ public class Revenant : CreatureEx
     { 
         //Ignore regular behavior
         return AttackTarget != null;
-        //return base.FindNextTarget();
     }
 
     public void Stalk()
     {
-        GuidManager.NewDynamicGuid();
-
         //Destroy when the player no longer accessible
-        if (PermaTarget is null)
+        if (PermaTarget is null || PermaTarget.UnderLifestoneProtection)
         {
-            PlayerManager.BroadcastToChannelFromEmote(Channel.Admin ,$"{Name} lost its target.");
             Destroy();
             return;
         }
@@ -60,13 +54,23 @@ public class Revenant : CreatureEx
             return;
         }
 
-        //Teleport if distance
+        //Teleport if distant
+        if(Weenie is null || IsDead)
+        {
+            Destroy();
+            return;
+        }
         var next = new Revenant(this.Weenie, PermaTarget);
-
         next.Location = new(PermaTarget.Location);
         next.PermaTarget = PermaTarget;
 
-        Destroy();
-        next.EnterWorld();
+        //Have the copy try to follow, destroying the original if successful
+        if(next.EnterWorld())
+            Destroy();
+        else
+        {
+            GuidManager.RecycleDynamicGuid(next.Guid);
+            next.Destroy();
+        }
     }
 }
