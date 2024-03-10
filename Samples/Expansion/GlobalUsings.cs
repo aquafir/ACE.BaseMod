@@ -20,6 +20,9 @@ global using System.Text.Encodings.Web;
 global using System.Text.Json.Serialization;
 global using System.Text.Json;
 global using Expansion.Creatures;
+global using ACE.Server.Entity.Actions;
+global using ACE.Server.Managers;
+
 
 global using ACE.Shared;
 global using ACE.Shared.Helpers;

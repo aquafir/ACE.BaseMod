@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureEx))]
 public class Evader : CreatureEx
 {
     public Evader(Biota biota) : base(biota) { }

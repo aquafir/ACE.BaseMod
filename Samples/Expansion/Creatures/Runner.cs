@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureEx))]
 public class Runner : CreatureEx
 {
     public Runner(Biota biota) : base(biota) { }

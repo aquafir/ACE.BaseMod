@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureEx))]
 public class Boss : CreatureEx
 {
     public Boss(Biota biota) : base(biota) { }

@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureEx))]
 public class SpellThief : CreatureEx
 {
     public SpellThief(Biota biota) : base(biota) { }

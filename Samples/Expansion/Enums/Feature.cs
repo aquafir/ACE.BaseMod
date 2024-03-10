@@ -33,5 +33,6 @@ public enum Feature
     MutatorHooks,
     Hardcore,
     Ironman,
+    CreatureFollow,
 }
 

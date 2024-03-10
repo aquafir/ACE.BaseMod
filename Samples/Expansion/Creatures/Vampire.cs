@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureEx))]
 public class Vampire : CreatureEx
 {
     public Vampire(Biota biota) : base(biota) { }

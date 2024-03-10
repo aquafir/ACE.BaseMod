@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureEx))]
 public class Suppresser : CreatureEx
 {
     public Suppresser(Biota biota) : base(biota) { }

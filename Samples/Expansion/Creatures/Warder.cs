@@ -2,7 +2,7 @@
 
 namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureEx))]
 public class Warder : CreatureEx
 {
     public Warder(Biota biota) : base(biota) { }

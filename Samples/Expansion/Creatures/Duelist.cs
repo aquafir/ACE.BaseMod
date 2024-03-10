@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureEx))]
 public class Duelist : CreatureEx
 {
     public Duelist(Biota biota) : base(biota) { }

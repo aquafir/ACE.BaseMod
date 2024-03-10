@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureEx))]
 public class Reaper : CreatureEx
 {
     public Reaper(Biota biota) : base(biota) { }

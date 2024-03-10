@@ -38,6 +38,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
+
 	<ItemGroup>
 		<Reference Include="ACE.Adapter">
 			<HintPath>C:\ACE\Server\ACE.Adapter.dll</HintPath>
@@ -65,9 +66,15 @@
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore">
 			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.dll</HintPath>
-			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
+			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
+		</Reference>
+		<Reference Include="Microsoft.EntityFrameworkCore.Relational">
+			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
 		</Reference>
 	</ItemGroup>
+	
 	<ItemGroup>
 		<None Update="Meta.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

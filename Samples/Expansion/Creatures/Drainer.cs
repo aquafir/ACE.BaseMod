@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureEx))]
 public class Drainer : CreatureEx
 {
     public Drainer(Biota biota) : base(biota) { }

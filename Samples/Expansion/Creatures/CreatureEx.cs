@@ -6,7 +6,7 @@ using static ACE.Server.Factories.PlayerFactory;
 
 namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureEx))]
 public class CreatureEx : Creature
 {
     public CreatureEx(Biota biota) : base(biota)

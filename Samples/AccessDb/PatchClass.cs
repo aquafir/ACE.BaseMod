@@ -152,6 +152,41 @@ public class PatchClass
     }
     #endregion
 
+    [CommandHandler("qs", AccessLevel.Admin, CommandHandlerFlag.ConsoleInvoke, -1)]
+    public static void HandleQuests(Session session, params string[] parameters)
+    {
+        //Dictionary<PropertyType, List<object>> query = new Dictionary<PropertyType, List<object>>();
+        Quests();
+    }
+
+    private static void Quests()
+    {
+        using (var ctx = new WorldDbContext())
+        {
+            // Find descending quest XP in emotes
+            var query = from action in ctx.WeeniePropertiesEmoteAction
+                        where action.Type == (int)EmoteType.AwardXP || action.Type == (int)EmoteType.AwardNoShareXP
+                        join emote in ctx.WeeniePropertiesEmote on action.EmoteId equals emote.Id
+                        orderby action.Amount64 descending
+                        select new
+                        {
+                            Name = emote.Quest,
+                            Xp = action.Amount64,
+                        };
+
+            
+            var sb = new StringBuilder($"\n\n{"Name",-40}{"Amount",-15}\n");
+            sb.AppendLine($"Query:\n{query.ToQueryString()}\n\n");
+
+            foreach (var e in query.Take(20).ToList())
+                sb.AppendLine($"{e.Name,-40}{e.Xp,-15}");
+
+            ModManager.Log(sb.ToString());
+        }
+    }
+
+
+
     #region Logic
     private static void Search(string query)
     {
