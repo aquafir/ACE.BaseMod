@@ -91,7 +91,6 @@ public static class BiotaExtensions
         return result;
     }
 
-
     public static bool IsNpc(this ACE.Entity.Models.Biota biota)
     {
         //Assume npc

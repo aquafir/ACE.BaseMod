@@ -1,4 +1,6 @@
 ﻿using ACE.Database.Models.World;
+using ACE.Server.Command.Handlers;
+using ACE.Server.Command.Handlers.Processors;
 using Weenie = ACE.Entity.Models.Weenie;
 
 namespace ACE.Shared.Helpers;
@@ -426,6 +428,81 @@ public static class WeenieExtensions
         return result;
     }
 
+    public static void ExportSQLWeenie(ACE.Database.Models.World.Weenie weenie, Session session, bool withFolders = false)
+    {
+        DirectoryInfo di = DeveloperContentCommands.VerifyContentFolder(session, false);
+        ACE.Database.SQLFormatters.World.WeenieSQLWriter WeenieSQLWriter = new();
+
+        var sep = Path.DirectorySeparatorChar;
+
+        string sql_folder = null;
+        if (withFolders)
+        {
+            var weenieType = (WeenieType)weenie.Type;
+            switch (weenieType)
+            {
+                case WeenieType.Creature: // Export to the "CreatureType" folder
+                    WeeniePropertiesInt cType = (from x in weenie.WeeniePropertiesInt where x.Type == 2 select x).FirstOrDefault();
+                    if (cType == null)
+                        sql_folder = $"{di.FullName}{sep}sql{sep}weenies{sep}{weenieType}{sep}";
+                    else
+                    {
+                        CreatureType creatureType = (CreatureType)cType.Value;
+                        sql_folder = $"{di.FullName}{sep}sql{sep}weenies{sep}{weenieType}{sep}{creatureType}{sep}";
+                    }
+                    break;
+                default: // Otherwise goes to "ItemType" folder
+                    WeeniePropertiesInt iType = (from x in weenie.WeeniePropertiesInt where x.Type == 1 select x).FirstOrDefault();
+                    if (iType == null)
+                        sql_folder = $"{di.FullName}{sep}sql{sep}weenies{sep}{weenieType}{sep}";
+                    else
+                    {
+                        ItemType itemType = (ItemType)iType.Value;
+                        sql_folder = $"{di.FullName}{sep}sql{sep}weenies{sep}{weenieType}{sep}{itemType}{sep}";
+                    }
+                    break;
+            }
+        }
+        else
+        {
+            sql_folder = $"{di.FullName}{sep}sql{sep}weenies{sep}";
+        }
+
+        di = new DirectoryInfo(sql_folder);
+
+        if (!di.Exists)
+            di.Create();
+
+        if (WeenieSQLWriter == null)
+        {
+            WeenieSQLWriter = new ACE.Database.SQLFormatters.World.WeenieSQLWriter();
+            WeenieSQLWriter.WeenieNames = DatabaseManager.World.GetAllWeenieNames();
+            WeenieSQLWriter.SpellNames = DatabaseManager.World.GetAllSpellNames();
+            WeenieSQLWriter.TreasureDeath = DatabaseManager.World.GetAllTreasureDeath();
+            WeenieSQLWriter.TreasureWielded = DatabaseManager.World.GetAllTreasureWielded();
+            WeenieSQLWriter.PacketOpCodes = PacketOpCodeNames.Values;
+        }
+
+        var sql_filename = WeenieSQLWriter.GetDefaultFileName(weenie);
+
+        var writer = new StreamWriter(sql_folder + sql_filename);
+
+        try
+        {
+            WeenieSQLWriter.CreateSQLDELETEStatement(weenie, writer);
+            writer.WriteLine();
+            WeenieSQLWriter.CreateSQLINSERTStatement(weenie, writer);
+            writer.Close();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            CommandHandlerHelper.WriteOutputInfo(session, $"Failed to export {sql_folder}{sql_filename}");
+            return;
+        }
+
+        CommandHandlerHelper.WriteOutputInfo(session, $"Exported {sql_folder}{sql_filename}");
+    }
 
     public static bool IsNpc(this Weenie weenie)
     {

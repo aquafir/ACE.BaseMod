@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<NoWarn>0436;1073;8509</NoWarn>
+		<Version>1.0.1</Version>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>False</AllowUnsafeBlocks>
@@ -15,6 +16,7 @@
 		<Title>ACE.Shared</Title>
 		<Description>Shared utility code and enums for the ACEmulator modding framework.</Description>
 		<PackageId>ACEmulator.$(AssemblyName)</PackageId>
+		<UserSecretsId>d2a8069a-3c7d-4cbe-b51d-575253303ea0</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -22,6 +24,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -68,4 +71,8 @@
 		<None Include="M:\Projects\ACE.BaseMod\ACE.Shared\.editorconfig" />
 	</ItemGroup>
 
+	<Target Name="AfterBuild" Condition="'$(Configuration)' == 'Release'">
+		<Exec Command="dotnet pack -c Release" />
+		<Exec Command="dotnet nuget push bin\Release\ACEmulator.ACE.Shared.1.0.0.nupkg -k NugetKey -s https://api.nuget.org/v3/index.json" />
+	</Target>
 </Project>

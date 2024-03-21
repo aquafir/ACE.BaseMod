@@ -1,4 +1,5 @@
-﻿using ACE.Server.WorldObjects;
+﻿using ACE.Server.Command;
+using ACE.Server.WorldObjects;
 
 namespace Expansion.Features;
 [HarmonyPatchCategory(nameof(Feature.CreatureFollow))]

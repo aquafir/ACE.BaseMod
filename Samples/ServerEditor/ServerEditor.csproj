@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<NoWarn>0436;1073;8509</NoWarn>
@@ -12,32 +12,30 @@
 		<PlatformTarget>x64</PlatformTarget>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<PublicizeAll>true</PublicizeAll>
-	</PropertyGroup>
-	<PropertyGroup>
-		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
-	</PropertyGroup>
-
 	<ItemGroup>
 		<Compile Remove=".template.config\**" />
 		<EmbeddedResource Remove=".template.config\**" />
 		<None Remove=".template.config\**" />
 	</ItemGroup>
+
+	<!--<PropertyGroup>
+		<PublicizeAll>true</PublicizeAll>
+	</PropertyGroup>-->
+
 	<ItemGroup>
-		<Compile Remove="Features\FakeReducedBurden.cs" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.1" />
-		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Lib.Harmony" Version="2.3.1.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -75,15 +73,13 @@
 			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
 		</Reference>
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<None Update="Meta.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
-	</ItemGroup>
+	
 	<!--Get rid of assemblies that should be present in ACE-->
 	<Target Name="CleanupFiles" AfterTargets="PostBuildEvent">
 		<ItemGroup>
