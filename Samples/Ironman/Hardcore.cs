@@ -10,7 +10,7 @@ public static class Hardcore
         //Ignore non-hardcore
         if (__instance is not Player player)
             return;
-
+        Debugger.Break();
         if (player.GetProperty(FakeBool.Hardcore) != true)
             return;
 
@@ -36,7 +36,7 @@ public static class Hardcore
         }
 
         //Handle perma-death
-        PlayerManager.BroadcastToChannelFromConsole(Channel.Advocate1, $"{player.Name} has met an untimely demise at the hands of {lastDamager.Name ?? ""}!");
+        PlayerManager.BroadcastToChannelFromConsole(Channel.Advocate1, $"{player?.Name} has met an untimely demise at the hands of {lastDamager?.Name ?? ""}!");
         if (PatchClass.Settings.QuarantineOnDeath)
         {
 
@@ -44,6 +44,4 @@ public static class Hardcore
         else
             player.PermaDeath();
     }
-
-
 }

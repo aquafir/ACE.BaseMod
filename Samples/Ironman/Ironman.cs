@@ -19,11 +19,14 @@ public static class FakeIronman
         player.WipeInventory(true);
 
         //Give items before Ironman applied
-        foreach(var skill  in player.Skills.Where(x => x.Value.AdvancementClass == SkillAdvancementClass.Specialized))
+        foreach(var skill in player.Skills.Where(x => x.Value.AdvancementClass == SkillAdvancementClass.Specialized))
             player.GiveIronmanItems(skill.Key);
 
         //Set lives/Ironman props
         player.ApplyIronmanProperty();
+
+        //Setup Hardcore mode
+        player.ApplyHardcore();
 
         //Welcome them
         player.SendMessage(PatchClass.Settings.WelcomeMessage);
@@ -208,13 +211,29 @@ public static class FakeIronman
             return;
         }
 
+        player.SetProperty(FakeBool.Ironman, true);
+        player.RadarColor = RadarColor.Sentinel;
+        player.SendMessage($"You're now participating in Ironman.  Stay safe!  Unless you rolled trash");
+    }
+
+    /// <summary>
+    /// Add Hardcore property and related mode setup
+    /// </summary>
+    public static void ApplyHardcore(this Player player)
+    {
+        if (player is null)
+            return;
+
+        if (!PatchClass.Settings.Restrictions.Contains(nameof(Hardcore)) || player.GetProperty(FakeBool.Hardcore) == true)
+        {
+            player.SendMessage($"You are already Hardcore.");
+            return;
+        }
+
         player.SetProperty(FakeInt.HardcoreLives, PatchClass.Settings.HardcoreStartingLives);
         player.SetProperty(FakeFloat.TimestampLastPlayerDeath, Time.GetUnixTime());
-        player.SetProperty(FakeBool.Ironman, true);
         player.SetProperty(FakeBool.Hardcore, true);
-        player.RadarColor = RadarColor.Sentinel;
-        player.SendMessage($"You're now participating in Ironman.  Stay safe!  Unless you rolled trash" +
-            $"\nYou have {PatchClass.Settings.HardcoreStartingLives} remaining and {PatchClass.Settings.HardcoreSecondsBetweenDeathAllowed} seconds between deaths.");
+        player.SendMessage($"\nYou have {PatchClass.Settings.HardcoreStartingLives} remaining and {PatchClass.Settings.HardcoreSecondsBetweenDeathAllowed} seconds between deaths.");
     }
 
     /// <summary>

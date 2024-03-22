@@ -152,7 +152,14 @@ public static class IronmanCommands
         t += $"\n{player.HeritageGroup} - {player.Gender} - {player.EyesPaletteDID}";
         player.SendMessage(t);
     }
-    
+
+    [CommandHandler("t4", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
+    public static void HandleT4(Session session, params string[] parameters)
+    {
+        var player = session.Player;
+        player.InitializeIronman();
+    }
+
     [CommandHandler("ironman", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
     public static void HandleIronman(Session session, params string[] parameters)
     {
