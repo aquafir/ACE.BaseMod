@@ -2,6 +2,9 @@
 using ACE.Server.Network.GameMessages.Messages;
 using ACE.DatLoader.Entity;
 using ACE.Server.Command.Handlers;
+using ACE.Server.Entity.Actions;
+using ACE.Server.Network;
+using ACE.Entity.Enum;
 
 namespace Ironman;
 
@@ -18,8 +21,35 @@ public static class FakeIronman
         //Wipe inventory
         player.WipeInventory(true);
 
+        //Wipe spells
+        player.RemoveAllSpells();
+               
+        //Schedule learning level 1s
+        var actionChain = new ActionChain();
+        actionChain.AddDelaySeconds(5);
+        actionChain.AddAction(player, () => {
+            if (PatchClass.Settings.UseSpellList)
+            {
+                foreach (var spell in PatchClass.Settings.DefaultSpells)
+                    player.TryLearnSpell((uint)spell, false);
+            }
+            else
+            {
+                player.LearnSpellsInBulk(MagicSchool.CreatureEnchantment, 1);
+                player.LearnSpellsInBulk(MagicSchool.ItemEnchantment, 1);
+                player.LearnSpellsInBulk(MagicSchool.LifeMagic, 1);
+                player.LearnSpellsInBulk(MagicSchool.VoidMagic, 1);
+                player.LearnSpellsInBulk(MagicSchool.WarMagic, 1);
+            }
+
+            player.UpdateSpellbook();
+
+            player.SendMessage($"Removed all but default spells.");
+        });
+        actionChain.EnqueueChain();
+
         //Give items before Ironman applied
-        foreach(var skill in player.Skills.Where(x => x.Value.AdvancementClass == SkillAdvancementClass.Specialized))
+        foreach (var skill in player.Skills.Where(x => x.Value.AdvancementClass == SkillAdvancementClass.Specialized))
             player.GiveIronmanItems(skill.Key);
 
         //Set lives/Ironman props
@@ -158,6 +188,7 @@ public static class FakeIronman
         player.SetProperty(FakeBool.Ironman, true);
         foreach (var item in player.Inventory.Values)
             item.SetProperty(FakeBool.Ironman, true);
+
         //foreach(var item in player.EquippedObjects.Values)
         //    item.SetProperty(FakeBool.Ironman, true);
     }

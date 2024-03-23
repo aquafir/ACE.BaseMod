@@ -8,6 +8,8 @@ public class Settings
     public string WelcomeMessage { get; set; } = $"Welcome to Ironman!";
     public int MaxSpecializedSkills { get; set; } = 2;
 
+    public string StartingLocation { get; set; } = "0xA9B40019 [84.000000 7.100000 94.005005] 0.996917 0.000000 0.000000 -0.078459";
+
     public int CreditsToPlanFor { get; set; } = 50;
 
     public float HardcoreSecondsBetweenDeathAllowed { get; set; } = 60 * 60 * 24 * 7;
@@ -50,6 +52,37 @@ public class Settings
             "20631 100",    //Tapers
             "691 10",       //Lead scarab
         }
+    };
+
+    //Determines
+    public bool UseSpellList { get; set; } = true;
+    public List<SpellId> DefaultSpells { get; set; } = new()
+    {
+        //Creature
+        SpellId.FocusSelf1,
+        SpellId.InvulnerabilityOther1,
+        SpellId.InvulnerabilitySelf1,
+        //Life
+        SpellId.ArmorOther1,
+        SpellId.ArmorSelf1,
+        SpellId.HealOther1,
+        SpellId.HealSelf1,
+        SpellId.ImperilOther1,
+        //Item
+        SpellId.BloodDrinkerSelf1,
+        SpellId.SwiftKillerSelf1,
+        SpellId.BludgeonBane1,
+        SpellId.Impenetrability1,
+        //Void
+        SpellId.Corrosion1,
+        SpellId.Corruption1,
+        SpellId.CurseDestructionOther1,
+        SpellId.NetherBolt1,
+        //War
+        SpellId.FlameBolt1,
+        SpellId.FrostBolt1,
+        SpellId.ShockWave1,
+        SpellId.ForceBolt1,
     };
 
     public List<Skill> PrimarySkillPool { get; set; } = new()

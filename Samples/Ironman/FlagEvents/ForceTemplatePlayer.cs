@@ -42,8 +42,9 @@ public class ForceTemplatePlayer
         pendingFinalization.Remove(character.Id);
 
         var actionChain = new ActionChain();
-        actionChain.AddDelaySeconds(9);
+        actionChain.AddDelaySeconds(5);
         actionChain.AddAction(session.Player, () => player.InitializeIronman());
+        actionChain.AddAction(session.Player, () => player.Teleport(player.Location));
         actionChain.EnqueueChain();
     }
 

@@ -38,6 +38,10 @@
 		<!--<PackageReference Include="Lib.Harmony" Version="2.3.1.1" />-->
 		<PackageReference Include="System.Text.Json" Version="7.0.0" Aliases="Json" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
+	</ItemGroup>
 		
 	<ItemGroup>
 		<Reference Include="0Harmony">

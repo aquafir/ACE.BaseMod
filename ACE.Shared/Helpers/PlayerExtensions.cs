@@ -22,8 +22,7 @@ public static class PlayerExtensions
     }
 
     private static PositionType[] wipedPositions =
-{
-        PositionType.Undef,
+    {
         PositionType.Home,
         PositionType.Instantiation,
         PositionType.LastOutsideDeath,
@@ -34,15 +33,28 @@ public static class PlayerExtensions
         PositionType.PortalSummonLoc,
         PositionType.Sanctuary,
     };
-    public static void QuarantinePlayer(this Player player)
+    public static void QuarantinePlayer(this Player player, string coords = "0x010D0100 -1.705717 2.126705 0.005000 0.577563 0.000000 0.000000 -0.816346")
     {
-        //Wipe positions
-        foreach (var position in wipedPositions)
-            player.SetPosition(position, null);
+        //if (!CommandParameterHelpers.TryParsePosition(coords.Split(' '), out var error, out var newPos))
+        if(!coords.TryParsePosition(out var newPos))
+        {
+            player.SendMessage($"Bad coordinates to quarantine to: {coords}");
+            return;
+        }
 
-        var loc = "0x00070270 120 -80 18 -0.70710700750351 0 0 -0.70710700750351".Split(' ');
-        AdminCommands.HandleTeleportLOC(player.Session, loc);
-        //player.Teleport(new ACE.Entity.Position(0x00070270, 120, -80, 18, -0.70710700750351 0 0 - 0.70710700750351));
+        //Wipe positions
+        foreach (var pos in wipedPositions)
+            player.SetPosition(pos, null);
+
+        //Set home?
+        //player.SetPosition(PositionType.LinkedLifestone, newPos);
+        //player.SetPosition(PositionType.Sanctuary, newPos);
+        //player.SetPosition(PositionType.Home, newPos);
+
+        //Set flag used to prevent tele/other stuff?
+        //player.SetProperty(FakeBool.Quarantined, true);
+
+        player.Teleport(newPos);
     }
 
     /// <summary>

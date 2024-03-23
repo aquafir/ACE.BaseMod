@@ -1,4 +1,5 @@
-﻿using ACE.Server.Network;
+﻿using ACE.Entity.Enum;
+using ACE.Server.Network;
 using ACE.Server.Network.GameMessages.Messages;
 using System;
 using System.Collections.Generic;
@@ -66,5 +67,54 @@ public static class PlayerSpellExtensions
         }
 
         return true;
+    }
+
+
+    public static void RemoveAllSpells(this Player player)//, bool withNetworking = true)
+    {
+        player.Biota.ClearSpells(player.BiotaDatabaseLock);
+    }
+
+    /// <summary>
+    /// Counterpart to AddSpellsInBulk
+    /// </summary>
+    public static void RemoveSpellsInBulk(this Player player, MagicSchool school, uint spellLevel, bool withNetworking = true)
+    {
+        var spellTable = DatManager.PortalDat.SpellTable;
+
+        foreach (var spellId in Player.PlayerSpellTable)
+        {
+            if (!spellTable.Spells.ContainsKey(spellId))
+            {
+                Console.WriteLine($"Unknown spell ID in PlayerSpellID table: {spellId}");
+                continue;
+            }
+
+            if (player.RemoveKnownSpell(spellId))
+            {
+                var spell = new Spell(spellId, false);
+                if(withNetworking)
+                    player.Session.Network.EnqueueSend(new GameMessageSystemChat($"{spell.Name} removed from spellbook.", ChatMessageType.Broadcast));
+            }
+
+            //var spell = new Spell(spellId, false);
+            //if (spell.School == school && spell.Formula.Level == spellLevel)
+            //{
+            //    if (withNetworking)
+            //        player.LearnSpellWithNetworking(spell.Id, false);
+            //    else
+            //        player.AddKnownSpell(spell.Id);
+            //}
+        }
+    }
+
+
+    public static void UpdateSpellbook(this Player player)
+    {
+        var session = player.Session;
+        foreach(var spell in player.Biota.PropertiesSpellBook)
+        {
+            GameEventMagicUpdateSpell updateSpellEvent = new GameEventMagicUpdateSpell(session, (ushort)spell.Key);
+        }
     }
 }

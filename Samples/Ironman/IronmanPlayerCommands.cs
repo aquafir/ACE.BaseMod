@@ -1,9 +1,8 @@
-﻿using ACE.Server.Command.Handlers;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace Ironman;
 
-public static class IronmanCommands
+public static class IronmanPlayerCommands
 {
     private const string NAME_SUFFIX = "-Im";
     static DateTime timestampLeaderboard = DateTime.MinValue;
@@ -101,65 +100,6 @@ public static class IronmanCommands
         player.SendMessage($"\n{player.GetProperty(FakeString.IronmanPlan)}\n\n{player.GetProperty(FakeString.IronmanFullPlan)}");
     }
 
-    [CommandHandler("ti", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleTI(Session session, params string[] parameters)
-    {
-        var player = session.Player;
-
-        var obj = CommandHandlerHelper.GetLastAppraisedObject(session);
-        if (player is null || obj == null) return;
-
-        if (obj.GetProperty(FakeBool.Ironman) != true)
-        {
-            obj.SetProperty(FakeBool.Ironman, true);
-            player.SendMessage($"{obj.Name} is now Iron");
-        }
-        else
-        {
-            obj.SetProperty(FakeBool.Ironman, false);
-            player.SendMessage($"{obj.Name} is no longer Iron");
-        }
-    }
-
-    [CommandHandler("t1", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleT1(Session session, params string[] parameters)
-    {
-        var player = session.Player;
-        //if (player is null || player.GetProperty(FakeBool.Ironman) != true)
-        //    return;
-
-        //player.QuarantinePlayer();
-
-        player.RollIronmanAttributes();
-
-        //player.SendMessage($"\n{player.GetProperty(FakeString.IronmanPlan)}\n\n{player.GetProperty(FakeString.IronmanFullPlan)}");
-    }
-
-    [CommandHandler("t2", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleT2(Session session, params string[] parameters)
-    {
-        var player = session.Player;
-        player.RollIronmanSkills();
-    }
-
-    [CommandHandler("t3", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleT3(Session session, params string[] parameters)
-    {
-        var player = session.Player;
-
-        var t = $"{player.HeritageGroup} - {player.Gender} - {player.EyesPaletteDID}-->";
-        player.RollIronmanAppearance();
-        t += $"\n{player.HeritageGroup} - {player.Gender} - {player.EyesPaletteDID}";
-        player.SendMessage(t);
-    }
-
-    [CommandHandler("t4", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleT4(Session session, params string[] parameters)
-    {
-        var player = session.Player;
-        player.InitializeIronman();
-    }
-
     [CommandHandler("ironman", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
     public static void HandleIronman(Session session, params string[] parameters)
     {
@@ -167,7 +107,7 @@ public static class IronmanCommands
 
         if (player is null) return;
 
-        if(player.Level > 1)
+        if (player.Level > 1)
         {
 
         }

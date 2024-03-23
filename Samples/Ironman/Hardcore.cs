@@ -10,7 +10,7 @@ public static class Hardcore
         //Ignore non-hardcore
         if (__instance is not Player player)
             return;
-        Debugger.Break();
+        
         if (player.GetProperty(FakeBool.Hardcore) != true)
             return;
 
@@ -39,7 +39,10 @@ public static class Hardcore
         PlayerManager.BroadcastToChannelFromConsole(Channel.Advocate1, $"{player?.Name} has met an untimely demise at the hands of {lastDamager?.Name ?? ""}!");
         if (PatchClass.Settings.QuarantineOnDeath)
         {
-
+            player.QuarantinePlayer();
+            //{ 0x010D, "Admin Waiting Room?" },
+            //{ 0x010E, "Admin Waiting Room? #2" },
+            //{ 0x010F, "Admin Waiting Room? #3" },
         }
         else
             player.PermaDeath();

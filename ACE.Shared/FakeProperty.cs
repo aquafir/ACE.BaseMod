@@ -14,6 +14,7 @@ public enum FakeBool
     /// </summary>
     Permanent = 10006,
     BankUsesDirectDeposit = 10007,
+    Quarantined = 10008,
 }
 public enum FakeDID
 {
