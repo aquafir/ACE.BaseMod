@@ -4,6 +4,8 @@ using Json.System.Text.Json.Serialization;
 
 using ACE.Entity.Models;
 using System.Runtime.CompilerServices;
+using ACE.Server.Factories;
+
 namespace Ironman;
 
 [HarmonyPatch]
@@ -112,4 +114,21 @@ public class PatchClass
     {
         session.Player.TakeDamage(null, DamageType.Fire, 1000000);
     }
+
+
+    static Dictionary<CharacterOption, bool> defaultOptions = new()
+    {
+        [CharacterOption.SideBySideVitals] = true,
+        [CharacterOption.AcceptCorpseLootingPermissions] = true,
+        [CharacterOption.AutomaticallyAcceptFellowshipRequests] = true,
+        [CharacterOption.AlwaysDaylightOutdoors] = true,
+    };
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(PlayerFactory), nameof(PlayerFactory.CharacterCreateSetDefaultCharacterOptions), new Type[] { typeof(Player) })]
+    public static void PostCharacterCreateSetDefaultCharacterOptions(Player player)
+    {
+        foreach(var option in defaultOptions)
+            player.SetCharacterOption(option.Key, option.Value);
+    }
+
 }

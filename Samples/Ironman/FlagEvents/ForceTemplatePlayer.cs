@@ -20,7 +20,8 @@ public class ForceTemplatePlayer
         if (characterCreateInfo.TemplateOption == 0)
             return;
 
-        characterCreateInfo.Name = $"{characterCreateInfo.Name}-Im";        
+        characterCreateInfo.Name = $"{characterCreateInfo.Name}-Im";
+        __result = CreateResult.Success;
     }
 
     //Tracks created but unfinished players
