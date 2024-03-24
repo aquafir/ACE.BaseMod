@@ -2,14 +2,14 @@
 
 namespace QualityOfLife;
 
-[HarmonyPatchCategory(nameof(Defaults))]
-internal static class Defaults
+[HarmonyPatchCategory(nameof(PropertyDefaults))]
+internal static class PropertyDefaults
 {
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Player), nameof(Player.UpdateProperty), new Type[] { typeof(WorldObject), typeof(PropertyInt), typeof(int?), typeof(bool) })]
     public static void PreUpdateProperty(WorldObject obj, PropertyInt prop, int? value, bool broadcast, ref Player __instance)
     {
-        if (value is null || __instance.GetProperty(prop) is not null || !S.Settings.Defaults.IntDefaults.TryGetValue(prop, out var defaultValue))
+        if (value is null || __instance.GetProperty(prop) is not null || !S.Settings.PropertyDefaults.IntDefaults.TryGetValue(prop, out var defaultValue))
             return;
 
         value = defaultValue;
@@ -20,7 +20,7 @@ internal static class Defaults
     [HarmonyPatch(typeof(Player), nameof(Player.UpdateProperty), new Type[] { typeof(WorldObject), typeof(PropertyBool), typeof(bool?), typeof(bool) })]
     public static void PreUpdateProperty(WorldObject obj, PropertyBool prop, bool? value, bool broadcast, ref Player __instance)
     {
-        if (value is null || __instance.GetProperty(prop) is not null || !S.Settings.Defaults.BoolDefaults.TryGetValue(prop, out var defaultValue))
+        if (value is null || __instance.GetProperty(prop) is not null || !S.Settings.PropertyDefaults.BoolDefaults.TryGetValue(prop, out var defaultValue))
             return;
 
         value = defaultValue;
@@ -31,7 +31,7 @@ internal static class Defaults
     [HarmonyPatch(typeof(Player), nameof(Player.UpdateProperty), new Type[] { typeof(WorldObject), typeof(PropertyFloat), typeof(double?), typeof(bool) })]
     public static void PreUpdateProperty(WorldObject obj, PropertyFloat prop, double? value, bool broadcast, ref Player __instance)
     {
-        if (value is null || __instance.GetProperty(prop) is not null || !S.Settings.Defaults.FloatDefaults.TryGetValue(prop, out var defaultValue))
+        if (value is null || __instance.GetProperty(prop) is not null || !S.Settings.PropertyDefaults.FloatDefaults.TryGetValue(prop, out var defaultValue))
             return;
 
         value = defaultValue;
@@ -77,7 +77,7 @@ internal static class Defaults
     [HarmonyPatch(typeof(Player), nameof(Player.UpdateProperty), new Type[] { typeof(WorldObject), typeof(PropertyInt64), typeof(long?), typeof(bool) })]
     public static void PreUpdateProperty(WorldObject obj, PropertyInt64 prop, ref long? value, bool broadcast, ref Player __instance)
     {
-        if (value is null || __instance.GetProperty(prop) is not null || !S.Settings.Defaults.Int64Defaults.TryGetValue(prop, out var defaultValue))
+        if (value is null || __instance.GetProperty(prop) is not null || !S.Settings.PropertyDefaults.Int64Defaults.TryGetValue(prop, out var defaultValue))
             return;
 
         value = defaultValue;

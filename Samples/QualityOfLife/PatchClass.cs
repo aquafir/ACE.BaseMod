@@ -199,7 +199,7 @@ public class PatchClass
     public static void HandleSetProperty(Session session, params string[] parameters)
     {
         var player = session.Player;
-        if (player.MaximumLuminance is not null && S.Settings.Defaults.Int64Defaults.TryGetValue(PropertyInt64.MaximumLuminance, out var value))
+        if (player.MaximumLuminance is not null && S.Settings.PropertyDefaults.Int64Defaults.TryGetValue(PropertyInt64.MaximumLuminance, out var value))
         {
             player.MaximumLuminance = value;
             player.SendMessage($"Your luminance is now {value}");

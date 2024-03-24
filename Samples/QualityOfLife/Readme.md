@@ -68,6 +68,14 @@ Whenever a property is set to something from a `null` value, if a default is in 
 
 
 
+
+
+### Settings Defaults
+
+Set default `CharacterOption` used on character creation.  All default to `true`, so you should change or remove the unwanted ones.
+
+
+
 ### Credits
 
 * `MaxSpecCredits` sets the number of specialization credits
