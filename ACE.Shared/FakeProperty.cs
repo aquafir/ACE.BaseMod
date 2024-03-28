@@ -105,6 +105,7 @@ public enum FakeInt
     ChatInfractions = 20004,
     ItemWieldRequirementEnlightenments = 20005,
     DifficultyTier = 20006,
+    CreatureExType = 20007,
 }
 
 public enum FakeInt64
