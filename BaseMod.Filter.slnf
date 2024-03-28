@@ -3,6 +3,7 @@
     "path": "ACE.BaseMod.sln",
     "projects": [
       "ACE.Shared\\ACE.Shared.csproj",
+      "Samples\\Expansion\\Expansion.csproj",
       "Samples\\Ironman\\Ironman.csproj"
     ]
   }
