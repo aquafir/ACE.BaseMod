@@ -1,6 +1,4 @@
-﻿using ACE.Entity.Enum.Properties;
-
-namespace QuestBonus;
+﻿namespace QuestBonus;
 
 public class Settings
 {

@@ -1,6 +1,4 @@
-﻿using ACE.Server.Network;
-
-namespace ACE.Shared.Helpers;
+﻿namespace ACE.Shared.Helpers;
 
 public static class PositionExtensions
 {
@@ -67,7 +65,7 @@ public static class PositionExtensions
 
             p = new Position(cell, positionData[0], positionData[1], positionData[2], positionData[4], positionData[5], positionData[6], positionData[3]);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return false;
         }

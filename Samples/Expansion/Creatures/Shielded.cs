@@ -11,7 +11,7 @@ public class Shielded : CreatureEx
     {
         base.Initialize();
 
-                Name = "Shielded " + Name;
+        Name = "Shielded " + Name;
     }
 
     //Custom behavior
@@ -24,7 +24,7 @@ public class Shielded : CreatureEx
         base.Heartbeat(currentUnixTime);
 
         if (ticks-- > 0) return;
-        
+
         ticks = reshieldTicks;
         shields = maxShields;
     }
@@ -32,7 +32,7 @@ public class Shielded : CreatureEx
     public override uint TakeDamage(WorldObject source, DamageType damageType, float amount, bool crit = false)
     {
         //Unshielded take normal damage
-        if(shields < 1) return base.TakeDamage(source, damageType, amount, crit);
+        if (shields < 1) return base.TakeDamage(source, damageType, amount, crit);
 
         //Otherwise neutralize
         shields--;

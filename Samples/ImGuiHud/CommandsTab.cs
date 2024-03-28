@@ -42,11 +42,11 @@ public class CommandsTab : Widget
                 //Check if skipped?
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
-                if(ImGui.Button($"{attr.Command}"))
+                if (ImGui.Button($"{attr.Command}"))
                 {
                     GUI.Selected.SendMessage($"Selected {attr.Command}");
                 }
-                
+
 
                 ImGui.TableNextColumn();
                 ImGui.Text($"Selected: {attr.Usage}");
@@ -64,7 +64,7 @@ public class CommandsTab : Widget
                 //        item.Destroy();
                 //    }
 
-                 //   ImGui.EndPopup();
+                //   ImGui.EndPopup();
                 //}
 
                 ImGui.TableNextColumn();

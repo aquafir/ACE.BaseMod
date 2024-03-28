@@ -33,7 +33,7 @@
         public static void PostTakeDamage(WorldObject source, DamageType damageType, float _amount, BodyPart bodyPart, bool crit, AttackConditions attackConditions, ref Player __instance, ref int __result)
         {
             __result = func(__result, __instance.ActiveConnections());
-        }            
+        }
         #endregion
     }
 }

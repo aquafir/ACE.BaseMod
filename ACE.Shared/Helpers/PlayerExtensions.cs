@@ -1,7 +1,5 @@
 ﻿using ACE.DatLoader.FileTypes;
-using ACE.Server.Command.Handlers;
 using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.WorldObjects;
 
 namespace ACE.Shared.Helpers;
 
@@ -36,7 +34,7 @@ public static class PlayerExtensions
     public static void QuarantinePlayer(this Player player, string coords = "0x010D0100 -1.705717 2.126705 0.005000 0.577563 0.000000 0.000000 -0.816346")
     {
         //if (!CommandParameterHelpers.TryParsePosition(coords.Split(' '), out var error, out var newPos))
-        if(!coords.TryParsePosition(out var newPos))
+        if (!coords.TryParsePosition(out var newPos))
         {
             player.SendMessage($"Bad coordinates to quarantine to: {coords}");
             return;

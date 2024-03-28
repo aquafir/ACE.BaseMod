@@ -1,5 +1,7 @@
-﻿namespace uTank2.LootPlugins {
-    public enum BoolValueKey {
+﻿namespace uTank2.LootPlugins
+{
+    public enum BoolValueKey
+    {
         Open = 2,
         Locked = 3,
         HookVisibility = 24, // 0x00000018

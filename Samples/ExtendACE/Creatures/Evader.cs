@@ -11,7 +11,7 @@ public class Evader : CreatureEx
     {
         base.Initialize();
 
-                Name = "Evasive " + Name;
+        Name = "Evasive " + Name;
     }
 
     //Custom behavior

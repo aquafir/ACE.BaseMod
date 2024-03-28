@@ -1,5 +1,7 @@
-﻿namespace uTank2.LootPlugins {
-    public abstract class LootPluginBase {
+﻿namespace uTank2.LootPlugins
+{
+    public abstract class LootPluginBase
+    {
         public abstract LootPluginInfo Startup();
 
         public abstract void Shutdown();

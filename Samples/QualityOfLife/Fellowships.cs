@@ -1,7 +1,5 @@
 ﻿using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
-using Iced.Intel.EncoderInternal;
-using MonoMod.Core.Platforms.Architectures;
 
 namespace QualityOfLife;
 

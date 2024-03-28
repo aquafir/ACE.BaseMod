@@ -28,36 +28,39 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 using AutoLoot.Lib;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using uTank2.LootPlugins;
 
-namespace VTClassic {
-    internal class ComputedItemInfo {
+namespace VTClassic
+{
+    internal class ComputedItemInfo
+    {
         private readonly WorldObject gameItemInfo;
 
-        public ComputedItemInfo(WorldObject gameItemInfo) {
+        public ComputedItemInfo(WorldObject gameItemInfo)
+        {
             this.gameItemInfo = gameItemInfo;
         }
 
-        struct SpellInfo<T> {
+        struct SpellInfo<T>
+        {
             public readonly T Key;
             public readonly double Change;
             public readonly double Bonus;
 
             public SpellInfo(T key, double change)
-                : this(key, change, 0) {
+                : this(key, change, 0)
+            {
             }
 
-            public SpellInfo(T key, double change, double bonus) {
+            public SpellInfo(T key, double change, double bonus)
+            {
                 Key = key;
                 Change = change;
                 Bonus = bonus;
             }
         }
 
-        static ComputedItemInfo() {
+        static ComputedItemInfo()
+        {
             LongValueKeySpellEffects[1616] = new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 20); // Blood Drinker VI
             LongValueKeySpellEffects[2096] = new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 22); // Infected Caress
             LongValueKeySpellEffects[5183] = new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 24); // Incantation of Blood Drinker Post Feb-2013
@@ -125,8 +128,10 @@ namespace VTClassic {
         static readonly Dictionary<int, SpellInfo<IntValueKey>> LongValueKeySpellEffects = new Dictionary<int, SpellInfo<IntValueKey>>();
         static readonly Dictionary<int, SpellInfo<DoubleValueKey>> DoubleValueKeySpellEffects = new Dictionary<int, SpellInfo<DoubleValueKey>>();
 
-        public double BuffedAverageDamage {
-            get {
+        public double BuffedAverageDamage
+        {
+            get
+            {
                 double variance = gameItemInfo.GetValueDouble(DoubleValueKey.Variance, 0.0);
                 int maxDamage = GetBuffedLogValueKey(IntValueKey.MaxDamage);
                 double minDamage = maxDamage - (variance * maxDamage);
@@ -135,8 +140,10 @@ namespace VTClassic {
             }
         }
 
-        public double CalcedBuffedTinkedDamage {
-            get {
+        public double CalcedBuffedTinkedDamage
+        {
+            get
+            {
                 double variance = gameItemInfo.GetValueDouble(DoubleValueKey.Variance, 0.0);
                 int maxDamage = GetBuffedLogValueKey(IntValueKey.MaxDamage);
 
@@ -149,7 +156,8 @@ namespace VTClassic {
                 if (gameItemInfo.GetValueInt(IntValueKey.Material, 0) == 0)
                     numberOfTinksLeft = 0;
 
-                for (int i = 1; i <= numberOfTinksLeft; i++) {
+                for (int i = 1; i <= numberOfTinksLeft; i++)
+                {
                     double ironTinkDoT = CalculateDamageOverTime(maxDamage + 24 + 1, variance);
                     double graniteTinkDoT = CalculateDamageOverTime(maxDamage + 24, variance * .8);
 
@@ -163,7 +171,8 @@ namespace VTClassic {
             }
         }
 
-        public bool CanReachTargetValues(double targetCalcedBuffedTinkedDoT, double targetBuffedMeleeDefenseBonus, double targetBuffedAttackBonus) {
+        public bool CanReachTargetValues(double targetCalcedBuffedTinkedDoT, double targetBuffedMeleeDefenseBonus, double targetBuffedAttackBonus)
+        {
             double buffedMeleeDefenseBonus = GetBuffedDoubleValueKey(DoubleValueKey.MeleeDefenseBonus);
             double buffedAttackBonus = GetBuffedDoubleValueKey(DoubleValueKey.AttackBonus);
 
@@ -179,12 +188,14 @@ namespace VTClassic {
             if (gameItemInfo.GetValueInt(IntValueKey.Material, 0) == 0)
                 numberOfTinksLeft = 0;
 
-            for (int i = 1; i <= numberOfTinksLeft; i++) {
+            for (int i = 1; i <= numberOfTinksLeft; i++)
+            {
                 if (buffedMeleeDefenseBonus < targetBuffedMeleeDefenseBonus)
                     buffedMeleeDefenseBonus += .01;
                 else if (buffedAttackBonus < targetBuffedAttackBonus)
                     buffedAttackBonus += .01;
-                else {
+                else
+                {
                     double ironTinkDoT = CalculateDamageOverTime(maxDamage + 24 + 1, variance);
                     double graniteTinkDoT = CalculateDamageOverTime(maxDamage + 24, variance * .8);
 
@@ -198,8 +209,10 @@ namespace VTClassic {
             return CalculateDamageOverTime(maxDamage + 24, variance) >= targetCalcedBuffedTinkedDoT && buffedMeleeDefenseBonus >= targetBuffedMeleeDefenseBonus && buffedAttackBonus >= targetBuffedAttackBonus;
         }
 
-        public int TotalRatings {
-            get {
+        public int TotalRatings
+        {
+            get
+            {
                 /*
                 DamRating = 370,
                 DamResRating = 371,
@@ -214,7 +227,8 @@ namespace VTClassic {
             }
         }
 
-        public static double CalculateDamageOverTime(int maxDamage, double variance) {
+        public static double CalculateDamageOverTime(int maxDamage, double variance)
+        {
             return CalculateDamageOverTime(maxDamage, variance, 0.1d, 2d);
         }
 
@@ -226,24 +240,30 @@ namespace VTClassic {
         /// <param name="critChance"></param>
         /// <param name="critMultiplier"></param>
         /// <returns></returns>
-        public static double CalculateDamageOverTime(int maxDamage, double variance, double critChance, double critMultiplier) {
+        public static double CalculateDamageOverTime(int maxDamage, double variance, double critChance, double critMultiplier)
+        {
             return maxDamage * ((1 - critChance) * (2 - variance) / 2 + (critChance * critMultiplier));
         }
 
-        public double BuffedMissileDamage {
-            get {
+        public double BuffedMissileDamage
+        {
+            get
+            {
                 return GetBuffedLogValueKey(IntValueKey.MaxDamage) + (((GetBuffedDoubleValueKey(DoubleValueKey.DamageBonus) - 1) * 100) / 3) + GetBuffedLogValueKey(IntValueKey.ElementalDmgBonus);
             }
         }
 
-        public int GetBuffedLogValueKey(IntValueKey key) {
+        public int GetBuffedLogValueKey(IntValueKey key)
+        {
             return GetBuffedLogValueKey(key, 0);
         }
 
-        public int GetBuffedLogValueKey(IntValueKey key, int defaultValue) {
+        public int GetBuffedLogValueKey(IntValueKey key, int defaultValue)
+        {
             int value = gameItemInfo.GetValueInt(key, defaultValue);
             var spells = gameItemInfo.GetSpells();
-            for (int i = 0; i < spells.Count; i++) {
+            for (int i = 0; i < spells.Count; i++)
+            {
                 int spellId = (int)spells[i].Id;
 
                 if (LongValueKeySpellEffects.ContainsKey(spellId) && LongValueKeySpellEffects[spellId].Key == key && LongValueKeySpellEffects[spellId].Bonus != 0)
@@ -253,17 +273,21 @@ namespace VTClassic {
             return value;
         }
 
-        public double GetBuffedDoubleValueKey(DoubleValueKey key) {
+        public double GetBuffedDoubleValueKey(DoubleValueKey key)
+        {
             return GetBuffedDoubleValueKey(key, 0d);
         }
 
-        public double GetBuffedDoubleValueKey(DoubleValueKey key, double defaultValue) {
+        public double GetBuffedDoubleValueKey(DoubleValueKey key, double defaultValue)
+        {
             double value = gameItemInfo.GetValueDouble(key, defaultValue);
             var spells = gameItemInfo.GetSpells();
-            for (int i = 0; i < spells.Count; i++) {
+            for (int i = 0; i < spells.Count; i++)
+            {
                 int spellId = (int)spells[i].Id;
 
-                if (DoubleValueKeySpellEffects.ContainsKey(spellId) && DoubleValueKeySpellEffects[spellId].Key == key && DoubleValueKeySpellEffects[spellId].Bonus != 0) {
+                if (DoubleValueKeySpellEffects.ContainsKey(spellId) && DoubleValueKeySpellEffects[spellId].Key == key && DoubleValueKeySpellEffects[spellId].Bonus != 0)
+                {
                     if ((int)DoubleValueKeySpellEffects[spellId].Change == 1)
                         value *= DoubleValueKeySpellEffects[spellId].Bonus;
                     else

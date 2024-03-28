@@ -1,5 +1,4 @@
 ﻿using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.WorldObjects;
 using ACE.Shared;
 using static ACE.Server.WorldObjects.Player;
 
@@ -20,7 +19,7 @@ public class DirectDeposit
         player.SendMessage($"You are using {(dd ? "no longer" : "now")} direct deposit.");
     }
 
-        [HarmonyPrefix]
+    [HarmonyPrefix]
     [HarmonyPatch(typeof(Player), nameof(Player.HandleActionSellItem), new Type[] { typeof(uint), typeof(List<ItemProfile>) })]
     public static bool PreHandleActionSellItem(uint vendorGuid, List<ItemProfile> itemProfiles, ref Player __instance)
     {
@@ -77,7 +76,7 @@ public class DirectDeposit
         //Increase of adding pyreal stacks add amount directly
         __instance.IncCash(payoutCoinAmount);
         __instance.SendMessage($"Deposited {payoutCoinAmount:N0}.  Balance is {__instance.GetCash():N0}");
-        
+
         vendor.MoneyOutflow += payoutCoinAmount;
 
         // remove sell items from player inventory

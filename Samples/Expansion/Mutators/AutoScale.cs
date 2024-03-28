@@ -1,6 +1,4 @@
 ﻿using ACE.Database;
-using ACE.Entity;
-using ACE.Entity.Models;
 using ACE.Server.Managers;
 
 namespace Expansion.Mutators;
@@ -25,7 +23,7 @@ public class AutoScale : Mutator
         var distance = nearest.Value.Distance2D(creature.Location);
 
         int tier = (int)(distance / TIER_INTERVAL);
-        creature.XpOverride *= (int)Math.Pow(2,tier);
+        creature.XpOverride *= (int)Math.Pow(2, tier);
         creature.ScaleAttributeBase(1 + .5f * tier, attributesToScale);
         creature.ObjScale *= (tier / 3);
         creature.SetMaxVitals();

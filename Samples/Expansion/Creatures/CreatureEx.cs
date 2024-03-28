@@ -1,8 +1,4 @@
-﻿using ACE.Server.Managers;
-using System;
-using System.Runtime.CompilerServices;
-using static ACE.Server.Factories.PlayerFactory;
-//using Weenie = ACE.Entity.Models.Weenie;
+﻿//using Weenie = ACE.Entity.Models.Weenie;
 
 namespace Expansion.Creatures;
 

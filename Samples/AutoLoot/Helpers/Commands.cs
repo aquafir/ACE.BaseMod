@@ -18,7 +18,7 @@ internal class Commands
 
         //Get some profile
         var profile = Profile.SampleProfile;
-        
+
         //Set up whatever needs to (Regexs, etc.)
         profile.Initialize();
 

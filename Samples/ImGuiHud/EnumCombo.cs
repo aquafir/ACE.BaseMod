@@ -1,7 +1,5 @@
-﻿using ACE.Entity.Enum.Properties;
-using ImGuiNET;
+﻿using ImGuiNET;
 using System.Text.RegularExpressions;
-using static HarmonyLib.Code;
 
 namespace ImGuiTest;
 
@@ -29,7 +27,7 @@ public class EnumCombo<TEnum> where TEnum : Enum
         ImGui.PushItemWidth(Width);
         if (ImGui.Combo(Label, ref Index, Options, Options.Length))
         {
-            
+
         }
 
         return false;

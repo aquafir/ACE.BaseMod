@@ -30,7 +30,7 @@
                 ModManager.Log($"Initializing {ID}...");
             }
 
-            Instance = this;            
+            Instance = this;
 
             _settingsWatcher = new FileSystemWatcher()
             {

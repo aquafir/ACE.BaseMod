@@ -1,13 +1,5 @@
-﻿using ACE.Database;
-using ACE.Entity.Enum.Properties;
-using ACE.Entity.Models;
-using ACE.Server.Command.Handlers;
-using ACE.Server.WorldObjects;
-using ACE.Shared;
+﻿using ACE.Entity.Enum.Properties;
 using ACE.Shared.Helpers;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
 namespace Bank;
@@ -123,7 +115,7 @@ public class PatchClass
         //Parse weenie / amount if relevant to command
         if ((verb == Transaction.Give || verb == Transaction.Take))
         {
-            if(String.IsNullOrWhiteSpace(name))
+            if (String.IsNullOrWhiteSpace(name))
             {
                 player.SendMessage($"Specify the name or WCID of the item to transact with.");
                 return;
@@ -235,7 +227,7 @@ public class PatchClass
                 //Get coins and tradenotes
                 var cashItems = player.AllItems().Where(x => x.WeenieClassId == Player.coinStackWcid || x.WeenieClassName.StartsWith("tradenote"));
                 long total = 0;
-                foreach(var item in cashItems)
+                foreach (var item in cashItems)
                     total += item.Value ?? 0;
                 var itemCount = cashItems.Count();
 
@@ -271,9 +263,9 @@ public class PatchClass
 
                 //Withdraw amount
                 long cost = (long)amount * currency.Value;
-                
+
                 //Check for overflow?
-                
+
                 long stored = player.GetBanked(Settings.CashProperty);
                 if (stored < cost)
                 {

@@ -264,7 +264,7 @@ public static class BiotaHelpers
             return;
 
         if (biota.BiotaPropertiesBook is null)
-            biota.BiotaPropertiesBook = new ();
+            biota.BiotaPropertiesBook = new();
 
         biota.BiotaPropertiesBook.MaxNumCharsPerPage = reader.ReadInt32();
         biota.BiotaPropertiesBook.MaxNumPages = reader.ReadInt32();

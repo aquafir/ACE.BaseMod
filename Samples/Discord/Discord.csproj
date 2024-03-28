@@ -23,16 +23,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Modules\PropertyCommandModule.cs" />
-	  <Compile Remove="Modules\SearchCommandModule.cs" />
-	  <Compile Remove="Modules\UploadModule.cs" />
+		<Compile Remove="Modules\PropertyCommandModule.cs" />
+		<Compile Remove="Modules\SearchCommandModule.cs" />
+		<Compile Remove="Modules\UploadModule.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Discord.Net" Version="3.13.0" />
 		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Lib.Harmony" Version="2.3.1.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
@@ -41,6 +41,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.0" />
+		<PackageReference Include="System.Text.Json" Version="7.0.0" Aliases="Json" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,5 +1,7 @@
-﻿namespace uTank2.LootPlugins {
-    public enum DoubleValueKey {
+﻿namespace uTank2.LootPlugins
+{
+    public enum DoubleValueKey
+    {
         ManaRateOfChange = 5,
         MeleeDefenseBonus = 29, // 0x0000001D
         ManaTransferEfficiency = 87, // 0x00000057

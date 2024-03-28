@@ -1,5 +1,7 @@
-﻿namespace uTank2.LootPlugins {
-    public enum ObjectClass {
+﻿namespace uTank2.LootPlugins
+{
+    public enum ObjectClass
+    {
         Unknown,
         MeleeWeapon,
         Armor,

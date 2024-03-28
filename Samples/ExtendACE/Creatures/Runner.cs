@@ -11,7 +11,7 @@ public class Runner : CreatureEx
     {
         base.Initialize();
 
-                Name = "Panicked " + Name;
+        Name = "Panicked " + Name;
     }
 
     //Custom behavior

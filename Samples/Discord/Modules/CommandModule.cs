@@ -1,6 +1,3 @@
-using ACE.Server.WorldObjects;
-using System.Diagnostics;
-
 namespace Discord.Modules;
 
 // Interaction modules must be public and inherit from an IInteractionModuleBase

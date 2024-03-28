@@ -1,5 +1,7 @@
-﻿namespace uTank2.LootPlugins {
-    public enum StringValueKey {
+﻿namespace uTank2.LootPlugins
+{
+    public enum StringValueKey
+    {
         Name = 1,
         Title = 5,
         Inscription = 7,

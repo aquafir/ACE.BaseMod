@@ -25,14 +25,14 @@ public class Drainer : CreatureEx
     public static void PostDoCalculateDamage(Creature attacker, Creature defender, WorldObject damageSource, ref DamageEvent __instance, ref float __result)
     {
         if (attacker is not Drainer d || defender is not Player p) return;
-            if (!__instance.HasDamage) return;
+        if (!__instance.HasDamage) return;
 
         var vital = d.drainType switch
         {
             DamageType.Mana => p.Mana,
             _ => p.Stamina,
-        };        
-        
+        };
+
         var amount = -p.UpdateVitalDelta(vital, -(int)__instance.Damage);
         if (amount > 0)
             p.SendMessage($"{d.Name} has leeched {amount} {d.drainType.GetName()}");

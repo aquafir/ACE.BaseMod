@@ -24,7 +24,7 @@ public class ChatCommandModule : InteractionModuleBase<SocketInteractionContext>
             await RespondAsync();
         }
     }
-    
+
     [SlashCommand("g", "Message gen chat?")]
     public async Task ChatCommand(
     string message

@@ -125,7 +125,7 @@ public class LevelCost : AngouriMathPatch
 
         var sb = new StringBuilder("Level costs: \n");
 
-        uint max = Math.Min(GetMaxLevel(session.Player), low+ range);
+        uint max = Math.Min(GetMaxLevel(session.Player), low + range);
         for (uint i = low; i < max; i++)
         {
             var credits = GetLevelSkillCredits(session.Player, (int)i);

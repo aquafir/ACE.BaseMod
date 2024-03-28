@@ -14,11 +14,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Content Remove="Meta.json" />
+		<Content Remove="Meta.json" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Lib.Harmony" Version="2.3.1.1" />
+		<PackageReference Include="Lib.Harmony" Version="2.3.2" />
+		<PackageReference Include="System.Text.Json" Version="7.0.0" Aliases="Json" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -52,17 +53,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="wwwroot\saves\" />
+		<Folder Include="wwwroot\saves\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="Meta.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
+		<None Include="Meta.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.0" />
+		<PackageReference Include="System.Text.Json" Version="7.0.0" Aliases="Json" />
+
 	</ItemGroup>
 
 	<!--Get rid of assemblies that should be present in ACE-->

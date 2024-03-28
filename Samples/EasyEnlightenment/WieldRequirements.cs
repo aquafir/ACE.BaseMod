@@ -11,7 +11,7 @@ public class WieldRequirements
         if (req is null)
             return true;
 
-        else if(__instance.Enlightenment < req)
+        else if (__instance.Enlightenment < req)
         {
             __result = WeenieError.SkillTooLow;
             __instance.SendMessage($"Unable to wield until you have {req} Enlightenments.");

@@ -33,7 +33,7 @@ public class MissileAttributeDamage : AngouriMathPatch
     [HarmonyPatch(typeof(Creature), nameof(Creature.GetAttributeMod), new Type[] { typeof(WorldObject) })]
     public static bool PreGetAttributeMod(WorldObject weapon, ref Creature __instance, ref float __result)
     {
-        if(__instance is Player player)
+        if (__instance is Player player)
         {
             //Only bow
             var isBow = weapon != null && weapon.IsBow;
@@ -41,7 +41,7 @@ public class MissileAttributeDamage : AngouriMathPatch
 
             var attribute = isBow || weapon?.WeaponSkill == Skill.FinesseWeapons ? __instance.Coordination : __instance.Strength;
 
-            __result = func((int)attribute.Current, player.ActiveConnections()); 
+            __result = func((int)attribute.Current, player.ActiveConnections());
             //SkillFormula.GetAttributeMod((int)attribute.Current, isBow);
 
             return false;

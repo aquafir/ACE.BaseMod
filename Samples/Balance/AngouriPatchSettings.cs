@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace Balance;
+﻿namespace Balance;
 
 public partial class AngouriPatchSettings
 {
@@ -35,7 +33,7 @@ public partial class AngouriPatchSettings
         }
 
         var patch = Activator.CreateInstance(type);
-        if(patch is not AngouriMathPatch angouriPatch)
+        if (patch is not AngouriMathPatch angouriPatch)
         {
             Debugger.Break();
             throw new Exception();

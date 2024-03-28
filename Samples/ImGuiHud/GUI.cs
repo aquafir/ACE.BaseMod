@@ -131,7 +131,7 @@ public class GUI : Overlay
     public static Player Selected;
     protected override void Render()
     {
-        if(Selected is not null)
+        if (Selected is not null)
         {
             ImGui.Text($"{Selected.Name} - {Selected.Character.Id} - {Selected.Account.AccountName}");
         }
@@ -148,7 +148,7 @@ public class GUI : Overlay
         {
             if (ImGui.BeginTabBar("TabBar"))
             {
-                foreach(var tab in tabs)
+                foreach (var tab in tabs)
                 {
                     //if(ImGui.BeginTabItem(tab.Label, ref tab.Open, ImGuiTabItemFlags.None))
                     if (ImGui.BeginTabItem(tab.Label))
@@ -160,7 +160,8 @@ public class GUI : Overlay
 
                 ImGui.EndTabBar();
             }
-        }catch(Exception ex)
+        }
+        catch (Exception ex)
         {
             ModManager.Log(ex.ToString(), ModManager.LogLevel.Error);
         }

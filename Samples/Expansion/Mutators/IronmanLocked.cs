@@ -14,7 +14,7 @@ internal class IronmanLocked : Mutator
     public override bool TryMutateCorpse(HashSet<Mutation> mutations, Creature creature, DamageHistoryInfo killer, Corpse corpse, WorldObject item)
     {
         item.SetProperty(FakeBool.Ironman, true);
-        
+
         return true;
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace AutoLoot.Loot;
+﻿namespace AutoLoot.Loot;
 
 public class StringRequirement
 {

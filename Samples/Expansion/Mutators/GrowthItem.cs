@@ -17,7 +17,7 @@ internal class GrowthItem : Mutator
         //Item costs
         //if (!S.Settings.GrowthTierXpCost.TryGetValue(profile.Tier, out var xpCost))
         //    return false;
-        var xpCost = (long)(S.Settings.GrowthXpBase * Math.Pow(S.Settings.GrowthXpScaleByTier, profile.Tier-1));
+        var xpCost = (long)(S.Settings.GrowthXpBase * Math.Pow(S.Settings.GrowthXpScaleByTier, profile.Tier - 1));
 
         item.ItemXpStyle = ItemXpStyle.ScalesWithLevel;
         item.ItemTotalXp = 0;

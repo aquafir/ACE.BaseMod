@@ -16,11 +16,11 @@ public static class ItemLevelUpGrowth
         var storedType = item.GetProperty(FakeInt.OriginalItemType);
         if (storedType is null) return;
         var itemType = (TreasureItemType_Orig)storedType;
-        
 
-        for (int level = prevItemLevel+1; level <= item.ItemLevel; level++)
+
+        for (int level = prevItemLevel + 1; level <= item.ItemLevel; level++)
         {
-            if(!item.TryGrowItem(level, itemType, __instance))
+            if (!item.TryGrowItem(level, itemType, __instance))
             {
                 //Quit early?
                 __instance.SendMessage($"Failed to apply Augment to {item.Name} for level {level}");
@@ -51,7 +51,7 @@ public static class ItemLevelUpGrowth
 
         //Apply
         if (!item.TryAugmentWith(augment))
-            return false;            
+            return false;
 
         player.SendMessage($"Growing {item.Name} with {augment} for level {level}/{item.ItemMaxLevel}");
         return true;

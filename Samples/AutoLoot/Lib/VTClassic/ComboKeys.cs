@@ -27,13 +27,8 @@
 //  THE SOFTWARE.
 ///////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-
-using uTank2.LootPlugins;
-
-namespace VTClassic {
+namespace VTClassic
+{
 #if VTC_EDITOR
 
     internal static class ComboKeys

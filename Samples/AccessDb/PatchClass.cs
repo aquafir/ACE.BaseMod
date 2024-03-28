@@ -1,16 +1,9 @@
-﻿using ACE.Database.Models.Shard;
+﻿using ACE.Database;
+using ACE.Database.Entity;
+using ACE.Database.Models.Shard;
 using ACE.Database.Models.World;
-using ACE.Database;
 using ACE.Entity.Enum.Properties;
 using ACE.Server.Managers;
-using Microsoft.EntityFrameworkCore;
-using ACE.Server.WorldObjects;
-using ACE.Server.Entity.Actions;
-using ACE.Database.SQLFormatters.Shard;
-using ACE.Database.Entity;
-using ACE.Entity.Models;
-using ACE.Server.Network.GameEvent.Events;
-using System.Net;
 
 namespace AccessDb;
 
@@ -85,7 +78,7 @@ public class PatchClass
             ModManager.DisableModByPath(Mod.ModPath);
             return;
         }
-        
+
         Mod.State = ModState.Running;
     }
 
@@ -324,6 +317,6 @@ public class PatchClass
 
             ModManager.Log(sb.ToString());
         }
-    } 
+    }
     #endregion
 }

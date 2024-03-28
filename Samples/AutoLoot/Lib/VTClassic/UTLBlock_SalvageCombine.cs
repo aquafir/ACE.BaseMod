@@ -27,16 +27,14 @@
 //  THE SOFTWARE.
 ///////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 #if VTC_PLUGIN
-using uTank2.LootPlugins;
 #endif
 
-namespace VTClassic.UTLBlockHandlers {
-    internal class UTLBlock_SalvageCombine : IUTLFileBlockHandler {
+namespace VTClassic.UTLBlockHandlers
+{
+    internal class UTLBlock_SalvageCombine : IUTLFileBlockHandler
+    {
         const int SALVAGEBLOCK_FILE_FORMAT_VERSION = 1;
         static Random rand = new Random();
 
@@ -44,7 +42,8 @@ namespace VTClassic.UTLBlockHandlers {
         public Dictionary<int, string> MaterialCombineStrings = new Dictionary<int, string>();
         public Dictionary<int, int> MaterialValueModeValues = new Dictionary<int, int>();
 
-        public UTLBlock_SalvageCombine() {
+        public UTLBlock_SalvageCombine()
+        {
             //Default rules
             DefaultCombineString = "1-6, 7-8, 9, 10";
 
@@ -84,12 +83,15 @@ namespace VTClassic.UTLBlockHandlers {
         }
 
         #region CombineString Parsing
-        struct sDoublePair {
+        struct sDoublePair
+        {
             public double a;
             public double b;
         }
-        static int GetRangeIndex(List<sDoublePair> Ranges, double val) {
-            for (int i = 0; i < Ranges.Count; ++i) {
+        static int GetRangeIndex(List<sDoublePair> Ranges, double val)
+        {
+            for (int i = 0; i < Ranges.Count; ++i)
+            {
                 //Gaps in ranges go to the previous range
                 if (Ranges[i].a > val)
                     return i - 1;
@@ -101,12 +103,14 @@ namespace VTClassic.UTLBlockHandlers {
             return Ranges.Count;
         }
 
-        static List<sDoublePair> ParseCombineSting(string pcombinestring) {
+        static List<sDoublePair> ParseCombineSting(string pcombinestring)
+        {
             List<sDoublePair> Ranges = new List<sDoublePair>();
 
             //Look through the string and delete all characters we don't understand
             string combinestring = pcombinestring;
-            for (int i = combinestring.Length - 1; i >= 0; --i) {
+            for (int i = combinestring.Length - 1; i >= 0; --i)
+            {
                 if (Char.IsDigit(combinestring[i])) continue;
                 if (combinestring[i] == ',') continue;
                 if (combinestring[i] == ';') continue;
@@ -118,17 +122,20 @@ namespace VTClassic.UTLBlockHandlers {
 
             //Split and parse string into ranges
             string[] toks = combinestring.Split(';', ',');
-            foreach (string tok in toks) {
+            foreach (string tok in toks)
+            {
                 if (tok.Length == 0) continue;
                 string[] numbers = tok.Split('-');
                 if (numbers.Length == 0) continue;
 
                 sDoublePair addpair = new sDoublePair();
-                if (numbers.Length == 1) {
+                if (numbers.Length == 1)
+                {
                     addpair.a = double.Parse(numbers[0], System.Globalization.CultureInfo.InvariantCulture);
                     addpair.b = addpair.a;
                 }
-                else {
+                else
+                {
                     addpair.a = double.Parse(numbers[0], System.Globalization.CultureInfo.InvariantCulture);
                     addpair.b = double.Parse(numbers[1], System.Globalization.CultureInfo.InvariantCulture);
                 }
@@ -158,103 +165,106 @@ namespace VTClassic.UTLBlockHandlers {
         }
 		*/
 
-        string GetCombineString(int material) {
+        string GetCombineString(int material)
+        {
             if (MaterialCombineStrings.ContainsKey(material))
                 return MaterialCombineStrings[material];
             else
                 return DefaultCombineString;
         }
 
-		public List<int> TryCombineMultiple(List<WorldObject> availablebags)
-		{
-			if (availablebags.Count == 0) return new List<int>();
+        public List<int> TryCombineMultiple(List<WorldObject> availablebags)
+        {
+            if (availablebags.Count == 0) return new List<int>();
 
-            var material = (int) ((availablebags[0].MaterialType) ?? 0);
-			List<sDoublePair> ranges = ParseCombineSting(GetCombineString(material));
+            var material = (int)((availablebags[0].MaterialType) ?? 0);
+            List<sDoublePair> ranges = ParseCombineSting(GetCombineString(material));
 
-			//Bin the available bags by which part of the combine string they fit in.
-			Dictionary<int, List<WorldObject>> binnedbags = new Dictionary<int, List<WorldObject>>();
-			foreach (WorldObject zz in availablebags)
-			{
-				int bin = GetRangeIndex(ranges, zz.Workmanship ?? 0);
-				if (!binnedbags.ContainsKey(bin)) binnedbags.Add(bin, new List<WorldObject>());
-				binnedbags[bin].Add(zz);
-			}
+            //Bin the available bags by which part of the combine string they fit in.
+            Dictionary<int, List<WorldObject>> binnedbags = new Dictionary<int, List<WorldObject>>();
+            foreach (WorldObject zz in availablebags)
+            {
+                int bin = GetRangeIndex(ranges, zz.Workmanship ?? 0);
+                if (!binnedbags.ContainsKey(bin)) binnedbags.Add(bin, new List<WorldObject>());
+                binnedbags[bin].Add(zz);
+            }
 
-			foreach (KeyValuePair<int, List<WorldObject>> kp in binnedbags)
-			{
-				if (kp.Value.Count < 2) continue;
+            foreach (KeyValuePair<int, List<WorldObject>> kp in binnedbags)
+            {
+                if (kp.Value.Count < 2) continue;
 
-				//We now have a list of every piece of salvage that can be combined. What should we combine?
-				//Finding the best possible combination of bags is equivalent to the knapsack problem, an NP-complete computational problem.
-				//That is a bit much for something that is called all the time, so we will just use stupid methods of choosing bags.
-				List<int> ret = new List<int>();
+                //We now have a list of every piece of salvage that can be combined. What should we combine?
+                //Finding the best possible combination of bags is equivalent to the knapsack problem, an NP-complete computational problem.
+                //That is a bit much for something that is called all the time, so we will just use stupid methods of choosing bags.
+                List<int> ret = new List<int>();
 
-				if (MaterialValueModeValues.ContainsKey(material))
-				{
-					//Salvage for money mode.
+                if (MaterialValueModeValues.ContainsKey(material))
+                {
+                    //Salvage for money mode.
 
-					//First, we see if we can cap out a bag.
-					int valuemodevalue = MaterialValueModeValues[material];
-					int vsum = 0;
-					int csum = 0;
+                    //First, we see if we can cap out a bag.
+                    int valuemodevalue = MaterialValueModeValues[material];
+                    int vsum = 0;
+                    int csum = 0;
 
-					foreach (WorldObject ii in kp.Value)
-					{
-						ret.Add((int)ii.Guid.Full);
-						vsum += ii.Value ?? 0;
-						csum += ii.Structure ?? 0;
-					}
+                    foreach (WorldObject ii in kp.Value)
+                    {
+                        ret.Add((int)ii.Guid.Full);
+                        vsum += ii.Value ?? 0;
+                        csum += ii.Structure ?? 0;
+                    }
 
-					//If we are above the value, combine.
-					if (vsum >= valuemodevalue)
-						return ret;
+                    //If we are above the value, combine.
+                    if (vsum >= valuemodevalue)
+                        return ret;
 
-					//Total bags are below target value. Try combining some without exceeding 100.
-					//In theory this is a hard problem. So to avoid wasting time, we will just randomly try a few possibilities.
+                    //Total bags are below target value. Try combining some without exceeding 100.
+                    //In theory this is a hard problem. So to avoid wasting time, we will just randomly try a few possibilities.
 
-					for (int i = 0; i < 12; ++i)
-					{
-						int ind1 = rand.Next(kp.Value.Count);
-						int ind2 = rand.Next(kp.Value.Count);
-						if (ind1 == ind2) continue;
+                    for (int i = 0; i < 12; ++i)
+                    {
+                        int ind1 = rand.Next(kp.Value.Count);
+                        int ind2 = rand.Next(kp.Value.Count);
+                        if (ind1 == ind2) continue;
 
-						if (((kp.Value[ind1].Structure ?? 0) + (kp.Value[ind2].Structure ?? 0)) < 100)
-						{
-							//This pair is good.
-							ret.Clear();
-							ret.Add((int)kp.Value[ind1].Guid.Full);
-							ret.Add((int)kp.Value[ind2].Guid.Full);
-							return ret;
-						}
-					}
-				}
-				else
-				{
-					//Salvage for maximum bags mode.
-					//Just loop and add bags until we are over 100 units.
+                        if (((kp.Value[ind1].Structure ?? 0) + (kp.Value[ind2].Structure ?? 0)) < 100)
+                        {
+                            //This pair is good.
+                            ret.Clear();
+                            ret.Add((int)kp.Value[ind1].Guid.Full);
+                            ret.Add((int)kp.Value[ind2].Guid.Full);
+                            return ret;
+                        }
+                    }
+                }
+                else
+                {
+                    //Salvage for maximum bags mode.
+                    //Just loop and add bags until we are over 100 units.
 
-					int csum = 0;
+                    int csum = 0;
 
-					foreach (WorldObject ii in kp.Value)
-					{
-						ret.Add((int)ii.Guid.Full);
-						csum += ii.Structure ?? 0;
-						if (csum >= 100) break;
-					}
+                    foreach (WorldObject ii in kp.Value)
+                    {
+                        ret.Add((int)ii.Guid.Full);
+                        csum += ii.Structure ?? 0;
+                        if (csum >= 100) break;
+                    }
 
-					return ret;
-				}
-			}
+                    return ret;
+                }
+            }
 
-			return new List<int>();
-		}
+            return new List<int>();
+        }
 
-        public string BlockTypeID {
+        public string BlockTypeID
+        {
             get { return "SalvageCombine"; }
         }
 
-        public void Read(System.IO.StreamReader inf, int len) {
+        public void Read(System.IO.StreamReader inf, int len)
+        {
             MaterialValueModeValues.Clear();
 
             string formatversion = inf.ReadLine();
@@ -263,7 +273,8 @@ namespace VTClassic.UTLBlockHandlers {
 
             MaterialCombineStrings.Clear();
             int nummatstrings = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
-            for (int i = 0; i < nummatstrings; ++i) {
+            for (int i = 0; i < nummatstrings; ++i)
+            {
                 int mat = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
                 string cmb = inf.ReadLine();
                 MaterialCombineStrings[mat] = cmb;
@@ -274,26 +285,30 @@ namespace VTClassic.UTLBlockHandlers {
 
             //MaterialValueModeValues.Clear();
             int nummatvalmodevals = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
-            for (int i = 0; i < nummatvalmodevals; ++i) {
+            for (int i = 0; i < nummatvalmodevals; ++i)
+            {
                 int k = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
                 int v = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
                 MaterialValueModeValues[k] = v;
             }
         }
 
-        public void Write(CountedStreamWriter inf) {
+        public void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(SALVAGEBLOCK_FILE_FORMAT_VERSION);
 
             inf.WriteLine(DefaultCombineString);
 
             inf.WriteLine(MaterialCombineStrings.Count);
-            foreach (KeyValuePair<int, string> kp in MaterialCombineStrings) {
+            foreach (KeyValuePair<int, string> kp in MaterialCombineStrings)
+            {
                 inf.WriteLine(kp.Key);
                 inf.WriteLine(kp.Value);
             }
 
             inf.WriteLine(MaterialValueModeValues.Count);
-            foreach (KeyValuePair<int, int> kp in MaterialValueModeValues) {
+            foreach (KeyValuePair<int, int> kp in MaterialValueModeValues)
+            {
                 inf.WriteLine(kp.Key);
                 inf.WriteLine(kp.Value);
             }

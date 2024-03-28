@@ -1,6 +1,4 @@
-﻿using ACE.Entity;
-
-namespace Expansion.Features;
+﻿namespace Expansion.Features;
 [HarmonyPatchCategory(nameof(Feature.MutatorHooks))]
 internal class MutatorHooks
 {

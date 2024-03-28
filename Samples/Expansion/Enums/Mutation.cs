@@ -21,11 +21,11 @@ public enum Mutation
 [Flags]
 public enum MutationEvent
 {
-    Loot                = 0x1,      //LootGenerationFactory.CreateRandomLootObjects_New
-    Corpse              = 0x2,      //Creature.GenerateTreasure
-    Generator           = 0x4,      //GeneratorProfile.TreasureGenerator
-    Factory             = 0x8,      //WeenieFactory different creates.  Probably more expensive
-    EnterWorld          = 0x10,     //WeenieObject.EnterWorld.  Has location/scale?
+    Loot = 0x1,      //LootGenerationFactory.CreateRandomLootObjects_New
+    Corpse = 0x2,      //Creature.GenerateTreasure
+    Generator = 0x4,      //GeneratorProfile.TreasureGenerator
+    Factory = 0x8,      //WeenieFactory different creates.  Probably more expensive
+    EnterWorld = 0x10,     //WeenieObject.EnterWorld.  Has location/scale?
     Containers = Corpse | Generator,
     //Factory = 0x4,  //LootGenerationFactory.CreateRandomLootObjects
 }

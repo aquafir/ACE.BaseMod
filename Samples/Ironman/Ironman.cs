@@ -1,10 +1,6 @@
 ﻿using ACE.Entity.Enum.Properties;
-using ACE.Server.Network.GameMessages.Messages;
-using ACE.DatLoader.Entity;
-using ACE.Server.Command.Handlers;
 using ACE.Server.Entity.Actions;
-using ACE.Server.Network;
-using ACE.Entity.Enum;
+using ACE.Server.Network.GameMessages.Messages;
 
 namespace Ironman;
 
@@ -23,11 +19,12 @@ public static class FakeIronman
 
         //Wipe spells
         player.RemoveAllSpells();
-               
+
         //Schedule learning level 1s
         var actionChain = new ActionChain();
         actionChain.AddDelaySeconds(5);
-        actionChain.AddAction(player, () => {
+        actionChain.AddAction(player, () =>
+        {
             if (PatchClass.Settings.UseSpellList)
             {
                 foreach (var spell in PatchClass.Settings.DefaultSpells)
@@ -202,8 +199,8 @@ public static class FakeIronman
         if (player is null)
             return;
 
-        PropertyAttribute primary = (PropertyAttribute)ThreadSafeRandom.Next(1, 6);        
-        foreach(var attr in Enum.GetValues<PropertyAttribute>())
+        PropertyAttribute primary = (PropertyAttribute)ThreadSafeRandom.Next(1, 6);
+        foreach (var attr in Enum.GetValues<PropertyAttribute>())
         {
             if (attr == PropertyAttribute.Undef) continue;
 
@@ -223,7 +220,7 @@ public static class FakeIronman
         if (player is null)
             return;
 
-        player.RandomizeAppearance();        
+        player.RandomizeAppearance();
         player.EnqueueBroadcastUpdateObject();
     }
 

@@ -11,7 +11,7 @@ public class Accurate : CreatureEx
     {
         base.Initialize();
 
-                Name = "Accurate " + Name;
+        Name = "Accurate " + Name;
     }
 
     //Custom behavior

@@ -72,7 +72,7 @@
                 Directory.CreateDirectory(PatchClass.Settings.SaveDirectory);
                 ModManager.Log($"Created directory for saves: {PatchClass.Settings.SaveDirectory}");
             }
- 
+
             if (Mod.State == ModState.Error)
             {
                 ModManager.DisableModByPath(Mod.ModPath);

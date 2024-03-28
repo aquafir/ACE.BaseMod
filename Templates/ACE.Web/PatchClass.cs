@@ -6,11 +6,11 @@ public class PatchClass
     #region Settings
     const int RETRIES = 10;
 
-    public  Settings Settings = new();
+    public Settings Settings = new();
     static string settingsPath => Path.Combine(Mod.ModPath, "Settings.json");
     private FileInfo settingsInfo = new(settingsPath);
 
-    private  JsonSerializerOptions _serializeOptions = new()
+    private JsonSerializerOptions _serializeOptions = new()
     {
         WriteIndented = true,
         AllowTrailingCommas = true,
@@ -18,7 +18,7 @@ public class PatchClass
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
-    private  void SaveSettings()
+    private void SaveSettings()
     {
         string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
 
@@ -29,7 +29,7 @@ public class PatchClass
         }
     }
 
-    private  void LoadSettings()
+    private void LoadSettings()
     {
         if (!settingsInfo.Exists)
         {
@@ -59,7 +59,7 @@ public class PatchClass
     #endregion
 
     #region Start/Shutdown
-    public  void Start()
+    public void Start()
     {
         //Need to decide on async use
         Mod.State = ModState.Loading;
@@ -76,7 +76,7 @@ public class PatchClass
         Mod.State = ModState.Running;
     }
 
-    public  void Shutdown()
+    public void Shutdown()
     {
         //if (Mod.State == ModState.Running)
         // Shut down enabled mod...
@@ -111,7 +111,8 @@ public class PatchClass
         try
         {
             app.Stop();
-        }catch(Exception ex)
+        }
+        catch (Exception ex)
         {
             ModManager.Log($"Error shutting down web app: {ex.Message}", ModManager.LogLevel.Error);
             Mod.State = ModState.Error;

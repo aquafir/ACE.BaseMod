@@ -39,8 +39,8 @@ public class Recklessness
 
         // damage rating is increased by 20 for specialized, and 10 for trained.
         // incoming non-critical damage from all sources is increased by the same.
-        var damageRating = skill.AdvancementClass == SkillAdvancementClass.Specialized ? 
-            PatchClass.Settings.Recklessness.RatingSpecialized : 
+        var damageRating = skill.AdvancementClass == SkillAdvancementClass.Specialized ?
+            PatchClass.Settings.Recklessness.RatingSpecialized :
             PatchClass.Settings.Recklessness.RatingTrained;
 
         // if recklessness skill is lower than current attack skill (as determined by your equipped weapon)

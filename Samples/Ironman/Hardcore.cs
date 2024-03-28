@@ -10,7 +10,7 @@ public static class Hardcore
         //Ignore non-hardcore
         if (__instance is not Player player)
             return;
-        
+
         if (player.GetProperty(FakeBool.Hardcore) != true)
             return;
 

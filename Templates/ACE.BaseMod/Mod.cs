@@ -21,7 +21,7 @@ public class Mod : IHarmonyMod
     private readonly TimeSpan _reloadInterval = TimeSpan.FromSeconds(3);
 
     private PatchClass patch = new();
-    public static ModState State = ModState.None; 
+    public static ModState State = ModState.None;
     #endregion
 
     #region Initialize / Dispose (called by ACE)

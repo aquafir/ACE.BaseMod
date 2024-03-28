@@ -1,13 +1,6 @@
 ﻿using ACE.Server.Managers;
 using Achievements.Data;
 using Achievements.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Achievements;
 
@@ -28,7 +21,7 @@ public class AdventurerTracker
 
     public void Initialize()
     {
-        foreach(var player in PlayerManager.GetAllOnline())
+        foreach (var player in PlayerManager.GetAllOnline())
             TrackOrAddAdventurer(player);
     }
 
@@ -41,8 +34,8 @@ public class AdventurerTracker
             adventurer = new Adventurer
             {
                 AdventurerId = player.Character.Id,
-                Kills = new (),
-                Lands = new (),
+                Kills = new(),
+                Lands = new(),
             };
 
             _context.ChangeTracker.DetectChanges();

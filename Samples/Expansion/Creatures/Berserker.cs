@@ -11,7 +11,7 @@ public class Berserker : CreatureEx
     {
         base.Initialize();
 
-                Name = "Raging " + Name;
+        Name = "Raging " + Name;
     }
 
     //Custom behavior

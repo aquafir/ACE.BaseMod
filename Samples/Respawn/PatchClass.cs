@@ -1,12 +1,4 @@
-﻿using ACE.Common;
-using ACE.Entity;
-using ACE.Server.Managers;
-using ACE.Server.Network;
-using ACE.Server.WorldObjects;
-using HarmonyLib;
-using System.Collections.Generic;
-using System.Formats.Asn1;
-using System.Reflection.Emit;
+﻿using ACE.Server.Managers;
 
 namespace Respawn
 {

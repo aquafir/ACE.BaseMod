@@ -6,7 +6,7 @@ public class GrantExperience : AngouriMathPatch
 {
     #region Fields / Props   
     public override string Formula { get; set; } = "P(0 if t = 0, x * 3/n)";
-    protected override Dictionary<string, MType>  Variables { get; } = new()
+    protected override Dictionary<string, MType> Variables { get; } = new()
     {
         ["x"] = MType.Long, // xp amount
         ["t"] = MType.Int,  // type

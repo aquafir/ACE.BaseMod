@@ -27,25 +27,24 @@
 //  THE SOFTWARE.
 ///////////////////////////////////////////////////////////////////////////////
 
-using ACE.Server.Entity.Actions;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using uTank2.LootPlugins;
-
-namespace VTClassic {
-    public class LootCore : uTank2.LootPlugins.LootPluginBase, uTank2.LootPlugins.ILootPluginCapability_SalvageCombineDecision2, uTank2.LootPlugins.ILootPluginCapability_GetExtraOptions {
+namespace VTClassic
+{
+    public class LootCore : uTank2.LootPlugins.LootPluginBase, uTank2.LootPlugins.ILootPluginCapability_SalvageCombineDecision2, uTank2.LootPlugins.ILootPluginCapability_GetExtraOptions
+    {
         internal static LootCore Instance;
 
-        internal static void WriteToChat(string s) {
+        internal static void WriteToChat(string s)
+        {
             Console.WriteLine(s);
         }
 
-        internal static void WriteToChat(string s, int c, int w) {
+        internal static void WriteToChat(string s, int c, int w)
+        {
             Console.WriteLine(s);
         }
 
-        void ExceptionHandler(Exception ex) {
+        void ExceptionHandler(Exception ex)
+        {
             WriteToChat("Exception: " + ex.ToString(), 6, 1);
         }
 
@@ -54,19 +53,23 @@ namespace VTClassic {
         int noid = 0;
 #endif
 
-        public override bool DoesPotentialItemNeedID(WorldObject item, Player player) {
+        public override bool DoesPotentialItemNeedID(WorldObject item, Player player)
+        {
             return false;
         }
 
-        public override uTank2.LootPlugins.LootAction GetLootDecision(WorldObject item, Player player) {
-            try {
+        public override uTank2.LootPlugins.LootAction GetLootDecision(WorldObject item, Player player)
+        {
+            try
+            {
                 if (LootRules == null) return uTank2.LootPlugins.LootAction.NoLoot;
 
                 string matchedrulename;
                 int data1;
                 eLootAction act = LootRules.Classify(item, player, out matchedrulename, out data1);
                 LootAction vtaction = LootAction.NoLoot;
-                switch (act) {
+                switch (act)
+                {
                     case eLootAction.Keep:
                         vtaction = LootAction.Keep;
                         break;
@@ -86,36 +89,45 @@ namespace VTClassic {
                 vtaction.RuleName = matchedrulename;
                 return vtaction;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 ExceptionHandler(ex);
             }
 
             return uTank2.LootPlugins.LootAction.NoLoot;
         }
 
-        public override void LoadProfile(string filename, bool newprofile) {
-            try {
+        public override void LoadProfile(string filename, bool newprofile)
+        {
+            try
+            {
 #if DEBUGMSG
                 neededid = 0;
                 noid = 0;
 #endif
 
-                if (newprofile) {
+                if (newprofile)
+                {
                     LootRules = new cLootRules();
-                    using (System.IO.FileStream fs = new System.IO.FileStream(filename, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None)) {
-                        using (CountedStreamWriter sr = new CountedStreamWriter(fs)) {
+                    using (System.IO.FileStream fs = new System.IO.FileStream(filename, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None))
+                    {
+                        using (CountedStreamWriter sr = new CountedStreamWriter(fs))
+                        {
                             LootRules.Write(sr);
                         }
                     }
 
                     WriteToChat("Created blank profile " + filename + ".");
                 }
-                else {
+                else
+                {
                     if (!System.IO.File.Exists(filename)) return;
 
                     LootRules = new cLootRules();
-                    using (System.IO.FileStream fs = new System.IO.FileStream(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read)) {
-                        using (System.IO.StreamReader sr = new System.IO.StreamReader(fs)) {
+                    using (System.IO.FileStream fs = new System.IO.FileStream(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read))
+                    {
+                        using (System.IO.StreamReader sr = new System.IO.StreamReader(fs))
+                        {
                             if (LootRules.Read(sr, -1))
                                 WriteToChat("Load profile " + filename + " successful (file version " + LootRules.UTLFileVersion.ToString() + ").");
                             else
@@ -125,16 +137,20 @@ namespace VTClassic {
 
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 ExceptionHandler(ex);
             }
         }
 
-        public override void UnloadProfile() {
-            try {
+        public override void UnloadProfile()
+        {
+            try
+            {
                 LootRules = null;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 ExceptionHandler(ex);
             }
         }
@@ -142,40 +158,52 @@ namespace VTClassic {
         cLootRules LootRules = null;
         //MyClasses.MetaViewWrappers.IView view;
 
-        public override void OpenEditorForProfile() {
-            try {
+        public override void OpenEditorForProfile()
+        {
+            try
+            {
 
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 ExceptionHandler(ex);
             }
         }
 
-        public override void CloseEditorForProfile() {
-            try {
+        public override void CloseEditorForProfile()
+        {
+            try
+            {
                 //view.Dispose();
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 ExceptionHandler(ex);
             }
         }
 
-        public override uTank2.LootPlugins.LootPluginInfo Startup() {
-            try {
+        public override uTank2.LootPlugins.LootPluginInfo Startup()
+        {
+            try
+            {
                 Instance = this;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 ExceptionHandler(ex);
             }
 
             return new uTank2.LootPlugins.LootPluginInfo("utl");
         }
 
-        public override void Shutdown() {
-            try {
+        public override void Shutdown()
+        {
+            try
+            {
                 Instance = null;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 ExceptionHandler(ex);
             }
         }
@@ -195,7 +223,8 @@ namespace VTClassic {
 
         #region ILootPluginCapability_SalvageCombineDecision2 Members
 
-        public List<int> ChooseBagsToCombine(List<WorldObject> availablebags) {
+        public List<int> ChooseBagsToCombine(List<WorldObject> availablebags)
+        {
             UTLBlockHandlers.UTLBlock_SalvageCombine CombineBlock = LootRules.ExtraBlockManager.GetFirstBlock("SalvageCombine") as UTLBlockHandlers.UTLBlock_SalvageCombine;
 
             return CombineBlock.TryCombineMultiple(availablebags);
@@ -205,7 +234,8 @@ namespace VTClassic {
 
         #region ILootPluginCapability_GetExtraOptions Members
 
-        public eLootPluginExtraOption GetExtraOptions() {
+        public eLootPluginExtraOption GetExtraOptions()
+        {
             return eLootPluginExtraOption.HideEditorCheckbox;
         }
 

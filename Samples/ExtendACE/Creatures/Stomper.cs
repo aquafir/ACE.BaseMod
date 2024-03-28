@@ -25,13 +25,13 @@ public class Stomper : CreatureEx
         if (attacker is not Stomper c || defender is not Player p)
             return;
 
-        foreach(Player n in p.GetNearbyPlayers(c, targets, range))
+        foreach (Player n in p.GetNearbyPlayers(c, targets, range))
         {
             //Skip self
             if (n == p) continue;
 
             var distance = n.GetDistance(c);
-            
+
             //Todo: fix GetNearby
             if (distance > range)
                 continue;
@@ -39,7 +39,7 @@ public class Stomper : CreatureEx
             var fraction = 1 - distance / range;
             var damage = maxSplash * fraction * __instance.Damage; //__instance.DamageBeforeMitigation;
             var dType = __instance.DamageType;
-            
+
             if (!n.TryDamageDirect(damage, out var taken, dType))
                 continue;
 

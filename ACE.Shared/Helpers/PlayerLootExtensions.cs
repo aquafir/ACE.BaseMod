@@ -1,5 +1,4 @@
 ﻿using ACE.Server.Command.Handlers;
-using ACE.Server.Network.GameMessages.Messages;
 
 namespace ACE.Shared.Helpers;
 
@@ -72,7 +71,7 @@ public static class PlayerLootExtensions
             amount -= stack;
 
             //Try to add
-            if(!session.Player.TryCreateInInventoryWithNetworking(obj))
+            if (!session.Player.TryCreateInInventoryWithNetworking(obj))
             {
                 ModManager.Log($"Failed to add remaining {amount} of {obj.Name} to {player.Name}", ModManager.LogLevel.Error);
                 return false;

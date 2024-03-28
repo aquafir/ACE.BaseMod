@@ -2,7 +2,7 @@
 
 public class Set : Mutator
 {
-    readonly Dictionary<TreasureItemType_Orig, EquipmentSet[]> sets= new();
+    readonly Dictionary<TreasureItemType_Orig, EquipmentSet[]> sets = new();
 
     public override bool TryMutateLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item)
     {
@@ -20,7 +20,7 @@ public class Set : Mutator
 
     public override void Start()
     {
-        foreach(var kvp in PatchClass.Settings.ItemTypeEquipmentSets)
+        foreach (var kvp in PatchClass.Settings.ItemTypeEquipmentSets)
         {
             //Skip equipment group names that have no group
             if (!PatchClass.Settings.EquipmentSetGroups.TryGetValue(kvp.Key.ToString(), out var setGroup))

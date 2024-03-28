@@ -3,7 +3,7 @@ global using ACE.Entity.Enum.Properties;
 global using ACE.Server.Entity;
 global using ACE.Server.Mods;
 global using ACE.Server.WorldObjects;
-global using AutoLoot.Helpers;
+global using ACE.Shared.Helpers;
 global using HarmonyLib;
 global using System.Diagnostics;
 global using System.Text;
@@ -15,5 +15,3 @@ global using uTank2.LootPlugins;
 //Aliases for polluted types
 global using Action = AutoLoot.Loot.Action;
 global using JsonSerializerOptions = System.Text.Json.JsonSerializerOptions;
-global using ACE.Shared;
-global using ACE.Shared.Helpers;

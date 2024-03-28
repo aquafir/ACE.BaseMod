@@ -1,10 +1,5 @@
-﻿using ACE.Entity;
-using ACE.Server.Command;
-using ACE.Server.Managers;
+﻿using ACE.Server.Command;
 using ACE.Server.Network;
-using ACE.Server.Network.GameMessages.Messages;
-using System.Runtime.CompilerServices;
-using static Microsoft.EntityFrameworkCore.Query.Internal.NavigationExpandingExpressionVisitor;
 
 namespace Expansion.Helpers;
 public static class Commands
@@ -40,7 +35,8 @@ public static class Commands
                 //player.Session.Network.EnqueueSend(new GameMessageInventoryRemoveObject(i));
                 player.DeleteItem(item);
             }
-        }catch(Exception ex)
+        }
+        catch (Exception ex)
         {
             ModManager.Log($"{ex.Message}", ModManager.LogLevel.Error);
         }

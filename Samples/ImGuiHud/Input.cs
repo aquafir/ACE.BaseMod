@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace ImGuiTest;
 
-public class Input 
+public class Input
 {
     private const ImGuiInputTextFlags Flags = ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.AutoSelectAll;
     public static string Text = "";
@@ -31,7 +31,7 @@ public class Input
             return true;
         }
 
-        if(ImGui.Button(ButtonLabel))
+        if (ImGui.Button(ButtonLabel))
         {
             Focus = true;
             Regex = new(Text, RegexOptions.IgnoreCase | RegexOptions.Compiled);

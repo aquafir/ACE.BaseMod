@@ -4,7 +4,7 @@ namespace Expansion.Features;
 
 [HarmonyPatchCategory(nameof(Feature.Hardcore))]
 public class Hardcore
-{  
+{
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Player), nameof(Player.OnDeath), new Type[] { typeof(DamageHistoryInfo), typeof(DamageType), typeof(bool) })]
     public static void PostOnDeath(DamageHistoryInfo lastDamager, DamageType damageType, bool criticalHit, ref Player __instance, ref DeathMessage __result)
@@ -14,7 +14,7 @@ public class Hardcore
             return;
 
         if (player.GetProperty(FakeBool.Hardcore) != true)
-                return;
+            return;
 
         //Check death interval
         var lastDeath = player.GetProperty(FakeFloat.TimestampLastPlayerDeath) ?? 0;
@@ -22,7 +22,7 @@ public class Hardcore
         var lapsed = current - lastDeath;
         player.SetProperty(FakeFloat.TimestampLastPlayerDeath, Time.GetUnixTime());
 
-        if(lapsed > S.Settings.HardcoreSecondsBetweenDeathAllowed)
+        if (lapsed > S.Settings.HardcoreSecondsBetweenDeathAllowed)
         {
             player.SendMessage($"You died after {lapsed / 3600:0.0} hours and are given a free death.");
             return;
@@ -30,7 +30,7 @@ public class Hardcore
 
         var lives = player.GetProperty(FakeInt.HardcoreLives) ?? 0;
         lives--;
-        if(lives >= 0)
+        if (lives >= 0)
         {
             player.SendMessage($"You have {lives} lives remaining.");
             player.SetProperty(FakeInt.HardcoreLives, lives);

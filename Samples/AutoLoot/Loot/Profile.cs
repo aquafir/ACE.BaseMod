@@ -1,6 +1,4 @@
-﻿using ACE.Common;
-
-namespace AutoLoot.Loot;
+﻿namespace AutoLoot.Loot;
 public class Profile
 {
     public List<Rule> Rules { get; set; } = new();

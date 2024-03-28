@@ -23,29 +23,29 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="FakeProperty.cs" />
+		<Compile Remove="FakeProperty.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.0" />
-		<!--<PackageReference Include="Lib.Harmony" Version="2.3.1.1" />-->
 		<PackageReference Include="System.Text.Json" Version="7.0.0" Aliases="Json" />
+		<PackageReference Include="Lib.Harmony" Version="2.3.1.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
+		<ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
 	</ItemGroup>
-		
+
 	<ItemGroup>
 		<Reference Include="0Harmony">
-		  <HintPath>C:\ACE\Server\0Harmony.dll</HintPath>
+			<HintPath>C:\ACE\Server\0Harmony.dll</HintPath>
 		</Reference>
 		<Reference Include="ACE.Adapter">
 			<HintPath>C:\ACE\Server\ACE.Adapter.dll</HintPath>

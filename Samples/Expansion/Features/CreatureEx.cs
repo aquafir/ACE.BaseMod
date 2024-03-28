@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Expansion.Features;
+﻿namespace Expansion.Features;
 
 [HarmonyPatchCategory(nameof(Feature.CreatureEx))]
 public class CreatureEx
@@ -17,10 +11,10 @@ public class CreatureEx
         if (weenie.WeenieType != WeenieType.Creature || weenie == null) return true;
 
         //Check for a specified CreatureEx type
-        if(weenie.PropertiesInt.TryGetValue((PropertyInt)FakeInt.CreatureExType, out var creatureType))
+        if (weenie.PropertiesInt.TryGetValue((PropertyInt)FakeInt.CreatureExType, out var creatureType))
         {
             var type = (CreatureExType)creatureType;
-            if(!Enum.IsDefined(type))
+            if (!Enum.IsDefined(type))
             {
                 ModManager.Log($"Invalid CreatureEx type found: {type}");
                 return true;

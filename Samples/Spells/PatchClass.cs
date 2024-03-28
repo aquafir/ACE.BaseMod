@@ -1,12 +1,5 @@
 ﻿using ACE.DatLoader.Entity;
 using ACE.Entity;
-using ACE.Entity.Enum;
-using ACE.Server.Entity;
-using ACE.Server.Network;
-using ACE.Server.WorldObjects;
-using System.Numerics;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading;
 using static ACE.Server.WorldObjects.Player;
 
 namespace Spells
@@ -15,7 +8,7 @@ namespace Spells
     public class PatchClass
     {
         private static Random gen = new();
-        
+
         #region Settings
         //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);
         const int RETRIES = 10;
@@ -291,11 +284,11 @@ namespace Spells
             trav.Field("spellWords").SetValue($"Abracazoop ({spell._spellBase.GetSpellWords(DatManager.PortalDat.SpellComponentsTable)})");
 
             //SpellBase PowerMod returns Power or a max of 25 and is used for mana costs
-            trav.Property(nameof(SpellBase.Power)).SetValue(Math.Max(25,(uint)(metaScale * 25)));
+            trav.Property(nameof(SpellBase.Power)).SetValue(Math.Max(25, (uint)(metaScale * 25)));
             trav.Property(nameof(SpellBase.Name)).SetValue($"{spell._spellBase.Name} ({metaScale})");
 
             var pType = SpellProjectile.GetProjectileSpellType(spell.Id);
-            if (pType == ProjectileSpellType.Ring)  
+            if (pType == ProjectileSpellType.Ring)
                 //This will fail if not cast to a single
                 trav.Property(nameof(SpellBase.BaseRangeConstant)).SetValue((float)Math.Sqrt(metaScale * spell._spellBase.BaseRangeConstant));
 

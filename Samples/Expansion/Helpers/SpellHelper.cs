@@ -1,10 +1,8 @@
 ﻿//using ACE.Adapter.GDLE.Models;
-using System.Runtime.Serialization.Formatters.Binary;
-using ACE.DatLoader.Entity;
 using ACE.Common.Extensions;
-using System.Text;
 using ACE.DatLoader;
-using ACE.Server.Network;
+using ACE.DatLoader.Entity;
+using System.Text;
 
 namespace Expansion.Helpers;
 
@@ -161,7 +159,8 @@ public static class SpellHelper
 
         //Just player spells
         var spells = new Dictionary<uint, SpellBase>();
-        foreach (uint i in Player.PlayerSpellTable) {
+        foreach (uint i in Player.PlayerSpellTable)
+        {
             var spell = new Spell(i);
             var sBase = portalDat.SpellTable.Spells[i];
             if (spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.Beneficial) && !spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.SelfTargeted)

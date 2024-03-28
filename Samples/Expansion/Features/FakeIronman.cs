@@ -1,12 +1,8 @@
 ﻿using ACE.Database;
-using ACE.Entity;
-using ACE.Entity.Models;
 using ACE.Server.Command;
 using ACE.Server.Managers;
 using ACE.Server.Network;
 using ACE.Server.Network.GameEvent.Events;
-using ACE.Server.WorldObjects;
-using System.Collections.Concurrent;
 using System.Text;
 
 namespace Expansion.Features;
@@ -142,10 +138,11 @@ public class FakeIronman
     [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.CreateEnchantment), new Type[] { typeof(WorldObject), typeof(WorldObject), typeof(WorldObject), typeof(Spell), typeof(bool), typeof(bool), typeof(bool) })]
     public static bool PreCreateEnchantment(WorldObject target, WorldObject caster, WorldObject weapon, Spell spell, bool equip, bool fromProc, bool isWeaponSpell, ref WorldObject __instance)
     {
-        if(target is Player player && player.GetProperty(FakeBool.Ironman) == true && caster.GetProperty(FakeBool.Ironman) != true) {
+        if (target is Player player && player.GetProperty(FakeBool.Ironman) == true && caster.GetProperty(FakeBool.Ironman) != true)
+        {
             player.SendMessage($"{caster.Name} failed to cast {spell.Name ?? ""} on you.  They are too fleshy for your thaums.");
 
-            if(caster is Player p)
+            if (caster is Player p)
                 p.SendMessage($"Failed to cast {spell.Name ?? ""} on {player.Name}, they lack culture and refinement.");
 
             return false;
@@ -159,7 +156,7 @@ public class FakeIronman
     [HarmonyPatch(typeof(Player), nameof(Player.IsPledgable), new Type[] { typeof(Player) })]
     public static bool PreIsPledgable(Player target, ref Player __instance, ref bool __result)
     {
-        if(target.GetProperty(FakeBool.Ironman) == true && __instance.GetProperty(FakeBool.Ironman) != true)
+        if (target.GetProperty(FakeBool.Ironman) == true && __instance.GetProperty(FakeBool.Ironman) != true)
         {
             __instance.SendMessage($"You can't swear to {target.Name}, you may as well be different species.");
             __instance.Session.Network.EnqueueSend(new GameEventWeenieError(__instance.Session, WeenieError.OlthoiCannotJoinAllegiance));

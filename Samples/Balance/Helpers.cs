@@ -1,8 +1,4 @@
-﻿using ACE.Server.Managers;
-using AngouriMath.Core.Compilation.IntoLinq;
-using AngouriMath.Extensions;
-using System.ComponentModel;
-using static AngouriMath.Entity;
+﻿using AngouriMath.Core.Compilation.IntoLinq;
 using static AngouriMath.Entity.Number;
 
 namespace Balance;
@@ -329,16 +325,16 @@ sb.ToString()
     public static bool TryGetFunction<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(this string formula, out Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> func, List<(MType, Variable)> typesAndNames) =>
         formula.TryGetFunction<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
     static Type GetAngouriType(this MType angouriType) => angouriType switch
-        {
-            MType.Bool => typeof(bool),
-            MType.Int => typeof(int),
-            MType.Long => typeof(long),
-            MType.Float => typeof(float),
-            MType.Double => typeof(double),
-            MType.Complex => typeof(Complex),
-            MType.BigInt => typeof(System.Numerics.BigInteger),
-            _ => throw new NotImplementedException()
-        };
+    {
+        MType.Bool => typeof(bool),
+        MType.Int => typeof(int),
+        MType.Long => typeof(long),
+        MType.Float => typeof(float),
+        MType.Double => typeof(double),
+        MType.Complex => typeof(Complex),
+        MType.BigInt => typeof(System.Numerics.BigInteger),
+        _ => throw new NotImplementedException()
+    };
 
     /// <summary>
     /// Converts a serializable variable dictionary to the tuple used by AngouriMath

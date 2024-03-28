@@ -1,13 +1,7 @@
 ﻿using ACE.Database.Models.Shard;
 using ACE.Entity.Enum.Properties;
-using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
 using ACE.Server.WorldObjects.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PlayerSave
 {
@@ -48,7 +42,7 @@ namespace PlayerSave
             //new {(e.Value.InitLevel, e.Value.LevelFromPP, e.Value.PP, uint ? ResistanceAtLastCheck, SkillAdvancementClass ? SAC)});
             //snapshot.Attributes = player.Attributes.ToDictionary(e => e.Key, e => new { (e.Value.ExperienceSpent, e.Value.Ranks, e.Value.StartingValue) });
             //snapshot = player.ToDictionary(e => e.Key, e => e.Value);
-            
+
             //foreach (var entry in player.GetAllPropertyBools())
             //{
             //    PropertyBool.
@@ -75,14 +69,14 @@ namespace PlayerSave
 
             CreatureVital cv = new(cr, new PropertyAttribute2nd() { });
             CreatureAttribute ca = new(cr, PropertyAttribute.Coordination)
-            {                
+            {
                 ExperienceSpent = 0u,
                 //ModifierType = ModifierType.None,
                 Ranks = 0u,
                 StartingValue = 0u,
             };
-            
-           // PropertyAttribute2nd
+
+            // PropertyAttribute2nd
             //wo.GetAllPropertyBools
 
             GameMessagePrivateUpdateSkill skill = new(wo, cs);

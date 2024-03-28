@@ -48,7 +48,7 @@ namespace Balance.Patches
             //var healthPercent = 1 - ((float)missingHealth / vital.MaxValue);
 
             var effectiveSkill = (int)Math.Round((healingSkill.Current + __instance.BoostValue) * trainedMod);
-            difficulty = func((int)missingVital, combatMod); 
+            difficulty = func((int)missingVital, combatMod);
             //(int)Math.Round(missingHealth * 2 * combatMod);
 
             var skillCheck = SkillCheck.GetSkillChance(effectiveSkill, difficulty);

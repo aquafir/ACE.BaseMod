@@ -1,5 +1,4 @@
 ﻿using ACE.Database;
-using ACE.Entity.Models;
 using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
 

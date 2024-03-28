@@ -1,6 +1,4 @@
-﻿using ACE.Server.Network;
-
-namespace ChatFilter;
+﻿namespace ChatFilter;
 
 [HarmonyPatch]
 public class PatchClass

@@ -1,6 +1,4 @@
-﻿using ACE.Database.Models.Shard;
-
-namespace ACE.Shared.Helpers;
+﻿namespace ACE.Shared.Helpers;
 
 public static class QuestExtensions
 {

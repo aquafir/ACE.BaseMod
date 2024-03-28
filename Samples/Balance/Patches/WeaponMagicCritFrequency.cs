@@ -36,7 +36,7 @@
         {
             //Skip without weapon?
             if (weapon == null) return true;
-                        
+
             var critRate = (float)(weapon.GetProperty(PropertyFloat.CriticalFrequency) ?? .05);
 
             var criticalStrikeMod = 0f;

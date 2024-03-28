@@ -10,7 +10,7 @@ public class Exploder : CreatureEx
     protected override void Initialize()
     {
         //SetProperty(PropertyFloat.DefaultScale, 2.0);
-                Name = "Exploding " + Name;
+        Name = "Exploding " + Name;
 
         //Set a faster heartbeat
         HeartbeatInterval = 5f;
@@ -49,7 +49,7 @@ public class Exploder : CreatureEx
         var damage = this.PercentHealth() * 1000;
         foreach (Player p in targets)
         {
-            if(p.TryDamageDirect(damage, out var taken, DamageType.Fire, true))
+            if (p.TryDamageDirect(damage, out var taken, DamageType.Fire, true))
             {
                 p.SendMessage($"{Name} explodes dealing {damage}.");
                 p.PlayAnimation(PlayScript.Explode);

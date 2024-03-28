@@ -1,11 +1,4 @@
-﻿using ACE.Server.Managers;
-using Microsoft.Extensions.Configuration;
-using System.Net.Sockets;
-using System.Net;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using ACE.Server.WorldObjects;
-
-namespace MinimalAPI
+﻿namespace MinimalAPI
 {
     [HarmonyPatch]
     public class PatchClass
@@ -17,7 +10,7 @@ namespace MinimalAPI
         const int RETRIES = 10;
 
         public Settings Settings = new();
-        static string settingsPath => Path.Combine(Mod.ModPath, "Settings.json"); 
+        static string settingsPath => Path.Combine(Mod.ModPath, "Settings.json");
         private FileInfo settingsInfo = new(settingsPath);
 
         private static JsonSerializerOptions _serializeOptions = new()

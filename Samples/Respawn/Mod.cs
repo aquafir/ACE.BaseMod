@@ -104,7 +104,7 @@
             {
                 //Patch everything in the mod with Harmony attributes
                 Harmony.PatchAll();
-                
+
                 PatchClass.Start();
             }
             catch (Exception ex)

@@ -1,5 +1,5 @@
-﻿using ACE.DatLoader.Entity;
-using ACE.DatLoader;
+﻿using ACE.DatLoader;
+using ACE.DatLoader.Entity;
 using ACE.Server.Command;
 using ACE.Server.Network;
 using static ACE.Server.WorldObjects.Player;
@@ -366,8 +366,8 @@ public static class FakeSpellMeta
                     ProjectileSpellType.Ring => (int)(metaScale * spell._spell.NumProjectiles),
                     ProjectileSpellType.Strike => (int)(metaScale * spell._spell.NumProjectiles),
                     _ => 1
-                };         
-            
+                };
+
             if (dbSpell.SpreadAngle is not null)
                 dbSpell.SpreadAngle = 360f;
             if (dbSpell.PaddingOriginY is not null)

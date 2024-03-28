@@ -77,10 +77,11 @@ public static class FakePropertyCache
             player.UpdateItem(item);
 
         //Clamp after or during?
-        foreach(var watched in watchedFloats)
+        foreach (var watched in watchedFloats)
         {
             if (S.Settings.BonusCaps.MinFloat.TryGetValue(watched, out var min) &&
-                floatCache.TryGetValue(watched, out var value)){
+                floatCache.TryGetValue(watched, out var value))
+            {
                 player.SendMessage($"min {watched} from {value} to {min}");
                 floatCache[watched] = Math.Max(value, min);
             }
@@ -108,7 +109,7 @@ public static class FakePropertyCache
     {
         var floatCache = player.GetOrCreateFloatCache();
 
-       // player.SendMessage($"{(equipping ? "Equipping" : "Unequipping")} {item.Name}: ");
+        // player.SendMessage($"{(equipping ? "Equipping" : "Unequipping")} {item.Name}: ");
 
         //For each type of prop
         //player.SendMessage($"  =====FakeFloat ({watchedFloats.Count} watched)====");
@@ -123,7 +124,7 @@ public static class FakePropertyCache
 
             var itemValue = item.GetProperty(prop) ?? 0;
             cacheValue += equipping ? itemValue : -itemValue;
-           // player.SendMessage($"    {item.Name}.{prop}: {cacheValue:0.00} + {itemValue:0.00} -> {floatCache[prop]:0.00}");
+            // player.SendMessage($"    {item.Name}.{prop}: {cacheValue:0.00} + {itemValue:0.00} -> {floatCache[prop]:0.00}");
 
             floatCache[prop] = cacheValue;
         }
@@ -141,7 +142,7 @@ public static class FakePropertyCache
 
             var itemValue = item.GetProperty(prop) ?? 0;
             cacheValue += equipping ? itemValue : -itemValue;
-          //  player.SendMessage($"    {item.Name}.{prop}: {cacheValue:0.00} + {itemValue:0.00} -> {intCache[prop]:0.00}");
+            //  player.SendMessage($"    {item.Name}.{prop}: {cacheValue:0.00} + {itemValue:0.00} -> {intCache[prop]:0.00}");
 
             intCache[prop] = cacheValue;
         }
@@ -165,10 +166,10 @@ public static class FakePropertyCache
             value = cache.TryGetValue(prop, out value) ? value : 0;
         }
 
-            //Watch property
-            if (watchedFloats.Add(prop))
+        //Watch property
+        if (watchedFloats.Add(prop))
             player.SendMessage($"Added {prop} to cache: {value}");
-        
+
         //watch.Stop();
         //player.SendMessage($"Fetched in {watch.ElapsedTicks} ticks / {watch.ElapsedMilliseconds} ms.");
         return value;
@@ -263,11 +264,12 @@ public static class FakePropertyCache
     public static string DumpPlayerItems(this Player player)
     {
         var sb = new StringBuilder();
-        foreach(var item in player.EquippedObjects.Values)
+        foreach (var item in player.EquippedObjects.Values)
         {
             var dump = item.DumpItem();
 
-            if (dump.Length > 0) {
+            if (dump.Length > 0)
+            {
                 sb.Append($"============={item.Name}=============\n{dump}\n");
             }
         }

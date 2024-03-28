@@ -27,14 +27,14 @@ public class Tank : CreatureEx
     [HarmonyPatch(typeof(Creature), nameof(Creature.TakeDamage), new Type[] { typeof(WorldObject), typeof(DamageType), typeof(float), typeof(bool) })]
     public static void PreTakeDamage(WorldObject source, DamageType damageType, ref float amount, bool crit, ref Creature __instance, ref uint __result)
     {
-        if(source is not Player p || __instance is Tank)
+        if (source is not Player p || __instance is Tank)
             return;
 
         //If there is a Tank nearby swap that for the target dealt damage and mitigate
         var nearby = p.GetNearbyCreatures(__instance, candidates, range);
         foreach (var creature in nearby)
         {
-            if(creature is Tank)
+            if (creature is Tank)
             {
                 p.SendMessage($"{creature.Name} tanked the {amount} damage.");
                 amount *= tankMultiplier;

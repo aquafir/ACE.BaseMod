@@ -1,10 +1,4 @@
-﻿using ACE.Database;
-using ACE.Entity;
-using ACE.Entity.Models;
-using ACE.Server.Managers;
-using Expansion.Features;
-
-namespace Expansion.Mutators;
+﻿namespace Expansion.Mutators;
 
 [HarmonyPatchCategory(nameof(Mutation.Enlightened))]  //Mutator categories not used, just convenience for generating enum or a placeholder
 public class Enlightened : Mutator
@@ -19,7 +13,7 @@ public class Enlightened : Mutator
         var muts = tier - 6;
 
         //Mutate a number of times
-        for(var i = 0; i < muts; i++)
+        for (var i = 0; i < muts; i++)
         {
             bool success = item.WeenieType switch
             {

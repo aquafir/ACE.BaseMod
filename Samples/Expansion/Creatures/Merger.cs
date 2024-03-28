@@ -35,7 +35,7 @@ public class Merger : CreatureEx
         var mergeTarget = p.GetNearbyCreatures(this, 5, 10).Where(x =>
         x.WeenieClassId == this.WeenieClassId &&
         x is not Merger).FirstOrDefault();
-        
+
         if (mergeTarget is null) return;
 
         //Scale stats
@@ -45,7 +45,7 @@ public class Merger : CreatureEx
         Health.StartingValue += mergeTarget.Health.Current;
         Health.Current += mergeTarget.Health.Current;
         DamageHistory.OnHeal(mergeTarget.Health.Current);
-        
+
         //Increase xp?
         XpOverride += this.Weenie.GetProperty(PropertyInt.XpOverride);
 

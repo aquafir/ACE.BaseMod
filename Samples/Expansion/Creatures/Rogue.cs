@@ -11,7 +11,7 @@ public class Rogue : CreatureEx
     {
         base.Initialize();
 
-                Name = "Rakish " + Name;
+        Name = "Rakish " + Name;
     }
 
     //Custom behavior
@@ -43,7 +43,7 @@ public class Rogue : CreatureEx
         if (item is null) return;
 
         p.SendMessage($"Try to fumble {item.Name}");
-        if(p.TryDropItem(item))
+        if (p.TryDropItem(item))
         {
             p.SendMessage($"{c.Name} has disarmed your {item.Name}!");
         }

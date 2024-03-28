@@ -21,7 +21,7 @@ public class SnapshotCommand
         player.GetAllPropertyInt64().Write(writer);
         player.GetAllPropertyString().Write(writer);
 
-        
+
     }
 
     #region Commands

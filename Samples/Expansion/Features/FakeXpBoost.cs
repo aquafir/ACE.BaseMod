@@ -15,7 +15,7 @@ internal class FakeXpBoost
         amount += bonusAmount;
 
 
-        __instance.SendMessage($"Added {bonusAmount} xp from {1+bonus} equipment bonus.");
+        __instance.SendMessage($"Added {bonusAmount} xp from {1 + bonus} equipment bonus.");
 
         //Return true to execute original
         return true;

@@ -10,13 +10,13 @@ internal class FakeCulling
         if (__result is null || target is null)
             return;
 
-        if(!__result.HasDamage || !target.IsAlive) 
+        if (!__result.HasDamage || !target.IsAlive)
             return;
 
         //More cull = higher percent
         var cullPercent = __instance.GetCachedFake(FakeFloat.ItemPercentCull);
 
-        if(cullPercent > target.Health.Percent)
+        if (cullPercent > target.Health.Percent)
         {
             __instance.SendMessage($"You have culled {target.Name} at {target.Health.Percent} of their health.");
 

@@ -106,7 +106,7 @@ namespace ConnectionLimit
             foreach (var player in PlayerManager.GetAllOnline())
             {
                 //Ignore exempt landblocks
-                if (Settings.ExemptLandblocks.Contains(player.CurrentLandblock.Id.Landblock)) 
+                if (Settings.ExemptLandblocks.Contains(player.CurrentLandblock.Id.Landblock))
                     continue;
 
 

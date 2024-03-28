@@ -9,7 +9,7 @@ public class Settings
 
     /* Raise command */
     // (Multi * L) / (RaiseDecay - LevelDecay * L), L = Level
-    public double RaiseMulti { get; set; } = 3_292_201_940D;     
+    public double RaiseMulti { get; set; } = 3_292_201_940D;
     public double RaiseDecay { get; set; } = 7.995D;
     public double LevelDecay { get; set; } = 0.001D;
 

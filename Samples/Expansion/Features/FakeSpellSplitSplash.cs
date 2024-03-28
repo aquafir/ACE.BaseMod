@@ -12,7 +12,7 @@ internal class FakeSpellSplitSplash
     public static void HandleCastSpell(Spell spell, WorldObject target, WorldObject itemCaster = null, WorldObject weapon = null, bool isWeaponSpell = false, bool fromProc = false, bool equip = false, WorldObject __instance = null)
     {
         //Only players split?
-         if (__instance is not Player player)
+        if (__instance is not Player player)
             return;
 
         //Debugger.Break();
@@ -36,7 +36,7 @@ internal class FakeSpellSplitSplash
             if (delta < scaledInterval)
                 return;
 
-            var rangeScale = (1+(float)player.GetCachedFake(FakeFloat.ItemSpellSplitRangeScale)) * S.Settings.SpellSettings.SplitRange;
+            var rangeScale = (1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplitRangeScale)) * S.Settings.SpellSettings.SplitRange;
             var targets = player.GetSplashTargets(target, splitCount, rangeScale);
 
             if (targets.Count < 1)
@@ -74,7 +74,7 @@ internal class FakeSpellSplitSplash
             if (delta < scaledInterval)
                 return;
 
-            var rangeScale = (1+(float)player.GetCachedFake(FakeFloat.ItemSpellSplashRangeScale)) * S.Settings.SpellSettings.SplitRange;
+            var rangeScale = (1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplashRangeScale)) * S.Settings.SpellSettings.SplitRange;
             var targets = player.GetSplashTargets(target, splashCount, rangeScale);
 
             if (targets.Count < 1)

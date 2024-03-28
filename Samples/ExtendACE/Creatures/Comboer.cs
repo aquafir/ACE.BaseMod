@@ -13,7 +13,7 @@ public class Comboer : CreatureEx
 
         Name = "Frenetic " + Name;
     }
-        
+
     const int threshold = 5;
     int combo = 0;
 
@@ -21,7 +21,7 @@ public class Comboer : CreatureEx
     [HarmonyPatch(typeof(DamageEvent), "DoCalculateDamage", new Type[] { typeof(Creature), typeof(Creature), typeof(WorldObject) })]
     public static void PostDoCalculateDamage(Creature attacker, Creature defender, WorldObject damageSource, ref DamageEvent __instance, ref float __result)
     {
-        if(attacker is not Comboer c || defender is not Player p)
+        if (attacker is not Comboer c || defender is not Player p)
             return;
 
         c.combo++;
@@ -39,6 +39,6 @@ public class Comboer : CreatureEx
     public override uint TakeDamage(WorldObject source, DamageType damageType, float amount, bool crit = false)
     {
         combo = 0;
-        return base.TakeDamage(source, damageType, amount, crit);        
+        return base.TakeDamage(source, damageType, amount, crit);
     }
 }

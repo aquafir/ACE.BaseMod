@@ -1,6 +1,5 @@
 ﻿using ACE.Server.Command;
 using ACE.Server.Network;
-using AutoLoot.Loot;
 using System.Collections.Concurrent;
 using VTClassic;
 
@@ -24,7 +23,7 @@ public class AutoLoot
             var sb = new StringBuilder("\nProfiles:");
             if (parameters.Length == 0)
             {
-                for(var i = 0; i < profiles.Length; i++)
+                for (var i = 0; i < profiles.Length; i++)
                 {
                     var profilePath = profiles[i];
                     var fi = new FileInfo(profilePath);

@@ -1,8 +1,5 @@
 ﻿using ACE.Database.Models.World;
-using ACE.Entity.Enum;
 using ACE.Entity.Enum.Properties;
-using ACE.Server.Managers;
-using ACE.Server.WorldObjects;
 using System.Numerics;
 
 namespace Tinkering;
@@ -174,14 +171,14 @@ public class PatchClass
             //BitOperations.PopCount()
             //value is not null)
             //{
-                //Handle check here?
-                //var comp = (CompareType)requirement.Enum;
-                //var tries = PatchClass.Settings.MaxTries - 1;   //Todo: figure out if I'm dumb
+            //Handle check here?
+            //var comp = (CompareType)requirement.Enum;
+            //var tries = PatchClass.Settings.MaxTries - 1;   //Todo: figure out if I'm dumb
 
-                //__result = comp.Compare(tries, value.Value);
+            //__result = comp.Compare(tries, value.Value);
 
-                //Skip regular check.  Can't return prematurely
-                continue;
+            //Skip regular check.  Can't return prematurely
+            continue;
             //}
 
             //if (RecipeManager.Debug)

@@ -1,6 +1,4 @@
-﻿using ACE.Entity.Enum.Properties;
-
-namespace QualityOfLife;
+﻿namespace QualityOfLife;
 
 public class Settings
 {
@@ -9,7 +7,7 @@ public class Settings
 
     //Sum of specialization credits
     public int MaxSpecCredits { get; set; } = 70;
-        
+
     public AnimationSettings Animations { get; set; } = new();
     public DefaultsSettings Defaults { get; set; } = new();
     public FellowshipSettings Fellowship { get; set; } = new();

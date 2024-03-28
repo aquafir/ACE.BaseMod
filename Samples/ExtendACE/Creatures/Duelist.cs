@@ -11,7 +11,7 @@ public class Duelist : CreatureEx
     {
         base.Initialize();
 
-                Name = "Dueling " + Name;
+        Name = "Dueling " + Name;
     }
 
     //Custom behavior

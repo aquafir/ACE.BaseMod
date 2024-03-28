@@ -1,7 +1,4 @@
-﻿using ACE.Server.Command;
-using ACE.Server.Network;
-using AutoLoot.Loot;
-namespace AutoLoot;
+﻿namespace AutoLoot;
 
 [HarmonyPatch]
 public class PatchClass

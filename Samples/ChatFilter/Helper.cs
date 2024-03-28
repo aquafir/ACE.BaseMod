@@ -1,7 +1,5 @@
 ﻿using ACE.Database;
-using ACE.Server.Network;
 using ACE.Server.Network.Enum;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ChatFilter;
 
@@ -26,8 +24,8 @@ public static class Helper
 
         player.SaveBiotaToDatabase();
 
-        if(PatchClass.Settings.BroadcastGag)
-            PlayerManager.BroadcastToAuditChannel(player, $"{player.Name} has been gagged {player.Name} for {gagSeconds/60} minute(s) for their {player.ChatInfractionCount()} infraction.");
+        if (PatchClass.Settings.BroadcastGag)
+            PlayerManager.BroadcastToAuditChannel(player, $"{player.Name} has been gagged {player.Name} for {gagSeconds / 60} minute(s) for their {player.ChatInfractionCount()} infraction.");
 
         return true;
     }

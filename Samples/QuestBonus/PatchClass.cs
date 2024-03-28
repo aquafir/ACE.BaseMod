@@ -1,15 +1,5 @@
-﻿using ACE.Database;
-using ACE.Database.Entity;
-using ACE.Database.Models.Shard;
-using ACE.Entity.Enum.Properties;
+﻿using ACE.Database.Models.Shard;
 using ACE.Server.Managers;
-using ACE.Server.Network;
-using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.WorldObjects;
-using ACE.Server.WorldObjects.Managers;
-using System;
-using System.Runtime.CompilerServices;
-using static ACE.Server.WorldObjects.Creature;
 
 namespace QuestBonus;
 
@@ -137,7 +127,7 @@ public class PatchClass
     //HasQuestSolves
     public static void UpdateIngamePlayers()
     {
-        foreach(var player in PlayerManager.GetAllOnline())
+        foreach (var player in PlayerManager.GetAllOnline())
             player.UpdateQuestPoints();
     }
 
@@ -168,8 +158,8 @@ public class PatchClass
         {
             player.IncQuestPoints(qst.Value());
 
-            if(PatchClass.Settings.NotifyQuest)
-            player.SendMessage($"Removed {qst.Value()} QP on removing {questName}");
+            if (PatchClass.Settings.NotifyQuest)
+                player.SendMessage($"Removed {qst.Value()} QP on removing {questName}");
         }
     }
 

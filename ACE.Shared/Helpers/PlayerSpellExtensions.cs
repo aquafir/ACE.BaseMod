@@ -1,11 +1,4 @@
-﻿using ACE.Entity.Enum;
-using ACE.Server.Network;
-using ACE.Server.Network.GameMessages.Messages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ACE.Server.Network.GameMessages.Messages;
 
 namespace ACE.Shared.Helpers;
 public static class PlayerSpellExtensions
@@ -18,7 +11,7 @@ public static class PlayerSpellExtensions
         if (Enum.IsDefined(typeof(SpellId), spellId))
         {
             return player.TryLearnSpell((uint)spellId);
-           
+
         }
 
         return false;
@@ -93,7 +86,7 @@ public static class PlayerSpellExtensions
             if (player.RemoveKnownSpell(spellId))
             {
                 var spell = new Spell(spellId, false);
-                if(withNetworking)
+                if (withNetworking)
                     player.Session.Network.EnqueueSend(new GameMessageSystemChat($"{spell.Name} removed from spellbook.", ChatMessageType.Broadcast));
             }
 
@@ -112,7 +105,7 @@ public static class PlayerSpellExtensions
     public static void UpdateSpellbook(this Player player)
     {
         var session = player.Session;
-        foreach(var spell in player.Biota.PropertiesSpellBook)
+        foreach (var spell in player.Biota.PropertiesSpellBook)
         {
             GameEventMagicUpdateSpell updateSpellEvent = new GameEventMagicUpdateSpell(session, (ushort)spell.Key);
         }

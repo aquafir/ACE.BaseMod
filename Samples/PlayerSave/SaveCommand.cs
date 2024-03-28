@@ -1,15 +1,13 @@
-﻿using ACE.Database.Entity;
-using ACE.Database.Models.Shard;
-using ACE.Database;
-using ACE.Server.Managers;
-using System.Collections.Concurrent;
-using System.Text.RegularExpressions;
-using System.Collections.ObjectModel;
+﻿using ACE.Database;
+using ACE.Database.Entity;
 using ACE.Database.Models.Auth;
+using ACE.Database.Models.Shard;
 using ACE.DatLoader;
-using ACE.Server.Network.Enum;
-using ACE.Server.Network;
+using ACE.Server.Managers;
 using PlayerSave.Helpers;
+using System.Collections.Concurrent;
+using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 
 namespace PlayerSave;
 
@@ -155,9 +153,9 @@ internal class SaveCommand
         var name = GetFormattedName(match.Groups["name"].Value);
 
         //Check taboo
-        if(!IsLegalName(name))
+        if (!IsLegalName(name))
             return;
-        
+
         var player = PlayerManager.FindByName(name);
 
         if (player is null)
@@ -222,7 +220,7 @@ internal class SaveCommand
         var jsonPath = $"{savePath}.json";
         var saveJson = JsonSerializer.Serialize(save, jsonOptions);
         watch.Stop();
-        sb.AppendLine($"\r\nJSON size (kb): {Encoding.Unicode.GetByteCount(saveJson)/1024,-20}Time (ms):{watch.ElapsedMilliseconds}");
+        sb.AppendLine($"\r\nJSON size (kb): {Encoding.Unicode.GetByteCount(saveJson) / 1024,-20}Time (ms):{watch.ElapsedMilliseconds}");
 
         watch = Stopwatch.StartNew();
         var gzipPath = $"{savePath}{Settings.Extension}";
@@ -241,7 +239,7 @@ internal class SaveCommand
         var gzipSaveBinary = Compression.CompressGzip(saveBinary);
         watch.Stop();
         sb.AppendLine($"ZBIN size (kb): {gzipSaveBinary.Length / 1024,-20}Time (ms):{watch.ElapsedMilliseconds}");
-        
+
         ModManager.Log(sb.ToString());
 
         try
@@ -271,7 +269,7 @@ internal class SaveCommand
             return false;
         }
 
-        if(name.Length > 32)
+        if (name.Length > 32)
         {
             ModManager.Log($"Rejecting name that exceeds 32 characters.", ModManager.LogLevel.Warn);
             return false;

@@ -38,7 +38,7 @@ public class MeleeAttributeDamage : AngouriMathPatch
         if (__instance is Player player)
         {
             //Only melee
-            var isBow = weapon != null && weapon.IsBow;                
+            var isBow = weapon != null && weapon.IsBow;
             if (isBow) return true;
 
             var attribute = isBow || weapon?.WeaponSkill == Skill.FinesseWeapons ? __instance.Coordination : __instance.Strength;

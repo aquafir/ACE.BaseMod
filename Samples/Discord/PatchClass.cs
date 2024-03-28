@@ -1,7 +1,6 @@
 ﻿using ACE.Common.Extensions;
 using ACE.Server.Network.GameAction.Actions;
 using ACE.Server.Network.GameMessages.Messages;
-using System.Diagnostics;
 using System.Text.Encodings.Web;
 
 namespace Discord;

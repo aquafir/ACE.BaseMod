@@ -27,23 +27,18 @@
 //  THE SOFTWARE.
 ///////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Collections.ObjectModel;
-using ACE.Server.Entity.Actions;
-using System.Xml;
 using AutoLoot.Lib;
+using System.Collections.ObjectModel;
 
 
 #if VTC_PLUGIN
-using uTank2.LootPlugins;
 #endif
 
-namespace VTClassic {
+namespace VTClassic
+{
     #region iLootRule abstract class
-    internal abstract class iLootRule : iSettingsCollection, ICloneable {
+    internal abstract class iLootRule : iSettingsCollection, ICloneable
+    {
         //iSettingsCollection methods
         public abstract void Read(System.IO.StreamReader inf, int fileversion);
         public abstract void Write(CountedStreamWriter inf);
@@ -60,7 +55,8 @@ namespace VTClassic {
         public abstract void EarlyMatch(WorldObject id, Player player, out bool hasdecision, out bool ismatch);
 #endif
 
-        public virtual object Clone() {
+        public virtual object Clone()
+        {
             return this.MemberwiseClone();
         }
 
@@ -104,18 +100,23 @@ namespace VTClassic {
 #endif
 
         cUniqueID iUniqueID;
-        public void SetID(cUniqueID pUniqueID) {
+        public void SetID(cUniqueID pUniqueID)
+        {
             iUniqueID = pUniqueID;
         }
-        public cUniqueID GetID() {
+        public cUniqueID GetID()
+        {
             return iUniqueID;
         }
 
-        public Regex createRegexForText(String s) {
-            try {
+        public Regex createRegexForText(String s)
+        {
+            try
+            {
                 return new Regex(s);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return new Regex(Regex.Escape(s));
             }
         }
@@ -123,7 +124,8 @@ namespace VTClassic {
     }
     #endregion iLootRule abstract class
 
-    internal enum eLootRuleType {
+    internal enum eLootRuleType
+    {
         UnsupportedRequirement = -1,
 
         SpellNameMatch = 0,
@@ -164,9 +166,12 @@ namespace VTClassic {
         DisabledRule = 9999,
     }
 
-    internal static class LootRuleCreator {
-        public static iLootRule CreateLootRule(eLootRuleType t) {
-            switch (t) {
+    internal static class LootRuleCreator
+    {
+        public static iLootRule CreateLootRule(eLootRuleType t)
+        {
+            switch (t)
+            {
                 case eLootRuleType.SpellNameMatch: return new SpellNameMatch();
                 case eLootRuleType.StringValueMatch: return new StringValueMatch();
                 case eLootRuleType.LongValKeyLE: return new LongValKeyLE();
@@ -210,10 +215,12 @@ namespace VTClassic {
     }
 
     #region UnsupportedRequirement special rule type
-    internal class cUnsupportedRequirement : iLootRule {
+    internal class cUnsupportedRequirement : iLootRule
+    {
         public char[] data;
 
-        public override eLootRuleType GetRuleType() {
+        public override eLootRuleType GetRuleType()
+        {
             return eLootRuleType.UnsupportedRequirement;
         }
 
@@ -230,23 +237,28 @@ namespace VTClassic {
         }
 #endif
 
-        public override void Read(System.IO.StreamReader inf, int fileversion) {
+        public override void Read(System.IO.StreamReader inf, int fileversion)
+        {
 
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.Write(data, 0, data.Length);
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return "UNSUPPORTED REQUIREMENT";
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Unsupported Requirement";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return false;
         }
     }
@@ -255,7 +267,8 @@ namespace VTClassic {
     #region LootRule classes
 
     #region SpellNameMatch
-    internal class SpellNameMatch : iLootRule {
+    internal class SpellNameMatch : iLootRule
+    {
         public System.Text.RegularExpressions.Regex rx = new Regex("");
 
         public SpellNameMatch() { }
@@ -291,23 +304,28 @@ namespace VTClassic {
         }
 #endif
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             rx = new System.Text.RegularExpressions.Regex(inf.ReadLine());
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(rx.ToString());
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return "SpellNameMatch: " + rx.ToString();
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Spell Name Match";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return true;
         }
 
@@ -321,7 +339,8 @@ namespace VTClassic {
     #endregion SpellNameMatch
 
     #region StringValueMatch
-    internal class StringValueMatch : iLootRule {
+    internal class StringValueMatch : iLootRule
+    {
         public System.Text.RegularExpressions.Regex rx = new Regex("");
         public StringValueKey vk = StringValueKey.FullDescription;
 
@@ -351,25 +370,30 @@ namespace VTClassic {
         }
 #endif
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             rx = new System.Text.RegularExpressions.Regex(inf.ReadLine());
             vk = (StringValueKey)Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(rx.ToString());
             inf.WriteLine(Convert.ToString((int)vk, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return string.Format("{0} matches: {1}", vk, rx);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "String Value Match";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return GameInfo.IsIDProperty(vk);
         }
 
@@ -390,7 +414,8 @@ namespace VTClassic {
     #endregion StringValueMatch
 
     #region LongValKeyLE
-    internal class LongValKeyLE : iLootRule {
+    internal class LongValKeyLE : iLootRule
+    {
         public int keyval = 0;
         public IntValueKey vk = IntValueKey.ActivationReqSkillId;
 
@@ -420,42 +445,57 @@ namespace VTClassic {
         }
 #endif
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             vk = (IntValueKey)Convert.ToUInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
             inf.WriteLine(Convert.ToString((int)vk, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
-            if (vk == IntValueKey.Material) {
+        public override string DisplayString()
+        {
+            if (vk == IntValueKey.Material)
+            {
                 SortedDictionary<string, int> matIds = GameInfo.getMaterialInfo();
-                if (matIds.ContainsValue((int)keyval)) {
-                    foreach (KeyValuePair<string, int> kv in matIds) {
-                        if (kv.Value == (int)keyval) {
+                if (matIds.ContainsValue((int)keyval))
+                {
+                    foreach (KeyValuePair<string, int> kv in matIds)
+                    {
+                        if (kv.Value == (int)keyval)
+                        {
                             return string.Format("{0} <= {1} ({2})", vk, keyval, kv.Key);
                         }
                     }
                 }
             }
-            else if (vk == IntValueKey.WieldReqAttribute) {
+            else if (vk == IntValueKey.WieldReqAttribute)
+            {
                 SortedDictionary<string, int> skillIds = GameInfo.getSkillInfo();
-                if (skillIds.ContainsValue((int)keyval)) {
-                    foreach (KeyValuePair<string, int> kv in skillIds) {
-                        if (kv.Value == (int)keyval) {
+                if (skillIds.ContainsValue((int)keyval))
+                {
+                    foreach (KeyValuePair<string, int> kv in skillIds)
+                    {
+                        if (kv.Value == (int)keyval)
+                        {
                             return string.Format("{0} <= {1} ({2})", vk, keyval, kv.Key);
                         }
                     }
                 }
             }
-            else if (vk == IntValueKey.WeaponMasteryCategory) {
+            else if (vk == IntValueKey.WeaponMasteryCategory)
+            {
                 SortedDictionary<string, int> masteries = GameInfo.getMasteryInfo();
-                if (masteries.ContainsValue((int)keyval)) {
-                    foreach (KeyValuePair<string, int> kv in masteries) {
-                        if (kv.Value == (int)keyval) {
+                if (masteries.ContainsValue((int)keyval))
+                {
+                    foreach (KeyValuePair<string, int> kv in masteries)
+                    {
+                        if (kv.Value == (int)keyval)
+                        {
                             return string.Format("{0} <= {1} ({2})", vk, keyval, kv.Key);
                         }
                     }
@@ -464,11 +504,13 @@ namespace VTClassic {
             return string.Format("{0} <= {1}", vk, keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Long Value Key <=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return GameInfo.IsIDProperty(vk);
         }
 
@@ -489,7 +531,8 @@ namespace VTClassic {
     #endregion LongValKeyLE
 
     #region LongValKeyGE
-    internal class LongValKeyGE : iLootRule {
+    internal class LongValKeyGE : iLootRule
+    {
         public int keyval = 0;
         public IntValueKey vk = IntValueKey.ActivationReqSkillId;
 
@@ -519,42 +562,57 @@ namespace VTClassic {
         }
 #endif
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             vk = (IntValueKey)Convert.ToUInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
             inf.WriteLine(Convert.ToString((int)vk, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
-            if (vk == IntValueKey.Material) {
+        public override string DisplayString()
+        {
+            if (vk == IntValueKey.Material)
+            {
                 SortedDictionary<string, int> matIds = GameInfo.getMaterialInfo();
-                if (matIds.ContainsValue((int)keyval)) {
-                    foreach (KeyValuePair<string, int> kv in matIds) {
-                        if (kv.Value == (int)keyval) {
+                if (matIds.ContainsValue((int)keyval))
+                {
+                    foreach (KeyValuePair<string, int> kv in matIds)
+                    {
+                        if (kv.Value == (int)keyval)
+                        {
                             return string.Format("{0} >= {1} ({2})", vk, keyval, kv.Key);
                         }
                     }
                 }
             }
-            else if (vk == IntValueKey.WieldReqAttribute) {
+            else if (vk == IntValueKey.WieldReqAttribute)
+            {
                 SortedDictionary<string, int> skillIds = GameInfo.getSkillInfo();
-                if (skillIds.ContainsValue((int)keyval)) {
-                    foreach (KeyValuePair<string, int> kv in skillIds) {
-                        if (kv.Value == (int)keyval) {
+                if (skillIds.ContainsValue((int)keyval))
+                {
+                    foreach (KeyValuePair<string, int> kv in skillIds)
+                    {
+                        if (kv.Value == (int)keyval)
+                        {
                             return string.Format("{0} >= {1} ({2})", vk, keyval, kv.Key);
                         }
                     }
                 }
             }
-            else if (vk == IntValueKey.WeaponMasteryCategory) {
+            else if (vk == IntValueKey.WeaponMasteryCategory)
+            {
                 SortedDictionary<string, int> masteries = GameInfo.getMasteryInfo();
-                if (masteries.ContainsValue((int)keyval)) {
-                    foreach (KeyValuePair<string, int> kv in masteries) {
-                        if (kv.Value == (int)keyval) {
+                if (masteries.ContainsValue((int)keyval))
+                {
+                    foreach (KeyValuePair<string, int> kv in masteries)
+                    {
+                        if (kv.Value == (int)keyval)
+                        {
                             return string.Format("{0} >= {1} ({2})", vk, keyval, kv.Key);
                         }
                     }
@@ -563,11 +621,13 @@ namespace VTClassic {
             return string.Format("{0} >= {1}", vk, keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Long Value Key >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return GameInfo.IsIDProperty(vk);
         }
 
@@ -588,7 +648,8 @@ namespace VTClassic {
     #endregion LongValKeyGE
 
     #region DoubleValKeyLE
-    internal class DoubleValKeyLE : iLootRule {
+    internal class DoubleValKeyLE : iLootRule
+    {
         public double keyval = 0d;
         public DoubleValueKey vk = DoubleValueKey.AcidProt;
 
@@ -618,25 +679,30 @@ namespace VTClassic {
         }
 #endif
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = GameInfo.HaxConvertDouble(inf.ReadLine());
             vk = (DoubleValueKey)Convert.ToUInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
             inf.WriteLine(Convert.ToString((int)vk, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return string.Format("{0} <= {1}", vk, keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Double Value Key <=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return GameInfo.IsIDProperty(vk);
         }
 
@@ -657,7 +723,8 @@ namespace VTClassic {
     #endregion DoubleValKeyLE
 
     #region DoubleValKeyGE
-    internal class DoubleValKeyGE : iLootRule {
+    internal class DoubleValKeyGE : iLootRule
+    {
         public double keyval = 0d;
         public DoubleValueKey vk = DoubleValueKey.AcidProt;
 
@@ -687,25 +754,30 @@ namespace VTClassic {
         }
 #endif
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = GameInfo.HaxConvertDouble(inf.ReadLine());
             vk = (DoubleValueKey)Convert.ToUInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
             inf.WriteLine(Convert.ToString((int)vk, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return string.Format("{0} >= {1}", vk, keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Double Value Key >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return GameInfo.IsIDProperty(vk);
         }
 
@@ -726,7 +798,8 @@ namespace VTClassic {
     #endregion DoubleValKeyGE
 
     #region DamagePercentGE
-    internal class DamagePercentGE : iLootRule {
+    internal class DamagePercentGE : iLootRule
+    {
         public double keyval = 0d;
 
         public DamagePercentGE() { }
@@ -747,23 +820,28 @@ namespace VTClassic {
         }
 #endif
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = GameInfo.HaxConvertDouble(inf.ReadLine());
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return string.Format("DamagePercentGE >= {0}", keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Damage Percentage >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return false;
         }
 
@@ -777,7 +855,8 @@ namespace VTClassic {
     #endregion DamagePercentGE
 
     #region ObjectClassE
-    internal class ObjectClassE : iLootRule {
+    internal class ObjectClassE : iLootRule
+    {
         public ObjectClass vk = ObjectClass.Armor;
 
         public ObjectClassE() { }
@@ -798,23 +877,28 @@ namespace VTClassic {
         }
 #endif
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             vk = (ObjectClass)Convert.ToUInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString((int)vk, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return string.Format("ObjectClass = {0}", vk);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "ObjectClass";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return false;
         }
 
@@ -829,7 +913,8 @@ namespace VTClassic {
     #endregion ObjectClassE
 
     #region SpellCountGE
-    internal class SpellCountGE : iLootRule {
+    internal class SpellCountGE : iLootRule
+    {
         public int keyval = 0;
 
         public SpellCountGE() { }
@@ -860,23 +945,28 @@ namespace VTClassic {
         }
 #endif
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return string.Format("SpellCount >= {0}", keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Spell Count >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return true;
         }
 
@@ -890,7 +980,8 @@ namespace VTClassic {
     #endregion SpellCountGE
 
     #region SpellMatch
-    internal class SpellMatch : iLootRule {
+    internal class SpellMatch : iLootRule
+    {
         public Regex rxDoesMatch = new Regex("");
         public Regex rxDoesNotMatch = new Regex("");
         public int Count = 1;
@@ -934,20 +1025,24 @@ namespace VTClassic {
         }
 #endif
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             rxDoesMatch = new Regex(inf.ReadLine());
             rxDoesNotMatch = new Regex(inf.ReadLine());
             Count = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(rxDoesMatch.ToString());
             inf.WriteLine(rxDoesNotMatch.ToString());
             inf.WriteLine(Count.ToString(System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
-            if (string.Empty.Equals(rxDoesNotMatch.ToString().Trim())) {
+        public override string DisplayString()
+        {
+            if (string.Empty.Equals(rxDoesNotMatch.ToString().Trim()))
+            {
                 return string.Format("SpellMatch: {0} [{1} times]",
                 rxDoesMatch, Count);
             }
@@ -955,11 +1050,13 @@ namespace VTClassic {
                 rxDoesMatch, rxDoesNotMatch, Count);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Spell Match and Count";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return true;
         }
 
@@ -983,7 +1080,8 @@ namespace VTClassic {
     #endregion SpellMatch
 
     #region MinDamageGE
-    internal class MinDamageGE : iLootRule {
+    internal class MinDamageGE : iLootRule
+    {
         public double keyval = 0d;
 
         public MinDamageGE() { keyval = 0; }
@@ -1014,23 +1112,28 @@ namespace VTClassic {
         }
 #endif
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = GameInfo.HaxConvertDouble(inf.ReadLine());
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return string.Format("MinDamage >= {0}", keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Minimum Damage >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return true;
         }
 
@@ -1044,7 +1147,8 @@ namespace VTClassic {
     #endregion MinDamageGE
 
     #region LongValKeyFlagExists
-    internal class LongValKeyFlagExists : iLootRule {
+    internal class LongValKeyFlagExists : iLootRule
+    {
         public int keyval = 0;
         public IntValueKey vk = IntValueKey.ActivationReqSkillId;
 
@@ -1074,25 +1178,30 @@ namespace VTClassic {
         }
 #endif
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             vk = (IntValueKey)Convert.ToUInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
             inf.WriteLine(Convert.ToString((int)vk, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return string.Format("{0} has flags {1} (0x{1:X})", vk, keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Long Value Key Has Flags";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return GameInfo.IsIDProperty(vk);
         }
 
@@ -1113,7 +1222,8 @@ namespace VTClassic {
     #endregion LongValKeyFlagExists
 
     #region CharacterSkillGE
-    internal class CharacterSkillGE : iLootRule {
+    internal class CharacterSkillGE : iLootRule
+    {
         public int keyval = 0;
         public VTCSkillID vk = VTCSkillID.Alchemy;
 
@@ -1134,25 +1244,30 @@ namespace VTClassic {
             ismatch = Match(id, player);
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             vk = (VTCSkillID)Convert.ToUInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
             inf.WriteLine(Convert.ToString((int)vk, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("Buffed {0} >= {1}", vk, keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Character Buffed Skill >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return false;
         }
 
@@ -1172,7 +1287,8 @@ namespace VTClassic {
     #endregion CharacterSkillGE
 
     #region CharacterMainPackEmptySlotsGE
-    internal class CharacterMainPackEmptySlotsGE : iLootRule {
+    internal class CharacterMainPackEmptySlotsGE : iLootRule
+    {
         public int keyval = 0;
 
         public CharacterMainPackEmptySlotsGE() { }
@@ -1192,23 +1308,28 @@ namespace VTClassic {
             ismatch = Match(id, player);
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("Main pack slots >= {0}", keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Free Main Pack Slots >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return false;
         }
 
@@ -1222,7 +1343,8 @@ namespace VTClassic {
     #endregion CharacterMainPackEmptySlotsGE
 
     #region LongValKeyE
-    internal class LongValKeyE : iLootRule {
+    internal class LongValKeyE : iLootRule
+    {
         public int keyval = 0;
         public IntValueKey vk = IntValueKey.ActivationReqSkillId;
 
@@ -1250,42 +1372,57 @@ namespace VTClassic {
             }
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             vk = (IntValueKey)Convert.ToUInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
             inf.WriteLine(Convert.ToString((int)vk, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
-            if (vk == IntValueKey.Material) {
+        public override string DisplayString()
+        {
+            if (vk == IntValueKey.Material)
+            {
                 SortedDictionary<string, int> matIds = GameInfo.getMaterialInfo();
-                if (matIds.ContainsValue((int)keyval)) {
-                    foreach (KeyValuePair<string, int> kv in matIds) {
-                        if (kv.Value == (int)keyval) {
+                if (matIds.ContainsValue((int)keyval))
+                {
+                    foreach (KeyValuePair<string, int> kv in matIds)
+                    {
+                        if (kv.Value == (int)keyval)
+                        {
                             return string.Format("{0} == {1} ({2})", vk, keyval, kv.Key);
                         }
                     }
                 }
             }
-            else if (vk == IntValueKey.WieldReqAttribute) {
+            else if (vk == IntValueKey.WieldReqAttribute)
+            {
                 SortedDictionary<string, int> skillIds = GameInfo.getSkillInfo();
-                if (skillIds.ContainsValue((int)keyval)) {
-                    foreach (KeyValuePair<string, int> kv in skillIds) {
-                        if (kv.Value == (int)keyval) {
+                if (skillIds.ContainsValue((int)keyval))
+                {
+                    foreach (KeyValuePair<string, int> kv in skillIds)
+                    {
+                        if (kv.Value == (int)keyval)
+                        {
                             return string.Format("{0} == {1} ({2})", vk, keyval, kv.Key);
                         }
                     }
                 }
             }
-            else if (vk == IntValueKey.WeaponMasteryCategory) {
+            else if (vk == IntValueKey.WeaponMasteryCategory)
+            {
                 SortedDictionary<string, int> masteries = GameInfo.getMasteryInfo();
-                if (masteries.ContainsValue((int)keyval)) {
-                    foreach (KeyValuePair<string, int> kv in masteries) {
-                        if (kv.Value == (int)keyval) {
+                if (masteries.ContainsValue((int)keyval))
+                {
+                    foreach (KeyValuePair<string, int> kv in masteries)
+                    {
+                        if (kv.Value == (int)keyval)
+                        {
                             return string.Format("{0} == {1} ({2})", vk, keyval, kv.Key);
                         }
                     }
@@ -1294,11 +1431,13 @@ namespace VTClassic {
             return string.Format("{0} == {1}", vk, keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Long Value Key ==";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return GameInfo.IsIDProperty(vk);
         }
 
@@ -1319,7 +1458,8 @@ namespace VTClassic {
     #endregion LongValKeyE
 
     #region LongValKeyNE
-    internal class LongValKeyNE : iLootRule {
+    internal class LongValKeyNE : iLootRule
+    {
         public int keyval = 0;
         public IntValueKey vk = IntValueKey.ActivationReqSkillId;
 
@@ -1347,42 +1487,57 @@ namespace VTClassic {
             }
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             vk = (IntValueKey)Convert.ToUInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
             inf.WriteLine(Convert.ToString((int)vk, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
-            if (vk == IntValueKey.Material) {
+        public override string DisplayString()
+        {
+            if (vk == IntValueKey.Material)
+            {
                 SortedDictionary<string, int> matIds = GameInfo.getMaterialInfo();
-                if (matIds.ContainsValue((int)keyval)) {
-                    foreach (KeyValuePair<string, int> kv in matIds) {
-                        if (kv.Value == (int)keyval) {
+                if (matIds.ContainsValue((int)keyval))
+                {
+                    foreach (KeyValuePair<string, int> kv in matIds)
+                    {
+                        if (kv.Value == (int)keyval)
+                        {
                             return string.Format("{0} != {1} ({2})", vk, keyval, kv.Key);
                         }
                     }
                 }
             }
-            else if (vk == IntValueKey.WieldReqAttribute) {
+            else if (vk == IntValueKey.WieldReqAttribute)
+            {
                 SortedDictionary<string, int> skillIds = GameInfo.getSkillInfo();
-                if (skillIds.ContainsValue((int)keyval)) {
-                    foreach (KeyValuePair<string, int> kv in skillIds) {
-                        if (kv.Value == (int)keyval) {
+                if (skillIds.ContainsValue((int)keyval))
+                {
+                    foreach (KeyValuePair<string, int> kv in skillIds)
+                    {
+                        if (kv.Value == (int)keyval)
+                        {
                             return string.Format("{0} != {1} ({2})", vk, keyval, kv.Key);
                         }
                     }
                 }
             }
-            else if (vk == IntValueKey.WeaponMasteryCategory) {
+            else if (vk == IntValueKey.WeaponMasteryCategory)
+            {
                 SortedDictionary<string, int> masteries = GameInfo.getMasteryInfo();
-                if (masteries.ContainsValue((int)keyval)) {
-                    foreach (KeyValuePair<string, int> kv in masteries) {
-                        if (kv.Value == (int)keyval) {
+                if (masteries.ContainsValue((int)keyval))
+                {
+                    foreach (KeyValuePair<string, int> kv in masteries)
+                    {
+                        if (kv.Value == (int)keyval)
+                        {
                             return string.Format("{0} != {1} ({2})", vk, keyval, kv.Key);
                         }
                     }
@@ -1391,11 +1546,13 @@ namespace VTClassic {
             return string.Format("{0} != {1}", vk, keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Long Value Key !=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return GameInfo.IsIDProperty(vk);
         }
 
@@ -1416,7 +1573,8 @@ namespace VTClassic {
     #endregion LongValKeyNE
 
     #region CharacterLevelGE
-    internal class CharacterLevelGE : iLootRule {
+    internal class CharacterLevelGE : iLootRule
+    {
         public int keyval = 0;
 
         public CharacterLevelGE() { }
@@ -1435,23 +1593,28 @@ namespace VTClassic {
             ismatch = Match(id, player);
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("Char Level >= {0}", keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Character Level >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return false;
         }
 
@@ -1465,7 +1628,8 @@ namespace VTClassic {
     #endregion CharacterLevelGE
 
     #region CharacterLevelLE
-    internal class CharacterLevelLE : iLootRule {
+    internal class CharacterLevelLE : iLootRule
+    {
         public int keyval = 0;
 
         public CharacterLevelLE() { }
@@ -1484,23 +1648,28 @@ namespace VTClassic {
             ismatch = Match(id, player);
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("Char Level <= {0}", keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Character Level <=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return false;
         }
 
@@ -1514,7 +1683,8 @@ namespace VTClassic {
     #endregion CharacterLevelLE
 
     #region CharacterBaseSkill
-    internal class CharacterBaseSkill : iLootRule {
+    internal class CharacterBaseSkill : iLootRule
+    {
         public VTCSkillID vk = VTCSkillID.Alchemy;
         public int minskill = 0;
         public int maxskill = 999;
@@ -1536,27 +1706,32 @@ namespace VTClassic {
             ismatch = Match(id, player);
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             vk = (VTCSkillID)Convert.ToUInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             minskill = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             maxskill = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString((int)vk, System.Globalization.CultureInfo.InvariantCulture));
             inf.WriteLine(Convert.ToString(minskill, System.Globalization.CultureInfo.InvariantCulture));
             inf.WriteLine(Convert.ToString(maxskill, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("Base {0} [{1}-{2}]", vk, minskill, maxskill);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Base Skill Range";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return false;
         }
 
@@ -1581,7 +1756,8 @@ namespace VTClassic {
     #endregion CharacterBaseSkill
 
     #region DisabledRule
-    internal class DisabledRule : iLootRule {
+    internal class DisabledRule : iLootRule
+    {
         public Boolean b = true;
 
         public DisabledRule() { }
@@ -1600,23 +1776,28 @@ namespace VTClassic {
             ismatch = false;
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             b = "true".Equals(inf.ReadLine());
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(b ? "true" : "false");
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return b ? "This rule is currently disabled" : "This rule is active";
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Enable/Disable";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return false;
         }
 
@@ -1637,7 +1818,8 @@ namespace VTClassic {
     #endregion DisabledRule
 
     #region AnySimilarColor
-    internal class AnySimilarColor : iLootRule {
+    internal class AnySimilarColor : iLootRule
+    {
         public System.Drawing.Color EColor = System.Drawing.Color.White;
         public double MaxDifferenceSV = 0.1d;
         public double MaxDifferenceH = 10d;
@@ -1694,7 +1876,8 @@ namespace VTClassic {
             ismatch = Match(id, player);
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             int r = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             int g = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             int b = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
@@ -1704,7 +1887,8 @@ namespace VTClassic {
             EColor = System.Drawing.Color.FromArgb(r, g, b);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(EColor.R);
             inf.WriteLine(EColor.G);
             inf.WriteLine(EColor.B);
@@ -1712,15 +1896,18 @@ namespace VTClassic {
             inf.WriteLine(MaxDifferenceSV);
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("Any Color {0}: {1}, {2}", EColor, MaxDifferenceH, MaxDifferenceSV);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "One Similar Color";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return false;
         }
 
@@ -1747,7 +1934,8 @@ namespace VTClassic {
     #endregion AnySimilarColor
 
     #region SimilarColorArmorType
-    internal class SimilarColorArmorType : iLootRule {
+    internal class SimilarColorArmorType : iLootRule
+    {
         public System.Drawing.Color EColor = System.Drawing.Color.White;
         public String ArmorGroup;
         public double MaxDifferenceSV = 0.1d;
@@ -1756,14 +1944,17 @@ namespace VTClassic {
         private static SortedDictionary<String, int[]> armorGroupDefinitions = null;
         private static ReadOnlyCollection<String> armorGroups = null;
 
-        public SimilarColorArmorType() {
+        public SimilarColorArmorType()
+        {
             ArmorGroup = ArmorGroups()[0];
         }
 
         public override eLootRuleType GetRuleType() { return eLootRuleType.SimilarColorArmorType; }
 
-        public static ReadOnlyCollection<String> ArmorGroups() {
-            if (armorGroups == null) {
+        public static ReadOnlyCollection<String> ArmorGroups()
+        {
+            if (armorGroups == null)
+            {
                 List<string> keys = new List<string>();
                 foreach (string k in ColorXML.SlotDefinitions.Keys)
                     keys.Add(k);
@@ -1772,8 +1963,10 @@ namespace VTClassic {
             return armorGroups;
         }
 
-        public static int[] PaletteIndices(String armorGroup) {
-            if (ColorXML.SlotDefinitions.ContainsKey(armorGroup)) {
+        public static int[] PaletteIndices(String armorGroup)
+        {
+            if (ColorXML.SlotDefinitions.ContainsKey(armorGroup))
+            {
                 return ColorXML.SlotDefinitions[armorGroup];
             }
             return new int[] { };
@@ -1789,7 +1982,8 @@ namespace VTClassic {
             value = max / 255d;
         }
 
-        public override bool Match(WorldObject id, Player player) {
+        public override bool Match(WorldObject id, Player player)
+        {
             // TODO: palette stuff
             return false;
             /*
@@ -1833,7 +2027,8 @@ namespace VTClassic {
             hasdecision = true;
             ismatch = Match(id, player);
         }
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             int r = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             int g = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             int b = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
@@ -1845,7 +2040,8 @@ namespace VTClassic {
             ArmorGroup = inf.ReadLine();
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(EColor.R);
             inf.WriteLine(EColor.G);
             inf.WriteLine(EColor.B);
@@ -1854,15 +2050,18 @@ namespace VTClassic {
             inf.WriteLine(ArmorGroup);
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("{0}: {1}, {2}, {3}", ArmorGroup, EColor, MaxDifferenceH, MaxDifferenceSV);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Armor Type Similar Color";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return false;
         }
 
@@ -1896,7 +2095,8 @@ namespace VTClassic {
     #endregion SimilarColorArmorType
 
     #region SlotSimilarColor
-    internal class SlotSimilarColor : iLootRule {
+    internal class SlotSimilarColor : iLootRule
+    {
         public System.Drawing.Color EColor = System.Drawing.Color.White;
         public double MaxDifferenceSV = 0.1d;
         public double MaxDifferenceH = 10d;
@@ -1916,7 +2116,8 @@ namespace VTClassic {
             value = max / 255d;
         }
 
-        public override bool Match(WorldObject id, Player player) {
+        public override bool Match(WorldObject id, Player player)
+        {
             // TODO: palette stuff
             return false;
             /*
@@ -1951,7 +2152,8 @@ namespace VTClassic {
             ismatch = Match(id, player);
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             int r = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             int g = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             int b = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
@@ -1962,7 +2164,8 @@ namespace VTClassic {
             EColor = System.Drawing.Color.FromArgb(r, g, b);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(EColor.R);
             inf.WriteLine(EColor.G);
             inf.WriteLine(EColor.B);
@@ -1971,15 +2174,18 @@ namespace VTClassic {
             inf.WriteLine(Slot);
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("Slot {0} Color {1}: {2}, {3}", Slot, EColor, MaxDifferenceH, MaxDifferenceSV);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Slot Similar Color";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return false;
         }
 
@@ -2011,7 +2217,8 @@ namespace VTClassic {
     #endregion SlotSimilarColor
 
     #region SlotExactPalette
-    internal class SlotExactPalette : iLootRule {
+    internal class SlotExactPalette : iLootRule
+    {
         public int Palette;
         public int Slot;
 
@@ -2019,7 +2226,8 @@ namespace VTClassic {
 
         public override eLootRuleType GetRuleType() { return eLootRuleType.SlotExactPalette; }
 
-        public override bool Match(WorldObject id, Player player) {
+        public override bool Match(WorldObject id, Player player)
+        {
             // TODO: palette stuff
             return false;
             /*
@@ -2039,25 +2247,30 @@ namespace VTClassic {
             ismatch = Match(id, player);
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             Slot = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             Palette = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Slot);
             inf.WriteLine(Palette);
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("Slot {0} Palette 0x{1:X}", Slot, Palette);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Slot Exact Palette";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return false;
         }
 
@@ -2078,7 +2291,8 @@ namespace VTClassic {
     #region Mag's computed requirements
 
     #region BuffedMedianDamageGE
-    internal class BuffedMedianDamageGE : iLootRule {
+    internal class BuffedMedianDamageGE : iLootRule
+    {
         public double keyval = 0d;
 
         public BuffedMedianDamageGE() { }
@@ -2111,23 +2325,28 @@ namespace VTClassic {
             }
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = GameInfo.HaxConvertDouble(inf.ReadLine());
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("Buffed Median Damage >= {0}", keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Calced Buffed Median Damage >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return true;
         }
 
@@ -2141,7 +2360,8 @@ namespace VTClassic {
     #endregion BuffedMedianDamageGE
 
     #region BuffedMissileDamageGE
-    internal class BuffedMissileDamageGE : iLootRule {
+    internal class BuffedMissileDamageGE : iLootRule
+    {
         public double keyval = 0d;
 
         public BuffedMissileDamageGE() { }
@@ -2170,23 +2390,28 @@ namespace VTClassic {
             }
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = GameInfo.HaxConvertDouble(inf.ReadLine());
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("Buffed Missile Damage >= {0}", keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Calced Buffed Missile Damage >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return true;
         }
 
@@ -2200,7 +2425,8 @@ namespace VTClassic {
     #endregion BuffedMissileDamageGE
 
     #region BuffedLongValKeyGE
-    internal class BuffedLongValKeyGE : iLootRule {
+    internal class BuffedLongValKeyGE : iLootRule
+    {
         public double keyval = 0d;
         public IntValueKey vk = IntValueKey.MaxDamage;
 
@@ -2208,7 +2434,7 @@ namespace VTClassic {
         public BuffedLongValKeyGE(double k, IntValueKey v) { keyval = k; vk = v; }
 
         public override eLootRuleType GetRuleType() { return eLootRuleType.BuffedLongValKeyGE; }
-        
+
         public override bool Match(WorldObject id, Player player)
         {
             ComputedItemInfo cinfo = new ComputedItemInfo(id);
@@ -2224,25 +2450,30 @@ namespace VTClassic {
             ismatch = false;
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = GameInfo.HaxConvertDouble(inf.ReadLine());
             vk = (IntValueKey)Convert.ToUInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
             inf.WriteLine(Convert.ToString((int)vk, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return string.Format("Buffed {0} >= {1}", vk, keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Buffed Long Value Key >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return true;
         }
 
@@ -2266,7 +2497,8 @@ namespace VTClassic {
     #endregion BuffedLongValKeyGE
 
     #region BuffedDoubleValKeyGE
-    internal class BuffedDoubleValKeyGE : iLootRule {
+    internal class BuffedDoubleValKeyGE : iLootRule
+    {
         public double keyval = 0d;
         public DoubleValueKey vk = DoubleValueKey.AttackBonus;
 
@@ -2290,25 +2522,30 @@ namespace VTClassic {
             ismatch = false;
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = GameInfo.HaxConvertDouble(inf.ReadLine());
             vk = (DoubleValueKey)Convert.ToUInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
             inf.WriteLine(Convert.ToString((int)vk, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return string.Format("Buffed {0} >= {1}", vk, keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Buffed Double Value Key >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return true;
         }
 
@@ -2332,7 +2569,8 @@ namespace VTClassic {
     #endregion BuffedDoubleValKeyGE
 
     #region CalcdBuffedTinkedDamageGE
-    internal class CalcdBuffedTinkedDamageGE : iLootRule {
+    internal class CalcdBuffedTinkedDamageGE : iLootRule
+    {
         public double keyval = 0d;
 
         public CalcdBuffedTinkedDamageGE() { }
@@ -2361,23 +2599,28 @@ namespace VTClassic {
             }
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = GameInfo.HaxConvertDouble(inf.ReadLine());
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("Calced Buffed Tinked Dmg >= {0}", keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Calced Buffed Tinked Dmg >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return true;
         }
 
@@ -2391,7 +2634,8 @@ namespace VTClassic {
     #endregion CalcdBuffedTinkedDamageGE
 
     #region TotalRatingsGE
-    internal class TotalRatingsGE : iLootRule {
+    internal class TotalRatingsGE : iLootRule
+    {
         public double keyval = 0d;
 
         public TotalRatingsGE() { }
@@ -2420,23 +2664,28 @@ namespace VTClassic {
 			}*/
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             keyval = GameInfo.HaxConvertDouble(inf.ReadLine());
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("Calced Total Ratings >= {0}", keyval);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Calced Total Ratings >=";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return true;
         }
 
@@ -2450,7 +2699,8 @@ namespace VTClassic {
     #endregion TotalRatingsGE
 
     #region CalcedBuffedTinkedTargetMeleeGE
-    internal class CalcedBuffedTinkedTargetMeleeGE : iLootRule {
+    internal class CalcedBuffedTinkedTargetMeleeGE : iLootRule
+    {
         double targetCalcedBuffedTinkedDoT;
         double targetBuffedMeleeDefenseBonus;
         double targetBuffedAttackBonus;
@@ -2478,27 +2728,32 @@ namespace VTClassic {
             }
         }
 
-        public override void Read(System.IO.StreamReader inf, int profileversion) {
+        public override void Read(System.IO.StreamReader inf, int profileversion)
+        {
             targetCalcedBuffedTinkedDoT = double.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             targetBuffedMeleeDefenseBonus = double.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             targetBuffedAttackBonus = double.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public override void Write(CountedStreamWriter inf) {
+        public override void Write(CountedStreamWriter inf)
+        {
             inf.WriteLine(targetCalcedBuffedTinkedDoT);
             inf.WriteLine(targetBuffedMeleeDefenseBonus);
             inf.WriteLine(targetBuffedAttackBonus);
         }
 
-        public override string DisplayString() {
+        public override string DisplayString()
+        {
             return String.Format("Melee Target: {0} DoT: {1} md, {2} a", targetCalcedBuffedTinkedDoT, targetBuffedMeleeDefenseBonus, targetBuffedAttackBonus);
         }
 
-        public override string FriendlyName() {
+        public override string FriendlyName()
+        {
             return "Calced Buffed Tinked Target Melee";
         }
 
-        public override bool MayRequireID() {
+        public override bool MayRequireID()
+        {
             return true;
         }
 
@@ -2527,7 +2782,8 @@ namespace VTClassic {
 
     #region cLootItemRule (requirement set) and cLootRules (rule set)
     //A set of rules with an action attached
-    internal class cLootItemRule : iSettingsCollection {
+    internal class cLootItemRule : iSettingsCollection
+    {
         public List<iLootRule> IntRules = new List<iLootRule>();
         public int pri = 0;
         public eLootAction act = eLootAction.Keep;
@@ -2535,15 +2791,19 @@ namespace VTClassic {
         public string name = "";
         public string CustomExpression = "";
 
-        public cLootItemRule() {
+        public cLootItemRule()
+        {
         }
 
         public int Priority() { return pri; }
         public eLootAction Action() { return act; }
 
-        public bool AnyReqRequiresID() {
-            foreach (iLootRule i in IntRules) {
-                if (i.MayRequireID()) {
+        public bool AnyReqRequiresID()
+        {
+            foreach (iLootRule i in IntRules)
+            {
+                if (i.MayRequireID())
+                {
                     return true;
                 }
             }
@@ -2591,7 +2851,8 @@ namespace VTClassic {
 
         #region iSettingsCollection Members
 
-        public void Read(System.IO.StreamReader inf, int profileversion) {
+        public void Read(System.IO.StreamReader inf, int profileversion)
+        {
             //Name
             name = inf.ReadLine();
 
@@ -2609,24 +2870,29 @@ namespace VTClassic {
             act = (eLootAction)Convert.ToInt32(clines[1], System.Globalization.CultureInfo.InvariantCulture);
 
             //Read extra info on the lootaction
-            if (act == eLootAction.KeepUpTo) {
+            if (act == eLootAction.KeepUpTo)
+            {
                 LootActionData = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             }
 
             //Rules...also encoded in the 'big line'
             IntRules.Clear();
-            for (int i = 2; i < clines.Length; ++i) {
+            for (int i = 2; i < clines.Length; ++i)
+            {
                 int ruletype = Convert.ToInt32(clines[i], System.Globalization.CultureInfo.InvariantCulture);
                 iLootRule newrule;
                 newrule = LootRuleCreator.CreateLootRule((eLootRuleType)ruletype);
 
-                if (UTLVersionInfo.VersionHasFeature(eUTLFileFeature.RequirementLengthCode, profileversion)) {
+                if (UTLVersionInfo.VersionHasFeature(eUTLFileFeature.RequirementLengthCode, profileversion))
+                {
                     int lengthcode = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
-                    if (newrule != null) {
+                    if (newrule != null)
+                    {
                         newrule.Read(inf, profileversion);
                         IntRules.Add(newrule);
                     }
-                    else {
+                    else
+                    {
                         //Skip
                         char[] b = new char[lengthcode];
                         inf.Read(b, 0, lengthcode);
@@ -2635,7 +2901,8 @@ namespace VTClassic {
                         IntRules.Add(Unsup);
                     }
                 }
-                else {
+                else
+                {
                     //Uncoded length, hope it is not null because if it is we are just going to crash
                     newrule.Read(inf, profileversion);
                     IntRules.Add(newrule);
@@ -2643,7 +2910,8 @@ namespace VTClassic {
             }
         }
 
-        public void Write(CountedStreamWriter inf) {
+        public void Write(CountedStreamWriter inf)
+        {
             //Name
             inf.WriteLine(name);
 
@@ -2655,17 +2923,20 @@ namespace VTClassic {
             s.Append(Convert.ToString(pri, System.Globalization.CultureInfo.InvariantCulture));
             s.Append(";");
             s.Append(Convert.ToString((int)act, System.Globalization.CultureInfo.InvariantCulture));
-            foreach (iLootRule lr in IntRules) {
+            foreach (iLootRule lr in IntRules)
+            {
                 s.Append(";");
                 s.Append(Convert.ToString((int)lr.GetRuleType(), System.Globalization.CultureInfo.InvariantCulture));
             }
             inf.WriteLine(s.ToString());
 
-            if (act == eLootAction.KeepUpTo) {
+            if (act == eLootAction.KeepUpTo)
+            {
                 inf.WriteLine(LootActionData.ToString(System.Globalization.CultureInfo.InvariantCulture));
             }
 
-            foreach (iLootRule lr in IntRules) {
+            foreach (iLootRule lr in IntRules)
+            {
                 //Write to a temp buffer so we can generate a length prefix
                 System.IO.MemoryStream ms = new System.IO.MemoryStream();
                 CountedStreamWriter sw = new CountedStreamWriter(ms);
@@ -2683,12 +2954,14 @@ namespace VTClassic {
         #endregion
     }
 
-    internal class cLootRules {
+    internal class cLootRules
+    {
         public List<cLootItemRule> Rules = new List<cLootItemRule>();
         public UTLFileExtraBlockManager ExtraBlockManager = new UTLFileExtraBlockManager();
         public int UTLFileVersion = UTLVersionInfo.MAX_PROFILE_VERSION;
 
-        public cLootRules() {
+        public cLootRules()
+        {
             ExtraBlockManager.CreateDefaultBlocks();
         }
 
@@ -2754,14 +3027,17 @@ namespace VTClassic {
             }
         }
 
-        public void Clear() {
+        public void Clear()
+        {
             Rules.Clear();
         }
 
         #region iSettingsCollection Members
 
-        public bool Read(System.IO.StreamReader inf, int none) {
-            try {
+        public bool Read(System.IO.StreamReader inf, int none)
+        {
+            try
+            {
                 Rules.Clear();
 
                 //Version 0 files start with a rulecount at the top,
@@ -2771,7 +3047,8 @@ namespace VTClassic {
                 //rulecount
                 string firstline = inf.ReadLine();
                 int count;
-                if (firstline == "UTL") {
+                if (firstline == "UTL")
+                {
                     UTLFileVersion = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
 
                     if (UTLFileVersion > UTLVersionInfo.MAX_PROFILE_VERSION)
@@ -2779,13 +3056,15 @@ namespace VTClassic {
 
                     count = Convert.ToInt32(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
                 }
-                else {
+                else
+                {
                     UTLFileVersion = 0;
                     count = Convert.ToInt32(firstline, System.Globalization.CultureInfo.InvariantCulture);
                 }
 
                 //Read rules
-                for (int i = 0; i < count; ++i) {
+                for (int i = 0; i < count; ++i)
+                {
                     cLootItemRule R = new cLootItemRule();
                     R.Read(inf, UTLFileVersion);
                     Rules.Add(R);
@@ -2796,13 +3075,16 @@ namespace VTClassic {
 
                 return true;
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 return false;
             }
         }
 
-        public bool Write(CountedStreamWriter inf) {
-            try {
+        public bool Write(CountedStreamWriter inf)
+        {
+            try
+            {
                 inf.WriteLine("UTL");
                 inf.WriteLine(UTLVersionInfo.MAX_PROFILE_VERSION);
 
@@ -2814,7 +3096,8 @@ namespace VTClassic {
 
                 return true;
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 return false;
             }
         }

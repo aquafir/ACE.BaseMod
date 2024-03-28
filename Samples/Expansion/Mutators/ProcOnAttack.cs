@@ -19,7 +19,7 @@ public class ProcOnAttack : Mutator
             { Sigil.Fury, EquipmentSet.AetheriaFury },
             { Sigil.Growth, EquipmentSet.AetheriaGrowth },
             { Sigil.Vigor, EquipmentSet.AetheriaVigor }
-        }; 
+        };
     #endregion
 
     public override bool TryMutateLoot(HashSet<Mutation> mutations, TreasureDeath treasureDeath, TreasureRoll treasureRoll, WorldObject item)
@@ -47,7 +47,7 @@ public class ProcOnAttack : Mutator
         target.SetProperty(PropertyDataId.ProcSpell, (uint)surgeSpell);
 
         //if (Sets.SurgeTargetSelf[surgeSpell])
-        if(new Spell(surgeSpell).IsSelfTargeted)
+        if (new Spell(surgeSpell).IsSelfTargeted)
             target.SetProperty(PropertyBool.ProcSpellSelfTargeted, true);
 
         // set equip mask

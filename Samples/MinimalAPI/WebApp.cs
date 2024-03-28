@@ -1,9 +1,4 @@
-﻿using ACE.Database.Models.Shard;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Net.WebSockets;
-
-namespace MinimalAPI;
+﻿namespace MinimalAPI;
 
 public class WebApp
 {

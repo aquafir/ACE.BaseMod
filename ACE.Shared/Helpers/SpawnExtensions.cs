@@ -1,14 +1,4 @@
-﻿using ACE.Common;
-using ACE.DatLoader.Entity;
-using ACE.Entity.Enum.Properties;
-using ACE.Server.Entity;
-using ACE.Server.Factories;
-using ACE.Server.Managers;
-using System;
-using System.Text.Json.Serialization;
-using System.Xml.Linq;
-
-namespace ACE.Shared.Helpers
+﻿namespace ACE.Shared.Helpers
 {
     public static class SpawnExtensions
     {

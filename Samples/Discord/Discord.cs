@@ -4,7 +4,6 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Timers;
 
@@ -198,7 +197,8 @@ public class Discord
             if (attachment.Size > 1_000_000)
                 continue;
 
-            try {
+            try
+            {
                 if (attachment.Filename.EndsWith(".utl"))
                 {
                     //By username?
@@ -223,7 +223,7 @@ public class Discord
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ModManager.Log($"Failed to download attachment.");
             }
@@ -330,18 +330,18 @@ public class Discord
                 //TODO: figure out why channel users was an issue
                 var guild = _client.GetGuild(PatchClass.Settings.GUILD_ID) as IGuild;
                 var users = await guild.GetUsersAsync();
-                foreach(var u in users)
+                foreach (var u in users)
                 //await foreach (var userAsync in _channel.GetUsersAsync())
                 {
                     //foreach (var u in userAsync)
                     //{
-                        //Todo: decide how to map usernames to lookup names
-                        if (_users.ContainsKey(u.Username))
-                            continue;
+                    //Todo: decide how to map usernames to lookup names
+                    if (_users.ContainsKey(u.Username))
+                        continue;
 
-                        //May only want to keep the ID?
-                        _users.Add(u.Username, u);
-                        ModManager.Log($"Found user {u.Username} - {u.Id} - {u.Status}");
+                    //May only want to keep the ID?
+                    _users.Add(u.Username, u);
+                    ModManager.Log($"Found user {u.Username} - {u.Id} - {u.Status}");
                     //}
                 }
 
@@ -354,7 +354,7 @@ public class Discord
                     return;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ModManager.Log($"Failed to find Discord user {userName}", ModManager.LogLevel.Error);
 
@@ -463,5 +463,5 @@ public class Discord
     #endregion
 
     private async Task LogAsync(LogMessage message)
-    => Console.WriteLine(message.ToString());    
+    => Console.WriteLine(message.ToString());
 }

@@ -1,8 +1,8 @@
 ﻿//using ACE.Adapter.GDLE.Models;
-using System.Runtime.Serialization.Formatters.Binary;
+using ACE.Common.Extensions;
 using ACE.DatLoader.Entity;
 using Newtonsoft.Json;
-using ACE.Common.Extensions;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Spells;
 
@@ -151,7 +151,7 @@ public static class SpellHelper
     private static void CreateRelatedSpellGroups()
     {
         var portalDat = new PortalDatDatabase(PatchClass.Settings.PortalDatPath, false);
-            
+
         //var spells = !PatchClass.Settings.OnlyPlayerSpells ?
         //    portalDat.SpellTable.Spells :
         //    //Restrict SpellTable to player spells.  PlayerSpellTable is sorted for binary search
@@ -159,14 +159,15 @@ public static class SpellHelper
 
         //Just player spells
         var spells = new Dictionary<uint, SpellBase>();
-        foreach (uint i in Player.PlayerSpellTable) {
+        foreach (uint i in Player.PlayerSpellTable)
+        {
             var spell = new Spell(i);
             var sBase = portalDat.SpellTable.Spells[i];
-            if(spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.Beneficial) && !spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.SelfTargeted)
+            if (spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.Beneficial) && !spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.SelfTargeted)
                 //Require researchable for any < 6
                 && (spell.Level > 6 || !spell.Flags.HasFlag(ACE.Entity.Enum.SpellFlags.NotResearchable))
                 && (sBase.MetaSpellType == SpellType.Enchantment))
-            spells.Add(i, sBase);
+                spells.Add(i, sBase);
         }
 
         //var groups = spells.OrderBy(s => new Spell(s.Key).Level).GroupBy(x => new
@@ -323,7 +324,7 @@ public static class SpellHelper
         var binaryFormatter = new BinaryFormatter();
         var memoryStream = new MemoryStream();
         binaryFormatter.Serialize(memoryStream, objectData);
-        
+
         return memoryStream.ToArray();
     }
 
@@ -385,7 +386,7 @@ public static class SpellHelper
             //if (j < spellBase.Formula.Count)
             //    writer.Write(spellBase.Formula[j]);
             //else
-                writer.Write(0u);
+            writer.Write(0u);
         }
 
         writer.Write((uint)spellBase.CasterEffect);

@@ -1,7 +1,6 @@
 ﻿using ACE.Entity.Enum.Properties;
 using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.WorldObjects;
 
 namespace EasyEnlightenment;
 
@@ -122,7 +121,7 @@ public class PatchClass
     {
         if (Settings.RemoveSociety)
             Enlightenment.RemoveSociety(player);
-        if(Settings.RemoveLuminance)
+        if (Settings.RemoveLuminance)
             Enlightenment.RemoveLuminance(player);
         if (Settings.RemoveAetheria)
             Enlightenment.RemoveAetheria(player);
@@ -141,7 +140,7 @@ public class PatchClass
     public static bool PreCheckUseRequirements(WorldObject activator, ref WorldObject __instance, ref ActivationResult __result)
     {
         //Handle activator custom
-        if(__instance.WeenieClassId == ENLIGHTENMENT_WCID)
+        if (__instance.WeenieClassId == ENLIGHTENMENT_WCID)
         {
             if (activator is not Player player)
                 __result = new ActivationResult(true);
@@ -211,7 +210,7 @@ public class PatchClass
                 break;
         }
 
-        if(!Settings.SkipResetCertificate) 
+        if (!Settings.SkipResetCertificate)
             player.GiveFromEmote(npc, Enlightenment.AttributeResetCertificate, 1);
 
         var msg = $"{player.Name} has achieved the {lvl} level of Enlightenment!";
@@ -240,8 +239,8 @@ public class PatchClass
 
         //Credits
         var creditsOwed = player.Enlightenment / Settings.SkillCreditInterval * Settings.SkillCreditAmount;
-            player.AddSkillCredits(player.Enlightenment / Settings.SkillCreditInterval * Settings.SkillCreditAmount);
-            player.SendMessage($"You've been awarded {creditsOwed} skill credits.");
+        player.AddSkillCredits(player.Enlightenment / Settings.SkillCreditInterval * Settings.SkillCreditAmount);
+        player.SendMessage($"You've been awarded {creditsOwed} skill credits.");
 
         //Max lum
         if (player.MaximumLuminance is not null)
@@ -262,7 +261,7 @@ public class PatchClass
     {
         __result = true;
 
-        if (player.Level < Settings.LevelReq )
+        if (player.Level < Settings.LevelReq)
         {
             player.Session.Network.EnqueueSend(new GameMessageSystemChat($"You must be level 275 for enlightenment.", ChatMessageType.Broadcast));
             __result = false;

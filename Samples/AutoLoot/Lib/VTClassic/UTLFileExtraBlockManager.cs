@@ -28,20 +28,20 @@
 //  THE SOFTWARE.
 ///////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace VTClassic {
-    internal interface IUTLFileBlockHandler {
+namespace VTClassic
+{
+    internal interface IUTLFileBlockHandler
+    {
         string BlockTypeID { get; }
         void Read(System.IO.StreamReader inf, int len);
         void Write(CountedStreamWriter inf);
     }
 
-    internal class UTLFileExtraBlockManager {
+    internal class UTLFileExtraBlockManager
+    {
         static Dictionary<string, Type> BlockHandlerTypes = new Dictionary<string, Type>();
-        static void AddHandlerType(Type t) {
+        static void AddHandlerType(Type t)
+        {
             if (!typeof(IUTLFileBlockHandler).IsAssignableFrom(t)) throw new Exception("UTLFileExtraBlockManager: Cannot add handler type.");
 
             //Create one to determine its typeid
@@ -52,49 +52,60 @@ namespace VTClassic {
 
             BlockHandlerTypes[tid] = t;
         }
-        static UTLFileExtraBlockManager() {
-            try {
+        static UTLFileExtraBlockManager()
+        {
+            try
+            {
                 //Add the current handler types
                 AddHandlerType(typeof(UTLBlockHandlers.UTLBlock_SalvageCombine));
             }
-            catch (Exception exx) {
+            catch (Exception exx)
+            {
                 Console.WriteLine("Exception in static constructor(" + System.Reflection.Assembly.GetExecutingAssembly().FullName + "): " + exx.ToString());
             }
         }
 
         List<IUTLFileBlockHandler> FileBlocks = new List<IUTLFileBlockHandler>();
 
-        void TryAddDefaultBlock(IUTLFileBlockHandler h) {
+        void TryAddDefaultBlock(IUTLFileBlockHandler h)
+        {
             if (GetFirstBlock(h.BlockTypeID) == null)
                 FileBlocks.Add(h);
         }
-        public void CreateDefaultBlocks() {
+        public void CreateDefaultBlocks()
+        {
             //Create the blocks that aren't here
             TryAddDefaultBlock(new UTLBlockHandlers.UTLBlock_SalvageCombine());
         }
 
-        public IUTLFileBlockHandler GetFirstBlock(string HandlerName) {
-            foreach (IUTLFileBlockHandler h in FileBlocks) {
+        public IUTLFileBlockHandler GetFirstBlock(string HandlerName)
+        {
+            foreach (IUTLFileBlockHandler h in FileBlocks)
+            {
                 if (h.BlockTypeID == HandlerName) return h;
             }
             return null;
         }
 
-        public void Read(System.IO.StreamReader inf) {
+        public void Read(System.IO.StreamReader inf)
+        {
             FileBlocks.Clear();
 
-            while (!inf.EndOfStream) {
+            while (!inf.EndOfStream)
+            {
                 //Read blocks
                 string blocktype = inf.ReadLine();
                 int blocklen = int.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
 
-                if (BlockHandlerTypes.ContainsKey(blocktype)) {
+                if (BlockHandlerTypes.ContainsKey(blocktype))
+                {
                     //Known blocktype, create and add
                     IUTLFileBlockHandler h = (IUTLFileBlockHandler)BlockHandlerTypes[blocktype].GetConstructor(new Type[] { }).Invoke(null);
                     h.Read(inf, blocklen);
                     FileBlocks.Add(h);
                 }
-                else {
+                else
+                {
                     //Unknown blocktype, skip ahead
                     char[] qq = new char[blocklen];
                     inf.Read(qq, 0, blocklen);
@@ -104,8 +115,10 @@ namespace VTClassic {
             CreateDefaultBlocks();
         }
 
-        public void Write(CountedStreamWriter inf) {
-            foreach (IUTLFileBlockHandler h in FileBlocks) {
+        public void Write(CountedStreamWriter inf)
+        {
+            foreach (IUTLFileBlockHandler h in FileBlocks)
+            {
                 System.IO.MemoryStream ms = new System.IO.MemoryStream();
                 CountedStreamWriter sw = new CountedStreamWriter(ms);
                 h.Write(sw);

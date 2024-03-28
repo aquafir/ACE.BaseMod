@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace ExtendACE;
+﻿namespace ExtendACE;
 
 public class Mod : IHarmonyMod
 {

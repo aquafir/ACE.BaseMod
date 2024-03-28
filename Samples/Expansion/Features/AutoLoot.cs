@@ -57,7 +57,7 @@ internal class AutoLoot
     {
         //Return false to override
         //return false;
-//        Debugger.Break();
+        //        Debugger.Break();
 
         //Return true to execute original
         return true;

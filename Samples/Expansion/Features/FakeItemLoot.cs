@@ -1,5 +1,4 @@
-﻿using ACE.Entity;
-using ACE.Server.Managers;
+﻿using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
 
 namespace Expansion.Features;
@@ -18,7 +17,7 @@ internal class FakeItemLoot
         var lootProfile = __instance?.DeathTreasure?.MemberwiseClone() as TreasureDeath;
 
         bool replaceProfile = false;
-        
+
         if (killer.IsPlayer && killer.TryGetPetOwnerOrAttacker() is Player player && lootProfile is not null)
         {
             replaceProfile = true;
@@ -102,7 +101,7 @@ internal class FakeItemLoot
                         droppedItems.Add(wo);
                 }
             }
-        } 
+        }
         #endregion
 
         __result = droppedItems;

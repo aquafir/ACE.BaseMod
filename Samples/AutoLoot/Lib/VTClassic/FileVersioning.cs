@@ -28,25 +28,26 @@
 //  THE SOFTWARE.
 ///////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 #if VTC_PLUGIN
-using uTank2.LootPlugins;
 #endif
 
-namespace VTClassic {
-    internal enum eUTLFileFeature {
+namespace VTClassic
+{
+    internal enum eUTLFileFeature
+    {
         RuleExpression = 1,
         RequirementLengthCode = 2,
     }
 
-    internal static class UTLVersionInfo {
+    internal static class UTLVersionInfo
+    {
         public const int MAX_PROFILE_VERSION = 1;
 
-        public static bool VersionHasFeature(eUTLFileFeature feature, int version) {
-            switch (version) {
+        public static bool VersionHasFeature(eUTLFileFeature feature, int version)
+        {
+            switch (version)
+            {
                 case 0:
                     return false;
                 case 1:

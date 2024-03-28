@@ -1,17 +1,11 @@
-﻿using ACE.Entity.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
-using uTank2.LootPlugins;
-using VTClassic;
-
-namespace AutoLoot.Lib {
-    public static class WorldObjectExtensions {
-        public static double GetValueDouble(this WorldObject wo, DoubleValueKey key, double defaultValue) {
-            switch (key) {
+﻿namespace AutoLoot.Lib
+{
+    public static class WorldObjectExtensions
+    {
+        public static double GetValueDouble(this WorldObject wo, DoubleValueKey key, double defaultValue)
+        {
+            switch (key)
+            {
                 case DoubleValueKey.SlashProt:
                     return wo.ArmorModVsSlash.HasValue ? wo.ArmorModVsSlash.Value : defaultValue;
                 case DoubleValueKey.PierceProt:
@@ -40,8 +34,10 @@ namespace AutoLoot.Lib {
                     return wo.GetProperty((PropertyFloat)key) ?? defaultValue;
             }
         }
-        public static bool GetValueBool(this WorldObject wo, BoolValueKey key, bool defaultValue) {
-            switch (key) {
+        public static bool GetValueBool(this WorldObject wo, BoolValueKey key, bool defaultValue)
+        {
+            switch (key)
+            {
                 case BoolValueKey.Inscribable:
                     return wo.Inscribable;
                 case BoolValueKey.Lockable:
@@ -51,8 +47,10 @@ namespace AutoLoot.Lib {
             }
         }
 
-        public static string GetValueString(this WorldObject wo, StringValueKey key, string defaultValue) {
-            switch (key) {
+        public static string GetValueString(this WorldObject wo, StringValueKey key, string defaultValue)
+        {
+            switch (key)
+            {
                 case StringValueKey.SecondaryName:
                     return wo.PluralName;
                 default:
@@ -60,8 +58,10 @@ namespace AutoLoot.Lib {
             }
         }
 
-        public static int GetValueInt(this WorldObject wo, IntValueKey key, int defaultValue) {
-            switch (key) {
+        public static int GetValueInt(this WorldObject wo, IntValueKey key, int defaultValue)
+        {
+            switch (key)
+            {
                 case IntValueKey.Type:
                     return (int)wo.WeenieType;
                 case IntValueKey.Icon:
@@ -145,19 +145,23 @@ namespace AutoLoot.Lib {
             }
         }
 
-        public static bool IsMagical(this WorldObject wo) { 
+        public static bool IsMagical(this WorldObject wo)
+        {
             return (wo.UiEffects & UiEffects.Magical) != 0;
         }
 
-        public static List<Spell> GetSpells(this WorldObject wo) {
+        public static List<Spell> GetSpells(this WorldObject wo)
+        {
             return wo.Biota?.PropertiesSpellBook?.Keys.ToList().Select(s => new Spell(s)).ToList() ?? new List<Spell>();
         }
 
-        public static int GetActiveSpellCount(this WorldObject wo) {
+        public static int GetActiveSpellCount(this WorldObject wo)
+        {
             return wo.EnchantmentManager.GetEnchantments(MagicSchool.LifeMagic).Count + wo.EnchantmentManager.GetEnchantments(MagicSchool.CreatureEnchantment).Count + wo.EnchantmentManager.GetEnchantments(MagicSchool.ItemEnchantment).Count;
         }
 
-        public static ObjectClass GetObjectClass(this WorldObject wo) {
+        public static ObjectClass GetObjectClass(this WorldObject wo)
+        {
             ObjectClass objectClass = ObjectClass.Unknown;
             int _type = (int)wo.ItemType;
             int _bools = (int)wo.ObjectDescriptionFlags;
@@ -202,7 +206,8 @@ namespace AutoLoot.Lib {
             else if ((_bools & 262144) > 0) objectClass = ObjectClass.Portal;
             else if ((_bools & 8388608) > 0) objectClass = ObjectClass.Foci;
             else if ((_bools & 1) > 0) objectClass = ObjectClass.Container;
-            if ((_type & 8192) > 0 && (_bools & 256) > 0 && objectClass == ObjectClass.Unknown) {
+            if ((_type & 8192) > 0 && (_bools & 256) > 0 && objectClass == ObjectClass.Unknown)
+            {
                 if ((_bools & 2) > 0) objectClass = ObjectClass.Journal;
                 else if ((_bools & 4) > 0) objectClass = ObjectClass.Sign;
                 else if ((_bools & 15) > 0) objectClass = ObjectClass.Book;

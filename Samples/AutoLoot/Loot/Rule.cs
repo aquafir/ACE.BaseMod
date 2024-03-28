@@ -1,8 +1,4 @@
-﻿
-using System.Data;
-using System.Text;
-
-namespace AutoLoot.Loot;
+﻿namespace AutoLoot.Loot;
 
 public class Rule
 {
@@ -28,7 +24,7 @@ public class Rule
             return false;
 
         //Todo: Check others...
-        
+
         return true;
     }
 

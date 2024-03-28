@@ -27,15 +27,12 @@
 //  THE SOFTWARE.
 ///////////////////////////////////////////////////////////////////////////////
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 #if VTC_PLUGIN
-using uTank2.LootPlugins;
 #endif
 
-namespace VTClassic {
+namespace VTClassic
+{
 #if VTC_EDITOR
     public enum PropertyString
     {
@@ -255,7 +252,8 @@ namespace VTClassic {
     }
 #endif
 
-    enum VTCSkillID {
+    enum VTCSkillID
+    {
         Axe = 1,
         Bow = 2,
         Crossbow = 3,
@@ -308,7 +306,8 @@ namespace VTClassic {
         Summoning = 54
     }
 
-    public enum eLootAction {
+    public enum eLootAction
+    {
         NoLoot = 0,
         Keep = 1,
         Salvage = 2,
@@ -323,9 +322,12 @@ namespace VTClassic {
     }
 
     // maybe some key-value collection will actually be better...
-    internal class eLootActionTool {
-        public static string FriendlyName(eLootAction e) {
-            switch (e) {
+    internal class eLootActionTool
+    {
+        public static string FriendlyName(eLootAction e)
+        {
+            switch (e)
+            {
                 case eLootAction.Keep:
                     return "Keep";
                 case eLootAction.Salvage:
@@ -340,12 +342,15 @@ namespace VTClassic {
             return string.Empty;
         }
 
-        public static List<string> FriendlyNames() {
+        public static List<string> FriendlyNames()
+        {
             List<String> r = new List<String>();
 
-            foreach (eLootAction e in Enum.GetValues(typeof(eLootAction))) {
+            foreach (eLootAction e in Enum.GetValues(typeof(eLootAction)))
+            {
                 String s = eLootActionTool.FriendlyName(e);
-                if (!String.Empty.Equals(s)) {
+                if (!String.Empty.Equals(s))
+                {
                     r.Add(s);
                 }
             }
@@ -353,10 +358,13 @@ namespace VTClassic {
             return r;
         }
 
-        public static eLootAction enumValue(string s) {
-            foreach (eLootAction e in Enum.GetValues(typeof(eLootAction))) {
+        public static eLootAction enumValue(string s)
+        {
+            foreach (eLootAction e in Enum.GetValues(typeof(eLootAction)))
+            {
                 String n = eLootActionTool.FriendlyName(e);
-                if (s.Equals(n)) {
+                if (s.Equals(n))
+                {
                     return e;
                 }
             }
@@ -364,21 +372,25 @@ namespace VTClassic {
         }
     }
 
-    internal interface iSettingsCollection {
+    internal interface iSettingsCollection
+    {
         void Read(System.IO.StreamReader inf, int fileversion);
         void Write(CountedStreamWriter inf);
     }
 
-    internal class cUniqueID : IComparable<cUniqueID> {
+    internal class cUniqueID : IComparable<cUniqueID>
+    {
         static long last = 0;
-        public static cUniqueID New(int t, object n) {
+        public static cUniqueID New(int t, object n)
+        {
             return new cUniqueID(++last, t, n);
         }
 
         public object node;
         public int type;
         long v;
-        cUniqueID(long z, int t, object n) {
+        cUniqueID(long z, int t, object n)
+        {
             node = n;
             type = t;
             v = z;
@@ -386,15 +398,18 @@ namespace VTClassic {
 
         #region IComparable<cUniqueID> Members
 
-        public int CompareTo(cUniqueID other) {
+        public int CompareTo(cUniqueID other)
+        {
             return v.CompareTo(other);
         }
 
         #endregion
     }
 
-    internal static class GameInfo {
-        public static double HaxConvertDouble(string s) {
+    internal static class GameInfo
+    {
+        public static double HaxConvertDouble(string s)
+        {
             string ss = s.Replace(',', '.');
             double res;
             if (!double.TryParse(ss, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out res))
@@ -402,7 +417,8 @@ namespace VTClassic {
             return res;
         }
 
-        public static bool IsIDProperty(StringValueKey vk) {
+        public static bool IsIDProperty(StringValueKey vk)
+        {
             return false;
             /*
             switch (vk) {
@@ -413,7 +429,8 @@ namespace VTClassic {
             */
         }
 
-        public static bool IsIDProperty(IntValueKey vk) {
+        public static bool IsIDProperty(IntValueKey vk)
+        {
             return false;
             /*
             switch (vk) {
@@ -455,7 +472,8 @@ namespace VTClassic {
             */
         }
 
-        public static bool IsIDProperty(DoubleValueKey vk) {
+        public static bool IsIDProperty(DoubleValueKey vk)
+        {
             return false;
             /*
             switch (vk) {
@@ -466,7 +484,8 @@ namespace VTClassic {
             */
         }
 
-        public static SortedDictionary<string, int> getSetInfo() {
+        public static SortedDictionary<string, int> getSetInfo()
+        {
             int i = 32;
             SortedDictionary<string, int> r = new SortedDictionary<string, int>();
             r.Add("Protective Clothing", i--);
@@ -501,7 +520,8 @@ namespace VTClassic {
             return r;
         }
 
-        public static SortedDictionary<string, int> getSkillInfo() {
+        public static SortedDictionary<string, int> getSkillInfo()
+        {
             SortedDictionary<string, int> r = new SortedDictionary<string, int>();
             r.Add("Axe (DEPRECEATED)", 1);
             r.Add("Bow (DEPRECEATED)", 2);
@@ -537,7 +557,8 @@ namespace VTClassic {
             return r;
         }
 
-        public static SortedDictionary<string, int> getMasteryInfo() {
+        public static SortedDictionary<string, int> getMasteryInfo()
+        {
             SortedDictionary<string, int> r = new SortedDictionary<string, int>();
 
             r.Add("Unarmed Weapon", 1);
@@ -557,8 +578,10 @@ namespace VTClassic {
 
         private static SortedDictionary<string, int> matIds;
         private static SortedDictionary<int, string> matNames;
-        static void GenerateMaterialInfo() {
-            if (matIds == null) {
+        static void GenerateMaterialInfo()
+        {
+            if (matIds == null)
+            {
                 matIds = new SortedDictionary<string, int>();
                 matIds.Add("Agate", 10);
                 matIds.Add("Alabaster", 66);
@@ -634,22 +657,26 @@ namespace VTClassic {
                 matIds.Add("Zircon", 50);
 
                 matNames = new SortedDictionary<int, string>();
-                foreach (KeyValuePair<string, int> kp in matIds) {
+                foreach (KeyValuePair<string, int> kp in matIds)
+                {
                     matNames[kp.Value] = kp.Key;
                 }
             }
         }
-        public static SortedDictionary<string, int> getMaterialInfo() {
+        public static SortedDictionary<string, int> getMaterialInfo()
+        {
             GenerateMaterialInfo();
             return matIds;
         }
 
-        public static SortedDictionary<int, string> getMaterialNamesByID() {
+        public static SortedDictionary<int, string> getMaterialNamesByID()
+        {
             GenerateMaterialInfo();
             return matNames;
         }
 
-        public static string getMaterialName(int materialId) {
+        public static string getMaterialName(int materialId)
+        {
             GenerateMaterialInfo();
             if (matNames.ContainsKey(materialId))
                 return matNames[materialId];
@@ -657,7 +684,8 @@ namespace VTClassic {
                 return String.Empty;
         }
 
-        public static int GetMaterialID(string matname) {
+        public static int GetMaterialID(string matname)
+        {
             GenerateMaterialInfo();
             if (matIds.ContainsKey(matname))
                 return matIds[matname];
@@ -665,7 +693,8 @@ namespace VTClassic {
                 return 0;
         }
 
-        public static SortedDictionary<string, int[]> getMaterialGroups() {
+        public static SortedDictionary<string, int[]> getMaterialGroups()
+        {
             SortedDictionary<string, int[]> r = new SortedDictionary<string, int[]>();
             // Armor Tinkering: Alabaster, Armoredillo Hide, Bronze, Ceramic, Marble, Peridot, Reedshark Hide, Steel, Wool, Yellow Topaz, Zircon
             r.Add("Armor Tinkering", new int[] { 66, 53, 58, 1, 68, 34, 55, 64, 8, 49, 50 });

@@ -146,7 +146,7 @@ public class PatchClass
     public static void HandleCreateEx(Session session, params string[] parameters)
     {
         //Check parameters
-        if(parameters.Length != 2)
+        if (parameters.Length != 2)
         {
             session.Player.SendMessage($"Available types are: \n{availableTypes}");
             return;
@@ -159,7 +159,7 @@ public class PatchClass
         {
             session.Player.SendMessage($"Available types are: \n{availableTypes}");
             return;
-        }       
+        }
 
         var weenie = AdminCommands.GetWeenieForCreate(session, parameters[1]);
         if (weenie is null)

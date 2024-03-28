@@ -36,7 +36,7 @@ namespace Balance.Patches
         {
             var baseSkill = GetBaseSkillImbued(skill);
             __result = func(baseSkill, (int)GetImbuedSkillType(skill));
-            
+
             //Check for a min?
             __result = Math.Max(1.0f, __result);
 

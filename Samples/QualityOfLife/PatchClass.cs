@@ -1,12 +1,8 @@
-﻿using ACE.DatLoader.FileTypes;
-using ACE.Entity;
+﻿using ACE.Entity;
 using ACE.Entity.Enum.Properties;
 using ACE.Server.Entity.Actions;
 using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.Physics.Animation;
-using ACE.Server.WorldObjects;
-using Iced.Intel.EncoderInternal;
 using MotionTable = ACE.DatLoader.FileTypes.MotionTable;
 
 namespace QualityOfLife;

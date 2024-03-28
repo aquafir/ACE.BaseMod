@@ -1,5 +1,4 @@
 ﻿using ACE.Database;
-using ACE.Entity.Models;
 using ACE.Server.Entity.Actions;
 using ACE.Server.Managers;
 
@@ -31,7 +30,8 @@ public class ShinyPet : Mutator
         //Lazy way of doing stuff after it spawns in its container
         var actionChain = new ActionChain();
         actionChain.AddDelaySeconds(3.0f);  // wait for container placement
-        actionChain.AddAction(item, () => {
+        actionChain.AddAction(item, () =>
+        {
             if (item.Container is not Corpse corpse)
                 return;
 
@@ -46,7 +46,7 @@ public class ShinyPet : Mutator
                 return;
 
             var weenie = DatabaseManager.World.GetCachedWeenie((uint)livingType);
-            if (weenie is null) 
+            if (weenie is null)
                 return;
 
             //            if (corpse.CreatureType is null)
@@ -65,8 +65,8 @@ public class ShinyPet : Mutator
 
             petDevice.Name = $"Shiny {corpse.Name}";
             //var parent = item.Container;
-            
-            });
+
+        });
         actionChain.EnqueueChain();
 
         return true;

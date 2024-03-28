@@ -1,13 +1,8 @@
-﻿using ACE.Database.Models.World;
+﻿using ACE.Database;
 using ACE.Entity.Enum.Properties;
-using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.Network;
-using ImGuiNET;
-using ACE.Entity;
-using ACE.Database;
-using System.Diagnostics;
 using ACE.Server.Command.Handlers;
-using ACE.Server.Physics.Common;
+using ImGuiNET;
+using System.Diagnostics;
 
 namespace ImGuiTest;
 
@@ -24,7 +19,7 @@ public class WorldTab : Widget
     bool focusQuery = true;
     public override void Render()
     {
-        if(focusQuery)
+        if (focusQuery)
         {
             ImGui.SetKeyboardFocusHere();
             focusQuery = false;
@@ -42,7 +37,7 @@ public class WorldTab : Widget
             focusQuery = true;
         }
 
-            ImGui.Combo("Type ###WorldWeenieType", ref weenieTypeIndex, weenieTypes, weenieTypes.Length);
+        ImGui.Combo("Type ###WorldWeenieType", ref weenieTypeIndex, weenieTypes, weenieTypes.Length);
 
         ImGui.SameLine();
         if (ImGui.Button("Cache###CacheWorldDb"))
@@ -129,26 +124,26 @@ public class WorldTab : Widget
         weenies.Clear();
         weenies = creatureCache.Where(x => x.PropertiesString[PropertyString.Name].Contains(query, StringComparison.OrdinalIgnoreCase)).Take(20).ToList();
 
-            //    using (var ctx = new WorldDbContext())
-            //{
-            //    // Group creatures by type
-            //    var results = from creature in ctx.Weenie
-            //                  where creature.Type == (int)(WeenieType.Creature) && creature.ClassName.Contains(query, StringComparison.OrdinalIgnoreCase)
-            //                  join cType in ctx.WeeniePropertiesInt on creature.ClassId equals cType.ObjectId
-            //                  where cType.Type == (ushort)(PropertyInt.CreatureType)
-            //                  select new TableRow()
-            //                  {
-            //                      ID = (int)creature.ClassId,
-            //                      Name = creature.ClassName,
-            //                      Value = ((CreatureType)cType.Value).ToString(),
-            //                  };
-            //    tableData = results.ToArray();
+        //    using (var ctx = new WorldDbContext())
+        //{
+        //    // Group creatures by type
+        //    var results = from creature in ctx.Weenie
+        //                  where creature.Type == (int)(WeenieType.Creature) && creature.ClassName.Contains(query, StringComparison.OrdinalIgnoreCase)
+        //                  join cType in ctx.WeeniePropertiesInt on creature.ClassId equals cType.ObjectId
+        //                  where cType.Type == (ushort)(PropertyInt.CreatureType)
+        //                  select new TableRow()
+        //                  {
+        //                      ID = (int)creature.ClassId,
+        //                      Name = creature.ClassName,
+        //                      Value = ((CreatureType)cType.Value).ToString(),
+        //                  };
+        //    tableData = results.ToArray();
 
-            //var sb = new StringBuilder($"\n\n{"Name",-40}{"Type",-15}{"Type #",-10}\n");
-            //foreach (var group in results.ToList().GroupBy(x => x.Type).OrderBy(x => x.Count()))
-            //    sb.AppendLine($"{(CreatureType)group.Key,-40}{group.Key,-15}{group.Count(),-10}");
+        //var sb = new StringBuilder($"\n\n{"Name",-40}{"Type",-15}{"Type #",-10}\n");
+        //foreach (var group in results.ToList().GroupBy(x => x.Type).OrderBy(x => x.Count()))
+        //    sb.AppendLine($"{(CreatureType)group.Key,-40}{group.Key,-15}{group.Count(),-10}");
 
-            //ModManager.Log(sb.ToString());
-        
+        //ModManager.Log(sb.ToString());
+
     }
 }

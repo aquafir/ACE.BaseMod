@@ -36,7 +36,7 @@ namespace Balance.Patches
             if (GetImbuedSkillType(skill) != ImbuedSkillType.Melee)
                 return true;
 
-                var baseSkill = GetBaseSkillImbued(skill);
+            var baseSkill = GetBaseSkillImbued(skill);
             __result = func(baseSkill);
 
             return false;

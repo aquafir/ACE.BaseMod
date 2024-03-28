@@ -1,5 +1,7 @@
-﻿namespace uTank2.LootPlugins {
-    public enum IntValueKey {
+﻿namespace uTank2.LootPlugins
+{
+    public enum IntValueKey
+    {
         Species = 2,
         Burden = 5,
         ContainerSlots = 7,

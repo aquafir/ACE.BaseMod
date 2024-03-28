@@ -32,12 +32,12 @@ public class SkillChance : AngouriMathPatch
     #region Patches
     [HarmonyPrefix]
     [HarmonyPatch(typeof(SkillCheck), nameof(SkillCheck.GetSkillChance), new Type[] { typeof(int), typeof(int), typeof(float) })]
-    public static bool PreGetSkillChance(int skill, int difficulty, float factor,  ref double __result)
-    {       
+    public static bool PreGetSkillChance(int skill, int difficulty, float factor, ref double __result)
+    {
         var chance = func(skill, difficulty, factor);
-     
+
         //Don't think the clamp is actually necessary for the way it is used
-        __result = Math.Clamp(chance, 0, 1); 
+        __result = Math.Clamp(chance, 0, 1);
 
         return false;
     }
