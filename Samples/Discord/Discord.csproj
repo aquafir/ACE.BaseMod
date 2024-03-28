@@ -89,7 +89,7 @@
 			<!--<FilesToDelete Include="$(OutDir)Microsoft.*.dll" />-->
 			<FilesToDelete Include="$(OutDir)Mono.*.dll" />
 			<FilesToDelete Include="$(OutDir)MonoMod.*.dll" />
-			<FilesToDelete Include="$(OutDir)System.*.dll" />
+			<FilesToDelete Include="$(OutDir)System.*.dll" Exclude="System.Text.*.dll" />
 		</ItemGroup>
 		<Message Text="Deleting Files @(FilesToDelete)" />
 		<Delete Files="@(FilesToDelete)">
