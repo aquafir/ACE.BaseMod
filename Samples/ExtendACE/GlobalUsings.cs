@@ -1,4 +1,5 @@
-﻿global using ACE.Common;
+﻿extern alias Json;
+global using ACE.Common;
 global using ACE.Entity;
 global using ACE.Entity.Enum;
 //global using ACE.DatLoader.Entity;
@@ -14,5 +15,5 @@ global using HarmonyLib;
 global using System.Diagnostics;
 global using System.Reflection;
 global using System.Text.Encodings.Web;
-global using System.Text.Json;
-global using System.Text.Json.Serialization;
+global using Json.System.Text.Json;
+global using Json.System.Text.Json.Serialization;

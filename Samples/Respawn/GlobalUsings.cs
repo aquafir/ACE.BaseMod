@@ -1,4 +1,5 @@
-﻿global using ACE.Entity.Enum;
+﻿extern alias Json;
+global using ACE.Entity.Enum;
 global using ACE.Server.Command;
 global using ACE.Server.Entity;
 global using ACE.Server.Mods;
@@ -8,5 +9,5 @@ global using ACE.Shared.Helpers;
 global using HarmonyLib;
 global using System;
 global using System.Text;
-global using System.Text.Json;
-global using System.Text.Json.Serialization;
+global using Json.System.Text.Json;
+global using Json.System.Text.Json.Serialization;

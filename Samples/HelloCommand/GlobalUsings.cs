@@ -1,4 +1,5 @@
-﻿global using ACE.Entity.Enum;
+﻿extern alias Json;
+global using ACE.Entity.Enum;
 
 global using ACE.Server.Command;
 global using ACE.Server.Mods;
