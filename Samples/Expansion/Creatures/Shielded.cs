@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureExType.Shielded))]
 public class Shielded : CreatureEx
 {
     public Shielded(Biota biota) : base(biota) { }

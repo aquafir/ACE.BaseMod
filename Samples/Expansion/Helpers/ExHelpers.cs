@@ -46,7 +46,7 @@ public static class CreatureExHelpers
         Creatures.CreatureExType.Drainer => new Drainer(weenie, guid),
         Creatures.CreatureExType.Duelist => new Duelist(weenie, guid),
         Creatures.CreatureExType.Evader => new Evader(weenie, guid),
-        Creatures.CreatureExType.Exploding => new Exploder(weenie, guid),
+        Creatures.CreatureExType.Exploder => new Exploder(weenie, guid),
         Creatures.CreatureExType.Healer => new Creatures.Healer(weenie, guid),
         Creatures.CreatureExType.Merger => new Merger(weenie, guid),
         //Creatures.CreatureType.Necromancer => new Necromancer(weenie, guid),

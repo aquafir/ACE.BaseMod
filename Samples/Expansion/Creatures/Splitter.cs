@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+//[HarmonyPatchCategory(nameof(CreatureExType.Splitter))]
 public class Splitter : CreatureEx
 {
     public Splitter(Biota biota) : base(biota) { }

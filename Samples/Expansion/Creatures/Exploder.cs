@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureExType.Exploder))]
 public class Exploder : CreatureEx
 {
     public Exploder(Biota biota) : base(biota) { }

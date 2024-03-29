@@ -94,6 +94,7 @@ public enum FakeInt
     OriginalItemType = 10026,
     ItemSpellSplitCount = 10027,
     ItemSpellSplashCount = 10028,
+    CreatureExType = 10029,
 
     //PropertyEnum?
     ItemWieldRequirementType1 = 20000,
@@ -105,7 +106,6 @@ public enum FakeInt
     ChatInfractions = 20004,
     ItemWieldRequirementEnlightenments = 20005,
     DifficultyTier = 20006,
-    CreatureExType = 20007,
 }
 
 public enum FakeInt64

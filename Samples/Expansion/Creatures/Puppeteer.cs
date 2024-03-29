@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureExType.Puppeteer))]
 public class Puppeteer : CreatureEx
 {
     public Puppeteer(Biota biota) : base(biota) { }

@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureExType.Stunner))]
 public class Stunner : CreatureEx
 {
     public Stunner(Biota biota) : base(biota) { }

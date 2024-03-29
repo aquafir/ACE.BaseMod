@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureExType.Comboer))]
 public class Comboer : CreatureEx
 {
     public Comboer(Biota biota) : base(biota) { }

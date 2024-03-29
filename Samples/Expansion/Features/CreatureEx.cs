@@ -1,4 +1,6 @@
-﻿namespace Expansion.Features;
+﻿using System;
+
+namespace Expansion.Features;
 
 [HarmonyPatchCategory(nameof(Feature.CreatureEx))]
 public class CreatureEx
@@ -14,7 +16,7 @@ public class CreatureEx
         if (weenie.PropertiesInt.TryGetValue((PropertyInt)FakeInt.CreatureExType, out var creatureType))
         {
             var type = (CreatureExType)creatureType;
-            if (!Enum.IsDefined(type))
+            if (!Enum.IsDefined(type) || type == CreatureExType.Unknown)
             {
                 ModManager.Log($"Invalid CreatureEx type found: {type}");
                 return true;
@@ -29,14 +31,9 @@ public class CreatureEx
 
         __result = RollCreature(weenie, guid);
 
-        //Fix it in post!
-        var timer = Stopwatch.StartNew();
+        //Fix NPCs being created as CreatureEx in post!
         if (__result is Creature creature && creature.IsNPC)
-        {
             __result = new Creature(weenie, guid);
-            timer.Stop();
-            ModManager.Log($"{creature.Name} was an NPC remade as a vanilla Creature in {timer.ElapsedMilliseconds} ms");
-        }
 
         return false;
     }
@@ -45,19 +42,29 @@ public class CreatureEx
     [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(Biota) })]
     public static bool PreCreateWorldObject(Biota biota, ref WorldObject __result)
     {
-        //if (biota.IsNpc()) return true;
         if (biota.WeenieType != WeenieType.Creature) return true;
-        if (ThreadSafeRandom.Next(0, 1.0f) > PatchClass.Settings.CreatureChance) return true;
-        __result = RollCreature(biota);
+
+        //Check for a specified CreatureEx type
+        if (biota.PropertiesInt.TryGetValue((PropertyInt)FakeInt.CreatureExType, out var creatureType))
+        {
+            var type = (CreatureExType)creatureType;
+            if (!Enum.IsDefined(type) || type == CreatureExType.Unknown)
+            {
+                ModManager.Log($"Invalid CreatureEx type found: {type}");
+                return false;
+            }
+
+            __result = type.Create(biota);
+        }
+        //Roll for a random type
+        else if (ThreadSafeRandom.Next(0, 1.0f) <= PatchClass.Settings.CreatureChance)
+        {
+            __result = RollCreature(biota);
+        }
 
         //Fix NPCs being created as CreatureEx in post!
-        var timer = Stopwatch.StartNew();
         if (__result is Creature creature && creature.IsNPC)
-        {
             __result = new Creature(biota);
-            timer.Stop();
-            ModManager.Log($"{creature.Name} was an NPC remade as a vanilla Creature in {timer.ElapsedMilliseconds} ms");
-        }
 
         return false;
     }

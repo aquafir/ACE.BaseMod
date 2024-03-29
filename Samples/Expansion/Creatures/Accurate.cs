@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureExType.Accurate))]
 public class Accurate : CreatureEx
 {
     public Accurate(Biota biota) : base(biota) { }

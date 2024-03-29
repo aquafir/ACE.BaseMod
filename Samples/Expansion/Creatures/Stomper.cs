@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureExType.Stomper))]
 public class Stomper : CreatureEx
 {
     public Stomper(Biota biota) : base(biota) { }

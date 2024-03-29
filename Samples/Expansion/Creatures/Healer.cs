@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureExType.Healer))]
 public class Healer : CreatureEx
 {
     public Healer(Biota biota) : base(biota) { }

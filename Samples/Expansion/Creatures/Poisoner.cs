@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+//[HarmonyPatchCategory(nameof(CreatureExType.Poisoner))]
 public class Poisoner : CreatureEx
 {
     public Poisoner(Biota biota) : base(biota) { }

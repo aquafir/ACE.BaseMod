@@ -1,8 +1,6 @@
-﻿//using Weenie = ACE.Entity.Models.Weenie;
+﻿namespace Expansion.Creatures;
 
-namespace Expansion.Creatures;
-
-[HarmonyPatch]
+//[HarmonyPatchCategory(nameof(CreatureEx))]
 public class CreatureEx : Creature
 {
     public CreatureEx(Biota biota) : base(biota)

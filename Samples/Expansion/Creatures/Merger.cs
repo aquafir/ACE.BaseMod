@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureExType.Merger))]
 public class Merger : CreatureEx
 {
     public Merger(Biota biota) : base(biota) { }

@@ -1,6 +1,6 @@
 ﻿namespace Expansion.Creatures;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(CreatureExType.Tank))]
 public class Tank : CreatureEx
 {
     public Tank(Biota biota) : base(biota) { }

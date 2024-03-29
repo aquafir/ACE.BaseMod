@@ -7,10 +7,14 @@ public class Settings
     #region Features / Mutators
     public List<Feature> Features { get; set; } = new() { 
         //Feature.FakePropertyCache, 
-        Feature.MutatorHooks, 
+        //Feature.MutatorHooks, 
         //Feature.Hardcore,
         //Feature.Ironman,
+        Feature.CreatureEx
     };
+
+    public List<CreatureExType> CreatureFeatures { get; set; } = new();
+
     //Full set
     //Enum.GetValues<Feature>().ToList();
     public List<MutatorSettings> Mutators { get; set; } =
@@ -141,7 +145,7 @@ public class Settings
     #endregion
     #endregion
 
-    public double CreatureChance { get; set; } = .5;
+    public double CreatureChance { get; set; } = 0;
 
     public SpellSettings SpellSettings { get; set; } = new();
 

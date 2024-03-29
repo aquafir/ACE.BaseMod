@@ -34,6 +34,5 @@ public enum Feature
     Hardcore,
     Ironman,
     CreatureEx,
-    CreatureExProperty,
 }
 
