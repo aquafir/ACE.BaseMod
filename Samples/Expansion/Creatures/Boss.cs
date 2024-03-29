@@ -193,7 +193,7 @@ public class Boss : CreatureEx
     #region Resist/Evade
     //Unresistable?
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.TryResistSpell), new Type[] { typeof(WorldObject), typeof(Spell), typeof(WorldObject), typeof(bool) })]
+    [HarmonyPatch(typeof(WorldObject), nameof(TryResistSpell), new Type[] { typeof(WorldObject), typeof(Spell), typeof(WorldObject), typeof(bool) })]
     public static bool PreTryResistSpell(WorldObject target, Spell spell, WorldObject itemCaster, bool projectileHit, ref WorldObject __instance, ref bool __result)
     {
         if (__instance is Boss b)

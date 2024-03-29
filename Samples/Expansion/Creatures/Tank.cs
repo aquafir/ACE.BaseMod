@@ -24,7 +24,7 @@ public class Tank : CreatureEx
     const int candidates = 4;
     const float tankMultiplier = .2f;
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(Creature), nameof(Creature.TakeDamage), new Type[] { typeof(WorldObject), typeof(DamageType), typeof(float), typeof(bool) })]
+    [HarmonyPatch(typeof(Creature), nameof(TakeDamage), new Type[] { typeof(WorldObject), typeof(DamageType), typeof(float), typeof(bool) })]
     public static void PreTakeDamage(WorldObject source, DamageType damageType, ref float amount, bool crit, ref Creature __instance, ref uint __result)
     {
         if (source is not Player p || __instance is Tank)

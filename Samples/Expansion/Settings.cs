@@ -13,7 +13,21 @@ public class Settings
         Feature.CreatureEx
     };
 
-    public List<CreatureExType> CreatureFeatures { get; set; } = new();
+    public List<CreatureExType> CreatureFeatures { get; set; } = new()
+    {
+        CreatureExType.Accurate,
+        CreatureExType.Boss,
+        CreatureExType.Comboer,
+        CreatureExType.Drainer,
+        CreatureExType.Evader,
+        CreatureExType.Rogue,
+        CreatureExType.SpellBreaker,
+        CreatureExType.SpellThief,
+        CreatureExType.Stomper,
+        CreatureExType.Tank,
+        CreatureExType.Vampire,
+        CreatureExType.Warder,
+    };
 
     //Full set
     //Enum.GetValues<Feature>().ToList();

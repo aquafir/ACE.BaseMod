@@ -101,14 +101,20 @@ public class PatchClass
     /// </summary>
     private static void SetupFeatures()
     {
-        foreach (var feature in PatchClass.Settings.Features)
+        foreach (var feature in Settings.Features)
         {
             Mod.Harmony.PatchCategory(feature.ToString());
 
-            if (PatchClass.Settings.Verbose)
+            if (Settings.Verbose)
                 ModManager.Log($"Enabled feature: {feature}");
         }
+
+        foreach (var feature in Settings.CreatureFeatures)
+        {
+            Mod.Harmony.PatchCategory(feature.ToString());
+
+            if (Settings.Verbose)
+                ModManager.Log($"Enabled CreatureEx feature: {feature}");
+        }
     }
-
-
 }

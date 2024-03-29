@@ -72,9 +72,9 @@ public static class SpellHelper
                 ModManager.Log($"Created related spell groups.");
 
                 var output = new StringBuilder("ID,Group,Type\r\n");
-                output.AppendLine(string.Join(System.Environment.NewLine, _comparableSpells.OrderBy(x => x.Key).Select(kvp => $"{kvp.Key}{CD}{kvp.Value}{CD}C")));
-                output.AppendLine(string.Join(System.Environment.NewLine, _relatedSpells.OrderBy(x => x.Key).Select(kvp => $"{kvp.Key}{CD}{kvp.Value}{CD}R")));
-                output.AppendLine(string.Join(System.Environment.NewLine, _groups.OrderBy(x => x.Key).Select(kvp => $"{kvp.Key}{CD}{string.Join(SD, kvp.Value)}{CD}G")));
+                output.AppendLine(string.Join(Environment.NewLine, _comparableSpells.OrderBy(x => x.Key).Select(kvp => $"{kvp.Key}{CD}{kvp.Value}{CD}C")));
+                output.AppendLine(string.Join(Environment.NewLine, _relatedSpells.OrderBy(x => x.Key).Select(kvp => $"{kvp.Key}{CD}{kvp.Value}{CD}R")));
+                output.AppendLine(string.Join(Environment.NewLine, _groups.OrderBy(x => x.Key).Select(kvp => $"{kvp.Key}{CD}{string.Join(SD, kvp.Value)}{CD}G")));
 
                 File.WriteAllText(_groupPath, output.ToString());
 
