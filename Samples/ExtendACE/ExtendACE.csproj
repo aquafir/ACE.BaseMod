@@ -26,7 +26,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Lib.Harmony" Version="2.3.1.1" />
+		<PackageReference Include="Lib.Harmony" Version="2.3.2" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -80,7 +80,7 @@
 			<FilesToDelete Include="$(OutDir)Microsoft.*.dll" />
 			<FilesToDelete Include="$(OutDir)Mono.*.dll" />
 			<FilesToDelete Include="$(OutDir)MonoMod.*.dll" />
-			<FilesToDelete Include="$(OutDir)System.*.dll" Exclude="System.Text.*.dll" />
+			<FilesToDelete Include="$(OutDir)System.*.dll" Exclude="$(OutDir)System.Text.*.dll" />
 		</ItemGroup>
 		<Message Text="Deleting Files @(FilesToDelete)" />
 		<Delete Files="@(FilesToDelete)">

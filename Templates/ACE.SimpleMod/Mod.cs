@@ -6,6 +6,7 @@ namespace ACE.SimpleMod
     public class Mod : IHarmonyMod
     {
         //Point to your mod directory
+    public static ModContainer Container => ModManager.GetModContainerByPath(Mod.ModPath);
         public static string ModPath = Path.Combine(ModManager.ModPath, "$safeprojectname$");
 
         //IDs are used by Harmony to separate multiple patches

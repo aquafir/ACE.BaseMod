@@ -1,5 +1,6 @@
 ﻿using ACE.Entity.Enum.Properties;
 using ACE.Shared.Helpers;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace Bank;
@@ -14,7 +15,7 @@ public class PatchClass
     static string settingsPath => Path.Combine(Mod.ModPath, "Settings.json");
     private FileInfo settingsInfo = new(settingsPath);
 
-    private System.Text.Json.JsonSerializerOptions _serializeOptions = new()
+    private JsonSerializerOptions _serializeOptions = new()
     {
         WriteIndented = true,
         AllowTrailingCommas = true,
