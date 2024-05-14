@@ -17,6 +17,8 @@ public class AutoLoot
 
         try
         {
+            //Make the path if it doesn't exist
+            Directory.CreateDirectory(PatchClass.Settings.LootProfilePath);
             var profiles = Directory.GetFiles(PatchClass.Settings.LootProfilePath, "*.utl", SearchOption.AllDirectories);
 
             //Print
