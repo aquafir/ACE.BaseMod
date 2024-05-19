@@ -58,6 +58,10 @@ public enum FakeFloat
     ItemWieldRequirementValue1 = 20000,
     TimestampLastPlayerDeath = 20001,
     QuestBonus = 20002,
+    TimestampLastMissileSplit = 20003,
+    ItemMissileSplitAngle = 20004,
+    TimestampLastMissileSplash = 20005,
+    ItemMissileSplashRadius = 20006,
 }
 public enum FakeIID
 {
@@ -106,6 +110,9 @@ public enum FakeInt
     ChatInfractions = 20004,
     ItemWieldRequirementEnlightenments = 20005,
     DifficultyTier = 20006,
+    MaxAmmo = 20007,
+    ItemMissileSplitCount = 20008,
+    ItemMissileSplashCount = 20009,
 }
 
 public enum FakeInt64

@@ -34,5 +34,7 @@ public enum Feature
     Hardcore,
     Ironman,
     CreatureEx,
+    FakeMissileSplitSplash,
+    CreatureMaxAmmo,
 }
 

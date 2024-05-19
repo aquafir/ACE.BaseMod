@@ -9,6 +9,7 @@ public static class SplashHelper
     /// </summary>
     public static List<PhysicsObj> GetVisibleCreaturesByDistance(this Player origin) => origin.GetVisibleCreaturesByDistance(origin);
 
+    //Todo: implement on per-landblock level if reference approach doesn't work.  Maybe look at spatial hashing
     /// <summary>
     /// Gets a list of PhysicsObj sorted by distance from a WorldObject using objects visible to a reference Player
     /// </summary>
@@ -26,27 +27,10 @@ public static class SplashHelper
 
         return visible;
     }
-
-    //Todo: implement on per-landblock level if reference approach doesn't work.  Maybe look at spatial hashing
+    
     /// <summary>
-    /// Gets a list of PhysicsObj visible to a WorldObject sorted by distance
+    /// Gets targets within a radius of the origin using a reference Player
     /// </summary>
-    //public static List<PhysicsObj> GetVisibleCreaturesByDistance(this WorldObject origin)
-    //{
-    //    var visible = origin.PhysicsObj.ObjMaint.GetVisibleObjectsValuesWhere(o =>
-    //    o.WeenieObj.WorldObject.WeenieType == WeenieType.Creature &&    //Restrict to creature weenies here for speed?
-    //    o.WeenieObj.WorldObject != null);
-    //
-    //    visible.Sort((x, y) => origin.Location.SquaredDistanceTo(x.WeenieObj.WorldObject.Location)
-    //                .CompareTo(origin.Location.SquaredDistanceTo(y.WeenieObj.WorldObject.Location)));
-
-    //    return visible;
-    //}
-
-    /// <summary>
-    /// Gets the Performs a cleaving attack for two-handed weapons
-    /// </summary>
-    /// <returns>List of objects surrounding a WorldObject</returns>
     public static List<Creature> GetSplashTargets(this Player reference, WorldObject origin, int maxTargets = 3, float maxRange = 5.0f)
     {
         if (origin is null || reference is null)
@@ -102,6 +86,57 @@ public static class SplashHelper
                 break;
         }
         return splashTargets;
+    }
+
+    /// <summary>
+    /// Gets targets within a radius and angle of the player and their target
+    /// </summary>
+    public static List<Creature> GetSplitTargets(this Player player, Creature target, int maxTargets = 3, float maxRange = 5.0f, float cleaveAngle = 360)
+    {
+        // sort visible objects by ascending distance
+        var visible = player.PhysicsObj.ObjMaint.GetVisibleObjectsValuesWhere(o => o.WeenieObj.WorldObject != null);
+        visible.Sort(player.DistanceComparator);
+
+        var cleaveTargets = new List<Creature>();
+
+        if (player is null)
+            return cleaveTargets;
+
+        foreach (var obj in visible)
+        {
+            // cleaving skips original target
+            if (obj.ID == target.PhysicsObj.ID)
+                continue;
+
+            // only cleave creatures
+            var creature = obj.WeenieObj.WorldObject as Creature;
+            if (creature == null || creature.Teleporting || creature.IsDead) continue;
+
+            if (player.CheckPKStatusVsTarget(creature, null) != null)
+                continue;
+
+            if (!creature.Attackable && creature.TargetingTactic == TargetingTactic.None || creature.Teleporting)
+                continue;
+
+            if (creature is CombatPet)
+                continue;
+
+            // no more objects in cleave range
+            var cylDist = player.GetCylinderDistance(creature);
+            if (cylDist > maxRange)
+                return cleaveTargets;
+
+            // only cleave in front of attacker
+            var angle = player.GetAngle(creature);
+            if (Math.Abs(angle) > cleaveAngle / 2.0f)
+                continue;
+
+            // found cleavable object
+            cleaveTargets.Add(creature);
+            if (cleaveTargets.Count == maxTargets)
+                break;
+        }
+        return cleaveTargets;
     }
 
     /// <summary>
