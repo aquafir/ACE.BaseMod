@@ -34,6 +34,8 @@
 
         public bool MetaEnabled { get; set; } = true;
         public double MetaScale { get; set; } = 1;
+
+        public bool Verbose { get; set; } = false;
     }
 
 

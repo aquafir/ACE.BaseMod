@@ -172,7 +172,9 @@ public class PatchClass
         //Track tracking a players variations
         if (!_playerSpells.TryGetValue(player, out dbSpells))
         {
-            player.SendMessage($"Tracking custom variations of spells for you...");
+            if (Settings.Verbose) 
+                player.SendMessage($"Tracking custom variations of spells for you...");
+
             dbSpells = new();
             _playerSpells.Add(player, dbSpells);
         }
@@ -198,7 +200,8 @@ public class PatchClass
         //Adjusting _spell adjusts ALL spell uses of that type, so create a shallow copy of the DB's Spell and SpellBase?
         if (!dbSpells.TryGetValue(spell, out dbSpell))
         {
-            player.SendMessage($"Created a custom variation of {spell.Name} - {spell.Id}...");
+            if (Settings.Verbose) 
+                player.SendMessage($"Created a custom variation of {spell.Name} - {spell.Id}...");
 
             //Set modified properties for DB Spell
             dbSpell = spell._spell.Clone();
@@ -259,7 +262,8 @@ public class PatchClass
         //Adjusting _spell adjusts ALL spell uses of that type, so create a shallow copy of the DB's Spell and SpellBase?
         if (!spellbases.TryGetValue(spell, out spellbase))
         {
-            player.SendMessage($"Created a custom SpellBase variation of {spell.Name} - {spell.Id}...");
+            if (Settings.Verbose) 
+                player.SendMessage($"Created a custom SpellBase variation of {spell.Name} - {spell.Id}...");
 
             //Set modified properties for DB Spell
             spellbase = spell._spellBase.DeepClone();
@@ -340,7 +344,7 @@ public class PatchClass
     //    if (player is not null)
     //    {
     //        MetaSpellSwap(spell, player);
-    //        player.SendMessage($"{spell._spellBase.Power} power");
+    //        if(Settings.Verbose) player.SendMessage($"{spell._spellBase.Power} power");
     //    }
 
     //}
@@ -399,7 +403,7 @@ public class PatchClass
         //Only players split
         if (__instance is not Player player)
             return;
-                
+
         //Check split projectiles
         if (spell.IsProjectile)
         {
@@ -423,10 +427,13 @@ public class PatchClass
             _lastSplit[player] = DateTime.Now;
 
             //Bit of debug
-            var sb = new StringBuilder($"\nSplit Targets:");
-            foreach (var t in targets)
-                sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
-            player.SendMessage(sb.ToString());
+            if (Settings.Verbose)
+            {
+                var sb = new StringBuilder($"\nSplit Targets:");
+                foreach (var t in targets)
+                    sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
+                player.SendMessage(sb.ToString());
+            }
 
             //var splitTo = Math.Min(Settings.SplitCount, targets.Count);
             for (var i = 0; i < targets.Count; i++)
@@ -457,10 +464,13 @@ public class PatchClass
             _lastSplash[player] = DateTime.Now;
 
             //Bit of debug
-            var sb = new StringBuilder($"\nSplash Targets:");
-            foreach (var t in targets)
-                sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
-            player.SendMessage(sb.ToString());
+            if (Settings.Verbose)
+            {
+                var sb = new StringBuilder($"\nSplash Targets:");
+                foreach (var t in targets)
+                    sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
+                player.SendMessage(sb.ToString());
+            }
 
             for (var i = 0; i < targets.Count; i++)
             {
