@@ -38,10 +38,14 @@ The available commands are:
 
 * `DirectDeposit` will cause coin sales to be added to the bank instead of using pyreal stacks
   * `/ddt` will toggle a players use of this feature in case the server wants it enabled but a player does not
-
 * `VendorsUseBank` will use banked items to complete the transaction first
 * `ExcessSetToMax` will reduce a quantity exceeding the max to the max amount
 * `MaxCoinsDropped` caps the amount of pyreals lost on death if >= 0
+* `CoinExplosion` toggles an explosion of items on death
+  * Creates until either the `PileValue` times the number of piles exceeds the coins dropped or `MaxPiles` exceeded 
+  * `PileWcid` is the thing created with random velocity up to `ExplosionVelocity`
+  * Pyreals set to max stack size
+
 
 
 
