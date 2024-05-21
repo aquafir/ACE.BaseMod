@@ -4,7 +4,14 @@ public class Settings
 {
     public bool VendorsUseBank { get; set; } = true;
     public bool DirectDeposit { get; set; } = true;
-    public int MaxCoinsDropped { get; set; } = -1;
+
+    public int MaxCoinsDropped { get; set; } = 100000;
+
+    public bool CoinExplosion { get; set; } = true;
+    public int MaxPiles { get; set; } = 10;
+    public uint PileWcid { get; set; } = Player.coinStackWcid;
+    public int PileValue { get; set; } = 25000;
+    public float ExplosionVelocity { get; set; } = 6;
 
     //WCID - PropInt64
     public List<BankItem> Items { get; set; } = new()
