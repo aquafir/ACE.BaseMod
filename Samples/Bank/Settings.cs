@@ -4,6 +4,7 @@ public class Settings
 {
     public bool VendorsUseBank { get; set; } = true;
     public bool DirectDeposit { get; set; } = true;
+    public int MaxCoinsDropped { get; set; } = -1;
 
     //WCID - PropInt64
     public List<BankItem> Items { get; set; } = new()
