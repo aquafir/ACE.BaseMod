@@ -41,6 +41,7 @@ The available commands are:
 
 * `VendorsUseBank` will use banked items to complete the transaction first
 * `ExcessSetToMax` will reduce a quantity exceeding the max to the max amount
+* `MaxCoinsDropped` caps the amount of pyreals lost on death if >= 0
 
 
 
