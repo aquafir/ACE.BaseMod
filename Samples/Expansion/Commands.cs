@@ -1,5 +1,6 @@
 ﻿using ACE.Server.Command;
 using ACE.Server.Network;
+using ACE.Server.Network.GameMessages.Messages;
 
 namespace Expansion.Helpers;
 public static class Commands
@@ -15,31 +16,47 @@ public static class Commands
         player.SetMaxVitals();
     }
 
+    //[CommandHandler("clean", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
+    //public static void Clean(Session session, params string[] parameters)
+    //{
+    //    var player = session.Player;
+
+    //    try
+    //    {
+    //        foreach (var item in player.Inventory.Values)
+    //        {
+    //            //player.TryRemoveFromInventoryWithNetworking(item.Key, out var i, Player.RemoveFromInventoryAction.None);
+    //            //player.Session.Network.EnqueueSend(new GameMessageInventoryRemoveObject(i));
+    //            player.DeleteItem(item);
+    //        }
+
+    //        foreach (var item in player.EquippedObjects.Values)
+    //        {
+    //            //player.TryRemoveFromInventoryWithNetworking(item.Key, out var i, Player.RemoveFromInventoryAction.None);
+    //            //player.Session.Network.EnqueueSend(new GameMessageInventoryRemoveObject(i));
+    //            player.DeleteItem(item);
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ModManager.Log($"{ex.Message}", ModManager.LogLevel.Error);
+    //    }
+    //}
     [CommandHandler("clean", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
     public static void Clean(Session session, params string[] parameters)
     {
+        // @delete - Deletes the selected object. Players may not be deleted this way.
+
         var player = session.Player;
 
-        try
+        foreach (var item in player.Inventory.Values)
         {
-            foreach (var item in player.Inventory.Values)
-            {
-                //player.TryRemoveFromInventoryWithNetworking(item.Key, out var i, Player.RemoveFromInventoryAction.None);
-                //player.Session.Network.EnqueueSend(new GameMessageInventoryRemoveObject(i));
-                player.DeleteItem(item);
-            }
+            if (item is Container)
+                continue;
 
-            foreach (var item in player.EquippedObjects.Values)
-            {
-                //player.TryRemoveFromInventoryWithNetworking(item.Key, out var i, Player.RemoveFromInventoryAction.None);
-                //player.Session.Network.EnqueueSend(new GameMessageInventoryRemoveObject(i));
-                player.DeleteItem(item);
-            }
+            item.DeleteObject(player);
+            session.Network.EnqueueSend(new GameMessageDeleteObject(item));
         }
-        catch (Exception ex)
-        {
-            ModManager.Log($"{ex.Message}", ModManager.LogLevel.Error);
-        }
-
     }
+
 }

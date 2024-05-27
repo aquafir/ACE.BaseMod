@@ -113,6 +113,7 @@ public enum FakeInt
     MaxAmmo = 20007,
     ItemMissileSplitCount = 20008,
     ItemMissileSplashCount = 20009,
+    SpellChainCount = 20010,
 }
 
 public enum FakeInt64

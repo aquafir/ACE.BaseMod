@@ -36,5 +36,6 @@ public enum Feature
     CreatureEx,
     FakeMissileSplitSplash,
     CreatureMaxAmmo,
+    OverrideSpellProjectiles,
 }
 
