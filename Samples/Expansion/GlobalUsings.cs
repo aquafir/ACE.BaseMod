@@ -1,4 +1,4 @@
-﻿extern alias Json;
+﻿//extern alias Json;
 global using ACE.Common;
 global using ACE.Database.Models.World;
 global using ACE.Entity.Enum.Properties;
@@ -26,8 +26,8 @@ global using System.Diagnostics;
 global using System.Numerics;
 global using System.Reflection;
 global using System.Text.Encodings.Web;
-global using Json.System.Text.Json;
-global using Json.System.Text.Json.Serialization;
+global using System.Text.Json;
+global using System.Text.Json.Serialization;
 global using Weenie = ACE.Entity.Models.Weenie;
 global using Spell = ACE.Server.Entity.Spell;
 //Aliases for polluted types

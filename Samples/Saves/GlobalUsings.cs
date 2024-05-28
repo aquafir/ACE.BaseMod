@@ -1,4 +1,4 @@
-﻿extern alias Json;
+﻿//extern alias Json;
 global using ACE.Database.Entity;
 global using ACE.Database.Models.Shard;
 global using ACE.DatLoader;
@@ -28,5 +28,5 @@ global using System.IO.Compression;
 global using System.Reflection;
 global using System.Text;
 global using System.Text.Encodings.Web;
-global using Json.System.Text.Json;
-global using Json.System.Text.Json.Serialization;
+global using System.Text.Json;
+global using System.Text.Json.Serialization;

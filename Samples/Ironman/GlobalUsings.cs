@@ -1,4 +1,4 @@
-﻿extern alias Json;
+﻿//extern alias Json;
 global using ACE.Common;
 global using ACE.Database;
 global using ACE.Database.Models.Shard;
@@ -15,8 +15,8 @@ global using ACE.Server.WorldObjects;
 global using ACE.Shared;
 global using ACE.Shared.Helpers;
 global using HarmonyLib;
-global using Json.System.Text.Json;
-global using Json.System.Text.Json.Serialization;
+global using System.Text.Json;
+global using System.Text.Json.Serialization;
 global using System;
 global using System.Reflection;
 global using System.Text;

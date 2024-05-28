@@ -30,7 +30,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Lib.Harmony" Version="2.3.2" />
-		<PackageReference Include="System.Text.Json" Version="7.0.0" Aliases="Json" />
+		<!--<PackageReference Include="System.Text.Json" Version="7.0.0" Aliases="Json" />-->
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="ACE.Adapter">

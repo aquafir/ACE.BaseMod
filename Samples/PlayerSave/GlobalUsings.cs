@@ -1,4 +1,4 @@
-﻿extern alias Json;
+﻿//extern alias Json;
 global using ACE.Entity.Enum;
 
 global using ACE.Server.Command;
@@ -12,5 +12,5 @@ global using System;
 global using System.Diagnostics;
 global using System.Reflection;
 global using System.Text;
-global using Json.System.Text.Json;
-global using Json.System.Text.Json.Serialization;
+global using System.Text.Json;
+global using System.Text.Json.Serialization;
