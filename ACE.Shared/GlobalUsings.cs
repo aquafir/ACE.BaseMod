@@ -14,6 +14,9 @@ global using ACE.Server.Network;
 global using ACE.Server.Network.GameEvent.Events;
 global using ACE.Server.WorldObjects;
 global using ACE.Server.WorldObjects.Entity;
+#if REALM
+global using ACE.Server.Realms;
+#endif
 
 global using System;
 global using System.Reflection;

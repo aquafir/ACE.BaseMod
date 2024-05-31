@@ -17,7 +17,9 @@ global using ACE.Server.Network.GameEvent.Events;
 global using ACE.Server.Network;
 global using ACE.Server.Physics;
 global using ACE.Server.WorldObjects;
-
+#if REALM
+global using ACE.Server.;
+#endif
 global using ACE.Shared.Helpers;
 global using ACE.Shared;
 

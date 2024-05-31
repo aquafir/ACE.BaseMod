@@ -28,7 +28,11 @@ public static class PositionExtensions
     /// <summary>
     /// Try to parse a location string as a Position
     /// </summary>
+#if REALM
+    public static bool TryParsePosition(this string position, out LocalPosition p)
+#else
     public static bool TryParsePosition(this string position, out Position p)
+#endif
     {
         p = null;
         var parameters = position.Split(' ');
@@ -63,7 +67,11 @@ public static class PositionExtensions
                 positionData[i] = pos;
             }
 
-            p = new Position(cell, positionData[0], positionData[1], positionData[2], positionData[4], positionData[5], positionData[6], positionData[3]);
+#if REALM
+            p = new (cell, positionData[0], positionData[1], positionData[2], positionData[4], positionData[5], positionData[6], positionData[3]);
+#else
+            p = new (cell, positionData[0], positionData[1], positionData[2], positionData[4], positionData[5], positionData[6], positionData[3]);
+#endif
         }
         catch (Exception ex)
         {

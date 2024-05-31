@@ -28,6 +28,10 @@ public static class WorldObjectExtensions
             obj.Location = player.Location.InFrontOf(dist);
         }
 
+#if REALM
+        obj.Location = obj.Location.SetLandblockId(new LandblockId(obj.Location.GetCell()));
+#else
         obj.Location.LandblockId = new LandblockId(obj.Location.GetCell());
+#endif        
     }
 }

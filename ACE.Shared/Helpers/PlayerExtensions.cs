@@ -52,7 +52,11 @@ public static class PlayerExtensions
         //Set flag used to prevent tele/other stuff?
         //player.SetProperty(FakeBool.Quarantined, true);
 
+#if REALM
+        player.Teleport(newPos.AsInstancedPosition(player, Entity.Enum.RealmProperties.PlayerInstanceSelectMode.HomeRealm));
+#else
         player.Teleport(newPos);
+#endif
     }
 
     /// <summary>
