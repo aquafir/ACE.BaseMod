@@ -37,5 +37,6 @@ public enum Feature
     FakeMissileSplitSplash,
     CreatureMaxAmmo,
     OverrideSpellProjectiles,
+    TimeInGame,
 }
 

@@ -62,6 +62,10 @@ public enum FakeFloat
     ItemMissileSplitAngle = 20004,
     TimestampLastMissileSplash = 20005,
     ItemMissileSplashRadius = 20006,
+    /// <summary>
+    /// Time previously spent in game, used in conjunction with LoginTimestamp to find current time in game
+    /// </summary>
+    TimeInGame = 20007,
 }
 public enum FakeIID
 {
