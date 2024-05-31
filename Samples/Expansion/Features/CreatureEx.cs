@@ -34,7 +34,6 @@ public class CreatureEx
         //Fix NPCs being created as CreatureEx in post!
         if (__result is Creature creature && creature.IsNPC)
             __result = new Creature(weenie, guid);
-
         return false;
     }
 

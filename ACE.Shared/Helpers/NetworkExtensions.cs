@@ -29,5 +29,9 @@ public static class NetworkExtensions
     /// <summary>
     /// Returns number of sessions sharing this players endpoint
     /// </summary>
+#if REALM
+    public static int ActiveConnections(this Player player) => NetworkManager.Instance.GetSessionEndpointTotalByAddressCount(player.Session.EndPointC2S.Address);
+#else
     public static int ActiveConnections(this Player player) => NetworkManager.GetSessionEndpointTotalByAddressCount(player.Session.EndPointC2S.Address);
+#endif
 }

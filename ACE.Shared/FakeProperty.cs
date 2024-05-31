@@ -152,9 +152,17 @@ public static class FakePropertyHelper
     public static void SetProperty(this WorldObject wo, FakeDID property, uint value) => wo.SetProperty(property.Prop(), value);
     public static void RemoveProperty(this WorldObject wo, FakeDID property) => wo.RemoveProperty(property.Prop());
     public static uint? GetProperty(this WorldObject wo, FakeDID property) => wo.GetProperty(property.Prop());
+#if REALM
+    public static void SetProperty(this WorldObject wo, FakeIID property, ulong value) => wo.SetProperty(property.Prop(), value);
+#else
     public static void SetProperty(this WorldObject wo, FakeIID property, uint value) => wo.SetProperty(property.Prop(), value);
+#endif
     public static void RemoveProperty(this WorldObject wo, FakeIID property) => wo.RemoveProperty(property.Prop());
+#if REALM
+    public static ulong? GetProperty(this WorldObject wo, FakeIID property) => wo.GetProperty(property.Prop());
+#else
     public static uint? GetProperty(this WorldObject wo, FakeIID property) => wo.GetProperty(property.Prop());
+#endif    
     public static PropertyBool Prop(this FakeBool prop) => (PropertyBool)prop;
     public static PropertyDataId Prop(this FakeDID prop) => (PropertyDataId)prop;
     public static PropertyFloat Prop(this FakeFloat prop) => (PropertyFloat)prop;

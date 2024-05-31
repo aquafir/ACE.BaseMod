@@ -5,9 +5,11 @@ public static class CommandHelpers
     {
         if (string.IsNullOrWhiteSpace(commandLine))
             return false;
-
+#if REALM
+        ISession session = null;
+#else
         Session session = null;
-
+#endif
         //Try to get player session if name provided
         if (!string.IsNullOrWhiteSpace(playerName))
         {
@@ -18,7 +20,7 @@ public static class CommandHelpers
             }
             session = player.Session;
         }
-
+        
         //Parse command
         string command = null;
         string[] parameters = null;

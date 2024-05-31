@@ -1,0 +1,5 @@
+<Project>
+ <PropertyGroup>
+   <DefineConstants>NREALM</DefineConstants>
+ </PropertyGroup>
+</Project>

@@ -1,4 +1,5 @@
 ﻿using ACE.Server.Network.GameMessages.Messages;
+using ACE.Server.Realms;
 using static ACE.Server.WorldObjects.Player;
 
 namespace ACE.Shared.Helpers;
@@ -51,7 +52,11 @@ public static class PlayerInventoryExtensions
     public static bool TryDropItem(this Player player, WorldObject item, DequipObjectAction action = DequipObjectAction.DequipToPack)
     {
         var session = player.Session;
+#if REALM
+        var playerLoc = new InstancedPosition(player.Location);
+#else
         var playerLoc = new Position(player.Location);
+#endif
         WorldObject destItem;
 
         //Todo: fix inventory drop
@@ -96,8 +101,12 @@ public static class PlayerInventoryExtensions
 
         player.SavePlayerToDatabase();
 
+#if REALM
+        destItem.Location = new InstancedPosition(playerLoc).SetPositionZ(playerLoc.PositionZ + .5f);
+#else
         destItem.Location = new Position(playerLoc);
         destItem.Location.PositionZ += .5f;
+#endif
         destItem.Placement = Placement.Resting;  // This is needed to make items lay flat on the ground.
 
         //Drop item to world
@@ -107,10 +116,15 @@ public static class PlayerInventoryExtensions
 
         if (player.CurrentLandblock?.AddWorldObject(destItem) ?? false)
         {
-            destItem.Location.LandblockId = new LandblockId(destItem.Location.GetCell());
-
             // try slide to new position
+#if REALM
+            destItem.Location = destItem.Location.SetLandblockId(new LandblockId(destItem.Location.GetCell()));
+            var transit = destItem.PhysicsObj.transition(destItem.PhysicsObj.Position, new Server.Physics.Common.PhysicsPosition(destItem.Location), false);
+#else
+            destItem.Location.LandblockId = new LandblockId(destItem.Location.GetCell());
             var transit = destItem.PhysicsObj.transition(destItem.PhysicsObj.Position, new Server.Physics.Common.Position(destItem.Location), false);
+#endif
+
 
             if (transit != null && transit.SpherePath.CurCell != null)
             {
@@ -145,14 +159,20 @@ public static class PlayerInventoryExtensions
     {
         var equippedObjects = player.EquippedObjects.Keys.ToList();
 
+#if REALM
+        var iid = player.Location.Instance;
+        foreach (var equippedObject in equippedObjects)
+            player.HandleActionPutItemInContainer(new ObjectGuid(equippedObject.Full, iid), player.Guid, 0);
+#else
         foreach (var equippedObject in equippedObjects)
             player.HandleActionPutItemInContainer(equippedObject.Full, player.Guid.Full, 0);
-    }
+#endif        
+}
 
-    /// <summary>
-    /// Remove items from inventory and optionally equipment
-    /// </summary>
-    public static void WipeInventory(this Player player, bool equipment = false)
+/// <summary>
+/// Remove items from inventory and optionally equipment
+/// </summary>
+public static void WipeInventory(this Player player, bool equipment = false)
     {
         foreach (var item in player.Inventory.Values)
             item.DeleteObject(player);
