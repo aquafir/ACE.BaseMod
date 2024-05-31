@@ -3,9 +3,6 @@
 [HarmonyPatchCategory(nameof(Feature.FakeMissileSplitSplash))]
 internal class FakeMissileSplitSplash
 {
-    /// <summary>
-    /// Splits or splashes a missile attack if the player has the 
-    /// </summary>
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Player), nameof(Player.LaunchMissile), new Type[] { typeof(WorldObject), typeof(int), typeof(MotionStance), typeof(bool) })]
     public static void PreLaunchMissile(WorldObject target, int attackSequence, MotionStance stance, bool subsequent, ref Player __instance)

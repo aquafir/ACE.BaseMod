@@ -12,13 +12,11 @@ namespace Expansion.Features;
 [HarmonyPatchCategory(nameof(Feature.OverrideSpellProjectiles))]
 internal class OverrideSpellProjectiles
 {
-
-    //Support changes to the creation and launching of spell projectiles
     [HarmonyPrefix]
     [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.CreateSpellProjectiles), new Type[] { typeof(Spell), typeof(WorldObject), typeof(WorldObject), typeof(bool), typeof(bool), typeof(uint) })]
     public static bool PreCreateSpellProjectiles(Spell spell, WorldObject target, WorldObject weapon, bool isWeaponSpell, bool fromProc, uint lifeProjectileDamage, ref WorldObject __instance, ref List<SpellProjectile> __result)
     {
-        if (spell.NumProjectiles == 0)
+        if (spell.NumProjectiles == 0 || __instance is not Player player)
             return true;    //Could skip original execution / set __result -- nothing is done with the returned list of SpellProjectile
 
         __result = __instance.PositionSpellProjectiles(spell, target, weapon, isWeaponSpell, fromProc, lifeProjectileDamage);
@@ -26,54 +24,30 @@ internal class OverrideSpellProjectiles
         return false;
     }
 
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.LaunchSpellProjectiles), new Type[] { typeof(Spell), typeof(WorldObject), typeof(ProjectileSpellType), typeof(WorldObject), typeof(bool), typeof(bool), typeof(List<Vector3>), typeof(Vector3), typeof(uint) })]
-    public static bool PreLaunchSpellProjectiles(Spell spell, WorldObject target, ProjectileSpellType spellType, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage, ref WorldObject __instance, ref List<SpellProjectile> __result)
-    {
-        __result = __instance.CreateSpellProjectiles(spell, target, spellType, weapon, isWeaponSpell, fromProc, origins, velocity, lifeProjectileDamage);
-        return false;
-    }
 
-    [HarmonyPostfix]
-    [HarmonyPatch(typeof(SpellProjectile), nameof(SpellProjectile.OnCollideObject), new Type[] { typeof(WorldObject) })]
-    public static void PostOnCollideObject(WorldObject target, ref SpellProjectile __instance)
-    {
-        if (__instance.ProjectileSource is not Player player)
-            return;
 
-        var chainCount = __instance.GetProperty(FakeInt.SpellChainCount) ?? 0;
-        chainCount++;
-        if (chainCount > 5)
-        {
-            player.SendMessage($"Max chain count hit.");
-            return;
-        }
+    //Support changes to the creation and launching of spell projectiles
+    //[HarmonyPrefix]
+    //[HarmonyPatch(typeof(WorldObject), nameof(WorldObject.CreateSpellProjectiles), new Type[] { typeof(Spell), typeof(WorldObject), typeof(WorldObject), typeof(bool), typeof(bool), typeof(uint) })]
+    //public static bool PreCreateSpellProjectiles(Spell spell, WorldObject target, WorldObject weapon, bool isWeaponSpell, bool fromProc, uint lifeProjectileDamage, ref WorldObject __instance, ref List<SpellProjectile> __result)
+    //{
+    //    if (spell.NumProjectiles == 0)
+    //        return true;    //Could skip original execution / set __result -- nothing is done with the returned list of SpellProjectile
 
-        var chance = __instance.GetProperty(FakeFloat.SpellChainChance) ?? 2;
-        if (chance > 0 && ThreadSafeRandom.Next(0f, 1.0f) < chance)
-        {
-            var t = player.GetSplashTargets(target, 2, 100).Skip(1).FirstOrDefault();
+    //    __result = __instance.PositionSpellProjectiles(spell, target, weapon, isWeaponSpell, fromProc, lifeProjectileDamage);
 
-            if (t is null)
-                player.SendMessage($"Your {__instance.Spell.Name} wants to chain after hitting {target.Name} with {chance:P2} odds but failed.");
-            else
-            {
-                //Create projectiles to a neighbor and increment chain count
-                var projectiles = player.CreateSpellProjectiles(new Spell(__instance.Spell.Id), t, player, __instance.IsWeaponSpell, __instance.FromProc, __instance.LifeProjectileDamage);
-                foreach (var projectile in projectiles)
-                {
-                    projectile.SetProperty(FakeInt.SpellChainCount, chainCount);
-                    
-                    //Halve chance
-                    projectile.SetProperty(FakeFloat.SpellChainChance, chance / 2);
-                }
+    //    return false;
+    //}
 
-                    player.SendMessage($"{__instance.Name} chained from {target.Name} to {t.Name} for the {chainCount}th time with {chance:P2}% chance");
-            }
-        }
-    }
+    //[HarmonyPrefix]
+    //[HarmonyPatch(typeof(WorldObject), nameof(WorldObject.LaunchSpellProjectiles), new Type[] { typeof(Spell), typeof(WorldObject), typeof(ProjectileSpellType), typeof(WorldObject), typeof(bool), typeof(bool), typeof(List<Vector3>), typeof(Vector3), typeof(uint) })]
+    //public static bool PreLaunchSpellProjectiles(Spell spell, WorldObject target, ProjectileSpellType spellType, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage, ref WorldObject __instance, ref List<SpellProjectile> __result)
+    //{
+    //    __result = __instance.CreateSpellProjectiles(spell, target, spellType, weapon, isWeaponSpell, fromProc, origins, velocity, lifeProjectileDamage);
+    //    return false;
+    //}
 
-    
+
 
 
 }

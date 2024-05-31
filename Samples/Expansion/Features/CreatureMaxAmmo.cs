@@ -3,9 +3,6 @@
 [HarmonyPatchCategory(nameof(Feature.CreatureMaxAmmo))]
 internal class CreatureMaxAmmo
 {
-    /// <summary>
-    /// Override normal behavior for switching on 3 missed ranged attacks to a max ammo regardless of hitting
-    /// </summary>
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Creature), nameof(Creature.RangeAttack))]
     public static void PostRangeAttack(ref Creature __instance)

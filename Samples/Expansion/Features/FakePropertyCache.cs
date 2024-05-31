@@ -33,30 +33,6 @@ public static class FakePropertyCache
             //player.SendMessage($"\nUnequipped {wo.Name}:\n{wo.DumpItem()}"); 
         }
     }
-
-    //[HarmonyPostfix]
-    //[HarmonyPatch(typeof(LootGenerationFactory), nameof(LootGenerationFactory.GetLongDesc), new Type[] { typeof(WorldObject) })]
-    //public static void PostGetLongDesc(WorldObject wo, ref string __result)
-    //{
-    //    __result += $"\n{wo.DumpItem()}";
-
-    //}
-
-    //[HarmonyPrefix]
-    //[HarmonyPatch(MethodType.Setter)]
-    //[HarmonyPatch(typeof(WorldObject), nameof(WorldObject.LongDesc), new Type[] { typeof(string) })]
-    //public static bool PreSetLongDesc(ref string value, ref WorldObject __instance)
-    //{
-    //    if (!String.IsNullOrEmpty(value))
-    //        value = __instance.DumpItem() + "\n\n" + value;
-    //    //Return false to override
-    //    //return false;
-
-    //    //Return true to execute original
-    //    return true;
-    //}
-
-
     #endregion
 
     /// <summary>

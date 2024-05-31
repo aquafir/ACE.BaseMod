@@ -89,8 +89,24 @@ Some features or mutators depend on a utility `Feature`:
 
 
 
-
 ### Features
+
+#### FakePropertyCache
+
+`FakePropertyCache` aims to be a performant way of tracking anything that might go into a particular FakeProp
+
+* Updates on
+  * Equipment change
+  * ~~Enchantment Change~~
+* ~~Softcaps/hardcaps~~
+* ~~Default value~~
+* Combination style
+  * Multiplicative
+  * Additive
+
+
+
+
 
 
 #### EnableOnAttackForNonAetheria
@@ -133,6 +149,11 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 
 ### Todo
 
+* Reversible weighted Augmentations
+* Add CommandCategory attributes
+  * Add batch load to startup
+
+* 
 * EquipmentCache caps
 * Need to use [different collections](https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/data-structures-for-parallel-programming) for parallel support?
 * Check mutations compatibility

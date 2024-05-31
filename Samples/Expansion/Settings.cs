@@ -5,12 +5,14 @@ public class Settings
     public bool Verbose { get; set; } = false;
 
     #region Features / Mutators
-    public List<Feature> Features { get; set; } = new() { 
-        //Feature.FakePropertyCache, 
+    public List<Feature> Features { get; set; } = new() {
+        Feature.FakePropertyCache,
+        Feature.OverrideSpellProjectiles,
+        Feature.FakeAttributes,
         //Feature.MutatorHooks, 
         //Feature.Hardcore,
         //Feature.Ironman,
-        Feature.CreatureEx
+        //Feature.CreatureEx
     };
 
     public List<CreatureExType> CreatureFeatures { get; set; } = new()
