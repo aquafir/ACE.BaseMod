@@ -76,6 +76,8 @@ public class PatchClass
             return;
         }
 
+        BankExtensions.Init();
+        FloorExtensions.Init();
         Mod.State = ModState.Running;
     }
 
@@ -92,102 +94,10 @@ public class PatchClass
     }
     #endregion
 
-    [CommandHandler("t1", AccessLevel.Admin, CommandHandlerFlag.None, -1)]
-    public static void T1(Session session, params string[] parameters)
-    {
-        Test(session.Player);
-    }
 
 
-    private static void Test(Player p)
-    {
-        using (var ctx = new ShardDbContext())
-        {
 
-            var sb = new StringBuilder("\n");
-            foreach (var player in PlayerManager.GetAllOffline().Where(x => p.Account.AccountId == x.Account.AccountId).ToList())
-            {
-                sb.Append($"{player.Name}\n");
-            }
-            p.SendMessage($"{sb}");
-            //var results = ctx.p
-            //    ctx.CharacterPropertiesShortcutBar
-            //    .FromSqlRaw("SELECT * FROM character_properties_shortcut_bar ORDER BY character_Id, shortcut_Bar_Index, id")
-            //    .ToList();
 
-            //var sqlCommands = new List<string>();
 
-            //uint characterId = 0;
-            //string playerName = null;
-            //var idxToObj = new Dictionary<uint, uint>();
-            //var objToIdx = new Dictionary<uint, uint>();
-            //var buggedChar = false;
-            //var buggedPlayerCount = 0;
 
-            //foreach (var result in results)
-            //{
-            //    if (characterId != result.CharacterId)
-            //    {
-            //        if (buggedChar)
-            //        {
-            //            buggedPlayerCount++;
-            //            Console.WriteLine($"Player {playerName} ({characterId}) was found to have errors in their shortcuts.");
-            //            sqlCommands.AddRange(OutputShortcutSQLCommand(playerName, characterId, idxToObj));
-            //            buggedChar = false;
-            //        }
-
-            //        // begin parsing new character
-            //        characterId = result.CharacterId;
-            //        var player = PlayerManager.FindByGuid(characterId);
-            //        playerName = player != null ? player.Name : $"{characterId:X8}";
-            //        idxToObj = new Dictionary<uint, uint>();
-            //        objToIdx = new Dictionary<uint, uint>();
-            //    }
-
-            //    var dupeIdx = idxToObj.ContainsKey(result.ShortcutBarIndex);
-            //    var dupeObj = objToIdx.ContainsKey(result.ShortcutObjectId);
-
-            //    if (dupeIdx || dupeObj)
-            //    {
-            //        //Console.WriteLine($"Player: {playerName}, Idx: {result.ShortcutBarIndex}, Obj: {result.ShortcutObjectId:X8} ({result.Id})");
-            //        buggedChar = true;
-            //    }
-
-            //    objToIdx[result.ShortcutObjectId] = result.ShortcutBarIndex;
-
-            //    if (!dupeObj)
-            //        idxToObj[result.ShortcutBarIndex] = result.ShortcutObjectId;
-            //}
-
-            //if (buggedChar)
-            //{
-            //    Console.WriteLine($"Player {playerName} ({characterId}) was found to have errors in their shortcuts.");
-            //    buggedPlayerCount++;
-            //    sqlCommands.AddRange(OutputShortcutSQLCommand(playerName, characterId, idxToObj));
-            //}
-
-            //Console.WriteLine($"Total players found with bugged shortcuts: {buggedPlayerCount}");
-
-            //if (execute)
-            //{
-            //    Console.WriteLine("Executing changes...");
-
-            //    foreach (var cmd in sqlCommands)
-            //        ctx.Database.ExecuteSqlRaw(cmd);
-            //}
-
-        }
-        //foreach (var p in PlayerManager.GetAllOffline())
-        //{
-        //    //Only move regular players / restrict based on access level.  
-        //    if (p.Account == null || p.Account.AccessLevel >= (uint)AccessLevel.Sentinel)
-        //        continue;
-
-        //    //Set Location position for a player to holt and save
-        //    p.Biota.SetPosition(PositionType.Location, position, p.BiotaDatabaseLock);
-        //    p.SaveBiotaToDatabase();
-        //}
-
-    }
 }
-
