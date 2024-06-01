@@ -13,6 +13,7 @@ internal class MutatorHooks
         mutators[MutationEvent.Generator] = new();
         mutators[MutationEvent.Factory] = new();
         mutators[MutationEvent.EnterWorld] = new();
+        mutators[MutationEvent.Inventory] = new();
 
         foreach (var mutatorOptions in S.Settings.Mutators)
         {
@@ -35,7 +36,8 @@ internal class MutatorHooks
                     mutators[MutationEvent.Factory].Add(mutator);
                 if (mutator.Event.HasFlag(MutationEvent.EnterWorld))
                     mutators[MutationEvent.EnterWorld].Add(mutator);
-
+                if (mutator.Event.HasFlag(MutationEvent.Inventory))
+                    mutators[MutationEvent.Inventory].Add(mutator);
 
                 if (PatchClass.Settings.Verbose)
                     ModManager.Log($"Enabled mutator: {mutatorOptions.PatchType}");
@@ -47,6 +49,7 @@ internal class MutatorHooks
             }
         }
     }
+
     public static void ShutdownMutators()
     {
         //if (Mod.State == ModState.Running)
@@ -233,4 +236,49 @@ internal class MutatorHooks
         return true;
     }
 
+    /// <summary>
+    /// On successful addition to Player inventory
+    /// </summary>
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Player), nameof(Player.TryCreateInInventoryWithNetworking), new Type[] { typeof(WorldObject), typeof(Container) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Out })]
+    public static void PostTryCreateInInventoryWithNetworking(WorldObject item, Container container, ref Player __instance, ref bool __result)
+    {
+        if (!__result)
+            return;
+        
+        //if (__instance is null || item is null) return;
+
+        //Keeps track of what mutations have been applied
+        HashSet<Mutation> mutations = new();
+        foreach (var mutator in mutators[MutationEvent.Inventory])
+        {
+            //Check for elligible item type along with standard check
+            if (!mutator.CheckMutates(item))
+                continue;
+
+            //If an item was mutated add the type
+            //Todo: create a separate handler for entering inventory?
+            if (mutator.TryMutateEnterWorld(mutations, item))
+                mutations.Add(mutator.MutationType);
+        }
+
+        if (PatchClass.Settings.Verbose && mutations.Count > 0)
+            ModManager.Log($"{item.Name} was mutated with: {String.Join(", ", mutations)}");
+    }
+
+    /// <summary>
+    /// Container-level inventory?
+    /// </summary>
+    //[HarmonyPostfix]
+    //[HarmonyPatch(typeof(Container), nameof(Container.TryAddToInventory), new Type[] { typeof(WorldObject), typeof(Container), typeof(int), typeof(bool), typeof(bool) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Out, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal })]
+    //public static void PreTryAddToInventory(WorldObject worldObject, Container container, int placementPosition, bool limitToMainPackOnly, bool burdenCheck, ref Container __instance, ref bool __result)
+    //{
+    //    //Skip failures
+    //    if (!__result)
+    //        return;
+    //    //Return false to override
+    //    //return false;
+
+    //    //Return true to execute original
+    //}
 }

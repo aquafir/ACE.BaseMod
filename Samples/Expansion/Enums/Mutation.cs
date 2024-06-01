@@ -5,17 +5,18 @@
 /// </summary>
 public enum Mutation
 {
-    LocationLocked,
+    AutoScale,
+    Enlightened,
     GrowthItem,
+    IronmanLocked,
+    LocationLocked,
     ProcOnAttack,
     ProcOnHit,
+    Resize,
     Set,
     ShinyPet,
     Slayer,
-    Resize,
-    AutoScale,
-    IronmanLocked,
-    Enlightened,
+    TowerLocked,
 }
 
 [Flags]
@@ -27,7 +28,8 @@ public enum MutationEvent
     Factory = 0x8,      //WeenieFactory different creates.  Probably more expensive
     EnterWorld = 0x10,     //WeenieObject.EnterWorld.  Has location/scale?
     Containers = Corpse | Generator,
-    //Factory = 0x4,  //LootGenerationFactory.CreateRandomLootObjects
+    Inventory = 0x20,     //Player.TryCreateInInventoryWithNetworking
+    //Vendor?
 }
 
 public static class MutationHelper
