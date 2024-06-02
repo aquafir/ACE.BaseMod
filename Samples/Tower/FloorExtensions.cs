@@ -1,25 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tower;
+﻿namespace Tower;
 public static class FloorExtensions
 {
     private static Dictionary<ushort, TowerFloor> floorLookup = null;
+    private static Dictionary<int, TowerFloor> floorIndexLookup = null;
     /// <summary>
     /// Called on plugin startup to populate a lookup for floors of the Tower
     /// </summary>
     public static void Init()
     {
         floorLookup = PatchClass.Settings.Floors.ToDictionary(x => x.Landblock, x => x);
+        floorIndexLookup = PatchClass.Settings.Floors.ToDictionary(x => x.Index, x => x);
     }
     /// <summary>
     /// Try to find the floor a player is on
     /// </summary>
     public static bool TryGetFloor(this Player player, out TowerFloor floor) =>
         floorLookup.TryGetValue(player.CurrentLandblock.Id.Landblock, out floor);
+
+    public static bool TryGetFloor(this Player player, int index, out TowerFloor floor) =>
+        floorIndexLookup.TryGetValue(index, out floor);
+
+    public static bool TryGetFloorByIndex(this int index, out TowerFloor floor) =>
+        floorIndexLookup.TryGetValue(index, out floor);
+
+    public static bool TryGetNextFloor(this TowerFloor current, out TowerFloor floor)
+    {
+        floor = null;
+        return FloorExtensions.TryGetFloorByIndex(current.Index + 1, out floor);
+    }
+    public static bool TryGetNextFloor(this Player player, out TowerFloor floor)
+    {
+        floor = null;
+        if (player.TryGetFloor(out var current))
+            return FloorExtensions.TryGetFloorByIndex(floor.Index + 1, out floor);
+
+        return false;
+    }
+
+
 
     public static float GetXpBonus(this Player player)
     {
