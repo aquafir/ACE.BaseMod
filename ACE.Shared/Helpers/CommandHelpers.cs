@@ -82,7 +82,7 @@ public static class CommandHelpers
             }
             session = player.Session;
         }
-
+        
         //Parse command
         string command = null;
         string[] parameters = null;
