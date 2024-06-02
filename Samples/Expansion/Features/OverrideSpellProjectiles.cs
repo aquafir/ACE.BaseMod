@@ -19,12 +19,16 @@ internal class OverrideSpellProjectiles
         if (spell.NumProjectiles == 0 || __instance is not Player player)
             return true;    //Could skip original execution / set __result -- nothing is done with the returned list of SpellProjectile
 
-        __result = __instance.PositionSpellProjectiles(spell, target, weapon, isWeaponSpell, fromProc, lifeProjectileDamage);
+
+        var spellType = SpellProjectile.GetProjectileSpellType(spell.Id);
+
+        __result = __instance.PositionSpellProjectiles(spell, spellType, target, weapon, isWeaponSpell, fromProc, lifeProjectileDamage);
+        //__result = __instance.LaunchSpellProjectiles(__result, spellType, spell, target, weapon, isWeaponSpell, fromProc, lifeProjectileDamage);
+
+        //__result = __instance.LaunchSpellProjectiles(spell, spellType, target, spellType, weapon, isWeaponSpell, fromProc, origins, velocity, lifeProjectileDamage);
 
         return false;
     }
-
-
 
     //Support changes to the creation and launching of spell projectiles
     //[HarmonyPrefix]
@@ -60,10 +64,10 @@ public static class CustomSpellProjectiles
     /// <summary>
     /// Creates but doesn't launch spell projectiles
     /// </summary>
-    public static List<SpellProjectile> PositionSpellProjectiles(this WorldObject source, Spell spell, WorldObject target, WorldObject weapon, bool isWeaponSpell, bool fromProc, uint lifeProjectileDamage)
+    public static List<SpellProjectile> PositionSpellProjectiles(this WorldObject source, Spell spell, ProjectileSpellType spellType, WorldObject target, WorldObject weapon, bool isWeaponSpell, bool fromProc, uint lifeProjectileDamage)
     {
         List<SpellProjectile> __result;
-        var spellType = SpellProjectile.GetProjectileSpellType(spell.Id);
+        //var spellType = SpellProjectile.GetProjectileSpellType(spell.Id);
         var origins = source.CalculateSpellProjectileOrigins(spellType, spell, target, weapon, isWeaponSpell, fromProc, lifeProjectileDamage); //source.CalculateProjectileOrigins(spell, spellType, target);
         var velocity = source.CalculateProjectileVelocity(spell, target, spellType, origins[0]);
 
@@ -105,7 +109,7 @@ public static class CustomSpellProjectiles
             //return false;
         }
 
-        __result = source.CreateSpellProjectiles(spell, target, spellType, weapon, isWeaponSpell, fromProc, origins, velocity, lifeProjectileDamage);
+        __result = source.CreateSpellProjectiles(spell, spellType, target, weapon, isWeaponSpell, fromProc, origins, velocity, lifeProjectileDamage);
         return __result;
     }
 
@@ -113,7 +117,7 @@ public static class CustomSpellProjectiles
     /// <summary>
     /// Launches a list of SpellProjectiles created with CreateSpellProjectiles and returns the ones successfully created
     /// </summary>
-    public static List<SpellProjectile> LaunchSpellProjectiles(this WorldObject source, List<SpellProjectile> projectiles, Spell spell, WorldObject target, ProjectileSpellType spellType, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage)
+    public static List<SpellProjectile> LaunchSpellProjectiles(this WorldObject source, List<SpellProjectile> projectiles, Spell spell, ProjectileSpellType spellType, WorldObject target, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage)
     {
         List<SpellProjectile> created = new();
         foreach (var sp in projectiles)
@@ -144,7 +148,7 @@ public static class CustomSpellProjectiles
     /// <summary>
     /// Creates spell projectiles without launching
     /// </summary>
-    public static List<SpellProjectile> CreateSpellProjectiles(this WorldObject source, Spell spell, WorldObject target, ProjectileSpellType spellType, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage)
+    public static List<SpellProjectile> CreateSpellProjectiles(this WorldObject source, Spell spell, ProjectileSpellType spellType, WorldObject target, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage)
     {
         var useGravity = spellType == ProjectileSpellType.Arc;
 
@@ -153,8 +157,8 @@ public static class CustomSpellProjectiles
         var spellProjectiles = new List<SpellProjectile>();
 
         //Reroute origins
-        var casterLoc = source.GetSpellCasterPosition(spell, target, spellType, weapon, isWeaponSpell, fromProc, origins, velocity, lifeProjectileDamage);
-        var targetLoc = source.GetSpellTargetPosition(spell, target, spellType, weapon, isWeaponSpell, fromProc, origins, velocity, lifeProjectileDamage);
+        var casterLoc = source.GetSpellCasterPosition(spell, spellType, target, weapon, isWeaponSpell, fromProc, origins, velocity, lifeProjectileDamage);
+        var targetLoc = source.GetSpellTargetPosition(spell, spellType, target, weapon, isWeaponSpell, fromProc, origins, velocity, lifeProjectileDamage);
 
         for (var i = 0; i < origins.Count; i++)
         {
@@ -168,7 +172,7 @@ public static class CustomSpellProjectiles
             }
 
             sp.Setup(spell, spellType);
-            source.SetSpellRotation(i, spell, target, spellType, velocity, strikeSpell, casterLoc, targetLoc, origin, sp);
+            source.SetSpellRotation(i, spell, spellType, target, velocity, strikeSpell, casterLoc, targetLoc, origin, sp);
 
             // set orientation
             var dir = Vector3.Normalize(sp.Velocity);
@@ -319,7 +323,7 @@ public static class CustomSpellProjectiles
         return origins;
     }
 
-    private static Position? GetSpellCasterPosition(this WorldObject source, Spell spell, WorldObject target, ProjectileSpellType spellType, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage)
+    private static Position? GetSpellCasterPosition(this WorldObject source, Spell spell, ProjectileSpellType spellType, WorldObject target, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage)
     {
         //Ring spells center on the selected target of the player if available
         if (spellType == ProjectileSpellType.Ring)
@@ -337,13 +341,13 @@ public static class CustomSpellProjectiles
         return source?.PhysicsObj.Position.ACEPosition();
     }
 
-    private static Position? GetSpellTargetPosition(this WorldObject source, Spell spell, WorldObject target, ProjectileSpellType spellType, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage)
+    private static Position? GetSpellTargetPosition(this WorldObject source, Spell spell, ProjectileSpellType spellType, WorldObject target, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage)
     {
 
         return target?.PhysicsObj.Position.ACEPosition();
     }
 
-    private static Quaternion SetSpellRotation(this WorldObject source, int i, Spell spell, WorldObject target, ProjectileSpellType spellType, Vector3 velocity, bool strikeSpell, Position? casterLoc, Position? targetLoc, Vector3 origin, SpellProjectile? sp)
+    private static Quaternion SetSpellRotation(this WorldObject source, int i, Spell spell, ProjectileSpellType spellType, WorldObject target, Vector3 velocity, bool strikeSpell, Position? casterLoc, Position? targetLoc, Vector3 origin, SpellProjectile? sp)
     {
         var rotate = casterLoc.Rotation;
         if (target != null)

@@ -5,6 +5,7 @@ global using ACE.Entity.Enum.Properties;
 global using ACE.Entity.Enum;
 global using ACE.Entity.Models;
 global using ACE.Entity;
+global using ACE.Server.Command;
 global using ACE.Server.Entity.Actions;
 global using ACE.Server.Entity;
 global using ACE.Server.Factories.Entity;

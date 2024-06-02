@@ -48,11 +48,6 @@ public class Enlightened : Mutator
         return true;
     }
 
-
-
-
-
-
     //To be changed, borrowed from growth
     private static bool TryGrowItem(WorldObject item, int level, TreasureItemType_Orig itemType)
     {

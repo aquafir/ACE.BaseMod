@@ -72,7 +72,13 @@ Whenever a property is set to something from a `null` value, if a default is in 
 
 * `MaxSpecCredits` sets the number of specialization credits
   * Fakes having more spec credits by `70 - max`
-  * Rewrite of SkillAlterationDevice might work?
+  * Rewrite of `SkillAlterationDevice` might work?
 
 
 
+### RunAs
+
+Experimental command that lets you run a command as an online player without regular checks:
+
+* `runas <player> <command with params>`
+* e.g., `runas alttest faction ch 5`

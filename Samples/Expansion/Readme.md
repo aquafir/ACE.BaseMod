@@ -89,24 +89,8 @@ Some features or mutators depend on a utility `Feature`:
 
 
 
+
 ### Features
-
-#### FakePropertyCache
-
-`FakePropertyCache` aims to be a performant way of tracking anything that might go into a particular FakeProp
-
-* Updates on
-  * Equipment change
-  * ~~Enchantment Change~~
-* ~~Softcaps/hardcaps~~
-* ~~Default value~~
-* Combination style
-  * Multiplicative
-  * Additive
-
-
-
-
 
 
 #### EnableOnAttackForNonAetheria
@@ -149,14 +133,13 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 
 ### Todo
 
-* Reversible weighted Augmentations
-* Add CommandCategory attributes
-  * Add batch load to startup
-
-* 
 * EquipmentCache caps
 * Need to use [different collections](https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/data-structures-for-parallel-programming) for parallel support?
-* Check mutations compatibility
+* Mutations
+  * Check mutations compatibility
+  * Don't patch various MutatorHooks if they have no Mutator with that type
+
+* 
 * ~~ArrayOf for pools for constant time sampling?~~
 * If ACE ever goes .NET >7 should switch to polymorphic serialization 
 * Currently doesn't wipe a set/proc if one exists and a mutation isn't rolled.
@@ -171,6 +154,11 @@ https://github.com/aquafir/ACE.BaseMod/assets/83029060/81e635c1-115a-453e-b1e3-c
 
 ## Scratch
 
+* Convert damage to periodic damage
+* Saving grace - chance of damage > hp being set to hp - 1
+* Sweetspot angle, support with UB?
+* Weal/woe
+* Autocombat
 * Flat vs. multi
 * Clamp in cache or return?
 * Bonus based on height / size
