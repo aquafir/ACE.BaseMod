@@ -1,6 +1,7 @@
 ﻿namespace Tower;
 public static class FloorExtensions
 {
+    private static List<TowerFloor> Floors => PatchClass.Settings.Floors;
     private static Dictionary<ushort, TowerFloor> floorLookup = null;
     private static Dictionary<int, TowerFloor> floorIndexLookup = null;
     /// <summary>
@@ -37,7 +38,8 @@ public static class FloorExtensions
         return false;
     }
 
-
+    public static TowerFloor? GetHighestCompletedFloor(this Player player) =>
+        Floors.OrderByDescending(x => x.Index).Where(x => player.GetFirstCompletion(x) != null).FirstOrDefault();
 
     public static float GetXpBonus(this Player player)
     {
@@ -54,7 +56,6 @@ public static class FloorExtensions
         //player.SendMessage($"{delta} levels below target of {floor.Level} - {fractionMaxBonus} of max");
         return Math.Clamp(bonus, 1, PatchClass.Settings.MaxXpBonus);
     }
-
     public static float GetLootBonus(this Player player)
     {
         //Todo: decide about setting on portal

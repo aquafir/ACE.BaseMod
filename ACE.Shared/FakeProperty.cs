@@ -66,7 +66,6 @@ public enum FakeFloat
     /// Time previously spent in game, used in conjunction with LoginTimestamp to find current time in game
     /// </summary>
     TimeInGame = 20007,
-    TimestampOfflineRewards = 20008,
 }
 public enum FakeIID
 {

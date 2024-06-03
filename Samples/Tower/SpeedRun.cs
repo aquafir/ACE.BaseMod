@@ -57,7 +57,6 @@ public static class SpeedRun
         //player.SendMessage($"Starting {floor.Name} ({floor.Index}) after {player.TotalTimeInGame().ToFriendlyTime()} time in game.");
     }
 
-
     /// <summary>
     /// Handles checking if the current floor the player is on completes the last one they were on
     /// </summary>

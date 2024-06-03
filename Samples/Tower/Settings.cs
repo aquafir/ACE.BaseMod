@@ -37,6 +37,8 @@ public class Settings
     public float MaxLootBonus { get; set; } = 2;
     public float MaxLootBonusLevelRange { get; set; } = 30;
 
+    public OfflineProgressSettings OfflineProgress { get; set; } = new();
+
     public List<TowerFloor> Floors { get; set; } = new()
     {
 //016C : MP non instance
