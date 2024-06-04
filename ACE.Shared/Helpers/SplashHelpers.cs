@@ -18,7 +18,11 @@ public static class SplashHelper
     /// <returns></returns>
     public static List<PhysicsObj> GetVisibleCreaturesByDistance(this Player reference, WorldObject origin)
     {
-        var visible = reference.PhysicsObj.ObjMaint.GetVisibleObjectsValuesWhere(o =>
+        if (reference is null || reference.PhysicsObj is null)
+            return new();
+
+        var visible = reference.PhysicsObj.ObjMaint?.GetVisibleObjectsValuesWhere(o =>
+            o?.WeenieObj?.WorldObject is not null &&
             o.WeenieObj.WorldObject.WeenieType == WeenieType.Creature &&    //Restrict to creature weenies here for speed?
             o.WeenieObj.WorldObject != null);
 
