@@ -89,6 +89,7 @@ public abstract class Mutator
     public virtual bool TryMutateGenerator(HashSet<Mutation> mutations, GeneratorProfile generator, WorldObject item) => false;
     public virtual bool TryMutateFactory(HashSet<Mutation> mutations, WorldObject item) => false;
     public virtual bool TryMutateEnterWorld(HashSet<Mutation> mutations, WorldObject item) => false;
+    public virtual bool TryMutateEnterInventory(HashSet<Mutation> mutations, WorldObject item) => false;
 
     #region Start/Stop - Placeholders for now
     public virtual void Start()

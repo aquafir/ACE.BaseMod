@@ -33,18 +33,21 @@ internal class FakeMissileSplitSplash
         var current = Time.GetUnixTime();
         var delta = current - time;
 
-        //Scale an interval?  Default to .1
-        var interval = .1;
+        var interval = weapon.GetProperty(FakeFloat.ItemMissileSplashCooldown) ?? 1;
+        //player.SendMessage($"Splash Interval: {delta}");
         if (delta < interval)
             return false;
 
         //Radius, range, etc.
         var radius = weapon.GetProperty(FakeFloat.ItemMissileSplashRadius) ?? 4;
         var targets = player.GetSplashTargets(target, splashCount, (float)radius);
-        player.SendMessage($"Radius: {radius} - {targets.Count}");
+        //player.SendMessage($"Radius: {radius} - {targets.Count}");
 
         if (targets.Count < 1)
             return false;
+
+        //Success, set last timestamp
+        player.SetProperty(FakeFloat.TimestampLastMissileSplash, Time.GetUnixTime());
 
         //Splash in a radius
         //player.SendMessage($"Splashing {targets.Count} times: {String.Join("\n", targets)}");
@@ -83,7 +86,7 @@ internal class FakeMissileSplitSplash
         var delta = current - time;
 
         //Scale an interval?  Default to .1
-        var interval = .1;
+        var interval = weapon.GetProperty(FakeFloat.ItemMissileSplitCooldown) ?? 1;
         if (delta < interval)
             return false;
 
@@ -93,6 +96,9 @@ internal class FakeMissileSplitSplash
 
         if (targets.Count < 1)
             return false;
+
+        //Success, set last timestamp
+        player.SetProperty(FakeFloat.TimestampLastMissileSplit, Time.GetUnixTime());
 
         //Split the missile
         //player.SendMessage($"Splitting {targets.Count} times: {String.Join("\n", targets.Select(x => x.Name))}");

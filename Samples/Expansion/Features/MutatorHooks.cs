@@ -258,7 +258,7 @@ internal class MutatorHooks
 
             //If an item was mutated add the type
             //Todo: create a separate handler for entering inventory?
-            if (mutator.TryMutateEnterWorld(mutations, item))
+            if (mutator.TryMutateEnterInventory(mutations, item))
                 mutations.Add(mutator.MutationType);
         }
 
