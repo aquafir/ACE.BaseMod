@@ -118,7 +118,6 @@ public static class SpeedRun
         __instance.CheckCompleteFloor();
     }
 
-
     [CommandHandler("clearspeed", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
     public static void HandleClearSpeed(Session session, params string[] parameters)
     {

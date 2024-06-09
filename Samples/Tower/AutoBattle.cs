@@ -2,7 +2,7 @@
 
 namespace Tower;
 
-[HarmonyPatch]
+//[HarmonyPatch]
 public static class AutoBattle
 {
     static PropertyBool Battling = (PropertyBool)50505;
