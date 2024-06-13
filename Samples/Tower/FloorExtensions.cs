@@ -74,7 +74,11 @@ public static class FloorExtensions
 
 
     [CommandHandler("bonus", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleBonus(Session session, params string[] parameters)
+#if REALM
+public static void HandleBonus(ISession session, params string[] parameters)
+#else
+public static void HandleBonus(Session session, params string[] parameters)
+#endif
     {
         var player = session.Player;
 

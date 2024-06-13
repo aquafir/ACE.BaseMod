@@ -6,7 +6,11 @@ public static class Bank
     static string Commands => String.Join(", ", Enum.GetNames<Transaction>());
 
     [CommandHandler("bank", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleBank(Session session, params string[] parameters)
+#if REALM
+public static void HandleBank(ISession session, params string[] parameters)
+#else
+public static void HandleBank(Session session, params string[] parameters)
+#endif
     {
         var player = session.Player;
 

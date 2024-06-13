@@ -59,7 +59,11 @@ public static class OfflineProgress
     //Create a command to toggle the variable
     static bool OfflineProgressEnabled(this Player player) => player.GetProperty(ProgressOffline) ?? false;
     [CommandHandler("offline-toggle", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleToggle(Session session, params string[] parameters)
+#if REALM
+public static void HandleToggle(ISession session, params string[] parameters)
+#else
+public static void HandleToggle(Session session, params string[] parameters)
+#endif
     {
         var player = session.Player;
         if (player is null) return;
@@ -76,7 +80,11 @@ public static class OfflineProgress
     }
 
     [CommandHandler("offline-tiers", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleOfflineRewards(Session session, params string[] parameters)
+#if REALM
+public static void HandleOfflineRewards(ISession session, params string[] parameters)
+#else
+public static void HandleOfflineRewards(Session session, params string[] parameters)
+#endif
     {
         var player = session.Player;
 
@@ -95,7 +103,11 @@ public static class OfflineProgress
     }
 
     [CommandHandler("offline-test", AccessLevel.Developer, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleOfflineRewardsTest(Session session, params string[] parameters)
+#if REALM
+public static void HandleOfflineRewardsTest(ISession session, params string[] parameters)
+#else
+public static void HandleOfflineRewardsTest(Session session, params string[] parameters)
+#endif
     {
         var player = session.Player;
 

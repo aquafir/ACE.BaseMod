@@ -158,7 +158,11 @@ public static class LootAll
 
     //Create a command to toggle the variable
     [CommandHandler("lootmute", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleT2(Session session, params string[] parameters)
+#if REALM
+public static void HandleT2(ISession session, params string[] parameters)
+#else
+public static void HandleT2(Session session, params string[] parameters)
+#endif
     {
         var player = session.Player;
         if (player is null) return;
@@ -178,7 +182,11 @@ public static class LootAll
 
 
     [CommandHandler("clean", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-    public static void Clean(Session session, params string[] parameters)
+#if REALM
+public static void Clean(ISession session, params string[] parameters)
+#else
+public static void Clean(Session session, params string[] parameters)
+#endif
     {
         // @delete - Deletes the selected object. Players may not be deleted this way.
 

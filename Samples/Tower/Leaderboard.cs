@@ -6,7 +6,11 @@ public class Leaderboard
     static TimeSpan cacheInterval = TimeSpan.FromSeconds(60);
 
     [CommandHandler("leaderboard", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleLeaderboard(Session session, params string[] parameters)
+#if REALM
+public static void HandleLeaderboard(ISession session, params string[] parameters)
+#else
+public static void HandleLeaderboard(Session session, params string[] parameters)
+#endif
     {
         var lapse = DateTime.Now - timestampLeaderboard;
         if (lapse < cacheInterval)
