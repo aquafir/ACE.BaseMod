@@ -57,6 +57,9 @@ internal class MutatorHooks
         //Shutdown/unpatch everything on settings change to support repatching by category
         foreach (var eventType in mutators.Values)
         {
+            if (eventType is null)
+                continue;
+            
             //Todo: Prevent duplicate shutdowns..?
             HashSet<Mutator> encountered = new();
 

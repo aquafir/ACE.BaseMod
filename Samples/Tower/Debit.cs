@@ -305,7 +305,17 @@ public class Debit
         var defaultItems = new List<WorldObject>();
 
         foreach (var defaultItemProfile in defaultItemProfiles)
+        {
+#if REALM
+            var item = __instance.DefaultItemsForSale[(new ObjectGuid(defaultItemProfile.ObjectGuid))];
+            if (item.ItemType == ItemType.Service)
+                defaultItems.Add(item);
+            else
+                defaultItems.AddRange(__instance.ItemProfileToWorldObjects(defaultItemProfile, item));
+#else
             defaultItems.AddRange(__instance.ItemProfileToWorldObjects(defaultItemProfile));
+#endif
+        }
 
         var purchaseItems = defaultItems.Concat(uniqueItems).ToList();
 

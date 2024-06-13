@@ -45,19 +45,19 @@ public class Settings
 //5369 : Housing non instance
 //5950 : Base non instance
 //5F44 : Jungle Base non instance
-        new("Floor 1", 0, 0x019E, 10),
-        new("Floor 2", 1, 0x0159, 20),
-        new("Floor 3", 2, 0x013B, 30),
-        new("Floor 4", 3, 0x6345, 40),
-        new("Floor 5", 4, 0x009D, 50),
-        new("Floor 6", 5, 0x03A5, 60),
-        new("Floor 7", 6, 0x01A3, 70),
-        new("Floor 7.5", 7, 0x016A, 80),
-        new("Floor 8", 8, 0x0110, 90),
-        new("Floor 9", 9, 0x0010, 100),
-        new("Floor 10", 10, 0x013C, 110),
-        new("Floor 11", 11, 0x001A, 120),
-        new("Floor 12", 12, 0x002D, 130),
+        new("Floor 1", 0, 0x019E, 10, 0x0159),
+        new("Floor 2", 1, 0x0159, 20, 0x013B),
+        new("Floor 3", 2, 0x013B, 30, 0x6345),
+        new("Floor 4", 3, 0x6345, 40, 0x009D),
+        new("Floor 5", 4, 0x009D, 50, 0x03A5),
+        new("Floor 6", 5, 0x03A5, 60, 0x5F44),
+        new("Floor 7", 6, 0x01A3, 70, 0x016A),
+        new("Floor 7.5", 7, 0x016A, 80, 0x0110),
+        new("Floor 8", 8, 0x0110, 90, 0x0010),
+        new("Floor 9", 9, 0x0010, 100, 0x013C),
+        new("Floor 10", 10, 0x013C, 110, 0x001A),
+        new("Floor 11", 11, 0x001A, 120, 0x002D),
+        new("Floor 12", 12, 0x002D, 130, 0x0000),
     };
 
 
@@ -94,7 +94,7 @@ public class Settings
 //public record struct TowerFloor(string Name, int Index, ushort Landblock, uint Level);
 //public record struct BankItem(string Name, uint Id, int Prop);
 
-public record TowerFloor(string Name, int Index, ushort Landblock, uint Level);
+public record TowerFloor(string Name, int Index, ushort Landblock, ushort ExitLandblock, uint Level);
 public record BankItem(string Name, uint Id, int Prop);
 
 

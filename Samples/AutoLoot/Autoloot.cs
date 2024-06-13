@@ -11,7 +11,11 @@ public class AutoLoot
     static readonly ConcurrentDictionary<Player, LootCore> lootProfiles = new();
     //Dump tests here
     [CommandHandler("loot", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, -1)]
-    public static void HandleLoadProfile(Session session, params string[] parameters)
+#if REALM
+public static void HandleLoadProfile(ISession session, params string[] parameters)
+#else
+public static void HandleLoadProfile(Session session, params string[] parameters)
+#endif
     {
         var player = session.Player;
 

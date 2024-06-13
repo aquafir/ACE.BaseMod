@@ -61,8 +61,4 @@
 		<None Include="M:\Projects\ACE.BaseMod\ACE.Shared\.editorconfig" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Augments\" />
-	</ItemGroup>
-
 </Project>

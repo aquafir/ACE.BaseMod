@@ -17,6 +17,7 @@ public enum Mutation
     ShinyPet,
     Slayer,
     TowerLocked,
+    RandomColor,
 }
 
 [Flags]

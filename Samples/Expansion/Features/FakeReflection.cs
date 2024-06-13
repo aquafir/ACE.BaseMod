@@ -1,4 +1,6 @@
-﻿namespace Expansion.Features;
+﻿using System.Diagnostics;
+
+namespace Expansion.Features;
 
 [HarmonyPatchCategory(nameof(Feature.FakeReflection))]
 internal class FakeReflection
@@ -18,7 +20,5 @@ internal class FakeReflection
 
         __instance.SendMessage($"You reflected {flat} flat and {percent} percent damage of the {__result} taken at {source.Name}");
         damageEvent.Attacker.TakeDamage(__instance, DamageType.Health, total);
-        //Player
-        //Your code here
     }
 }
