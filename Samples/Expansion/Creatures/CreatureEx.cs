@@ -1,4 +1,6 @@
-﻿namespace Expansion.Creatures;
+﻿using ACE.Server.Realms;
+
+namespace Expansion.Creatures;
 
 //[HarmonyPatchCategory(nameof(CreatureEx))]
 public class CreatureEx : Creature
@@ -7,7 +9,11 @@ public class CreatureEx : Creature
     {
         Initialize();
     }
+#if REALM
+    public CreatureEx(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
+#else
     public CreatureEx(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
+#endif
     {
         Initialize();
     }

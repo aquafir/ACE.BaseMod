@@ -4,7 +4,11 @@
 public class Healer : CreatureEx
 {
     public Healer(Biota biota) : base(biota) { }
-    public Healer(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
+#if REALM
+    public Healer(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
+#else
+    public Healer(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
+#endif { }
 
     //Mutate from the original weenie
     protected override void Initialize()

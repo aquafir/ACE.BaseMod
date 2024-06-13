@@ -4,7 +4,11 @@
 public class Poisoner : CreatureEx
 {
     public Poisoner(Biota biota) : base(biota) { }
-    public Poisoner(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
+#if REALM
+    public Poisoner(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
+#else
+    public Poisoner(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
+#endif { }
 
     //Mutate from the original weenie
     protected override void Initialize()

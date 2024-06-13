@@ -4,7 +4,11 @@
 public class Evader : CreatureEx
 {
     public Evader(Biota biota) : base(biota) { }
-    public Evader(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
+#if REALM
+    public Evader(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
+#else
+    public Evader(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
+#endif { }
 
     //Mutate from the original weenie
     protected override void Initialize()

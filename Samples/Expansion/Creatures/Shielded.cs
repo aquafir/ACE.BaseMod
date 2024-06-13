@@ -4,7 +4,11 @@
 public class Shielded : CreatureEx
 {
     public Shielded(Biota biota) : base(biota) { }
-    public Shielded(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
+#if REALM
+    public Shielded(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
+#else
+    public Shielded(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
+#endif { }
 
     //Mutate from the original weenie
     protected override void Initialize()

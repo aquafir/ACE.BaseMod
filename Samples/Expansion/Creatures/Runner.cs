@@ -4,7 +4,11 @@
 public class Runner : CreatureEx
 {
     public Runner(Biota biota) : base(biota) { }
-    public Runner(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
+#if REALM
+    public Runner(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
+#else
+    public Runner(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
+#endif { }
 
     //Mutate from the original weenie
     protected override void Initialize()
