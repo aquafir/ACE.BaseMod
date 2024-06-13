@@ -4,11 +4,7 @@
 public class Duelist : CreatureEx
 {
     public Duelist(Biota biota) : base(biota) { }
-#if REALM
-    public Duelist(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
-#else
-    public Duelist(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
-#endif { }
+    public Duelist(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
 
     //Mutate from the original weenie
     protected override void Initialize()

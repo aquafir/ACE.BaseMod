@@ -6,11 +6,7 @@ namespace Expansion.Creatures;
 public class Warder : CreatureEx
 {
     public Warder(Biota biota) : base(biota) { }
-#if REALM
-    public Warder(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
-#else
-    public Warder(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
-#endif { }
+    public Warder(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
 
     //Mutate from the original weenie
     protected override void Initialize()

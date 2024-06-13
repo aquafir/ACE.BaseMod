@@ -4,11 +4,7 @@
 public class Rogue : CreatureEx
 {
     public Rogue(Biota biota) : base(biota) { }
-#if REALM
-    public Rogue(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
-#else
-    public Rogue(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
-#endif { }
+    public Rogue(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
 
     //Mutate from the original weenie
     protected override void Initialize()

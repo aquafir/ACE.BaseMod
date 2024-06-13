@@ -4,11 +4,7 @@
 public class Revenger : CreatureEx
 {
     public Revenger(Biota biota) : base(biota) { }
-#if REALM
-    public Revenger(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
-#else
-    public Revenger(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
-#endif { }
+    public Revenger(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
 
     //Mutate from the original weenie
     protected override void Initialize()

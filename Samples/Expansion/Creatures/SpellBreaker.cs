@@ -4,11 +4,7 @@
 public class SpellBreaker : CreatureEx
 {
     public SpellBreaker(Biota biota) : base(biota) { }
-#if REALM
-    public SpellBreaker(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
-#else
-    public SpellBreaker(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
-#endif { }
+    public SpellBreaker(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
 
     //Mutate from the original weenie
     protected override void Initialize()

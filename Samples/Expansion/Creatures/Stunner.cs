@@ -4,11 +4,7 @@
 public class Stunner : CreatureEx
 {
     public Stunner(Biota biota) : base(biota) { }
-#if REALM
-    public Stunner(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
-#else
-    public Stunner(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
-#endif { }
+    public Stunner(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
 
     //Mutate from the original weenie
     protected override void Initialize()

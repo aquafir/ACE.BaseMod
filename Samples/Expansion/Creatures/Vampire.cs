@@ -4,11 +4,7 @@
 public class Vampire : CreatureEx
 {
     public Vampire(Biota biota) : base(biota) { }
-#if REALM
-    public Vampire(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
-#else
-    public Vampire(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
-#endif { }
+    public Vampire(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
 
     //Mutate from the original weenie
     protected override void Initialize()

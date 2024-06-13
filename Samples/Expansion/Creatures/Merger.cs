@@ -4,11 +4,7 @@
 public class Merger : CreatureEx
 {
     public Merger(Biota biota) : base(biota) { }
-#if REALM
-    public Merger(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
-#else
-    public Merger(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
-#endif { }
+    public Merger(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
 
     //Mutate from the original weenie
     protected override void Initialize()

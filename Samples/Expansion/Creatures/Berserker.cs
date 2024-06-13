@@ -4,11 +4,7 @@
 public class Berserker : CreatureEx
 {
     public Berserker(Biota biota) : base(biota) { }
-#if REALM
-    public Berserker(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
-#else
-    public Berserker(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
-#endif { }
+    public Berserker(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
 
     //Mutate from the original weenie
     protected override void Initialize()

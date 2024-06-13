@@ -4,11 +4,7 @@
 public class Stomper : CreatureEx
 {
     public Stomper(Biota biota) : base(biota) { }
-#if REALM
-    public Stomper(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
-#else
-    public Stomper(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
-#endif { }
+    public Stomper(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
 
     //Mutate from the original weenie
     protected override void Initialize()

@@ -4,11 +4,7 @@
 public class Accurate : CreatureEx
 {
     public Accurate(Biota biota) : base(biota) { }
-#if REALM
-    public Accurate(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
-#else
-    public Accurate(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
-#endif { }
+    public Accurate(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
 
     //Mutate from the original weenie
     protected override void Initialize()

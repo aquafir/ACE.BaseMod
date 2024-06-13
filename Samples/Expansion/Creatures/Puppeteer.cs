@@ -4,11 +4,7 @@
 public class Puppeteer : CreatureEx
 {
     public Puppeteer(Biota biota) : base(biota) { }
-#if REALM
-    public Puppeteer(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
-#else
-    public Puppeteer(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
-#endif { }
+    public Puppeteer(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
 
     private PropertiesGenerator generator;
 

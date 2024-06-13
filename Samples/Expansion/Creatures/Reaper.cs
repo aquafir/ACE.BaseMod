@@ -4,11 +4,7 @@
 public class Reaper : CreatureEx
 {
     public Reaper(Biota biota) : base(biota) { }
-#if REALM
-    public Reaper(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
-#else
-    public Reaper(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
-#endif { }
+    public Reaper(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
 
     //Mutate from the original weenie
     protected override void Initialize()
