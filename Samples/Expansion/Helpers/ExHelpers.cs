@@ -1,4 +1,6 @@
-﻿namespace Expansion.Helpers;
+﻿using System;
+
+namespace Expansion.Helpers;
 
 public static class CreatureExHelpers
 {
@@ -35,40 +37,42 @@ public static class CreatureExHelpers
         //Creatures.CreatureType.Warder => new Warder(biota),
         _ => new CreatureEx(biota),             // throw new NotImplementedException(),
     };
-    public static CreatureEx Create(this Creatures.CreatureExType type, Weenie weenie, ObjectGuid guid) => type switch
-    {
+
 #if REALM
-        CreatureExType.Accurate => new Accurate(weenie, guid, null),
-        //Creatures.CreatureType.Avenger => new Avenger(weenie, guid, null),
-        CreatureExType.Banisher => new Banisher(weenie, guid, null),
-        //Creatures.CreatureType.Bard => new Bard(weenie, guid, null),
-        CreatureExType.Berserker => new Berserker(weenie, guid, null),
-        CreatureExType.Boss => new Boss(weenie, guid, null),
-        CreatureExType.Comboer => new Comboer(weenie, guid, null),
-        CreatureExType.Drainer => new Drainer(weenie, guid, null),
-        CreatureExType.Duelist => new Duelist(weenie, guid, null),
-        CreatureExType.Evader => new Evader(weenie, guid, null),
-        CreatureExType.Exploder => new Exploder(weenie, guid, null),
-        CreatureExType.Healer => new Creatures.Healer(weenie, guid, null),
-        CreatureExType.Merger => new Merger(weenie, guid, null),
-        //Creatures.CreatureType.Necromancer => new Necromancer(weenie, guid, null),
-        //Creatures.CreatureType.Poisoner => new Poisoner(weenie, guid, null),
-        CreatureExType.Puppeteer => new Puppeteer(weenie, guid, null),
-        //Creatures.CreatureType.Reaper => new Reaper(weenie, guid, null),
-        CreatureExType.Rogue => new Rogue(weenie, guid, null),
-        //Creatures.CreatureType.Runner => new Runner(weenie, guid, null),
-        CreatureExType.Shielded => new Shielded(weenie, guid, null),
-        CreatureExType.SpellBreaker => new SpellBreaker(weenie, guid, null),
-        CreatureExType.SpellThief => new SpellThief(weenie, guid, null),
-        //Creatures.CreatureType.Splitter => new Splitter(weenie, guid, null),
-        //Creatures.CreatureType.Stomper => new Stomper(weenie, guid, null),
-        CreatureExType.Stunner => new Stunner(weenie, guid, null),
-        //Creatures.CreatureType.Suppresser => new Suppresser(weenie, guid, null),
-        CreatureExType.Tank => new Tank(weenie, guid, null),
-        CreatureExType.Vampire => new Vampire(weenie, guid, null),
-        CreatureExType.Warder => new Warder(weenie, guid, null),
-        _ => new Stunner(weenie, guid, null),      //throw new NotImplementedException(),
+    public static CreatureEx Create(this Creatures.CreatureExType type, Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset = null) => type switch { 
+            CreatureExType.Accurate => new Accurate(weenie, guid, ruleset),
+        //Creatures.CreatureType.Avenger => new Avenger(weenie, guid, ruleset),
+        CreatureExType.Banisher => new Banisher(weenie, guid, ruleset),
+        //Creatures.CreatureType.Bard => new Bard(weenie, guid, ruleset),
+        CreatureExType.Berserker => new Berserker(weenie, guid, ruleset),
+        CreatureExType.Boss => new Boss(weenie, guid, ruleset),
+        CreatureExType.Comboer => new Comboer(weenie, guid, ruleset),
+        CreatureExType.Drainer => new Drainer(weenie, guid, ruleset),
+        CreatureExType.Duelist => new Duelist(weenie, guid, ruleset),
+        CreatureExType.Evader => new Evader(weenie, guid, ruleset),
+        CreatureExType.Exploder => new Exploder(weenie, guid, ruleset),
+        CreatureExType.Healer => new Creatures.Healer(weenie, guid, ruleset),
+        CreatureExType.Merger => new Merger(weenie, guid, ruleset),
+        //Creatures.CreatureType.Necromancer => new Necromancer(weenie, guid, ruleset),
+        //Creatures.CreatureType.Poisoner => new Poisoner(weenie, guid, ruleset),
+        CreatureExType.Puppeteer => new Puppeteer(weenie, guid, ruleset),
+        //Creatures.CreatureType.Reaper => new Reaper(weenie, guid, ruleset),
+        CreatureExType.Rogue => new Rogue(weenie, guid, ruleset),
+        //Creatures.CreatureType.Runner => new Runner(weenie, guid, ruleset),
+        CreatureExType.Shielded => new Shielded(weenie, guid, ruleset),
+        CreatureExType.SpellBreaker => new SpellBreaker(weenie, guid, ruleset),
+        CreatureExType.SpellThief => new SpellThief(weenie, guid, ruleset),
+        //Creatures.CreatureType.Splitter => new Splitter(weenie, guid, ruleset),
+        //Creatures.CreatureType.Stomper => new Stomper(weenie, guid, ruleset),
+        CreatureExType.Stunner => new Stunner(weenie, guid, ruleset),
+        //Creatures.CreatureType.Suppresser => new Suppresser(weenie, guid, ruleset),
+        CreatureExType.Tank => new Tank(weenie, guid, ruleset),
+        CreatureExType.Vampire => new Vampire(weenie, guid, ruleset),
+        CreatureExType.Warder => new Warder(weenie, guid, ruleset),
+        _ => new Stunner(weenie, guid, ruleset),      //throw new NotImplementedException(),
+    };
 #else
+    public static CreatureEx Create(this Creatures.CreatureExType type, Weenie weenie, ObjectGuid guid) => type switch {
         CreatureExType.Accurate => new Accurate(weenie, guid),
         //Creatures.CreatureType.Avenger => new Avenger(weenie, guid),
         CreatureExType.Banisher => new Banisher(weenie, guid),
@@ -99,7 +103,7 @@ public static class CreatureExHelpers
         CreatureExType.Vampire => new Vampire(weenie, guid),
         CreatureExType.Warder => new Warder(weenie, guid),
         _ => new Stunner(weenie, guid),      //throw new NotImplementedException(),
-#endif
     };
+#endif
 }
 
