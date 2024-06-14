@@ -3,9 +3,6 @@
 [HarmonyPatch]
 public class FistMagic
 {
-
-    //static List<>
-
     /// <summary>
     /// Checks Power/Accuracy bar and height to trigger a spell on UA
     /// </summary>
@@ -17,8 +14,7 @@ public class FistMagic
         //    return;
 
         //Todo: fix checking attack type instead of equipped?  //__instance?.AttackType == AttackType.Punches
-
-        var watch = Stopwatch.StartNew();
+        //var watch = Stopwatch.StartNew();
 
         var weapon = __instance.GetEquippedWeapon();
 
@@ -57,9 +53,10 @@ public class FistMagic
             __instance.TryCastSpell_WithRedirects(spell, target);
         }
 
-        watch.Stop();
-        __instance.SendMessage($"{watch.ElapsedTicks} ticks / {watch.ElapsedMilliseconds} ms");
-        //Add ring cast if you hit the right height/power
+        //watch.Stop();
+        //__instance.SendMessage($"{watch.ElapsedTicks} ticks / {watch.ElapsedMilliseconds} ms");
+
+        //Not using buckets
         //var randomId = Settings.FistPool[gen.Next(Settings.FistPool.Length)];
         //var powerResult = (int)(__instance.GetPowerAccuracyBar() * Settings.FistBuckets);
         //var heightResult = ((int)__result.AttackHeight - 1) * Settings.FistBuckets;

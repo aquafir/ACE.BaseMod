@@ -51,7 +51,7 @@ public static class LootAll
             player.SendMessage($"Looting {loot.Count} items for {looters.Count} players", PatchClass.Settings.MessageType);
 
         //Roll a random starting player for round-robin
-        var index = random.Next(0, looters.Count+1);
+        var index = random.Next(looters.Count);
 
         //For each loot item
         foreach (var item in loot)

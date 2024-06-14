@@ -179,16 +179,4 @@ public static void HandleTimeInGame(Session session, params string[] parameters)
         var tot = player.TotalTimeInGame().ToTimeSpan().GetFriendlyString();
         player.SendMessage($"Previous time: {prev}\nTotal time: {tot}");
     }
-
-    [CommandHandler("t3", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-#if REALM
-    public static void HandleT3(ISession session, params string[] parameters)
-#else
-public static void HandleT3(Session session, params string[] parameters)
-#endif
-    {
-        var player = session.Player;
-        player.AugmentationCriticalExpertise = 100;
-        player.AugmentationCriticalDefense = 100;
-    }
 }

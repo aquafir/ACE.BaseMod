@@ -2,7 +2,7 @@
 
 namespace Tower;
 
-//[HarmonyPatch]
+[HarmonyPatchCategory(nameof(AutoBattle))]
 public static class AutoBattle
 {
     static PropertyBool Battling = (PropertyBool)50505;
@@ -78,4 +78,15 @@ public static class AutoBattle
         __instance.Attack(creature, __instance.AttackSequence);
     }
 
+
+    [CommandHandler("t3", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
+#if REALM
+    public static void HandleT3(ISession session, params string[] parameters)
+#else
+public static void HandleT3(Session session, params string[] parameters)
+#endif
+    {
+        var player = session.Player;
+        PlayerFactoryEx.AddAllSpells(player);
+    }
 }

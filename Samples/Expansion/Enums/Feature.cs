@@ -59,5 +59,10 @@ public enum Feature
     /// On logging out it stores the amount of time in game for a more accurate measure of total time played
     /// </summary>
     TimeInGame,
+    DamageOverTimeConversion,
+    /// <summary>
+    /// Enables scaling of Life projectiles by ElementalDamageMod
+    /// </summary>
+    LifeMagicElementalMod,
 }
 

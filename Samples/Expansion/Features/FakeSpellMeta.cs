@@ -413,8 +413,12 @@ public static void HandleMeta(Session session, params string[] parameters)
     #endregion
 }
 
-public class SpellVariant // : Spell
+public class SpellVariant  : Spell
 {
+    public SpellVariant(uint spellID, bool loadDB = true) : base(spellID, loadDB)
+    {
+    }
+
     //Equation that relates power?
     public override int GetHashCode()
     {

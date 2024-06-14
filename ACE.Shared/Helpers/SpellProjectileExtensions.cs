@@ -39,7 +39,6 @@ public static class SpellProjectileExtensions
         return __result;
     }
 
-
     /// <summary>
     /// Launches a list of SpellProjectiles created with CreateSpellProjectiles and returns the ones successfully created
     /// </summary>
@@ -254,6 +253,207 @@ public static class SpellProjectileExtensions
 
         return origins;
     }
+
+    /// <summary>
+    /// *****UNUSED*****
+    /// Decomposed method to calculates the damage for a spell projectile
+    /// Used by war magic, void magic, and life magic projectiles
+    /// </summary>
+    public static float? CalculateDamage(this SpellProjectile projectile, Spell Spell, WorldObject source, Creature target, bool criticalHit, bool critDefended, bool overpower)
+    {
+        var sourcePlayer = source as Player;
+        var targetPlayer = target as Player;
+
+        if (source == null || !target.IsAlive || targetPlayer != null && targetPlayer.Invincible)
+            return null;
+
+        // check lifestone protection
+        if (targetPlayer != null && targetPlayer.UnderLifestoneProtection)
+        {
+            if (sourcePlayer != null)
+                sourcePlayer.Session.Network.EnqueueSend(new GameMessageSystemChat($"The Lifestone's magic protects {targetPlayer.Name} from the attack!", ChatMessageType.Magic));
+
+            targetPlayer.HandleLifestoneProtection();
+            return null;
+        }
+
+        var critDamageBonus = 0.0f;
+        var weaponCritDamageMod = 1.0f;
+        var weaponResistanceMod = 1.0f;
+        var resistanceMod = 1.0f;
+
+        // life magic
+        var lifeMagicDamage = 0.0f;
+
+        // war/void magic
+        var baseDamage = 0;
+        var skillBonus = 0.0f;
+        var finalDamage = 0.0f;
+
+        var resistanceType = Creature.GetResistanceType(Spell.DamageType);
+
+        var sourceCreature = source as Creature;
+        if (sourceCreature?.Overpower != null)
+            overpower = Creature.GetOverpower(sourceCreature, target);
+
+        var weapon = projectile.ProjectileLauncher;
+
+        var resistSource = projectile.IsWeaponSpell ? weapon : source;
+
+        var resisted = source.TryResistSpell(target, Spell, resistSource, true);
+        if (resisted && !overpower)
+            return null;
+
+        CreatureSkill attackSkill = null;
+        if (sourceCreature != null)
+            attackSkill = sourceCreature.GetCreatureSkill(Spell.School);
+
+        // critical hit
+        var criticalChance = SpellProjectile.GetWeaponMagicCritFrequency(weapon, sourceCreature, attackSkill, target);
+
+        if (ThreadSafeRandom.Next(0.0f, 1.0f) < criticalChance)
+        {
+            if (targetPlayer != null && targetPlayer.AugmentationCriticalDefense > 0)
+            {
+                var criticalDefenseMod = sourcePlayer != null ? 0.05f : 0.25f;
+                var criticalDefenseChance = targetPlayer.AugmentationCriticalDefense * criticalDefenseMod;
+
+                if (criticalDefenseChance > ThreadSafeRandom.Next(0.0f, 1.0f))
+                    critDefended = true;
+            }
+
+            if (!critDefended)
+                criticalHit = true;
+        }
+
+        var absorbMod = projectile.GetAbsorbMod(target);
+
+        bool isPVP = sourcePlayer != null && targetPlayer != null;
+
+        //http://acpedia.org/wiki/Announcements_-_2014/01_-_Forces_of_Nature - Aegis is 72% effective in PvP
+        if (isPVP && (target.CombatMode == CombatMode.Melee || target.CombatMode == CombatMode.Missile))
+        {
+            absorbMod = 1 - absorbMod;
+            absorbMod *= 0.72f;
+            absorbMod = 1 - absorbMod;
+        }
+
+        if (isPVP && Spell.IsHarmful)
+            Player.UpdatePKTimers(sourcePlayer, targetPlayer);
+
+        var elementalDamageMod = SpellProjectile.GetCasterElementalDamageModifier(weapon, sourceCreature, target, Spell.DamageType);
+
+        // Possible 2x + damage bonus for the slayer property
+        var slayerMod = SpellProjectile.GetWeaponCreatureSlayerModifier(weapon, sourceCreature, target);
+
+        // life magic projectiles: ie., martyr's hecatomb
+        if (Spell.MetaSpellType == ACE.Entity.Enum.SpellType.LifeProjectile)
+        {
+            lifeMagicDamage = projectile.LifeProjectileDamage * Spell.DamageRatio;
+
+            // could life magic projectiles crit?
+            // if so, did they use the same 1.5x formula as war magic, instead of 2.0x?
+            if (criticalHit)
+            {
+                // verify: CriticalMultiplier only applied to the additional crit damage,
+                // whereas CD/CDR applied to the total damage (base damage + additional crit damage)
+                weaponCritDamageMod = SpellProjectile.GetWeaponCritDamageMod(weapon, sourceCreature, attackSkill, target);
+
+                critDamageBonus = lifeMagicDamage * 0.5f * weaponCritDamageMod;
+            }
+
+            weaponResistanceMod = SpellProjectile.GetWeaponResistanceModifier(weapon, sourceCreature, attackSkill, Spell.DamageType);
+
+            // if attacker/weapon has IgnoreMagicResist directly, do not transfer to spell projectile
+            // only pass if SpellProjectile has it directly, such as 2637 - Invoking Aun Tanua
+
+            resistanceMod = (float)Math.Max(0.0f, target.GetResistanceMod(resistanceType, projectile, null, weaponResistanceMod));
+
+            finalDamage = (lifeMagicDamage + critDamageBonus) * elementalDamageMod * slayerMod * resistanceMod * absorbMod;
+        }
+        // war/void magic projectiles
+        else
+        {
+            if (criticalHit)
+            {
+                // Original:
+                // http://acpedia.org/wiki/Announcements_-_2002/08_-_Atonement#Letter_to_the_Players
+
+                // Critical Strikes: In addition to the skill-based damage bonus, each projectile spell has a 2% chance of causing a critical hit on the target and doing increased damage.
+                // A magical critical hit is similar in some respects to melee critical hits (although the damage calculation is handled differently).
+                // While a melee critical hit automatically does twice the maximum damage of the weapon, a magical critical hit will do an additional half the minimum damage of the spell.
+                // For instance, a magical critical hit from a level 7 spell, which does 110-180 points of damage, would add an additional 55 points of damage to the spell.
+
+                // Later updated for PvE only:
+
+                // http://acpedia.org/wiki/Announcements_-_2004/07_-_Treaties_in_Stone#Letter_to_the_Players
+
+                // Currently when a War Magic spell scores a critical hit, it adds a multiple of the base damage of the spell to a normal damage roll.
+                // Starting in July, War Magic critical hits will instead add a multiple of the maximum damage of the spell.
+                // No more crits that do less damage than non-crits!
+
+                if (isPVP) // PvP: 50% of the MIN damage added to normal damage roll
+                    critDamageBonus = Spell.MinDamage * 0.5f;
+                else   // PvE: 50% of the MAX damage added to normal damage roll
+                    critDamageBonus = Spell.MaxDamage * 0.5f;
+
+                // verify: CriticalMultiplier only applied to the additional crit damage,
+                // whereas CD/CDR applied to the total damage (base damage + additional crit damage)
+                weaponCritDamageMod = SpellProjectile.GetWeaponCritDamageMod(weapon, sourceCreature, attackSkill, target);
+
+                critDamageBonus *= weaponCritDamageMod;
+            }
+
+            /* War Magic skill-based damage bonus
+             * http://acpedia.org/wiki/Announcements_-_2002/08_-_Atonement#Letter_to_the_Players
+             */
+            if (sourcePlayer != null)
+            {
+                var magicSkill = sourcePlayer.GetCreatureSkill(Spell.School).Current;
+
+                if (magicSkill > Spell.Power)
+                {
+                    var percentageBonus = (magicSkill - Spell.Power) / 1000.0f;
+
+                    skillBonus = Spell.MinDamage * percentageBonus;
+                }
+            }
+            baseDamage = ThreadSafeRandom.Next(Spell.MinDamage, Spell.MaxDamage);
+
+            weaponResistanceMod = SpellProjectile.GetWeaponResistanceModifier(weapon, sourceCreature, attackSkill, Spell.DamageType);
+
+            // if attacker/weapon has IgnoreMagicResist directly, do not transfer to spell projectile
+            // only pass if SpellProjectile has it directly, such as 2637 - Invoking Aun Tanua
+
+            resistanceMod = (float)Math.Max(0.0f, target.GetResistanceMod(resistanceType, projectile, null, weaponResistanceMod));
+
+            if (sourcePlayer != null && targetPlayer != null && Spell.DamageType == DamageType.Nether)
+            {
+                // for direct damage from void spells in pvp,
+                // apply void_pvp_modifier *on top of* the player's natural resistance to nether
+
+                // this supposedly brings the direct damage from void spells in pvp closer to retail
+                resistanceMod *= (float)PropertyManager.GetDouble("void_pvp_modifier").Item;
+            }
+
+            finalDamage = baseDamage + critDamageBonus + skillBonus;
+
+            finalDamage *= elementalDamageMod * slayerMod * resistanceMod * absorbMod;
+        }
+
+        // show debug info
+        //if (sourceCreature != null && sourceCreature.DebugDamage.HasFlag(Creature.DebugDamageType.Attacker))
+        //{
+        //    projectile.ShowInfo(sourceCreature, Spell, attackSkill, criticalChance, criticalHit, critDefended, overpower, weaponCritDamageMod, skillBonus, baseDamage, critDamageBonus, elementalDamageMod, slayerMod, weaponResistanceMod, resistanceMod, absorbMod, projectile.LifeProjectileDamage, lifeMagicDamage, finalDamage);
+        //}
+        //if (target.DebugDamage.HasFlag(Creature.DebugDamageType.Defender))
+        //{
+        //    projectile.ShowInfo(target, Spell, attackSkill, criticalChance, criticalHit, critDefended, overpower, weaponCritDamageMod, skillBonus, baseDamage, critDamageBonus, elementalDamageMod, slayerMod, weaponResistanceMod, resistanceMod, absorbMod, projectile.LifeProjectileDamage, lifeMagicDamage, finalDamage);
+        //}
+        return finalDamage;
+    }
+
+
 
 #if REALM
     private static InstancedPosition? GetSpellCasterPosition(this WorldObject source, Spell spell, ProjectileSpellType spellType, WorldObject target, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage)
