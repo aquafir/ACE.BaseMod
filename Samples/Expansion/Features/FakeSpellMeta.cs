@@ -10,61 +10,6 @@ namespace Expansion.Features;
 [HarmonyPatchCategory(nameof(Feature.FakeSpellMeta))]
 public static class FakeSpellMeta
 {
-    #region Commands
-    [CommandHandler("meta", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 1)]
-#if REALM
-public static void HandleMeta(ISession session, params string[] parameters)
-#else
-public static void HandleMeta(Session session, params string[] parameters)
-#endif
-    {
-        //Get some scale to adjust spells by
-        if (!double.TryParse(parameters[0], out var metaScale))
-            return;
-
-        var player = session.Player;
-
-        if (!_metaScale.ContainsKey(player))
-        {
-            _metaScale.Add(player, metaScale);
-        }
-        //Clear if modified spells (if the scale is changing?)
-        if (_playerSpells.ContainsKey(player))
-            _playerSpells[player] = new();
-        if (_playerSpellBases.ContainsKey(player))
-            _playerSpellBases[player] = new();
-
-
-        _metaScale[player] = metaScale;
-
-        player.SendMessage($"Scaling spells by {metaScale}");
-    }
-
-    //[CommandHandler("splash", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, -1)]
-    //public static void HandleSplash(Session session, params string[] parameters)
-    //{
-    //    var player = session.Player;
-
-
-    //    if (player.CurrentAppraisalTarget is null)
-    //        return;
-
-    //    var targetGuid = new ObjectGuid(player.CurrentAppraisalTarget.Value);
-    //    var selection = session.Player.CurrentLandblock?.GetObject(targetGuid);
-
-    //    var targets = player.GetSplashTargets(selection, S.Settings.SpellSettings.SplashCount, S.Settings.SpellSettings.SplashRange);
-
-    //    var sb = new StringBuilder($"\nSplash Targets:");
-
-    //    foreach (var target in targets)
-    //    {
-    //        sb.Append($"\n  {target?.Name} - {target?.GetDistance(selection)}");
-    //    }
-
-    //    player.SendMessage(sb.ToString());
-    //}
-    #endregion
-
     #region Patches
     //This is probably where a pre-cast random should happen to effect difficulty?
     [HarmonyPrefix]
@@ -435,8 +380,38 @@ public static void HandleMeta(Session session, params string[] parameters)
         //}
     }
     #endregion
-}
 
+    #region Commands
+    [CommandHandler("meta", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 1)]
+#if REALM
+    public static void HandleMeta(ISession session, params string[] parameters)
+#else
+public static void HandleMeta(Session session, params string[] parameters)
+#endif
+    {
+        //Get some scale to adjust spells by
+        if (!double.TryParse(parameters[0], out var metaScale))
+            return;
+
+        var player = session.Player;
+
+        if (!_metaScale.ContainsKey(player))
+        {
+            _metaScale.Add(player, metaScale);
+        }
+        //Clear if modified spells (if the scale is changing?)
+        if (_playerSpells.ContainsKey(player))
+            _playerSpells[player] = new();
+        if (_playerSpellBases.ContainsKey(player))
+            _playerSpellBases[player] = new();
+
+
+        _metaScale[player] = metaScale;
+
+        player.SendMessage($"Scaling spells by {metaScale}");
+    }
+    #endregion
+}
 
 public class SpellVariant // : Spell
 {

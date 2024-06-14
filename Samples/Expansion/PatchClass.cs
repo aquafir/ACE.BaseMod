@@ -101,6 +101,7 @@ public class PatchClass
     /// </summary>
     private static void SetupFeatures()
     {
+        //Add enabled Feature patches
         foreach (var feature in Settings.Features)
         {
             Mod.Harmony.PatchCategory(feature.ToString());
@@ -109,6 +110,7 @@ public class PatchClass
                 ModManager.Log($"Enabled feature: {feature}");
         }
 
+        //Add enabled CreatureEx patches
         foreach (var feature in Settings.CreatureFeatures)
         {
             Mod.Harmony.PatchCategory(feature.ToString());
@@ -116,5 +118,9 @@ public class PatchClass
             if (Settings.Verbose)
                 ModManager.Log($"Enabled CreatureEx feature: {feature}");
         }
+
+        //Add commands of enabled features
+        var commandRegex = String.Join("|", Settings.Features);
+        Mod.Container.RegisterCommandCategory(commandRegex);
     }
 }
