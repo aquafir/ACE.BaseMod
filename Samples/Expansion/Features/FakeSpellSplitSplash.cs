@@ -1,5 +1,6 @@
 ﻿namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakeSpellSplitSplash))]
 [HarmonyPatchCategory(nameof(Feature.FakeSpellSplitSplash))]
 internal class FakeSpellSplitSplash
 {

@@ -3,6 +3,7 @@ using ACE.Server.Network.GameMessages.Messages;
 
 namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakeItemLoot))]
 [HarmonyPatchCategory(nameof(Feature.FakeItemLoot))]
 internal class FakeItemLoot
 {

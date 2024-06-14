@@ -8,6 +8,7 @@ namespace Expansion.Features;
 
 #else
 //Corpse generation sucks.  Long method and it doesn't track the type of corpse.
+[CommandCategory(nameof(Feature.CorpseInfo))]
 [HarmonyPatchCategory(nameof(Feature.CorpseInfo))]
 public class CorpseInfo
 {

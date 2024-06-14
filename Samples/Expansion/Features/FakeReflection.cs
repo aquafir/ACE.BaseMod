@@ -2,6 +2,7 @@
 
 namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakeReflection))]
 [HarmonyPatchCategory(nameof(Feature.FakeReflection))]
 internal class FakeReflection
 {

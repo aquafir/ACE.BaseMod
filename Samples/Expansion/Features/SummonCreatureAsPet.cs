@@ -3,6 +3,7 @@ using ACE.Server.Managers;
 
 namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.SummonCreatureAsPet))]
 [HarmonyPatchCategory(nameof(Feature.SummonCreatureAsPet))]
 public static class SummonCreatureAsPet
 {

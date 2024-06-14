@@ -6,6 +6,7 @@ using static ACE.Server.WorldObjects.Player;
 
 namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakeSpellMeta))]
 [HarmonyPatchCategory(nameof(Feature.FakeSpellMeta))]
 public static class FakeSpellMeta
 {

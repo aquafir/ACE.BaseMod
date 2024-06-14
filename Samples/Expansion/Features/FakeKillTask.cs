@@ -2,6 +2,7 @@
 
 namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakeKillTask))]
 [HarmonyPatchCategory(nameof(Feature.FakeKillTask))]
 internal class FakeKillTask
 {

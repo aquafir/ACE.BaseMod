@@ -4,6 +4,7 @@ using ACE.Server.WorldObjects.Managers;
 
 namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakeAttributes))]
 [HarmonyPatchCategory(nameof(Feature.FakeAttributes))]
 internal class FakeAttributes
 {

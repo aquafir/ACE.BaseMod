@@ -2,6 +2,7 @@
 
 namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.Hardcore))]
 [HarmonyPatchCategory(nameof(Feature.Hardcore))]
 public class Hardcore
 {

@@ -9,6 +9,7 @@ namespace Expansion.Features;
 #if REALM
 
 #else
+[CommandCategory(nameof(Feature.Ironman))]
 [HarmonyPatchCategory(nameof(Feature.Ironman))]
 public class FakeIronman
 {

@@ -1,5 +1,6 @@
 ﻿namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.ProcOnHit))]
 [HarmonyPatchCategory(nameof(Feature.ProcOnHit))]
 internal class ProcOnHit
 {

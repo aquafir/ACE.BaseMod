@@ -2,6 +2,7 @@
 
 namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakeCombo))]
 [HarmonyPatchCategory(nameof(Feature.FakeCombo))]
 public static class FakeCombo
 {

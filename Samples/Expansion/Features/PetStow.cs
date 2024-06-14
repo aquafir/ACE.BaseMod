@@ -1,5 +1,6 @@
 ﻿namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.PetStow))]
 [HarmonyPatchCategory(nameof(Feature.PetStow))]
 internal class PetStow
 {

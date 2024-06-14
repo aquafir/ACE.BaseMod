@@ -1,5 +1,6 @@
 ﻿namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.CreatureMaxAmmo))]
 [HarmonyPatchCategory(nameof(Feature.CreatureMaxAmmo))]
 internal class CreatureMaxAmmo
 {

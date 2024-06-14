@@ -3,6 +3,7 @@ using System;
 
 namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.CreatureEx))]
 [HarmonyPatchCategory(nameof(Feature.CreatureEx))]
 public class CreatureEx
 {

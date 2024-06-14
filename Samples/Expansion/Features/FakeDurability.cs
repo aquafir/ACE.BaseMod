@@ -11,6 +11,7 @@
 
 //namespace Expansion.Features;
 
+//[CommandCategory(nameof(Feature.FakeDurability))]
 //[HarmonyPatchCategory(nameof(Feature.FakeDurability))]
 //public static class FakeDurability
 //{

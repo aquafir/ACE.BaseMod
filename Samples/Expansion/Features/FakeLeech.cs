@@ -1,5 +1,6 @@
 ﻿namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakeLeech))]
 [HarmonyPatchCategory(nameof(Feature.FakeLeech))]
 internal class FakeLeech
 {

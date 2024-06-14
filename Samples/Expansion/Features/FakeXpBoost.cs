@@ -1,5 +1,6 @@
 ﻿namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakeXpBoost))]
 [HarmonyPatchCategory(nameof(Feature.FakeXpBoost))]
 internal class FakeXpBoost
 {

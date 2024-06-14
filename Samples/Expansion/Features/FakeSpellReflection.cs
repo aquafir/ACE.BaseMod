@@ -1,5 +1,6 @@
 ﻿namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakeSpellReflection))]
 [HarmonyPatchCategory(nameof(Feature.FakeSpellReflection))]
 internal class FakeSpellReflection
 {

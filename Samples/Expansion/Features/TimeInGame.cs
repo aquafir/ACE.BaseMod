@@ -1,7 +1,7 @@
 ﻿namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.TimeInGame))]
 [HarmonyPatchCategory(nameof(Feature.TimeInGame))]
-//[CommandCategory(nameof(Feature.TimeInGame))]
 public static class TimeInGame
 {
     [HarmonyPostfix]

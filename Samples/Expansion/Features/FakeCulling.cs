@@ -1,5 +1,6 @@
 ﻿namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakeCulling))]
 [HarmonyPatchCategory(nameof(Feature.FakeCulling))]
 internal class FakeCulling
 {

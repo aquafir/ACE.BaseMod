@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakePropertyCache))]
 [HarmonyPatchCategory(nameof(Feature.FakePropertyCache))]
 public static class FakePropertyCache
 {

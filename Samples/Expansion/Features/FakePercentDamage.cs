@@ -1,5 +1,6 @@
 ﻿namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakePercentDamage))]
 [HarmonyPatchCategory(nameof(Feature.FakePercentDamage))]
 public static class FakePercentDamage
 {

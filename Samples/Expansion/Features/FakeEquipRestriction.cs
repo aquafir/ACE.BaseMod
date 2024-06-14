@@ -1,5 +1,6 @@
 ﻿namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.FakeEquipRestriction))]
 [HarmonyPatchCategory(nameof(Feature.FakeEquipRestriction))]
 internal class FakeEquipRestriction
 {

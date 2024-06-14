@@ -1,5 +1,6 @@
 ﻿namespace Expansion.Features;
 
+[CommandCategory(nameof(Feature.ProcRateOverride))]
 [HarmonyPatchCategory(nameof(Feature.ProcRateOverride))]
 public class ProcRateOverride
 {
