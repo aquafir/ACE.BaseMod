@@ -4,6 +4,9 @@ using ACE.Server.Network.GameMessages.Messages;
 
 namespace Expansion.Features;
 
+#if REALM
+
+#else
 //Corpse generation sucks.  Long method and it doesn't track the type of corpse.
 [HarmonyPatchCategory(nameof(Feature.CorpseInfo))]
 public class CorpseInfo
@@ -239,3 +242,4 @@ public class CorpseInfo
         return false;
     }
 }
+#endif

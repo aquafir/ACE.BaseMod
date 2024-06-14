@@ -30,19 +30,3 @@ An `Augment` describes a reversible change to a `WorldObject`:
 
 An `Affix` is a collection of `Augment`
 
-
-
-
-
-
-
-
-
-
-
-## Realms
-
-* Convert `CommandHandler` signatures
-  * `public static void MyCommand(Session session, params string[] parameters)` becomes
-  * `public static void MyCommand(ISession session, params string[] parameters)`
-* 

@@ -36,6 +36,9 @@ public enum Feature
     FakeSpellMeta,
     FakeSpellSplitSplash,
     FakeSpellChain,
+    /// <summary>
+    /// Enables patches that enable Mutators to mutate WorldObjects
+    /// </summary>
     MutatorHooks,
     Hardcore,
     Ironman,
@@ -52,6 +55,9 @@ public enum Feature
     /// Breaks up code for spell projectiles to enable custom handling
     /// </summary>
     OverrideSpellProjectiles,
+    /// <summary>
+    /// On logging out it stores the amount of time in game for a more accurate measure of total time played
+    /// </summary>
     TimeInGame,
 }
 

@@ -20,7 +20,11 @@ public static class SummonCreatureAsPet
             return false;
         }
         //var worldObject = CreateWorldObject(weenie, guid);
+#if REALM
+        var wo = new CombatPet(weenie, guid, null);
+#else
         var wo = new CombatPet(weenie, guid);
+#endif
         //var wo = new Pet(weenie, guid);
 
         //Could wipe others?         /* PhysicsState - Ethereal, ReportCollisions, Gravity */

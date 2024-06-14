@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ACE.Server.Realms;
+using System;
 
 namespace Expansion.Features;
 
@@ -7,8 +8,13 @@ public class CreatureEx
 {
     //Replace Factory creation of creatures with a random chance of a CreatureEx
     [HarmonyPrefix]
+#if REALM
+    [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(Weenie), typeof(ObjectGuid), typeof(AppliedRuleset) })]
+    public static bool PreCreateWorldObject(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset, ref WorldObject __result)
+#else
     [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(Weenie), typeof(ObjectGuid) })]
     public static bool PreCreateWorldObject(Weenie weenie, ObjectGuid guid, ref WorldObject __result)
+#endif
     {
         if (weenie.WeenieType != WeenieType.Creature || weenie == null) return true;
 
@@ -33,7 +39,11 @@ public class CreatureEx
 
         //Fix NPCs being created as CreatureEx in post!
         if (__result is Creature creature && creature.IsNPC)
+#if REALM
+            __result = new Creature(weenie, guid, ruleset);
+#else
             __result = new Creature(weenie, guid);
+#endif
         return false;
     }
 

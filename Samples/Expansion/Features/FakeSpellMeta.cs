@@ -11,7 +11,11 @@ public static class FakeSpellMeta
 {
     #region Commands
     [CommandHandler("meta", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 1)]
-    public static void HandleMeta(Session session, params string[] parameters)
+#if REALM
+public static void HandleMeta(ISession session, params string[] parameters)
+#else
+public static void HandleMeta(Session session, params string[] parameters)
+#endif
     {
         //Get some scale to adjust spells by
         if (!double.TryParse(parameters[0], out var metaScale))

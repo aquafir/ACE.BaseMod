@@ -11,7 +11,11 @@ public static class CreatureExCommands
     static Expansion.Creatures.CreatureExType[] types = Enum.GetValues<Expansion.Creatures.CreatureExType>();
     static string availableTypes = String.Join('\n', types.Select(x => $"  {x.ToString()} - {(int)x}"));
     [CommandHandler("cex", AccessLevel.Developer, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleCreateEx(Session session, params string[] parameters)
+#if REALM
+public static void HandleCreateEx(ISession session, params string[] parameters)
+#else
+public static void HandleCreateEx(Session session, params string[] parameters)
+#endif
     {
         //Check parameters
         if (parameters.Length != 2)

@@ -4,7 +4,12 @@
 public class Suppresser : CreatureEx
 {
     public Suppresser(Biota biota) : base(biota) { }
-    public Suppresser(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
+#if REALM
+    public Suppresser(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
+#else
+    public Suppresser(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
+#endif
+ { }
 
     //Mutate from the original weenie
     protected override void Initialize()

@@ -7,7 +7,11 @@ public static class Commands
 {
     //Todo: remove in release
     [CommandHandler("hp", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-    public static void HP(Session session, params string[] parameters)
+#if REALM
+public static void HP(ISession session, params string[] parameters)
+#else
+public static void HP(Session session, params string[] parameters)
+#endif
     {
         // @delete - Deletes the selected object. Players may not be deleted this way.
 
@@ -43,7 +47,11 @@ public static class Commands
     //    }
     //}
     [CommandHandler("clean", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-    public static void Clean(Session session, params string[] parameters)
+#if REALM
+public static void Clean(ISession session, params string[] parameters)
+#else
+public static void Clean(Session session, params string[] parameters)
+#endif
     {
         // @delete - Deletes the selected object. Players may not be deleted this way.
 

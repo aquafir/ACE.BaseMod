@@ -8,13 +8,13 @@ public class OfflineProgressSettings
 
     public Dictionary<int, OfflineRewardTier> RewardTiers = new()
     {
-        [0] = new(3077, Player.coinStackWcid, 1),
-        [1] = new(25041, Player.coinStackWcid, 2),
-        [2] = new(98422, Player.coinStackWcid, 3),
-        [3] = new(612768, Player.coinStackWcid, 4),
-        [4] = new(1202066, Player.coinStackWcid, 5),
-        [5] = new(2139447, Player.coinStackWcid, 6),
-        [6] = new(3540745, Player.coinStackWcid, 7),
+        [0] = new(3077, 273, 1),
+        [1] = new(25041, 273, 2),
+        [2] = new(98422, 273, 3),
+        [3] = new(612768, 273, 4),
+        [4] = new(1202066, 273, 5),
+        [5] = new(2139447, 273, 6),
+        [6] = new(3540745, 273, 7),
         [7] = new(5538460, 691, 1),
         [8] = new(8281758, 691, 2),
         [9] = new(11936473, 691, 3),

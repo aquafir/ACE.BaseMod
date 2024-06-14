@@ -7,7 +7,11 @@ public static class GameMessageExtensions
     /// <summary>
     /// Equivalent of base in a constructor for a GameEventMessage
     /// </summary>
-    public static void Base(this GameEventMessage eventMessage, Session session, GameEventType eventType, GameMessageGroup group, GameMessageOpcode opCode = GameMessageOpcode.GameEvent)
+#if REALM
+    public static void Base(this GameEventMessage eventMessage, ISession session, GameEventType eventType, GameMessageGroup group, GameMessageOpcode opCode = GameMessageOpcode.GameEvent)
+#else
+public static void Base(this GameEventMessage eventMessage, Session session, GameEventType eventType, GameMessageGroup group, GameMessageOpcode opCode = GameMessageOpcode.GameEvent)
+#endif
     {
         eventMessage.Base(opCode, group);
 

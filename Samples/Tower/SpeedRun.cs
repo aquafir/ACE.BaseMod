@@ -1,13 +1,10 @@
-﻿namespace Tower;
+﻿using ACE.Server.Realms;
+
+namespace Tower;
 
 [HarmonyPatch]
 public static class SpeedRun
 {
-    //public static double PreviousTimeInGame(this Player player) => player.TotalTimeInGame() - player.TimeInGameFromLogin();
-    //public static double TimeInGameFromLogin(this Player player) => Time.GetUnixTime() - (player.GetProperty(PropertyFloat.LoginTimestamp) ?? 0);
-    //public static double TotalTimeInGame(this Player player) => player.Age ?? 0;
-    //public static TimeSpan TotalTimeInGameAsTimeSpan(this Player player) => TimeSpan.FromSeconds(player.TotalTimeInGame());
-
     public static bool TryGetTimeFromLastFloorStarted(this Player player, out TimeSpan time)
     {
         time = default(TimeSpan);
@@ -76,7 +73,7 @@ public static class SpeedRun
             //Check if the current floor is the one that would follow / complete it
             if (challengedFloor.TryGetNextFloor(out var nextFloor) && nextFloor.Landblock == currentFloor.Landblock)
             {
-                if(!player.TryGetTimeFromLastFloorStarted(out var timeCurrent))
+                if (!player.TryGetTimeFromLastFloorStarted(out var timeCurrent))
                 {
                     player.SendMessage($"For some reason the start of your last floor is unknown. Report to blode");
                 }
@@ -107,8 +104,12 @@ public static class SpeedRun
     }
 
     [HarmonyPostfix]
+#if REALM
+    [HarmonyPatch(typeof(Player), nameof(Player.Teleport), new Type[] { typeof(InstancedPosition), typeof(bool), typeof(bool) })]
+    public static void PostTeleport(InstancedPosition newPosition, bool teleportingFromInstance, bool fromPortal, ref Player __instance)
+#else
     [HarmonyPatch(typeof(Player), nameof(Player.Teleport), new Type[] { typeof(Position), typeof(bool) })]
-    public static void PostTeleport(Position _newPosition, bool fromPortal, ref Player __instance)
+#endif
     {
         //Ignore logging back in
         //if (!fromPortal)
@@ -120,7 +121,7 @@ public static class SpeedRun
 
     [CommandHandler("clearspeed", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
 #if REALM
-public static void HandleClearSpeed(ISession session, params string[] parameters)
+    public static void HandleClearSpeed(ISession session, params string[] parameters)
 #else
 public static void HandleClearSpeed(Session session, params string[] parameters)
 #endif
@@ -139,7 +140,7 @@ public static void HandleClearSpeed(Session session, params string[] parameters)
 
     [CommandHandler("speed", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
 #if REALM
-public static void HandleSpeed(ISession session, params string[] parameters)
+    public static void HandleSpeed(ISession session, params string[] parameters)
 #else
 public static void HandleSpeed(Session session, params string[] parameters)
 #endif
@@ -167,7 +168,7 @@ public static void HandleSpeed(Session session, params string[] parameters)
 
     [CommandHandler("tig", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
 #if REALM
-public static void HandleTimeInGame(ISession session, params string[] parameters)
+    public static void HandleTimeInGame(ISession session, params string[] parameters)
 #else
 public static void HandleTimeInGame(Session session, params string[] parameters)
 #endif
@@ -181,7 +182,7 @@ public static void HandleTimeInGame(Session session, params string[] parameters)
 
     [CommandHandler("t3", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
 #if REALM
-public static void HandleT3(ISession session, params string[] parameters)
+    public static void HandleT3(ISession session, params string[] parameters)
 #else
 public static void HandleT3(Session session, params string[] parameters)
 #endif

@@ -7,7 +7,7 @@ public static class Bank
 
     [CommandHandler("bank", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
 #if REALM
-public static void HandleBank(ISession session, params string[] parameters)
+    public static void HandleBank(ISession session, params string[] parameters)
 #else
 public static void HandleBank(Session session, params string[] parameters)
 #endif
@@ -39,7 +39,7 @@ public static void HandleBank(Session session, params string[] parameters)
         var query = int.TryParse(name, out var wcid) ?
             PatchClass.Settings.Items.Where(x => x.Id == wcid) :
             PatchClass.Settings.Items.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
-            //PatchClass.Settings.Items.Where(x => x.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase));
+        //PatchClass.Settings.Items.Where(x => x.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase));
 
         var item = query.FirstOrDefault();
         if (item is null)
@@ -79,7 +79,7 @@ public static void HandleBank(Session session, params string[] parameters)
             //Skip missing?
             var banked = player.GetBanked(item.Prop);
             var held = player.GetNumInventoryItemsOfWCID(item.Id);
-            
+
             if (PatchClass.Settings.SkipMissingBankedItems && banked <= 0 && held <= 0)
                 continue;
 

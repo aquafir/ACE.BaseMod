@@ -7,7 +7,12 @@ namespace Expansion.Creatures;
 public class Boss : CreatureEx
 {
     public Boss(Biota biota) : base(biota) { }
-    public Boss(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
+#if REALM
+    public Boss(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
+#else
+    public Boss(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
+#endif
+ { }
 
     //Mutate from the original weenie
     protected override void Initialize()

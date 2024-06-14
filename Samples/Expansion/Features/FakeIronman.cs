@@ -6,13 +6,19 @@ using ACE.Server.Network.GameEvent.Events;
 using System.Text;
 
 namespace Expansion.Features;
+#if REALM
 
+#else
 [HarmonyPatchCategory(nameof(Feature.Ironman))]
 public class FakeIronman
 {
     #region Commands
     [CommandHandler("iron", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 0)]
-    public static void HandleIronman(Session session, params string[] parameters)
+#if REALM
+public static void HandleIronman(ISession session, params string[] parameters)
+#else
+public static void HandleIronman(Session session, params string[] parameters)
+#endif
     {
         var player = session.Player;
 
@@ -37,7 +43,11 @@ public class FakeIronman
 
     static Dictionary<string, Position> cachedLocations;
     [CommandHandler("ironmen", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 0)]
-    public static void HandleIronmen(Session session, params string[] parameters)
+#if REALM
+public static void HandleIronmen(ISession session, params string[] parameters)
+#else
+public static void HandleIronmen(Session session, params string[] parameters)
+#endif
     {
         var p = session.Player;
 
@@ -64,7 +74,11 @@ public class FakeIronman
     }
 
     [CommandHandler("uniron", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-    public static void HandleUnIronman(Session session, params string[] parameters)
+#if REALM
+public static void HandleUnIronman(ISession session, params string[] parameters)
+#else
+public static void HandleUnIronman(Session session, params string[] parameters)
+#endif
     {
         var player = session.Player;
 
@@ -245,3 +259,4 @@ public class FakeIronman
         player.SendMessage(sb.ToString());
     }
 }
+#endif

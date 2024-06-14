@@ -9,6 +9,7 @@ global using ACE.Entity.Models;
 
 global using ACE.Server.Command;
 global using ACE.Server.Entity;
+global using ACE.Server.Factories;
 global using ACE.Server.Factories.Enum;
 global using ACE.Server.Managers;
 global using ACE.Server.Mods;
@@ -25,6 +26,7 @@ global using ACE.Server.Realms;
 global using HarmonyLib;
 
 global using System.Diagnostics;
+global using System.Numerics;
 global using System.Reflection;
 global using System.Text;
 global using System.Text.Encodings.Web;

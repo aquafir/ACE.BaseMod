@@ -3,6 +3,9 @@ using ACE.Server.Managers;
 
 namespace Expansion.Mutators;
 
+#if REALM
+
+#else
 [HarmonyPatchCategory(nameof(Mutation.AutoScale))]  //Mutator categories not used, just convenience for generating enum or a placeholder
 public class AutoScale : Mutator
 {
@@ -52,3 +55,4 @@ public class AutoScale : Mutator
         }
     }
 }
+#endif

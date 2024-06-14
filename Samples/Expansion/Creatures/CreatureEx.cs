@@ -7,7 +7,12 @@ public class CreatureEx : Creature
     {
         Initialize();
     }
+#if REALM
+    public CreatureEx(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
+#else
     public CreatureEx(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
+#endif
+
     {
         Initialize();
     }

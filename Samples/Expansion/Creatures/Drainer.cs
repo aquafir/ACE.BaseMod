@@ -4,7 +4,12 @@
 public class Drainer : CreatureEx
 {
     public Drainer(Biota biota) : base(biota) { }
-    public Drainer(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
+#if REALM
+    public Drainer(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
+#else
+    public Drainer(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
+#endif
+ { }
 
     //Mutate from the original weenie
     DamageType drainType = DamageType.Stamina;

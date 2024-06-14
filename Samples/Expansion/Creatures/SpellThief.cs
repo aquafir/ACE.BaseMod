@@ -4,7 +4,12 @@
 public class SpellThief : CreatureEx
 {
     public SpellThief(Biota biota) : base(biota) { }
-    public SpellThief(Weenie weenie, ObjectGuid guid) : base(weenie, guid) { }
+#if REALM
+    public SpellThief(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset) : base(weenie, guid, ruleset)
+#else
+    public SpellThief(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
+#endif
+ { }
 
     //Mutate from the original weenie
     protected override void Initialize()
