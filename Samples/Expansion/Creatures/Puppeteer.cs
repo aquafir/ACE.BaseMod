@@ -39,7 +39,11 @@ public class Puppeteer : CreatureEx
         };
 
         GeneratorProfiles = new();
+#if REALM
+        GeneratorProfiles.Add(new GeneratorProfile(this, generator, 0, null));
+#else
         GeneratorProfiles.Add(new GeneratorProfile(this, generator, 0));
+#endif
     }
 
 
