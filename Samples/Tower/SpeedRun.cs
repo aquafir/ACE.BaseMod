@@ -105,8 +105,8 @@ public static class SpeedRun
 
     [HarmonyPostfix]
 #if REALM
-    [HarmonyPatch(typeof(Player), nameof(Player.Teleport), new Type[] { typeof(InstancedPosition), typeof(bool), typeof(bool) })]
-    public static void PostTeleport(InstancedPosition newPosition, bool teleportingFromInstance, bool fromPortal, ref Player __instance)
+    [HarmonyPatch(typeof(Player), nameof(Player.Teleport), new Type[] { typeof(ACE.Server.Realms.InstancedPosition), typeof(bool), typeof(bool) })]
+    public static void PostTeleport(ACE.Server.Realms.InstancedPosition newPosition, bool teleportingFromInstance, bool fromPortal, ref Player __instance)
 #else
     [HarmonyPatch(typeof(Player), nameof(Player.Teleport), new Type[] { typeof(Position), typeof(bool) })]
 #endif

@@ -51,7 +51,7 @@ public static class PlayerInventoryExtensions
     {
         var session = player.Session;
 #if REALM
-        var playerLoc = new InstancedPosition(player.Location);
+        var playerLoc = new Server.Realms.InstancedPosition(player.Location);
 #else
         var playerLoc = new Position(player.Location);
 #endif
@@ -100,7 +100,7 @@ public static class PlayerInventoryExtensions
         player.SavePlayerToDatabase();
 
 #if REALM
-        destItem.Location = new InstancedPosition(playerLoc).SetPositionZ(playerLoc.PositionZ + .5f);
+        destItem.Location = new Server.Realms.InstancedPosition(playerLoc).SetPositionZ(playerLoc.PositionZ + .5f);
 #else
         destItem.Location = new Position(playerLoc);
         destItem.Location.PositionZ += .5f;

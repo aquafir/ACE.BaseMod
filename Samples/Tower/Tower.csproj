@@ -19,6 +19,7 @@
 	</ItemGroup>
 
 	<PropertyGroup>
+		<!--<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>-->
 		<PublicizeAll>true</PublicizeAll>
 	</PropertyGroup>
 

@@ -1,4 +1,5 @@
-﻿using ACE.Server.WorldObjects;
+﻿using ACE.Common;
+using ACE.Server.Physics.Animation;
 
 namespace Tower;
 
@@ -9,7 +10,8 @@ public static class AutoBattle
     static PropertyInstanceId AutoTarget = (PropertyInstanceId)50505;
     public static bool InBattle(this Player player) => player.GetProperty(Battling) == true;
 
-    public static bool TryGetTarget(this Player player, out WorldObject target) {
+    public static bool TryGetTarget(this Player player, out WorldObject target)
+    {
         target = null;
 
         if (player.selectedTarget is null)
@@ -29,6 +31,55 @@ public static class AutoBattle
         return target is not null;
     }
 
+    [CommandHandler("t2", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
+    public static void HandleAutobattle(ISession session, params string[] parameters)
+    {
+        var player = session.Player;
+
+        var target = player.MeleeTarget ?? player.selectedTarget?.TryGetWorldObject();
+        if (target is null || target.WeenieType != WeenieType.Creature)
+        {
+            player.SendMessage($"Nothing selected.");
+            return;
+        }
+        else
+            player.SendMessage($"Battling {target.Name}.");
+
+        player.PrevMotionCommand = MotionCommand.Invalid;
+        player.AttackHeight = AttackHeight.Low;
+        //player.
+        //var time = player.SimulateSwingMotion(target, out var frames);
+        //player.SendMessage($"{time} - {frames.Count} swings");
+        //        player
+
+
+        Auto(player);
+    }
+
+    private static void Auto(Player player)
+    {
+        var actionChain = new ActionChain();
+        float time = 2;
+        actionChain.AddAction(player, () =>
+        {
+            var nearest = player.GetSplashTargets(player, 1, 5).FirstOrDefault();
+
+            if (nearest is null)
+            {
+                player.SendMessage("Nothing nearby.");
+                return;
+            }
+
+            time = player.SimulateSwingMotion(nearest, out var frames);
+            player.DamageTarget(nearest, player);
+
+            actionChain.AddDelaySeconds(time);
+            actionChain.AddAction(player, () => Auto(player));
+            player.SendMessage($"{nearest?.Name} nearby, delay {time} seconds");
+        });
+        actionChain.EnqueueChain();
+    }
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(Creature), nameof(Creature.OnTargetSelected), new Type[] { typeof(Player) })]
     public static void PostOnTargetSelected(Player player, ref Creature __instance, ref bool __result)
@@ -43,6 +94,24 @@ public static class AutoBattle
             player.SetProperty(Battling, true);
             player.SetProperty(AutoTarget, player.selectedTarget.Guid.Full);
         }
+
+        //var actionChain = new ActionChain();
+
+        //actionChain.AddLoop(player, () =>
+        //{
+        //    //origins[0] += System.Numerics.Vector3.UnitZ;
+        //    origins[0] += new Vector3(ThreadSafeRandom.Next(0, perturbance), ThreadSafeRandom.Next(0, perturbance), ThreadSafeRandom.Next(0, perturbance));
+        //    velocity = Vector3.Multiply(CalculateProjectileVelocity(spell, target, spellType, origins[0]), (float)ThreadSafeRandom.Next(lowVelocity, highVelocity));
+        //    LaunchSpellProjectiles(spell, target, spellType, null, false, false, origins, velocity);
+        //});
+
+        //actionChain.AddLoop(player, () => true, () =>
+        //{
+
+        //})
+        //actionChain.AddDelaySeconds(7);
+        //actionChain.AddAction(__instance, () => __instance.GiveOfflineProgress());
+        //actionChain.EnqueueChain();
     }
 
     [HarmonyPostfix]

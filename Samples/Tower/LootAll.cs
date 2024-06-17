@@ -2,7 +2,8 @@
 
 namespace Tower;
 
-[HarmonyPatch]
+[HarmonyPatchCategory(nameof(LootAll))]
+//[HarmonyPatch]
 public static class LootAll
 {
     static Random random = new();
