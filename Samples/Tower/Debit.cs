@@ -13,8 +13,8 @@ namespace Tower;
 /// <summary>
 /// Overrides purchase w/pyreals and alt currency
 /// </summary>
-//[HarmonyPatchCategory(nameof(Debit))]
-[HarmonyPatch]
+[CommandCategory(nameof(Debit))]
+[HarmonyPatchCategory(nameof(Debit))]
 public class Debit
 {
     //Send the player the held and banked currency/alt coins

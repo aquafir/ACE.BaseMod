@@ -1,5 +1,7 @@
 ﻿namespace Tower;
 
+//[CommandCategory(nameof(FistMagic))]
+//[HarmonyPatchCategory(nameof(FistMagic))]
 [HarmonyPatch]
 public class FistMagic
 {

@@ -6,7 +6,7 @@ using Biota = ACE.Database.Models.Shard.Biota;
 
 namespace Tower;
 
-[HarmonyPatch]
+//[HarmonyPatch]
 public static class OfflineProgress
 {
     static double MinTime = TimeSpan.FromHours(1).TotalSeconds;

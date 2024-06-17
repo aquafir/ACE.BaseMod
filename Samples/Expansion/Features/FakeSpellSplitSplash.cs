@@ -28,7 +28,7 @@ internal class FakeSpellSplitSplash
             if (splitCount < 1) return;
 
             //Gate by cooldown
-            var time = player.GetProperty(FakeFloat.TimestampLastSpellSplit) ?? 0;
+            var time = player.GetProperty(FakeFloat.TimestampLastSpellSplit) ?? 0.1;
             var current = Time.GetUnixTime();
             var delta = current - time;
 
@@ -67,7 +67,7 @@ internal class FakeSpellSplitSplash
             if (splashCount < 1) return;
 
             //Gate by cooldown
-            var time = player.GetProperty(FakeFloat.TimestampLastSpellSplash) ?? 0;
+            var time = player.GetProperty(FakeFloat.TimestampLastSpellSplash) ?? 0.1;
             var current = Time.GetUnixTime();
             var delta = current - time;
 

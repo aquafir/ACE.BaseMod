@@ -1,6 +1,7 @@
 ﻿namespace Tower;
 
-//[CommandCategory(nameof(Bank))]
+[CommandCategory(nameof(Bank))]
+[HarmonyPatchCategory(nameof(Bank))]
 public static class Bank
 {
     static string Commands => String.Join(", ", Enum.GetNames<Transaction>());

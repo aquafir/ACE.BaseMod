@@ -49,6 +49,7 @@ internal class FakeItemLoot
         {
             //List<WorldObject> items = LootGenerationFactory.CreateRandomLootObjects(__instance.DeathTreasure);
             List<WorldObject> items = LootGenerationFactory.CreateRandomLootObjects(replaceProfile ? lootProfile : __instance.DeathTreasure);
+
             foreach (WorldObject wo in items)
             {
                 if (corpse != null)

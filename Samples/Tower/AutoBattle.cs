@@ -149,11 +149,7 @@ public static class AutoBattle
 
 
     [CommandHandler("t3", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-#if REALM
-    public static void HandleT3(ISession session, params string[] parameters)
-#else
-public static void HandleT3(Session session, params string[] parameters)
-#endif
+    public static void HandleT3(Session session, params string[] parameters)
     {
         var player = session.Player;
         PlayerFactoryEx.AddAllSpells(player);

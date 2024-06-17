@@ -1,9 +1,7 @@
-﻿using ACE.Server.WorldObjects;
+﻿namespace Tower;
 
-namespace Tower;
-
-[HarmonyPatchCategory(nameof(LootAll))]
-//[HarmonyPatch]
+//[HarmonyPatchCategory(nameof(LootAll))]
+[HarmonyPatch]
 public static class LootAll
 {
     static Random random = new();

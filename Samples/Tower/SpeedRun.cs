@@ -1,6 +1,4 @@
-﻿using ACE.Server.Realms;
-
-namespace Tower;
+﻿namespace Tower;
 
 [HarmonyPatch]
 public static class SpeedRun
