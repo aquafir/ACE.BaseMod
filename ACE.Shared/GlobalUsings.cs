@@ -21,6 +21,8 @@ global using ACE.Server.WorldObjects.Entity;
 global using ACE.Server.WorldObjects;
 #if REALM
 global using ACE.Server.Realms;
+global using Session = ACE.Server.Network.ISession;
+global using BinaryWriter = ACE.Server.Network.GameMessages.RealmsBinaryWriter;
 #endif
 
 global using HarmonyLib;
