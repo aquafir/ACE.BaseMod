@@ -38,3 +38,7 @@ global using Spell = ACE.Server.Entity.Spell;
 //Aliases for polluted types
 global using Mutation = Expansion.Enums.Mutation;
 global using S = Expansion.PatchClass;
+#if REALM
+global using Session = ACE.Server.Network.ISession;
+global using BinaryWriter = ACE.Server.Network.GameMessages.RealmsBinaryWriter;
+#endif

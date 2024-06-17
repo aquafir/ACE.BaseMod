@@ -25,7 +25,7 @@ public class Debit
         //Workaround initialization since base is awkward..?
         __instance.Base(session, GameEventType.ApproachVendor, GameMessageGroup.UIQueue);
 
-        __instance.Writer.Write(vendor.Guid.Full);
+        __instance.Writer.WriteGuid(vendor.Guid);
 
         // the types of items vendor will purchase
         __instance.Writer.Write((uint)vendor.MerchandiseItemTypes);
