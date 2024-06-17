@@ -31,5 +31,7 @@ global using System.Text.Json.Serialization;
 global using System.Text.Json;
 global using System.Text.RegularExpressions;
 global using System.Text;
-global using ACE.Shared;
-global using ACE.Shared.Helpers;
+#if REALM
+global using Session = ACE.Server.Network.ISession;
+global using BinaryWriter = ACE.Server.Network.GameMessages.RealmsBinaryWriter;
+#endif

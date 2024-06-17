@@ -33,7 +33,7 @@ public static void Base(this GameEventMessage eventMessage, Session session, Gam
         gameMessage.Opcode = opCode;
         gameMessage.Group = group;
         gameMessage.Data = new System.IO.MemoryStream();
-        gameMessage.Writer = new System.IO.BinaryWriter(gameMessage.Data);
+        gameMessage.Writer = new BinaryWriter(gameMessage.Data);
 
         if (gameMessage.Opcode != GameMessageOpcode.None)
             gameMessage.Writer.Write((uint)gameMessage.Opcode);
