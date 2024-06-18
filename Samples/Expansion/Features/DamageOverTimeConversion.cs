@@ -1,7 +1,4 @@
-﻿using ACE.Entity.Enum;
-using ACE.Server.WorldObjects;
-
-namespace Expansion.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.DamageOverTimeConversion))]
 [HarmonyPatchCategory(nameof(Feature.DamageOverTimeConversion))]

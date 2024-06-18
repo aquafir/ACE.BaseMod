@@ -24,7 +24,7 @@ internal class FakeSpellSplitSplash
             //if (player.GetProperty(FakeBool.CurrentlySpellSplit) ?? false)  return;
 
             //Check any split
-            var splitCount = player.GetCachedFake(FakeInt.ItemSpellSplitCount);
+            var splitCount = S.Settings.SpellSettings.SplitCount;// player.GetCachedFake(FakeInt.ItemSpellSplitCount);
             if (splitCount < 1) return;
 
             //Gate by cooldown
@@ -38,7 +38,7 @@ internal class FakeSpellSplitSplash
                 return;
 
             var rangeScale = (1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplitRangeScale)) * S.Settings.SpellSettings.SplitRange;
-            var targets = player.GetSplashTargets(target, splitCount, rangeScale);
+            var targets = player.GetSplashTargets(target, splitCount, rangeScale, false);
 
             if (targets.Count < 1)
                 return;
@@ -63,7 +63,7 @@ internal class FakeSpellSplitSplash
         else if (spell.IsHarmful)
         {
             //Check any splash
-            var splashCount = player.GetCachedFake(FakeInt.ItemSpellSplashCount);
+            var splashCount = S.Settings.SpellSettings.SplashCount; //player.GetCachedFake(FakeInt.ItemSpellSplashCount);
             if (splashCount < 1) return;
 
             //Gate by cooldown
@@ -76,7 +76,7 @@ internal class FakeSpellSplitSplash
                 return;
 
             var rangeScale = (1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplashRangeScale)) * S.Settings.SpellSettings.SplitRange;
-            var targets = player.GetSplashTargets(target, splashCount, rangeScale);
+            var targets = player.GetSplashTargets(target, splashCount, rangeScale, false);
 
             if (targets.Count < 1)
                 return;
