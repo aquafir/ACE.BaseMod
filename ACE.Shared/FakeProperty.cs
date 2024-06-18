@@ -15,6 +15,7 @@ public enum FakeBool
     Permanent = 10006,
     BankUsesDirectDeposit = 10007,
     Quarantined = 10008,
+    MeleeMagic = 10009,
 }
 public enum FakeDID
 {

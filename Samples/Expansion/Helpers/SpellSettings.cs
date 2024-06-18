@@ -22,13 +22,13 @@ public class SpellSettings
     //[JsonIgnore]
     //public uint TotalBuckets => FistBuckets * 3;            //One for each heights
 
-    public int SplashCount { get; set; } = 3;
+    public int SplashCount { get; set; } = 1;
     public float SplashRange { get; set; } = 5.0f;
-    public float SplashCooldown { get; set; } = 5;
+    public float SplashCooldown { get; set; } = .1f;
 
-    public int SplitCount { get; set; } = 5;
+    public int SplitCount { get; set; } = 1;
     public float SplitRange { get; set; } = 35.0f;
-    public float SplitCooldown { get; set; } = 10;
+    public float SplitCooldown { get; set; } = .1f;
 
     //public bool MetaEnabled { get; set; } = true;
     //public double MetaScale { get; set; } = 1;

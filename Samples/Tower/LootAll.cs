@@ -85,13 +85,13 @@ public static class LootAll
     /// </summary>
     public static void Loot(this Player player, WorldObject item)
     {
-        if(item.TryGetBankedItem(out var bankItem))
-        {
-            var amt = ThreadSafeRandom.Next(0f, 10f);
-            player.IncBanked(bankItem.Prop, amt);
-            player.SendMessage($"{amt:0.00} {item.Name} added for {player.GetBanked(bankItem.Prop):0.00} in bank.", PatchClass.Settings.MessageType);
-            return;
-        }
+        //if(item.TryGetBankedItem(out var bankItem))
+        //{
+        //    var amt = ThreadSafeRandom.Next(0f, 10f);
+        //    player.IncBanked(bankItem.Prop, amt);
+        //    player.SendMessage($"{amt:0.00} {item.Name} added for {player.GetBanked(bankItem.Prop):0.00} in bank.", PatchClass.Settings.MessageType);
+        //    return;
+        //}
 
         var success = player.TryCreateInInventoryWithNetworking(item);
         if (player.GetProperty(LootMuted) != true)

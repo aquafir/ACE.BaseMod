@@ -16,6 +16,10 @@ internal class FakeSpellSplitSplash
         if (__instance is not Player player)
             return;
 
+        //Skip procs?
+        if (fromProc)
+            return;
+
         //Debugger.Break();
         //Check split projectiles
         if (spell.IsProjectile)
@@ -51,7 +55,7 @@ internal class FakeSpellSplitSplash
             //foreach (var t in targets)
             //    sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
             //player.SendMessage(sb.ToString());
-            player.SendMessage($"Spell split after {delta:F1}/{scaledInterval:F1} seconds with {targets.Count}/{splitCount} targets within {rangeScale} units");
+            //player.SendMessage($"Spell split after {delta:F1}/{scaledInterval:F1} seconds with {targets.Count}/{splitCount} targets within {rangeScale} units");
 
             //var splitTo = Math.Min(S.Settings.SpellSettings.SplitCount, targets.Count);
             for (var i = 0; i < targets.Count; i++)
@@ -89,7 +93,7 @@ internal class FakeSpellSplitSplash
             //foreach (var t in targets)
             //    sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
             //player.SendMessage(sb.ToString());
-            player.SendMessage($"Spell splashed after {delta:F1}/{scaledInterval:F1} seconds with {targets.Count}/{splashCount} targets within {rangeScale} units");
+            //player.SendMessage($"Spell splashed after {delta:F1}/{scaledInterval:F1} seconds with {targets.Count}/{splashCount} targets within {rangeScale} units");
 
             for (var i = 0; i < targets.Count; i++)
             {
