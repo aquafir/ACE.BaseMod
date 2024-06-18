@@ -31,11 +31,11 @@ public static class SplashHelper
 
         return visible;
     }
-    
+
     /// <summary>
     /// Gets targets within a radius of the origin using a reference Player
     /// </summary>
-    public static List<Creature> GetSplashTargets(this Player reference, WorldObject origin, int maxTargets = 3, float maxRange = 5.0f)
+    public static List<Creature> GetSplashTargets(this Player reference, WorldObject origin, int maxTargets = 3, float maxRange = 5.0f, bool targetsPlayers = true)
     {
         if (origin is null || reference is null)
         {
@@ -55,7 +55,7 @@ public static class SplashHelper
 
         foreach (var obj in visible)
         {
-            //Pplashing skips original target?
+            //Splashing skips original target?
             if (obj.ID == origin.PhysicsObj.ID)
                 continue;
 
@@ -63,7 +63,11 @@ public static class SplashHelper
             var creature = obj.WeenieObj.WorldObject as Creature;
             if (creature == null || creature.Teleporting || creature.IsDead) continue;
 
-            //if (player != null && player.CheckPKStatusVsTarget(creature, null) != null)
+            if (!targetsPlayers && creature is Player)
+                continue;
+
+            //Check pk error?
+            //if (origin.CheckPKStatusVsTarget(creature, null) != null)
             //    continue;
 
             if (!creature.Attackable && creature.TargetingTactic == TargetingTactic.None || creature.Teleporting)
