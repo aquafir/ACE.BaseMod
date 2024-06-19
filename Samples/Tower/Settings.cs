@@ -1,4 +1,6 @@
-﻿namespace Tower;
+﻿using Tower.MeleeMagic;
+
+namespace Tower;
 
 public class Settings
 {
@@ -61,34 +63,16 @@ public class Settings
     };
 
 
-    public List<FistPool> FistMagicPools { get; set; } = new()
-    {
-        new() {
-            LimitingSkill = Skill.WarMagic,
-            Spells = new()
-              {
-                  new SkillSpellPair(0, SpellId.LightningArc1, 0),
-                  new SkillSpellPair(94, SpellId.LightningArc2, 0),
-                  new SkillSpellPair(141, SpellId.LightningArc3, 0),
-                  new SkillSpellPair(188, SpellId.LightningArc4, 0),
-                  new SkillSpellPair(235, SpellId.LightningArc5, 0),
-                  new SkillSpellPair(282, SpellId.EyeOfTheStormII, 0),
-              }
-        },
-        new() {
-            LimitingSkill = Skill.LifeMagic,
-            Spells = new()
-              {
-                  new SkillSpellPair(94, SpellId.LightningVulnerabilityOther1, 0),
-                  new SkillSpellPair(141, SpellId.LightningVulnerabilityOther2, 0),
-                  new SkillSpellPair(188, SpellId.LightningVulnerabilityOther3, 0),
-                  new SkillSpellPair(235, SpellId.LightningVulnerabilityOther4, 0),
-                  new SkillSpellPair(282, SpellId.LightningVulnerabilityOther5, 0),
-                  new SkillSpellPair(329, SpellId.LightningVulnerabilityOther6, 0),
-              }
-        },
-    };
+    public MeleeMagicSettings MeleeMagic { get; set; } = new();
+}
 
+
+public enum Feature
+{
+    AutoBattle,
+    AutoLoot,
+    Bank,
+    MeleeMagic,
 }
 
 //public record struct TowerFloor(string Name, int Index, ushort Landblock, uint Level);

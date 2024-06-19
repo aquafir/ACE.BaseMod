@@ -20,7 +20,8 @@ public enum FakeBool
 public enum FakeDID
 {
     CorpseLandblockId = 10000,
-    LocationLockId = 10001
+    LocationLockId = 10001,
+    MeleeMagicGroup = 10002
 }
 public enum FakeFloat
 {
