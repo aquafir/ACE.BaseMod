@@ -1,4 +1,4 @@
-﻿namespace Discord;
+﻿namespace CrossModInteraction;
 
 public class Mod : IHarmonyMod
 {
@@ -7,10 +7,10 @@ public class Mod : IHarmonyMod
     public const bool DEBUGGING = false;
     //Point to your mod directory
     public static ModContainer Container => ModManager.GetModContainerByPath(Mod.ModPath);
-    public static string ModPath = Path.Combine(ModManager.ModPath, "Discord");
+    public static string ModPath = Path.Combine(ModManager.ModPath, "CrossModInteraction");
 
     //IDs are used by Harmony to separate multiple patches
-    const string ID = "com.ACE.ACEmulator.Discord";
+    const string ID = "com.ACE.ACEmulator.CrossModInteraction";
     public static Harmony Harmony { get; set; } = new(ID);
 
     private bool disposedValue;
@@ -23,6 +23,10 @@ public class Mod : IHarmonyMod
 
     public PatchClass Patch = new();
     public static ModState State = ModState.None;
+
+    public Mod()
+    {
+    }
     #endregion
 
     #region Initialize / Dispose (called by ACE)

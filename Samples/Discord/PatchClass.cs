@@ -23,6 +23,7 @@ public class PatchClass
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
     public static Discord DiscordRelay;
+    public Discord Relay;
 
     private void SaveSettings()
     {
@@ -73,6 +74,7 @@ public class PatchClass
 
         //Start Dscord
         DiscordRelay = new Discord();
+        Relay = DiscordRelay;
         DiscordRelay.RunAsync()
             .GetAwaiter()
             .GetResult();
@@ -99,7 +101,6 @@ public class PatchClass
             ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
     }
     #endregion
-
 
     [HarmonyPrefix]
     [HarmonyPatch(typeof(GameMessageTurbineChat), MethodType.Constructor,
@@ -158,5 +159,8 @@ public class PatchClass
 
         return true;
     }
+
+
+    public static Discord GetDiscordRelay() => DiscordRelay;
 }
 

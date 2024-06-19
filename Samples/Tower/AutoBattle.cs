@@ -30,7 +30,7 @@ public static class AutoBattle
     }
 
     [CommandHandler("t2", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleAutobattle(ISession session, params string[] parameters)
+    public static void HandleAutobattle(Session session, params string[] parameters)
     {
         var player = session.Player;
 

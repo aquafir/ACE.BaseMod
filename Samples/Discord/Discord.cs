@@ -263,7 +263,18 @@ public class Discord
         var fakeSender = GetDiscordFakePlayer(speaker);
 
         //Message with a name/clickable response
-        var tellEvent = new GameEventTell(targetPlayer.Session, message, fakeSender.Name, fakeSender.Guid.Full, targetPlayer.Guid.Full, ChatMessageType.Tell);
+        var tellEvent = new GameEventTell(
+            targetPlayer.Session, 
+            message, 
+            fakeSender.Name,
+#if REALM
+            fakeSender.Guid.ClientGUID,
+            targetPlayer.Guid.ClientGUID,
+#else
+            fakeSender.Guid.Full,
+            targetPlayer.Guid.Full,
+#endif
+            ChatMessageType.Tell);
         targetPlayer.Session.Network.EnqueueSend(tellEvent);
     }
 
@@ -287,7 +298,11 @@ public class Discord
             fakeSender.Name, //Use prefix to filter out messages the relay is sending
                              //"~Discord",
             message,
+#if REALM
+            fakeSender.Guid.ClientGUID,
+#else
             fakeSender.Guid.Full,
+#endif
             ChatType.General);
 
         //Send a message to any player who is listening to general chat

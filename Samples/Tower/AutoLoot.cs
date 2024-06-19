@@ -157,11 +157,7 @@ public static class AutoLoot
 
     //Create a command to toggle the variable
     [CommandHandler("lootmute", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-#if REALM
-    public static void HandleT2(ISession session, params string[] parameters)
-#else
-public static void HandleT2(Session session, params string[] parameters)
-#endif
+    public static void HandleT2(Session session, params string[] parameters)
     {
         var player = session.Player;
         if (player is null) return;
@@ -181,7 +177,7 @@ public static void HandleT2(Session session, params string[] parameters)
 
 
     [CommandHandler("clean", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-    public static void Clean(ISession session, params string[] parameters)
+    public static void Clean(Session session, params string[] parameters)
     {
         // @delete - Deletes the selected object. Players may not be deleted this way.
 

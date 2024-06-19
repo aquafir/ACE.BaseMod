@@ -18,25 +18,14 @@
 		<None Remove=".template.config\**" />
 	</ItemGroup>
 
-	<PropertyGroup>
-		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
+	<!--<PropertyGroup>
 		<PublicizeAll>true</PublicizeAll>
-	</PropertyGroup>
+	</PropertyGroup>-->
 
 	<ItemGroup>
-		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Lib.Harmony" Version="2.3.3" />
 		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.0" />
 		<!--<PackageReference Include="System.Text.Json" Version="7.0.0" Aliases="Json" />-->
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
-	  <ProjectReference Include="..\CrossModInteraction\CrossModInteraction.csproj" />
-	  <ProjectReference Include="..\Discord\Discord.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -70,6 +59,9 @@
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
 		  <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
+		</Reference>
+		<Reference Include="Microsoft.EntityFrameworkCore.Relational">
+		  <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
