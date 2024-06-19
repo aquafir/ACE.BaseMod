@@ -12,11 +12,7 @@ public static class Commands
 {
 
     [CommandHandler("sim", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-#if REALM
-    public static void Sim(ISession session, params string[] parameters)
-#else
-public static void HP(Session session, params string[] parameters)
-#endif
+    public static void Sim(Session session, params string[] parameters)
     {
         var player = session.Player;
 
@@ -69,7 +65,7 @@ public static void HP(Session session, params string[] parameters)
 
 
     [CommandHandler("t4", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-    public static void T4(ISession session, params string[] parameters)
+    public static void T4(Session session, params string[] parameters)
     {
         var player = session.Player;
         var t = player.GetSplitTargets(player, 1, 3, 45f).FirstOrDefault();
@@ -114,11 +110,7 @@ public static void HP(Session session, params string[] parameters)
 
     //Todo: remove in release
     [CommandHandler("hp", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-#if REALM
-    public static void HP(ISession session, params string[] parameters)
-#else
-public static void HP(Session session, params string[] parameters)
-#endif
+    public static void HP(Session session, params string[] parameters)
     {
         // @delete - Deletes the selected object. Players may not be deleted this way.
 
@@ -154,11 +146,7 @@ public static void HP(Session session, params string[] parameters)
     //    }
     //}
     [CommandHandler("clean", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-#if REALM
-    public static void Clean(ISession session, params string[] parameters)
-#else
-public static void Clean(Session session, params string[] parameters)
-#endif
+    public static void Clean(Session session, params string[] parameters)
     {
         // @delete - Deletes the selected object. Players may not be deleted this way.
 

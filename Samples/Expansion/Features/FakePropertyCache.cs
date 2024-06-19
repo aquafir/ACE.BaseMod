@@ -204,11 +204,7 @@ public static class FakePropertyCache
 
     #region Commands / Dumps -- /ecXX
     [CommandHandler("ecdw", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-#if REALM
-public static void WatchedDump(ISession session, params string[] parameters)
-#else
 public static void WatchedDump(Session session, params string[] parameters)
-#endif
     {
         var player = session.Player;
 
@@ -217,32 +213,20 @@ public static void WatchedDump(Session session, params string[] parameters)
         player.SendMessage(dump);
     }
     [CommandHandler("ecdc", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-#if REALM
-public static void PlayerCacheDump(ISession session, params string[] parameters)
-#else
 public static void PlayerCacheDump(Session session, params string[] parameters)
-#endif
     {
         var player = session.Player;
         player.SendMessage(player.DumpPlayerCache());
     }
     [CommandHandler("ecde", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-#if REALM
-public static void PlayerEquipmentDump(ISession session, params string[] parameters)
-#else
 public static void PlayerEquipmentDump(Session session, params string[] parameters)
-#endif
     {
         var player = session.Player;
         var dump = player.DumpPlayerItems();
         player.SendMessage(dump);
     }
     [CommandHandler("ecdi", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-#if REALM
-public static void ItemDump(ISession session, params string[] parameters)
-#else
 public static void ItemDump(Session session, params string[] parameters)
-#endif
     {
         var player = session.Player;
         var target = CommandHandlerHelper.GetLastAppraisedObject(session);

@@ -1,8 +1,8 @@
 ﻿namespace Tower;
 
-//[HarmonyPatchCategory(nameof(LootAll))]
-[HarmonyPatch]
-public static class LootAll
+[CommandCategory(nameof(Feature.AutoLoot))]
+[HarmonyPatchCategory(nameof(Feature.AutoLoot))]
+public static class AutoLoot
 {
     static Random random = new();
 
@@ -158,7 +158,7 @@ public static class LootAll
     //Create a command to toggle the variable
     [CommandHandler("lootmute", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
 #if REALM
-public static void HandleT2(ISession session, params string[] parameters)
+    public static void HandleT2(ISession session, params string[] parameters)
 #else
 public static void HandleT2(Session session, params string[] parameters)
 #endif
@@ -181,11 +181,7 @@ public static void HandleT2(Session session, params string[] parameters)
 
 
     [CommandHandler("clean", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-#if REALM
-public static void Clean(ISession session, params string[] parameters)
-#else
-public static void Clean(Session session, params string[] parameters)
-#endif
+    public static void Clean(ISession session, params string[] parameters)
     {
         // @delete - Deletes the selected object. Players may not be deleted this way.
 

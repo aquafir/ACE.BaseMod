@@ -1,9 +1,7 @@
-﻿using ACE.Common;
-using ACE.Server.Physics.Animation;
+﻿namespace Tower;
 
-namespace Tower;
-
-[HarmonyPatchCategory(nameof(AutoBattle))]
+[CommandCategory(nameof(Feature.AutoBattle))]
+[HarmonyPatchCategory(nameof(Feature.AutoBattle))]
 public static class AutoBattle
 {
     static PropertyBool Battling = (PropertyBool)50505;

@@ -1,4 +1,4 @@
-﻿namespace Tower;
+﻿namespace Tower.Bank;
 
 public static class BankExtensions
 {
@@ -25,7 +25,7 @@ public static class BankExtensions
     /// <summary>
     /// Try to find the corresponding BankItem for a WorldObject
     /// </summary>
-    public static bool TryGetBankedItem(this WorldObject wo, out BankItem item) => 
+    public static bool TryGetBankedItem(this WorldObject wo, out BankItem item) =>
         bankLookup.TryGetValue(wo.WeenieClassId, out item);
 
 
@@ -43,7 +43,7 @@ public static class BankExtensions
         $@"(?<verb>{Transaction.Send}) (?<recipient>.+) (?<name>.+)$",
     };
     //Join usages in a regex pattern
-    static string Pattern => String.Join("|", USAGES.Select(x => $"({x})"));
+    static string Pattern => string.Join("|", USAGES.Select(x => $"({x})"));
     static Regex CommandRegex = new(Pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     public static bool TryParseCommand(this string[] parameters, out Transaction verb, out string name, out int amount, out bool wildcardAmount, out string recipient)
@@ -57,12 +57,12 @@ public static class BankExtensions
 
         //Debugger.Break();
         //Check for valid command
-        var match = CommandRegex.Match(String.Join(" ", parameters));
+        var match = CommandRegex.Match(string.Join(" ", parameters));
         if (!match.Success)
             return false;
 
         //Parse verb
-        if (!Enum.TryParse<Transaction>(match.Groups["verb"].Value, true, out verb))
+        if (!Enum.TryParse(match.Groups["verb"].Value, true, out verb))
             return false;
 
         //Set name
@@ -84,8 +84,8 @@ public static class BankExtensions
     }
 
     //Support for spaces in names
-    public static string ParseName(this string[] param, int skip = 1, int atEnd = 0) => (param.Length - skip - atEnd > 0) ?
-        String.Join(" ", param.Skip(skip).Take(param.Length - atEnd - skip)) : "";
+    public static string ParseName(this string[] param, int skip = 1, int atEnd = 0) => param.Length - skip - atEnd > 0 ?
+        string.Join(" ", param.Skip(skip).Take(param.Length - atEnd - skip)) : "";
 
     //Parse quantity from last parameter supporting wildcards
     public static bool TryParseAmount(this string[] param, out int amount, int max = int.MaxValue)

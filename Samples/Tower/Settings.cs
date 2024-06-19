@@ -1,9 +1,13 @@
 ﻿using Tower.MeleeMagic;
+using Tower.Offline;
 
 namespace Tower;
 
 public class Settings
 {
+    public bool Verbose { get; set; } = true;
+    public HashSet<Feature> Features { get; set; } = Enum.GetValues<Feature>().ToHashSet();
+
     public LootStyle LootStyle { get; set; } = LootStyle.RoundRobin;
     public LooterRequirements LooterRequirements { get; set; } = LooterRequirements.Range;
     public ChatMessageType MessageType { get; set; } = ChatMessageType.Broadcast;
@@ -73,6 +77,8 @@ public enum Feature
     AutoLoot,
     Bank,
     MeleeMagic,
+    OfflineProgress,
+    SpeedRun,
 }
 
 //public record struct TowerFloor(string Name, int Index, ushort Landblock, uint Level);

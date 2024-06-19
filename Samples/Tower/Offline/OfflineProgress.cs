@@ -2,11 +2,13 @@
 using ACE.Database.Models.Shard;
 using ACE.DatLoader;
 using ACE.Server.Network;
+using Tower.Speedrun;
 using Biota = ACE.Database.Models.Shard.Biota;
 
-namespace Tower;
+namespace Tower.Offline;
 
-//[HarmonyPatch]
+[CommandCategory(nameof(Feature.OfflineProgress))]
+[HarmonyPatchCategory(nameof(Feature.OfflineProgress))]
 public static class OfflineProgress
 {
     static double MinTime = TimeSpan.FromHours(1).TotalSeconds;
@@ -59,11 +61,7 @@ public static class OfflineProgress
     //Create a command to toggle the variable
     static bool OfflineProgressEnabled(this Player player) => player.GetProperty(ProgressOffline) ?? false;
     [CommandHandler("offline-toggle", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-#if REALM
-public static void HandleToggle(ISession session, params string[] parameters)
-#else
-public static void HandleToggle(Session session, params string[] parameters)
-#endif
+    public static void HandleToggle(Session session, params string[] parameters)
     {
         var player = session.Player;
         if (player is null) return;
@@ -80,15 +78,11 @@ public static void HandleToggle(Session session, params string[] parameters)
     }
 
     [CommandHandler("offline-tiers", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-#if REALM
-public static void HandleOfflineRewards(ISession session, params string[] parameters)
-#else
-public static void HandleOfflineRewards(Session session, params string[] parameters)
-#endif
+    public static void HandleOfflineRewards(Session session, params string[] parameters)
     {
         var player = session.Player;
 
-        if(!Settings.Enabled)
+        if (!Settings.Enabled)
         {
             player.SendMessage($"Offline progress is disabled.");
             return;
@@ -96,23 +90,34 @@ public static void HandleOfflineRewards(Session session, params string[] paramet
 
         var sb = new StringBuilder();
         sb.Append($"\nMax offline time rewarded is: {Settings.MaxTime.GetFriendlyString()}\n\n=====Tiers=====\n");
-        foreach(var tier in Settings.RewardTiers)
+        foreach (var tier in Settings.RewardTiers)
             sb.Append($"{tier.Key,-4}{tier.Value.XpPerHour:N0} xp/hr, {tier.Value.LootPerHour:0.0} @ {tier.Value.LootWcid} loot/hr\n");
 
         player.SendMessage($"{sb}");
     }
 
     [CommandHandler("offline-test", AccessLevel.Developer, CommandHandlerFlag.RequiresWorld)]
-#if REALM
-public static void HandleOfflineRewardsTest(ISession session, params string[] parameters)
-#else
-public static void HandleOfflineRewardsTest(Session session, params string[] parameters)
-#endif
+    public static void HandleOfflineRewardsTest(Session session, params string[] parameters)
     {
         var player = session.Player;
 
         var secondsPrior = TimeSpan.FromHours((double)ThreadSafeRandom.Next(.5f, 4f)).TotalSeconds;
         player.LogoffTimestamp = Time.GetUnixTime() - secondsPrior;
         player.GiveOfflineProgress();
+    }
+
+    [CommandHandler("bonus", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld)]
+    public static void HandleBonus(Session session, params string[] parameters)
+    {
+        var player = session.Player;
+
+        var floor = PatchClass.Settings.Floors.Where(x => x.Landblock == player.CurrentLandblock.Id.Landblock).FirstOrDefault();
+
+        var lb = player.CurrentLandblock;
+
+        if (floor is null)
+            player.SendMessage($"Not in tower");
+        else
+            player.SendMessage($"{floor.Name} - Target level {floor.Level}\nXp Bonus: {player.GetXpBonus():P2}\nLoot Bonus: {player.GetLootBonus():P2}");
     }
 }

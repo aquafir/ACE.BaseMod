@@ -1,11 +1,12 @@
-﻿namespace Tower;
+﻿namespace Tower.Speedrun;
 
-[HarmonyPatch]
+[CommandCategory(nameof(Feature.SpeedRun))]
+[HarmonyPatchCategory(nameof(Feature.SpeedRun))]
 public static class SpeedRun
 {
     public static bool TryGetTimeFromLastFloorStarted(this Player player, out TimeSpan time)
     {
-        time = default(TimeSpan);
+        time = default;
 
         if (!player.TryGetChallengedFloor(out var floor, out var start))
             return false;
@@ -40,7 +41,7 @@ public static class SpeedRun
         if (index is null)
             return false;
 
-        return FloorExtensions.TryGetFloorByIndex(index.Value, out floor);
+        return index.Value.TryGetFloorByIndex(out floor);
     }
     public static void SetChallengedFloor(this Player player, TowerFloor floor)
     {
@@ -102,12 +103,8 @@ public static class SpeedRun
     }
 
     [HarmonyPostfix]
-#if REALM
     [HarmonyPatch(typeof(Player), nameof(Player.Teleport), new Type[] { typeof(ACE.Server.Realms.InstancedPosition), typeof(bool), typeof(bool) })]
     public static void PostTeleport(ACE.Server.Realms.InstancedPosition newPosition, bool teleportingFromInstance, bool fromPortal, ref Player __instance)
-#else
-    [HarmonyPatch(typeof(Player), nameof(Player.Teleport), new Type[] { typeof(Position), typeof(bool) })]
-#endif
     {
         //Ignore logging back in
         //if (!fromPortal)
@@ -118,11 +115,7 @@ public static class SpeedRun
     }
 
     [CommandHandler("clearspeed", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-#if REALM
-    public static void HandleClearSpeed(ISession session, params string[] parameters)
-#else
-public static void HandleClearSpeed(Session session, params string[] parameters)
-#endif
+    public static void HandleClearSpeed(Session session, params string[] parameters)
     {
         var player = session.Player;
 
@@ -137,11 +130,7 @@ public static void HandleClearSpeed(Session session, params string[] parameters)
     }
 
     [CommandHandler("speed", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-#if REALM
-    public static void HandleSpeed(ISession session, params string[] parameters)
-#else
-public static void HandleSpeed(Session session, params string[] parameters)
-#endif
+    public static void HandleSpeed(Session session, params string[] parameters)
     {
         var player = session.Player;
 
@@ -165,11 +154,7 @@ public static void HandleSpeed(Session session, params string[] parameters)
     }
 
     [CommandHandler("tig", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-#if REALM
-    public static void HandleTimeInGame(ISession session, params string[] parameters)
-#else
-public static void HandleTimeInGame(Session session, params string[] parameters)
-#endif
+    public static void HandleTimeInGame(Session session, params string[] parameters)
     {
         var player = session.Player;
 

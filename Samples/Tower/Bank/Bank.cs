@@ -1,17 +1,13 @@
-﻿namespace Tower;
+﻿namespace Tower.Bank;
 
-[CommandCategory(nameof(Bank))]
-[HarmonyPatchCategory(nameof(Bank))]
+[CommandCategory(nameof(Feature.Bank))]
+[HarmonyPatchCategory(nameof(Feature.Bank))]
 public static class Bank
 {
-    static string Commands => String.Join(", ", Enum.GetNames<Transaction>());
+    static string Commands => string.Join(", ", Enum.GetNames<Transaction>());
 
     [CommandHandler("bank", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-#if REALM
-    public static void HandleBank(ISession session, params string[] parameters)
-#else
-public static void HandleBank(Session session, params string[] parameters)
-#endif
+    public static void HandleBank(Session session, params string[] parameters)
     {
         var player = session.Player;
 
@@ -30,7 +26,7 @@ public static void HandleBank(Session session, params string[] parameters)
         }
 
         //Parse information needed for other commands
-        if (String.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
             player.SendMessage($"Specify the name or WCID of the item to transact with.");
             return;
@@ -156,7 +152,7 @@ public static void HandleBank(Session session, params string[] parameters)
         var r = alts.Where(x => x.Name.Contains(recipient, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
         if (r is null)
         {
-            player.SendMessage($"Recipient was not found: \n{String.Join("\n", alts.Select(x => $"{x.Name} - {x.Level}"))}");
+            player.SendMessage($"Recipient was not found: \n{string.Join("\n", alts.Select(x => $"{x.Name} - {x.Level}"))}");
             return false;
         }
 

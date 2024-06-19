@@ -2,6 +2,8 @@
 using ACE.Server.Command;
 using ACE.Server.Managers;
 using System.Text;
+using Tower.Bank;
+using Tower.Speedrun;
 
 namespace Tower;
 
@@ -76,6 +78,8 @@ public class PatchClass
             return;
         }
 
+        SetupFeatures();
+
         BankExtensions.Init();
         FloorExtensions.Init();
         Mod.State = ModState.Running;
@@ -95,9 +99,22 @@ public class PatchClass
     #endregion
 
 
+    /// <summary>
+    /// Adds additional features to ACE that may be needed by custom loot
+    /// </summary>
+    private static void SetupFeatures()
+    {
+        //Add enabled Feature patches
+        foreach (var feature in Settings.Features)
+        {
+            Mod.Harmony.PatchCategory(feature.ToString());
 
+            if (Settings.Verbose)
+                ModManager.Log($"Enabled feature: {feature}");
+        }
 
-
-
-
+        //Add commands of enabled features
+        var commandRegex = String.Join("|", Settings.Features);
+        Mod.Container.RegisterCommandCategory(commandRegex);
+    }
 }

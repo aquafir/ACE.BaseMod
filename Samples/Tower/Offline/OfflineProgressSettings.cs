@@ -1,4 +1,4 @@
-﻿namespace Tower;
+﻿namespace Tower.Offline;
 
 public class OfflineProgressSettings
 {

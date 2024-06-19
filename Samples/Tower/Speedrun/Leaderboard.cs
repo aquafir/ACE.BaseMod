@@ -1,4 +1,7 @@
-﻿namespace Tower;
+﻿namespace Tower.Speedrun;
+
+[CommandCategory(nameof(Feature.SpeedRun))]
+[HarmonyPatchCategory(nameof(Feature.SpeedRun))]
 public class Leaderboard
 {
     static DateTime timestampLeaderboard = DateTime.MinValue;
@@ -6,11 +9,7 @@ public class Leaderboard
     static TimeSpan cacheInterval = TimeSpan.FromSeconds(60);
 
     [CommandHandler("leaderboard", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-#if REALM
-public static void HandleLeaderboard(ISession session, params string[] parameters)
-#else
-public static void HandleLeaderboard(Session session, params string[] parameters)
-#endif
+    public static void HandleLeaderboard(Session session, params string[] parameters)
     {
         var lapse = DateTime.Now - timestampLeaderboard;
         if (lapse < cacheInterval)

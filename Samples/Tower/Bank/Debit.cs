@@ -8,7 +8,7 @@ using ACE.Server.Network.GameMessages.Messages;
 using ACE.Shared.Helpers;
 using static ACE.Server.WorldObjects.Player;
 
-namespace Tower;
+namespace Tower.Bank;
 
 /// <summary>
 /// Overrides purchase w/pyreals and alt currency
@@ -158,7 +158,7 @@ public class Debit
     {
         // transaction has been validated by this point
 
-        var currencyWcid = vendor.AlternateCurrency ?? Player.coinStackWcid;
+        var currencyWcid = vendor.AlternateCurrency ?? coinStackWcid;
 
         __instance.SpendCurrency(currencyWcid, cost, true);
 
@@ -307,7 +307,7 @@ public class Debit
         foreach (var defaultItemProfile in defaultItemProfiles)
         {
 #if REALM
-            var item = __instance.DefaultItemsForSale[(new ObjectGuid(defaultItemProfile.ObjectGuid))];
+            var item = __instance.DefaultItemsForSale[new ObjectGuid(defaultItemProfile.ObjectGuid)];
             if (item.ItemType == ItemType.Service)
                 defaultItems.Add(item);
             else

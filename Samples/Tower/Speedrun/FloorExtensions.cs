@@ -1,4 +1,4 @@
-﻿namespace Tower;
+﻿namespace Tower.Speedrun;
 public static class FloorExtensions
 {
     private static List<TowerFloor> Floors => PatchClass.Settings.Floors;
@@ -27,13 +27,13 @@ public static class FloorExtensions
     public static bool TryGetNextFloor(this TowerFloor current, out TowerFloor floor)
     {
         floor = null;
-        return FloorExtensions.TryGetFloorByIndex(current.Index + 1, out floor);
+        return (current.Index + 1).TryGetFloorByIndex(out floor);
     }
     public static bool TryGetNextFloor(this Player player, out TowerFloor floor)
     {
         floor = null;
         if (player.TryGetFloor(out var current))
-            return FloorExtensions.TryGetFloorByIndex(floor.Index + 1, out floor);
+            return (floor.Index + 1).TryGetFloorByIndex(out floor);
 
         return false;
     }
@@ -70,25 +70,5 @@ public static class FloorExtensions
         var bonus = PatchClass.Settings.MaxLootBonus * fractionMaxBonus;
         //player.SendMessage($"{delta} levels below target of {floor.Level} - {fractionMaxBonus} of max");
         return Math.Clamp(bonus, 1, PatchClass.Settings.MaxLootBonus);
-    }
-
-
-    [CommandHandler("bonus", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld)]
-#if REALM
-public static void HandleBonus(ISession session, params string[] parameters)
-#else
-public static void HandleBonus(Session session, params string[] parameters)
-#endif
-    {
-        var player = session.Player;
-
-        var floor = PatchClass.Settings.Floors.Where(x => x.Landblock == player.CurrentLandblock.Id.Landblock).FirstOrDefault();
-
-        var lb = player.CurrentLandblock;
-
-        if (floor is null)
-            player.SendMessage($"Not in tower");
-        else
-            player.SendMessage($"{floor.Name} - Target level {floor.Level}\nXp Bonus: {player.GetXpBonus():P2}\nLoot Bonus: {player.GetLootBonus():P2}");
     }
 }
