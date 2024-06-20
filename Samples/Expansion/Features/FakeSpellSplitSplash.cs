@@ -20,6 +20,10 @@ internal class FakeSpellSplitSplash
         if (fromProc)
             return;
 
+        //Require targeted spells
+        if (target is null)
+            return;
+
         //Debugger.Break();
         //Check split projectiles
         if (spell.IsProjectile)
