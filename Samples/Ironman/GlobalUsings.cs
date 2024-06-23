@@ -21,3 +21,9 @@ global using System;
 global using System.Reflection;
 global using System.Text;
 global using System.Text.Encodings.Web;
+
+#if REALM
+global using ACE.Server.Realms;
+global using Session = ACE.Server.Network.ISession;
+global using BinaryWriter = ACE.Server.Network.GameMessages.RealmsBinaryWriter;
+#endif

@@ -64,7 +64,6 @@ public static class SimulationExtensions
 
 public class SimulatedDamageEvent : DamageEvent
 {
-
     /// <summary>
     /// Simulates damage for missile and melee
     /// </summary>

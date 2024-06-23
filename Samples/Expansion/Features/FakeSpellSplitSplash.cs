@@ -24,6 +24,9 @@ internal class FakeSpellSplitSplash
         if (target is null)
             return;
 
+        if (spell.IsSelfTargeted)
+            return;
+
         //Debugger.Break();
         //Check split projectiles
         if (spell.IsProjectile)
@@ -41,12 +44,12 @@ internal class FakeSpellSplitSplash
             var delta = current - time;
 
             //scale?
-            var scaledInterval = (1 - player.GetCachedFake(FakeFloat.ItemSpellSplitCooldownScale)) * S.Settings.SpellSettings.SplitCooldown;
+            var scaledInterval = S.Settings.SpellSettings.SplitCooldown; //(1 - player.GetCachedFake(FakeFloat.ItemSpellSplitCooldownScale)) * S.Settings.SpellSettings.SplitCooldown;
             if (delta < scaledInterval)
                 return;
 
-            var rangeScale = (1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplitRangeScale)) * S.Settings.SpellSettings.SplitRange;
-            var targets = player.GetSplashTargets(target, splitCount, rangeScale, false);
+            var rangeScale = S.Settings.SpellSettings.SplitRange; //(1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplitRangeScale)) * S.Settings.SpellSettings.SplitRange;
+            var targets = player.GetSplashTargets(target, rangeScale).Where(x => x is not Player).Take(splitCount).ToList();
 
             if (targets.Count < 1)
                 return;
@@ -79,12 +82,12 @@ internal class FakeSpellSplitSplash
             var current = Time.GetUnixTime();
             var delta = current - time;
 
-            var scaledInterval = (1 - player.GetCachedFake(FakeFloat.ItemSpellSplashCooldownScale)) * S.Settings.SpellSettings.SplitCooldown;
+            var scaledInterval = S.Settings.SpellSettings.SplitCooldown;//(1 - player.GetCachedFake(FakeFloat.ItemSpellSplashCooldownScale)) * S.Settings.SpellSettings.SplitCooldown;
             if (delta < scaledInterval)
                 return;
 
-            var rangeScale = (1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplashRangeScale)) * S.Settings.SpellSettings.SplitRange;
-            var targets = player.GetSplashTargets(target, splashCount, rangeScale, false);
+            var rangeScale = S.Settings.SpellSettings.SplitRange;//(1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplashRangeScale)) * S.Settings.SpellSettings.SplitRange;
+            var targets = player.GetSplashTargets(target, rangeScale).Where(x => x is not Player).Take(splashCount).ToList();
 
             if (targets.Count < 1)
                 return;

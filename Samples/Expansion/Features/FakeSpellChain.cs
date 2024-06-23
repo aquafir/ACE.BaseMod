@@ -23,7 +23,9 @@ internal class FakeSpellChain
         var chance = __instance.GetProperty(FakeFloat.SpellChainChance) ?? 2;
         if (chance > 0 && ThreadSafeRandom.Next(0f, 1.0f) < chance)
         {
-            var t = player.GetSplashTargets(target, 2, 100).Skip(1).FirstOrDefault();
+            //Todo: update splash
+            //var t = player.GetSplashTargets(target, 2, 100).Skip(1).FirstOrDefault();
+            var t = player.GetSplashTargets(target, 100).Skip(1).Take(1).FirstOrDefault();
 
             if (t is null)
                 player.SendMessage($"Your {__instance.Spell.Name} wants to chain after hitting {target.Name} with {chance:P2} odds but failed.");

@@ -258,15 +258,92 @@
 
 ### Magic
 
-* Events
-  * `CastTargetedSpell`
-  * `CastUntargetedSpell`
+#### Magic Start
+
+* `CastTargetedSpell `
+
+  * `HandleActionCastTargetedSpell(ObjectGuid targetGuid, uint spellId, WorldObject casterItem = null)`
+
+  * Checks 
+    * `LastCombatMode` and `CombatMode` for `CombatMode.Magic`
+    * More physics if PK
+    * Jumping, Busy, PKLogout, `MagicState.CanQueue`
+    * Spell known - `VerifySpell(spellId, casterItem)` 
+    * Null/teleporting target
+  * Begins casting
+    * `MagicState.OnCastStart`
+      * Resets a lot of casting related things
+    * `MagicState.SetWindupParams(targetGuid.Full, spellId, casterItem)`
+      * Assigns `WindupParams`
+    * `StartPos` set to current location
+  * If not using `FastTick`
+    * Queue `Rotate` to the target
+    * If the target is null `MagicState.OnCastDone()`
+    * Otherwise try to create spell, calling `OnCastDone()` on failure
+      * `CreatePlayerSpell(target, targetCategory, spellId, casterItem)`
+  * Otherwise `TurnTo_Magic(WorldObject target)` 
+
+* `CastUntargetedSpell`
+
+  * `HandleActionMagicCastUnTargetedSpell(uint spellId)`
+    * Same as targeted spells, but no checks for target and no rotation
+    * Ends with `CreatePlayerSpell(spellId)`
+    * On fail `OnCastDone`
+
+* `CreatePlayerSpell`
+
+  * `ValidateSpell(spellId, casterItem != null)`
+  * *`VerifySpellTarget(spell, target)` if targeted*
+  * Find `caster`, whether player or item
+  * Find if `isWeaponSpell` with `IsWeaponSpell(uint spellId, WorldObject casterItem)`
+  * Find `magicSkill` with either
+    * `GetCreatureSkill(MagicSchool skill)`
+    * `ItemSpellcraft`
+
+  * *`(WorldObject target, TargetCategory targetCategory, Spell spell, WorldObject casterItem, uint magicSkill)` if targeted*
+  * `GetCastingPreCheckStatus(Spell spell, uint magicSkill, bool isWeaponSpell)`
+    * Defaults to a fail - `CastingPreCheckStatus.CastFailed`
+    * Weapon spells automatically succeed
+    * If skill is within 50 of `Power` / difficulty, succeed on a successful roll with
+      * `SkillCheck.GetMagicSkillChance(int skill, int difficulty)`
+
+    * ***Switching between War / Void has an additional check***
+
+  * `CalculateManaUsage(CastingPreCheckStatus castingPreCheckStatus, Spell spell, WorldObject target, WorldObject casterItem, out uint manaUsed)`
+    * Check mana use, defaulting to 5 on a failed precheck
+    * Mana used found with `CalculateManaUsage(Creature caster, Spell spell, WorldObject target = null)`
+      * *Todo*.  Uses spell's `BaseMana` and differentiates between item/player cast
+
+    * Fails on player/item mana insufficient
+    * Grant proficiency on use
+
+  * `DoSpellWords(Spell spell, bool isWeaponSpell)` broadcasts spell words
+  * `DoWindupGestures(Spell spell, bool isWeaponSpell, ActionChain castChain)`
+    * Queue windup motions
+      * `SpellFlags.FastCast` skips
+      * *FastTick - todo*
+      * Each gesture in the spell formula's list queued - `spell.Formula.WindupGestures` 
+        * `EnqueueMotionMagic(ActionChain actionChain, MotionCommand motionCommand, float speed = 1.0f)`
+          * Finds animation length 
+            * `Physics.Animation.MotionTable.GetAnimationLength(MotionTableId, MotionStance.Magic, motionCommand, speed)`
+          * Players broadcast their motion
+            * `EnqueueBroadcastMotion(Motion motion, float? maxRange = null, bool? applyPhysics = null)`
+          * Add animation length to action chain as delay
+      * 
+
+* 
+
+* 
+
 * Life
+
   * Drain
   * Harm
   * Martyr
+
 * War / Void
   * SpellProjectile
+
 * Void
   * DoT
 

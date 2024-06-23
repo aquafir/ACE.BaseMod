@@ -40,17 +40,19 @@ public static class PlayerExtensions
             return;
         }
 
-        //Wipe positions
-        foreach (var pos in wipedPositions)
+        //Wipe positions?
+        foreach (var pos in wipedPositions) 
             player.SetPosition(pos, null);
 
         //Set home?
-        //player.SetPosition(PositionType.LinkedLifestone, newPos);
-        //player.SetPosition(PositionType.Sanctuary, newPos);
-        //player.SetPosition(PositionType.Home, newPos);
+        player.SetPosition(PositionType.LinkedLifestone, newPos);
+        player.SetPosition(PositionType.Sanctuary, newPos);
+        player.SetPosition(PositionType.Home, newPos);
+
+        player.RecallsDisabled = true;
 
         //Set flag used to prevent tele/other stuff?
-        //player.SetProperty(FakeBool.Quarantined, true);
+        player.SetProperty(FakeBool.Quarantined, true);
 
 #if REALM
         player.Teleport(newPos.AsInstancedPosition(player, Entity.Enum.RealmProperties.PlayerInstanceSelectMode.HomeRealm));

@@ -41,7 +41,8 @@ internal class FakeMissileSplitSplash
 
         //Radius, range, etc.
         var radius = weapon.GetProperty(FakeFloat.ItemMissileSplashRadius) ?? 4;
-        var targets = player.GetSplashTargets(target, splashCount, (float)radius);
+        //var targets = player.GetSplashTargets(target, splashCount, (float)radius);
+        var targets = player.GetSplashTargets(target, (float)radius).Where(x => x is not Player).Take(splashCount).ToList();
         //player.SendMessage($"Radius: {radius} - {targets.Count}");
 
         if (targets.Count < 1)

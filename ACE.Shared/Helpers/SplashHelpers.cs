@@ -1,4 +1,5 @@
 ﻿using ACE.Server.Physics;
+using ACE.Server.WorldObjects;
 
 namespace ACE.Shared.Helpers;
 
@@ -35,23 +36,124 @@ public static class SplashHelper
     /// <summary>
     /// Gets targets within a radius of the origin using a reference Player
     /// </summary>
-    public static List<Creature> GetSplashTargets(this Player reference, WorldObject origin, int maxTargets = 3, float maxRange = 5.0f, bool targetsPlayers = true)
+    //public static IEnumerable<Creature> GetSplashTargets(this Player reference, WorldObject origin, int maxTargets = 3, float maxRange = 5.0f, bool targetsPlayers = true)
+    //{
+    //    if (origin is null || reference is null)
+    //    {
+    //        ModManager.Log($"Failed to get splash targets.", ModManager.LogLevel.Warn);
+    //        return new List<Creature>();
+    //    }
+    //    //List<PhysicsObj> visible;
+    //    //// sort visible objects by ascending distance
+    //    //if (origin is Player)
+    //    //    visible = (origin as Player).GetVisibleCreaturesByDistance();
+
+    //    //else visible = null;
+    //    //origin.GetVisibleCreaturesByDistance();
+    //    var visible = reference.GetVisibleCreaturesByDistance(origin);
+
+    //    var splashTargets = new List<Creature>();
+
+    //    foreach (var obj in visible)
+    //    {
+    //        //Splashing skips original target?
+    //        if (obj.ID == origin.PhysicsObj.ID)
+    //            continue;
+
+    //        //Only splash creatures?
+    //        var creature = obj.WeenieObj.WorldObject as Creature;
+    //        if (creature == null || creature.Teleporting || creature.IsDead) continue;
+
+    //        if (!targetsPlayers && creature is Player)
+    //            continue;
+
+    //        //Check pk error?
+    //        //if (origin.CheckPKStatusVsTarget(creature, null) != null)
+    //        //    continue;
+
+    //        if (!creature.Attackable && creature.TargetingTactic == TargetingTactic.None || creature.Teleporting)
+    //            continue;
+
+    //        //if (creature is CombatPet && (player != null || this is CombatPet))
+    //        //    continue;
+
+    //        //No objects in range
+    //        var cylDist = origin.GetCylinderDistance(creature);
+    //        if (cylDist > maxRange)
+    //            return splashTargets;
+
+    //        //Filter by angle?
+    //        //var angle = creature.GetAngle(origin);
+    //        // if (Math.Abs(angle) > splashAngle / 2.0f)
+    //        //     continue;
+
+    //        //Found splash object
+    //        splashTargets.Add(creature);
+
+    //        //Stop if you've found enough targets
+    //        if (splashTargets.Count == maxTargets)
+    //            break;
+    //    }
+    //    return splashTargets;
+    //}
+
+
+    /// <summary>
+    /// Common splash filter
+    /// </summary>
+    public static bool StandardSplashFilter(WorldObject origin, Creature creature)
+    {
+        if (creature is null)
+            return false;
+
+        if (creature.Teleporting || creature.IsDead)
+            return false;
+
+        //NPC check
+        if (!creature.Attackable && creature.TargetingTactic == TargetingTactic.None)
+            return false;
+
+        //Cleave's pk check?
+        //if (origin.CheckPKStatusVsTarget(creature, null) != null)
+        //    continue;
+
+        //if (creature is CombatPet && (player != null || this is CombatPet))
+        //    continue;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Excludes Players from standard checks
+    /// </summary>
+    public static bool CreatureSplashFilter(WorldObject origin, Creature creature)
+    {
+        //Do standard check
+        if (!StandardSplashFilter(origin, creature))
+            return false;
+
+        if (creature is Player player)
+            return false;
+
+        return true;
+    }
+
+    public static List<Creature> GetSplashTargets(this Player reference, WorldObject origin, float maxRange = 5.0f)
+    {
+        if (reference is null) return new List<Creature>();
+
+        return reference.GetSplashTargets(origin, StandardSplashFilter, maxRange).ToList();
+    }
+
+    public static IEnumerable<Creature> GetSplashTargets(this Player reference, WorldObject origin, Func<WorldObject, Creature, bool> predicate, float maxRange = 5.0f)
     {
         if (origin is null || reference is null)
         {
-            ModManager.Log($"Failed to get splash targets.", ModManager.LogLevel.Warn);
-            return new List<Creature>();
+            //ModManager.Log($"Failed to get splash targets.", ModManager.LogLevel.Warn);
+            yield break;
         }
-        //List<PhysicsObj> visible;
-        //// sort visible objects by ascending distance
-        //if (origin is Player)
-        //    visible = (origin as Player).GetVisibleCreaturesByDistance();
 
-        //else visible = null;
-        //origin.GetVisibleCreaturesByDistance();
         var visible = reference.GetVisibleCreaturesByDistance(origin);
-
-        var splashTargets = new List<Creature>();
 
         foreach (var obj in visible)
         {
@@ -61,25 +163,11 @@ public static class SplashHelper
 
             //Only splash creatures?
             var creature = obj.WeenieObj.WorldObject as Creature;
-            if (creature == null || creature.Teleporting || creature.IsDead) continue;
 
-            if (!targetsPlayers && creature is Player)
-                continue;
-
-            //Check pk error?
-            //if (origin.CheckPKStatusVsTarget(creature, null) != null)
-            //    continue;
-
-            if (!creature.Attackable && creature.TargetingTactic == TargetingTactic.None || creature.Teleporting)
-                continue;
-
-            //if (creature is CombatPet && (player != null || this is CombatPet))
-            //    continue;
-
-            //No objects in range
-            var cylDist = origin.GetCylinderDistance(creature);
-            if (cylDist > maxRange)
-                return splashTargets;
+            //Todo: think about this -- max range halts evaluation instead of skipping, but might be nice to open 
+            //No more objects in range
+            if (origin.GetCylinderDistance(creature) > maxRange)
+                yield break;
 
             //Filter by angle?
             //var angle = creature.GetAngle(origin);
@@ -87,14 +175,10 @@ public static class SplashHelper
             //     continue;
 
             //Found splash object
-            splashTargets.Add(creature);
-
-            //Stop if you've found enough targets
-            if (splashTargets.Count == maxTargets)
-                break;
+            yield return creature;
         }
-        return splashTargets;
     }
+
 
     /// <summary>
     /// Gets targets within a radius and angle of the player and their target

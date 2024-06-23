@@ -79,8 +79,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expansion", "Samples\Expans
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tower", "Samples\Tower\Tower.csproj", "{DA46257A-2A09-4B11-9A53-C275B1347388}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossModInteraction", "Samples\CrossModInteraction\CrossModInteraction.csproj", "{D1B165AD-3CCF-44AF-8733-6259D9B93138}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -205,10 +203,6 @@ Global
 		{DA46257A-2A09-4B11-9A53-C275B1347388}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA46257A-2A09-4B11-9A53-C275B1347388}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA46257A-2A09-4B11-9A53-C275B1347388}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D1B165AD-3CCF-44AF-8733-6259D9B93138}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D1B165AD-3CCF-44AF-8733-6259D9B93138}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D1B165AD-3CCF-44AF-8733-6259D9B93138}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D1B165AD-3CCF-44AF-8733-6259D9B93138}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -245,7 +239,6 @@ Global
 		{FCFB9631-60E6-4027-8CC7-4F23B4301156} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
 		{F60E46A6-1A58-4F82-AD88-014BF504F420} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
 		{DA46257A-2A09-4B11-9A53-C275B1347388} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
-		{D1B165AD-3CCF-44AF-8733-6259D9B93138} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78F97B66-6E9E-4329-A0FE-1E02A2C50967}

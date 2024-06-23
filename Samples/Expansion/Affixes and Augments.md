@@ -38,6 +38,13 @@ An `Affix` is a collection of `Augment` which may apply to some eligible WorldOb
 
 
 
+* https://github.com/BlueRaja/Weighted-Item-Randomizer-for-C-Sharp
+* https://github.com/BlueRaja/Weighted-Item-Randomizer-for-C-Sharp/wiki/Getting-Started#are-floating-point-weights-supported
+* https://github.com/cdanek/KaimiraWeightedList
+* https://www.keithschwarz.com/darts-dice-coins/
+
+
+
 
 
 Questions for RF

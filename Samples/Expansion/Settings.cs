@@ -6,9 +6,9 @@ public class Settings
 
     #region Features / Mutators
     public List<Feature> Features { get; set; } = new() {
-        Feature.FakePropertyCache,
-        Feature.OverrideSpellProjectiles,
-        Feature.FakeAttributes,
+        //Feature.FakePropertyCache,
+        //Feature.OverrideSpellProjectiles,
+        //Feature.FakeAttributes,
         //Feature.MutatorHooks, 
         //Feature.Hardcore,
         //Feature.Ironman,
