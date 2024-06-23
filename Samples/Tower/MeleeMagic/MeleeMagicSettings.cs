@@ -20,7 +20,36 @@ public class MeleeMagicSettings
     /// </summary>
     public Dictionary<uint, MeleeMagicGroup> MeleeMagicGroups { get; set; } = new()
     {
-        [0] = new()
+        [0] = new(),
+        //Non-default
+        [1] = new()
+        {
+            Pools = new()
+            {
+                [AttackHeight.Low] = new() {
+                    new ()
+                    {
+                        MinimumSlider = 1,
+                        LimitingSkill = Skill.VoidMagic,
+                        Spells = new ()
+                        {
+                            [94] = SpellId.Corrosion3,
+                            [329] = SpellId.Corrosion6,
+                        }
+                    },
+                    new ()
+                    {
+                        MinimumSlider = .5f,
+                        LimitingSkill = Skill.VoidMagic,
+                        Spells = new ()
+                        {
+                            [94] = SpellId.FesterOther3,
+                            [329] = SpellId.FesterOther6,
+                        }
+                    },
+                },
+            }
+        },
     };
 }
 

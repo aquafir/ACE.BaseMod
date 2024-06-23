@@ -60,7 +60,7 @@ public static class AutoBattle
         float time = 2;
         actionChain.AddAction(player, () =>
         {
-            var nearest = player.GetSplashTargets(player, 1, 5).FirstOrDefault();
+            var nearest = player.GetSplashTargets(player, 5).FirstOrDefault();
 
             if (nearest is null)
             {
@@ -143,13 +143,5 @@ public static class AutoBattle
         //__instance.HandleActionTargetedMeleeAttack(creature.Guid.Full, (uint)(__instance.AttackHeight ?? AttackHeight.Low), __instance.PowerLevel);
         __instance.MeleeTarget = creature;
         __instance.Attack(creature, __instance.AttackSequence);
-    }
-
-
-    [CommandHandler("t3", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleT3(Session session, params string[] parameters)
-    {
-        var player = session.Player;
-        PlayerFactoryEx.AddAllSpells(player);
     }
 }

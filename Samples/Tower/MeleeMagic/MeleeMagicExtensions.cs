@@ -33,7 +33,7 @@ public static class MeleeMagicExtensions
                 continue;
 
 
-            player.SendMessage($"Check {pool.LimitingSkill} > {pool.MinimumSlider} - {power}");
+            //player.SendMessage($"Check {pool.LimitingSkill} > {pool.MinimumSlider} - {power}");
 
             //Look for most restricted spell
             for (var i = pool.Spells.Count - 1; i >= 0; --i)
@@ -42,7 +42,7 @@ public static class MeleeMagicExtensions
                 {
                     spell = pool.Spells.Values[i];
 
-                    player.SendMessage($"Selected {spell} @ {pool.Spells.Keys[i]} >= {skill.Base}");
+                    //player.SendMessage($"Selected {spell} @ {pool.Spells.Keys[i]} >= {skill.Base}");
                     return true;
                 }
             }

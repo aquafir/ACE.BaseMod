@@ -1,4 +1,5 @@
-﻿using Tower.MeleeMagic;
+﻿using Tower.Hardcore;
+using Tower.MeleeMagic;
 using Tower.Offline;
 
 namespace Tower;
@@ -6,7 +7,17 @@ namespace Tower;
 public class Settings
 {
     public bool Verbose { get; set; } = true;
-    public HashSet<Feature> Features { get; set; } = Enum.GetValues<Feature>().ToHashSet();
+    public HashSet<Feature> Features { get; set; } = //Enum.GetValues<Feature>().ToHashSet();
+        new()
+        {
+            //Feature.AutoBattle,
+            Feature.AutoLoot,
+            //Feature.Bank,
+            Feature.Hardcore,
+            Feature.MeleeMagic,
+            //Feature.OfflineProgress,
+            Feature.SpeedRun,
+        };
 
     public LootStyle LootStyle { get; set; } = LootStyle.RoundRobin;
     public LooterRequirements LooterRequirements { get; set; } = LooterRequirements.Range;
@@ -44,6 +55,7 @@ public class Settings
     public float MaxLootBonusLevelRange { get; set; } = 30;
 
     public OfflineProgressSettings OfflineProgress { get; set; } = new();
+    public HardcoreSettings Hardcore { get; set; } = new();
 
     public List<TowerFloor> Floors { get; set; } = new()
     {
@@ -76,6 +88,7 @@ public enum Feature
     AutoBattle,
     AutoLoot,
     Bank,
+    Hardcore,
     MeleeMagic,
     OfflineProgress,
     SpeedRun,

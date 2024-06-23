@@ -1,8 +1,7 @@
 ﻿namespace Tower.MeleeMagic;
 
-//[CommandCategory(nameof(FistMagic))]
-//[HarmonyPatchCategory(nameof(FistMagic))]
-[HarmonyPatch]
+[CommandCategory(nameof(Feature.MeleeMagic))]
+[HarmonyPatchCategory(nameof(Feature.MeleeMagic))]
 public class MeleeMagic
 {
     static MeleeMagicSettings Settings => PatchClass.Settings.MeleeMagic;
@@ -25,6 +24,42 @@ public class MeleeMagic
             return;
 
         var spell = new ACE.Server.Entity.Spell(spellId);
-        __instance.TryCastSpell_WithRedirects(spell, target, fromProc: true);
+        var weapon = __instance.GetEquippedWeapon();
+        __instance.TryCastSpell_Inner(spell, target, weapon, weapon, fromProc: true);
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.GetCasterElementalDamageModifier), new Type[] { typeof(WorldObject), typeof(Creature), typeof(Creature), typeof(DamageType) })]
+    public static bool PreGetCasterElementalDamageModifier(WorldObject weapon, Creature wielder, Creature target, DamageType damageType, ref float __result)
+    {
+        //Skip original method when checks redundant
+        if (wielder is null || weapon is null || weapon.W_DamageType != damageType)
+        {
+            __result = 1f;
+            return false;
+        }
+
+        //Use original code if not a valid non-Caster ElementalDamageModifier?
+        if (!weapon.WeenieType.HasAny(WeenieType.MissileLauncher | WeenieType.Missile | WeenieType.MeleeWeapon))
+            return true;
+
+
+        //Reimplementation 
+        var elementalDamageMod = weapon.ElementalDamageMod ?? 1.0f;
+
+        // additive to base multiplier
+        var wielderEnchantments = wielder.EnchantmentManager.GetElementalDamageMod();
+        var weaponEnchantments = weapon.EnchantmentManager.GetElementalDamageMod();
+
+        var enchantments = wielderEnchantments + weaponEnchantments;
+
+        var modifier = (float)(elementalDamageMod + enchantments);
+
+        if (modifier > 1.0f && target is Player)
+            modifier = 1.0f + (modifier - 1.0f) * WorldObject.ElementalDamageBonusPvPReduction;
+
+        __result = modifier;
+
+        return false;
     }
 }

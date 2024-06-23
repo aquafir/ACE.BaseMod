@@ -10,16 +10,16 @@ public class MeleeMagicGroup
     /// </summary>
     public Dictionary<AttackHeight, List<MeleeMagicPool>> Pools { get; set; } = new()
     {
-        [AttackHeight.High] = new() {
+        //Default group shows off 
+        [AttackHeight.Low] = new() {
             new ()
             {
                 MinimumSlider = .4f,
-                LimitingSkill = Skill.LifeMagic,
+                LimitingSkill = Skill.VoidMagic,
                 Spells = new ()
                 {
-                    [94] = SpellId.LightningVulnerabilityOther1,
-                    [235] = SpellId.LightningVulnerabilityOther4,
-                    [329] = SpellId.LightningVulnerabilityOther6,
+                    [94] = SpellId.Corruption2,
+                    [329] = SpellId.Corruption6,
                 }
             },
         },
@@ -46,6 +46,19 @@ public class MeleeMagicGroup
                     [282] = SpellId.VulnerabilityOther6,
                 }
             },
-        }
+        },
+        [AttackHeight.High] = new() {
+            new ()
+            {
+                MinimumSlider = .4f,
+                LimitingSkill = Skill.LifeMagic,
+                Spells = new ()
+                {
+                    [94] = SpellId.LightningVulnerabilityOther1,
+                    [235] = SpellId.LightningVulnerabilityOther4,
+                    [329] = SpellId.LightningVulnerabilityOther6,
+                }
+            },
+        },
     };
 }
