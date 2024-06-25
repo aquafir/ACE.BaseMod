@@ -1,9 +1,10 @@
-﻿namespace Tower;
+﻿namespace Tower.Loot;
 
 [CommandCategory(nameof(Feature.AutoLoot))]
 [HarmonyPatchCategory(nameof(Feature.AutoLoot))]
 public static class AutoLoot
 {
+    static LootSettings Settings => PatchClass.Settings.Loot;
     static Random random = new();
 
     [HarmonyPrefix]
@@ -36,7 +37,7 @@ public static class AutoLoot
             return false;
 
         //Get a list of looters, just the player if not in a fellow with some restriction
-        List<Player> looters = PatchClass.Settings.LooterRequirements switch
+        List<Player> looters = Settings.LooterRequirements switch
         {
             LooterRequirements.Landblock =>
                 player.GetFellowshipTargets().Where(x => x.CurrentLandblock.Id == player.CurrentLandblock.Id).ToList(),
@@ -47,7 +48,7 @@ public static class AutoLoot
 
 
         if (player.GetProperty(LootMuted) != true)
-            player.SendMessage($"Looting {loot.Count} items for {looters.Count} players", PatchClass.Settings.MessageType);
+            player.SendMessage($"Looting {loot.Count} items for {looters.Count} players", Settings.MessageType);
 
         //Roll a random starting player for round-robin
         var index = random.Next(looters.Count);
@@ -55,7 +56,7 @@ public static class AutoLoot
         //For each loot item
         foreach (var item in loot)
         {
-            switch (PatchClass.Settings.LootStyle)
+            switch (Settings.LootStyle)
             {
                 case LootStyle.Finder:
                     player.Loot(item);
@@ -95,7 +96,7 @@ public static class AutoLoot
 
         var success = player.TryCreateInInventoryWithNetworking(item);
         if (player.GetProperty(LootMuted) != true)
-            player.SendMessage($"{(success ? "Looted" : "Failed to loot")} {item.Name}.", PatchClass.Settings.MessageType);
+            player.SendMessage($"{(success ? "Looted" : "Failed to loot")} {item.Name}.", Settings.MessageType);
 
         //Could drop or something else on failure...
     }
@@ -192,36 +193,4 @@ public static class AutoLoot
             session.Network.EnqueueSend(new GameMessageDeleteObject(item));
         }
     }
-}
-
-public enum LootStyle
-{
-    /// <summary>
-    /// Finder keeps all
-    /// </summary>
-    Finder = 0,
-    /// <summary>
-    /// Duplicate items through fellow
-    /// </summary>
-    OneForAll = 1,
-    /// <summary>
-    /// Chooses random start and cycles through
-    /// </summary>
-    RoundRobin = 2,
-}
-
-public enum LooterRequirements
-{
-    /// <summary>
-    /// No restrictions
-    /// </summary>
-    None = 0,
-    /// <summary>
-    /// Fellow must be in same landblock
-    /// </summary>
-    Landblock = 1,
-    /// <summary>
-    /// Fellow must be within 2x max range
-    /// </summary>
-    Range = 2,
 }

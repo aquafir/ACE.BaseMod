@@ -4,6 +4,8 @@
 [HarmonyPatchCategory(nameof(Feature.Bank))]
 public static class Bank
 {
+    static BankSettings Settings => PatchClass.Settings.Bank;
+
     static string Commands => string.Join(", ", Enum.GetNames<Transaction>());
 
     [CommandHandler("bank", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
@@ -34,9 +36,8 @@ public static class Bank
 
         //Try to parse weenie
         var query = int.TryParse(name, out var wcid) ?
-            PatchClass.Settings.Items.Where(x => x.Id == wcid) :
-            PatchClass.Settings.Items.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
-        //PatchClass.Settings.Items.Where(x => x.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase));
+            Settings.Items.Where(x => x.Id == wcid) :
+            Settings.Items.Where(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
 
         var item = query.FirstOrDefault();
         if (item is null)
@@ -46,7 +47,7 @@ public static class Bank
         }
 
         //Take the cap if it's smaller
-        if (wildcardAmount || PatchClass.Settings.ExcessSetToMax)
+        if (wildcardAmount || Settings.ExcessSetToMax)
         {
             var held = verb == Transaction.Give ? player.GetNumInventoryItemsOfWCID(item.Id) : (int)player.GetBanked(item.Prop);
             amount = Math.Min(amount, held);
@@ -71,13 +72,13 @@ public static class Bank
     {
         var sb = new StringBuilder("\nBanked items:");
 
-        foreach (var item in PatchClass.Settings.Items)
+        foreach (var item in Settings.Items)
         {
             //Skip missing?
             var banked = player.GetBanked(item.Prop);
             var held = player.GetNumInventoryItemsOfWCID(item.Id);
 
-            if (PatchClass.Settings.SkipMissingBankedItems && banked <= 0 && held <= 0)
+            if (Settings.SkipMissingBankedItems && banked <= 0 && held <= 0)
                 continue;
 
             sb.Append($"\n{banked,-25:0.00}{item.Name} banked, {held:0} held");

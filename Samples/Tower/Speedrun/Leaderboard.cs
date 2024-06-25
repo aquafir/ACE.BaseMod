@@ -1,12 +1,22 @@
 ﻿namespace Tower.Speedrun;
 
-[CommandCategory(nameof(Feature.SpeedRun))]
-[HarmonyPatchCategory(nameof(Feature.SpeedRun))]
+[CommandCategory(nameof(Feature.Speedrun))]
+[HarmonyPatchCategory(nameof(Feature.Speedrun))]
 public static class Leaderboard
 {
     static DateTime timestampLeaderboard = DateTime.MinValue;
     static string lastLeaderboard = "";
     static TimeSpan cacheInterval = TimeSpan.FromSeconds(60);
+
+    static string Commands => string.Join(", ", Enum.GetNames<Leaderboards>());
+
+
+    enum Leaderboards
+    {
+        Level,
+        Speed,
+        Floor,
+    }
 
     [CommandHandler("leaderboard", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
     public static void HandleLeaderboard(Session session, params string[] parameters)

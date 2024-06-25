@@ -2,7 +2,7 @@
 using ACE.Database.Models.Shard;
 using ACE.DatLoader;
 using ACE.Server.Network;
-using Tower.Speedrun;
+using Tower.Floor;
 using Biota = ACE.Database.Models.Shard.Biota;
 
 namespace Tower.Offline;
@@ -104,20 +104,5 @@ public static class OfflineProgress
         var secondsPrior = TimeSpan.FromHours((double)ThreadSafeRandom.Next(.5f, 4f)).TotalSeconds;
         player.LogoffTimestamp = Time.GetUnixTime() - secondsPrior;
         player.GiveOfflineProgress();
-    }
-
-    [CommandHandler("bonus", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld)]
-    public static void HandleBonus(Session session, params string[] parameters)
-    {
-        var player = session.Player;
-
-        var floor = PatchClass.Settings.Floors.Where(x => x.Landblock == player.CurrentLandblock.Id.Landblock).FirstOrDefault();
-
-        var lb = player.CurrentLandblock;
-
-        if (floor is null)
-            player.SendMessage($"Not in tower");
-        else
-            player.SendMessage($"{floor.Name} - Target level {floor.Level}\nXp Bonus: {player.GetXpBonus():P2}\nLoot Bonus: {player.GetLootBonus():P2}");
     }
 }

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Tower.Entitled;
 
-namespace Tower.Entitled;
-
-//[HarmonyPatch]
+//[CommandCategory(nameof(Feature.))]
+//[HarmonyPatchCategory(nameof(Feature.))]
 internal class Entitled
 {
+    //static EntitlementSettings Settings = PatchClass.Settings.;
 
 }

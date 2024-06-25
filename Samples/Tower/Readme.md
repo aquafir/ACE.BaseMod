@@ -1,1 +1,10 @@
-﻿*Add mod description and usage*
+﻿
+
+
+
+
+
+## Commands
+
+* `hc`
+* `mm` - Describes your current MeleeMagic group

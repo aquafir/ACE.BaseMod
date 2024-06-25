@@ -2,6 +2,8 @@
 
 public static class BankExtensions
 {
+    static BankSettings Settings => PatchClass.Settings.Bank;
+
     public static double GetBanked(this Player player, int prop) =>
         player.GetProperty((PropertyFloat)prop) ?? 0;
     public static void IncBanked(this Player player, int prop, double amount) =>
@@ -20,7 +22,7 @@ public static class BankExtensions
     /// </summary>
     public static void Init()
     {
-        bankLookup = PatchClass.Settings.Items.ToDictionary(x => x.Id, x => x);
+        bankLookup = Settings.Items.ToDictionary(x => x.Id, x => x);
     }
     /// <summary>
     /// Try to find the corresponding BankItem for a WorldObject
@@ -107,7 +109,7 @@ public static class BankExtensions
             success = false;
 
         //Wildcards will always use the max value, parsed ints will use the setting
-        if (PatchClass.Settings.ExcessSetToMax || last == "*")
+        if (Settings.ExcessSetToMax || last == "*")
             amount = Math.Min(max, amount);
 
         return success;

@@ -17,6 +17,8 @@ namespace Tower.Bank;
 [HarmonyPatchCategory(nameof(Debit))]
 public class Debit
 {
+    static BankSettings Settings => PatchClass.Settings.Bank;
+
     //Send the player the held and banked currency/alt coins
     [HarmonyPrefix]
     [HarmonyPatch(typeof(GameEventApproachVendor), MethodType.Constructor, new Type[] { typeof(Session), typeof(Vendor), typeof(uint) })]
@@ -50,7 +52,7 @@ public class Debit
             var altCurrencyInInventory = (uint)session.Player.GetNumInventoryItemsOfWCID(vendor.AlternateCurrency.Value);
 
             //!!ADD BANKED AMOUNT
-            var banked = PatchClass.Settings.Items.Where(x => x.Id == vendor.AlternateCurrency.Value).FirstOrDefault();
+            var banked = Settings.Items.Where(x => x.Id == vendor.AlternateCurrency.Value).FirstOrDefault();
             if (banked is not null)
                 altCurrencyInInventory += (uint)session.Player.GetBanked(banked.Prop);
 
@@ -108,7 +110,7 @@ public class Debit
             return false;
         }
 
-        var bankEntry = PatchClass.Settings.Items.Where(x => x.Id == currentWcid).FirstOrDefault();
+        var bankEntry = Settings.Items.Where(x => x.Id == currentWcid).FirstOrDefault();
         if (bankEntry is not null)
         {
             //Get amount banked
@@ -351,7 +353,7 @@ public class Debit
 
         //!!ADD BANKED AMOUNT
         var wcid = __instance.AlternateCurrency.Value;
-        var banked = PatchClass.Settings.Items.Where(x => x.Id == wcid).FirstOrDefault();
+        var banked = Settings.Items.Where(x => x.Id == wcid).FirstOrDefault();
         if (banked is not null)
             playerAltCurrency += (int)player.GetBanked(banked.Prop);
 

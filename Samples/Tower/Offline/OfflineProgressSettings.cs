@@ -23,6 +23,15 @@ public class OfflineProgressSettings
         [12] = new(22726818, 691, 6),
     };
 
+
+    public bool XpBonusEnabled { get; set; } = true;
+    public float MaxXpBonus { get; set; } = 5;
+    public float MaxXpBonusLevelRange { get; set; } = 30;
+
+    public bool LootBonusEnabled { get; set; } = true;
+    public float MaxLootBonus { get; set; } = 2;
+    public float MaxLootBonusLevelRange { get; set; } = 30;
+
     //public double LootPerHour, TimeSpan MinTime, 
 }
 public record OfflineRewardTier(double XpPerHour, uint LootWcid, double LootPerHour);

@@ -1,4 +1,6 @@
-﻿namespace Tower.MeleeMagic;
+﻿using ACE.Entity.Enum;
+
+namespace Tower.MeleeMagic;
 
 [CommandCategory(nameof(Feature.MeleeMagic))]
 [HarmonyPatchCategory(nameof(Feature.MeleeMagic))]
@@ -61,5 +63,39 @@ public class MeleeMagic
         __result = modifier;
 
         return false;
+    }
+
+
+    [CommandHandler("mm", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
+    public static void HandleLeaderboard(Session session, params string[] parameters)
+    {
+        var player = session.Player;
+
+        if (player is null)
+            return;
+
+        if (!player.TryGetMeleeMagicGroup(out var group))
+        {
+            player.SendMessage($"No current MeleeMagic group.");
+            return;
+        }
+
+        var sb = new StringBuilder();
+
+        foreach(var height in group.Pools)
+        {
+            sb.Append($"\n{height.Key}");
+
+            foreach(var pool in height.Value)
+            {
+                sb.Append($"\n  {pool.LimitingSkill} @ {pool.MinimumSlider:P2} power");
+                foreach(var spell in pool.Spells)
+                {
+                    sb.Append($"\n    {spell.Key,-5}{spell.Value}");
+                }
+            }
+        }
+
+        player.SendMessage($"{sb}");
     }
 }

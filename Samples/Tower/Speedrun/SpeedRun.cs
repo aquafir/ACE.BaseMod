@@ -1,9 +1,14 @@
-﻿namespace Tower.Speedrun;
+﻿using Tower.Floor;
 
-[CommandCategory(nameof(Feature.SpeedRun))]
-[HarmonyPatchCategory(nameof(Feature.SpeedRun))]
-public static class SpeedRun
+namespace Tower.Speedrun;
+
+[CommandCategory(nameof(Feature.Speedrun))]
+[HarmonyPatchCategory(nameof(Feature.Speedrun))]
+public static class Speedrun
 {
+    static List<TowerFloor> Floors => PatchClass.Settings.Tower.Floors;
+    static SpeedrunSettings Settings => PatchClass.Settings.Speedrun;
+
     public static bool TryGetTimeFromLastFloorStarted(this Player player, out TimeSpan time)
     {
         time = default;
@@ -15,20 +20,28 @@ public static class SpeedRun
         return true;
     }
 
-    public static int FirstCompletionRangeStart { get; set; } = 56000;
-    public static int PersonalBestRangeStart { get; set; } = 57000;
-    public static PropertyFloat FirstCompletionProp(this TowerFloor floor) => (PropertyFloat)(floor.Index + FirstCompletionRangeStart);
-    public static PropertyFloat PersonalBestProp(this TowerFloor floor) => (PropertyFloat)(floor.Index + PersonalBestRangeStart);
+    #region Helpers
+    //public static int FirstCompletionRangeStart { get; set; } = 56000;
+    //public static int PersonalBestRangeStart { get; set; } = 57000;
+    public static PropertyFloat FirstCompletionTimeProp(this TowerFloor floor) => (PropertyFloat)(floor.Index + Settings.FirstCompletionRangeStart);
+    public static PropertyInt FirstCompletionLevelProp(this TowerFloor floor) => (PropertyInt)(floor.Index + Settings.FirstCompletionRangeStart);
+    public static PropertyFloat PersonalBestTimeProp(this TowerFloor floor) => (PropertyFloat)(floor.Index + Settings.PersonalBestRangeStart);
 
     public static TimeSpan? GetPersonalBest(this Player player, TowerFloor floor)
-        => player.GetProperty(floor.PersonalBestProp())?.ToTimeSpan();
+        => player.GetProperty(floor.PersonalBestTimeProp())?.ToTimeSpan();
     public static void SetPersonalBest(this Player player, TowerFloor floor, double time)
-        => player.SetProperty(floor.PersonalBestProp(), time);
+        => player.SetProperty(floor.PersonalBestTimeProp(), time);
 
-    public static TimeSpan? GetFirstCompletion(this Player player, TowerFloor floor)
-        => player.GetProperty(floor.FirstCompletionProp())?.ToTimeSpan();
-    public static void SetFirstCompletion(this Player player, TowerFloor floor, double time)
-        => player.SetProperty(floor.FirstCompletionProp(), time);
+    public static TimeSpan? GetFirstCompletionTime(this Player player, TowerFloor floor)
+        => player.GetProperty(floor.FirstCompletionTimeProp())?.ToTimeSpan();
+    public static void SetFirstCompletionTime(this Player player, TowerFloor floor, double time)
+        => player.SetProperty(floor.FirstCompletionTimeProp(), time);
+
+    public static int? GetFirstCompletionLevel(this Player player, TowerFloor floor)
+        => player.GetProperty(floor.FirstCompletionLevelProp());
+    public static void SetFirstCompletionLevel(this Player player, TowerFloor floor, int level)
+        => player.SetProperty(floor.FirstCompletionLevelProp(), level);
+    #endregion
 
     public static PropertyInt CurrentFloor => (PropertyInt)55999;
     public static PropertyFloat CurrentFloorStartTimestamp => (PropertyFloat)55999;
@@ -79,11 +92,11 @@ public static class SpeedRun
                 else
                 {
                     //Check for first completion
-                    var timeFirst = player.GetFirstCompletion(challengedFloor);
+                    var timeFirst = player.GetFirstCompletionTime(challengedFloor);
                     if (timeFirst is null)
                     {
                         player.SendMessage($"Congratulations!  You first finished floor {challengedFloor.Name} after {player.TotalTimeInGame().ToTimeSpan().GetFriendlyString()}");
-                        player.SetFirstCompletion(challengedFloor, player.TotalTimeInGame());
+                        player.SetFirstCompletionTime(challengedFloor, player.TotalTimeInGame());
                     }
 
                     //Check for speed from level start
@@ -119,10 +132,10 @@ public static class SpeedRun
     {
         var player = session.Player;
 
-        foreach (var floor in PatchClass.Settings.Floors.OrderBy(x => x.Level))
+        foreach (var floor in Floors.OrderBy(x => x.Level))
         {
-            player.RemoveProperty(floor.FirstCompletionProp());
-            player.RemoveProperty(floor.PersonalBestProp());
+            player.RemoveProperty(floor.FirstCompletionLevelProp());
+            player.RemoveProperty(floor.PersonalBestTimeProp());
         }
 
         player.Age = 0;
@@ -138,9 +151,9 @@ public static class SpeedRun
         var tot = player.TotalTimeInGame();
 
         var sb = new StringBuilder();
-        foreach (var floor in PatchClass.Settings.Floors.OrderBy(x => x.Level))
+        foreach (var floor in Floors.OrderBy(x => x.Level))
         {
-            var first = player.GetFirstCompletion(floor);
+            var first = player.GetFirstCompletionTime(floor);
             //if (first is null)
             //    break;
 
