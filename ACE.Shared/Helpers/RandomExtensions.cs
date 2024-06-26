@@ -1,4 +1,6 @@
-﻿namespace ACE.Shared.Helpers;
+﻿using Microsoft.Cci.Pdb;
+
+namespace ACE.Shared.Helpers;
 
 public static class RandomExtensions
 {
@@ -36,4 +38,16 @@ public static class RandomExtensions
     public static T GetRandom<T>(this IEnumerable<T> list) => list.GetRandomElements<T>(1).FirstOrDefault();
     public static List<T> GetRandomElements<T>(this IEnumerable<T> list, int elementsCount) =>
         list.OrderBy(arg => Guid.NewGuid()).Take(elementsCount).ToList();
+
+    //public static int RollRemainder(this float amount) {
+    //    var truncated = (int)amount;
+    //    var remainder = amount - truncated;
+
+    //    //Roll a chance for the remainder of a decimal
+    //    if(random.NextSingle() )
+
+    //    return truncated + ((random.NextSingle() < remainder) ? 1 : 0);
+
+    //    return 0;            
+    //        }
 }

@@ -1,5 +1,3 @@
-## Combat
-
 * Missile and Melee Actions/Messages
   * `ChangeCombatMode`
   * `HandleAttackDoneEvent`
@@ -7,14 +5,14 @@
 
 
 
-### Physical Damage
+## Physical Damage
 
 * Melee / missile damage both eventually use  `DamageEvent.CalculateDamage` to calculate/handle damage.  It provides rich information about what happened in a physical attack.
 * Both use `NextRefillTime` to gate speed
 
 
 
-#### Melee Start
+### Melee Start
 
 * Start with `TargetedMeleeAttack` GameAction
 * `HandleActionTargetedMeleeAttack(ObjectGuid targetGuid, uint attackHeight, float powerLevel)`
@@ -22,6 +20,7 @@
   * `OnAttackDone(WeenieError error)` may be called
     * Called at the very end of an attack sequence,
     * Sends action cancelled so the power / accuracy meter reset, and doesn't start refilling again
+    * Sends `GameEventAttackDone` event
   * Adds power to `AttackQueue`
   * Increments `AttackSequence`
   * Sets `MeleeTarget`, `AttackTarget`
@@ -64,7 +63,7 @@
         * If `AutoRepeatAttacks` enabled and a repeat attack would be valid, another `Attack` is scheduled
           * Otherwise `OnAttackDone`
 
-#### Missile Start
+### Missile Start
 
 * Start with `TargetedMissileAttack` GameAction
 
@@ -145,7 +144,7 @@
 
 
 
-#### *Missile Collision*
+### *Missile Collision*
 
 * `Ammunition`, `WorldObject` and `Player` all have a `OnCollideObject(WorldObject target)` that detects initial collision
 * Sends to `ProjectileCollisionHelper` used either for object or environment collisions
@@ -169,7 +168,7 @@
 
 
 
-#### Damage
+### Damage
 
 * `CalculateDamage` figures out damage.  It gets started/handled with
   * Melee - `DamageTarget(Creature target, WorldObject damageSource)`
@@ -256,9 +255,14 @@
 
 
 
-### Magic
+## Magic
 
-#### Magic Start
+### Magic Start
+
+* **Magic starts with a `CastTargetedSpell ` or `CastUntargetedSpell ` GameAction**
+
+  * **A lot of overlap, with target validation if targeted.**
+  * **Rolls skill, mana, sets up `MagicState`, and queues motions up to the time of casting**
 
 * `CastTargetedSpell `
 
@@ -329,48 +333,209 @@
           * Players broadcast their motion
             * `EnqueueBroadcastMotion(Motion motion, float? maxRange = null, bool? applyPhysics = null)`
           * Add animation length to action chain as delay
-      * 
 
+  * `DoCastGesture(Spell spell, WorldObject casterItem, ActionChain castChain)`
+    * `MagicState.CastGesture` comes from formula - `spell.Formula.CastGesture`
+      * Unless it's a caster item with `UseUserAnimation`
+
+    * Fails it not casting - `MagicState.IsCasting`
+    * `MagicState.CastGestureStartTime` set to the present
+    * *FastTick - todo*
+    * `EnqueueMotionMagic(ActionChain actionChain, MotionCommand motionCommand, float speed = 1.0f)`
+
+  * `SetCastParams(Spell spell, WorldObject casterItem, uint magicSkill, uint manaUsed, WorldObject target, Player.CastingPreCheckStatus status)`
+    * Sets `CastSpellParams` of `MagicState`
+
+  * `DoCastSpell(MagicState _state, bool checkAngle = true)`
+    * *Added to action chain to finish up, if not FastTick*
+
+
+
+
+
+
+#### DoCastSpell
+
+* Targeted and untargeted both route through here on successful checks for skill / mana / target and motions
+
+* `DoCastSpell(Spell spell, WorldObject casterItem, uint magicSkill, uint manaUsed, WorldObject target, CastingPreCheckStatus castingPreCheckStatus, bool checkAngle = true)`
+
+* If targeted
+
+  * Check range, valid target
+  * If  a second `Rotate` is needed queue that and call back into `DoCastSpell` when done
+
+* Check for `IsDead`
+
+* `DoCastSpell_Inner(Spell spell, WorldObject casterItem, uint manaUsed, WorldObject target, CastingPreCheckStatus castingPreCheckStatus, bool finishCast = true)`
+
+  * Consumes mana from player or item
+
+  * Burn comps - `TryBurnComponents(Spell spell)`
+
+  * Check for movement disrupting casting
+
+    * Distance from `StartPos` 
+
+  * Check pk - `CheckPKStatusVsTarget(target, spell)`
+
+    * *Projectiles created even on fail?*
+
+  * On success, `CreatePlayerSpell(WorldObject target, Spell spell, bool isWeaponSpell)`
+
+    * If a fellowship spell, for each player in `GetFellowshipTargets()`
+    * If harmful, `TryProcEquippedItems(WorldObject attacker, Creature target, bool selfTarget, WorldObject weapon)`
+
+  * `FinishCast` unless coming from `FailCast`
+
+    * Returns to Ready stance
+    * *Todo - FastTick*
+    * 1 second recoil/delay
+    * `HandleCastQueue()` to process queue if enabled
+
+    
+
+#### CreatePlayerSpell
+
+* Untargeted / Targeted both have a `CreatePlayerSpell` which after success/motions ends up here
+
+* `CreatePlayerSpell(WorldObject target, Spell spell, bool isWeaponSpell)`
+
+  * Routes based on spell type
+    * `MagicSchool.ItemEnchantment`
+      * `TryCastItemEnchantment_WithRedirects(Spell spell, WorldObject target, WorldObject itemCaster = null)`
+    * Non-projectile checks
+      * `OnAttackMonster(targetCreature)` 
+        * *Target wakes up / retaliates*
+      * Check resist
+        * `TryResistSpell(WorldObject target, Spell spell, WorldObject itemCaster = null, bool projectileHit = false)`
+      * Check immunity
+    * `HandleCastSpell(Spell spell, WorldObject target, WorldObject itemCaster = null, WorldObject weapon = null, bool isWeaponSpell = false, bool fromProc = false, bool equip = false)`
+      * Further routes spell based on information
+    * Non-projectiles also:
+      * `TryProcEquippedItems` and update PK timers if harmful
+      * Gain proficiency - `Proficiency.OnSuccessUse`
+
+  
+
+
+
+### HandleCastSpell
+
+* Creates a spell based on `MetaSpellType`
+* Resolves `targetCreature`
+* Plays caster/target effects unless there was an error
+  * `DoSpellEffects(Spell spell, WorldObject caster, WorldObject target, bool projectileHit = false)`
+* Routes on `spell.MetaSpellType`
+  * Enchantments
+    * `CreateEnchantment(WorldObject target, WorldObject caster, WorldObject weapon, Spell spell, bool equip = false, bool fromProc = false, bool isWeaponSpell = false)`
+  * Boosts (typically heal/harm)
+    * `HandleCastSpell_Boost(Spell spell, Creature targetCreature)`
+  * Transfers (e.g., Stam to Mana)
+    * `HandleCastSpell_Transfer(Spell spell, Creature targetCreature)`
+  * Portal Link/Recall/Summon/Sending/FellowSending
+    * `HandleCastSpell_PortalLink(Spell spell, WorldObject target)`
+    * `HandleCastSpell_PortalRecall(Spell spell, Creature targetCreature)`
+    * `HandleCastSpell_PortalSummon(Spell spell, Creature targetCreature, WorldObject itemCaster)`
+    * `HandleCastSpell_FellowPortalSending(Spell spell, Creature targetCreature, WorldObject itemCaster)`
+  * Dispels
+    * `HandleCastSpell_Dispel(Spell spell, WorldObject target)`
+  * Projectiles - Projectile / LifeProjectile / EnchantmentProjectile
+    * `HandleCastSpell_Projectile(Spell spell, WorldObject target, WorldObject itemCaster, WorldObject weapon, bool isWeaponSpell, bool fromProc)`
+
+
+
+
+
+#### Portal / Dispel
+
+*Todo, not of interest*
+
+#### Enchantment
+
+
+
+#### Boost
+
+* Gets an amount to try to boost
+  * Random between `MinBoost` and `MaxBoost`
+    * Or `spell.Boost`, if lower/higher
+  * Multiply by resistance
+    * `GetResistanceMod(ResistanceType resistance, WorldObject attacker = null, WorldObject weapon = null, float weaponResistanceMod = 1.0f)`
+  * `UpdateVitalDelta` corresponding to the DamageType
+  * Harms (health, negative boost)
+    * Roll `target` Cloak procs
+    * Add to `DamageHistory`
+    * *Adds a short delay to sequence things?*
+    * Checks for death with `HandleBoostTransferDeath(Creature caster, Creature target)`
+
+#### Transfer
+
+* Find source and destination of transfer
+* Drains are when `TransferFlags` is `TargetSource | CasterDestination`
+  * If draining the `boostMod` is the target's resistance to the damage type
+  * `GetResistanceMod(ResistanceType resistance, WorldObject attacker = null, WorldObject weapon = null, float weaponResistanceMod = 1.0f)`
+  * Health drains 
+    * Add to `DamageHistory` (`OnHeal` for source) and check for `Cloak` procs
+    * *Delay slightly for sequencing*
+    * Checks for death with `HandleBoostTransferDeath(Creature caster, Creature target)`
+* Find vital change in the source from the spell's `Proportion` and the `Current` vital
+  * `srcVitalChange = (uint)Math.Round(transferSource.GetCreatureVital(spell.Source).Current * spell.Proportion * drainMod);`
+* Find vital change in destination
+  * Start with source change and factor in spell's `LossPercent` and, if a drain, the `boostMod`
+    * `destVitalChange = (uint)Math.Round(srcVitalChange * (1.0f - spell.LossPercent) * boostMod)`
+  * Find a max change
+    * Min of the spell's `TransferCap` and the amount of the vital missing in the destination
+  * If the max `destVitalChange` is capped, scale the source and destination changes to the ratio
+* `UpdateVitalDelta` for the source/destination values, corresponding to the DamageType
+
+
+
+
+
+
+
+*Example:*
+
+* *Drain Health 1 - Drains  25% of the target's Health and gives 200% of it to the caster.*
+* *`LossPercent` = -1, `Proportion` = 0.25, `TransferCap` = 60*
+* *Missing 40 health, draining 500 health, no resistance*
+  * *Source = 125*
+  * *Dest = 250 (and boost?)*
+  * *Cap is 40, lower than transfer cap*
+  * *Ratio drained = 40/250 = 16%*
+  * *Source = 125*.16 = 20*
+
+
+
+#### Projectile
+
+* `HandleCastSpell_Projectile(Spell spell, WorldObject target, WorldObject itemCaster, WorldObject weapon, bool isWeaponSpell, bool fromProc)`
+* Possible types are: 
+  * `Projectile`
+  * `LifeProjectile`
+  * `EnchantmentProjectile`
+* 
 * 
 
-* 
 
-* Life
 
-  * Drain
-  * Harm
-  * Martyr
 
-* War / Void
-  * SpellProjectile
 
-* Void
-  * DoT
+##### 
+
+### SpellProjectile
+
+#### Creation/Setup
 
 
 
 
 
-
-
-#### SpellProjectile
-
-
-
-##### Collision
+####  Collision
 
 * `SpellProjectile` either collides with object or environment
   * `OnCollideEnvironment`
   * `OnCollideObject(WorldObject target)`
 
 
-
-
-
-
-
-Previously static `LootGenerationFactory` methods now accessed through WorldObject's `.RealmRuleset`?
-
-
-
-Found an [extension](https://marketplace.visualstudio.com/items?itemName=qazwsxlty.forceutf8nobom2022) for forcing non-BOM but if it isn't an issue I'll skip trying that

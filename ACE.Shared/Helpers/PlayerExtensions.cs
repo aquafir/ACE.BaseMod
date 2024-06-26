@@ -45,9 +45,15 @@ public static class PlayerExtensions
             player.SetPosition(pos, null);
 
         //Set home?
+#if REALM
+        player.LinkedLifestone = newPos;
+        player.Sanctuary = newPos;
+        player.Home = newPos.AsInstancedPosition(player, Entity.Enum.RealmProperties.PlayerInstanceSelectMode.HomeRealm);
+#else
         player.SetPosition(PositionType.LinkedLifestone, newPos);
         player.SetPosition(PositionType.Sanctuary, newPos);
         player.SetPosition(PositionType.Home, newPos);
+#endif
 
         player.RecallsDisabled = true;
 
@@ -55,9 +61,10 @@ public static class PlayerExtensions
         player.SetProperty(FakeBool.Quarantined, true);
 
 #if REALM
-        player.Teleport(newPos.AsInstancedPosition(player, Entity.Enum.RealmProperties.PlayerInstanceSelectMode.HomeRealm));
+        //Todo: determine how to see if player is 
+        player.TeleportThreadSafe(newPos.AsInstancedPosition(player, Entity.Enum.RealmProperties.PlayerInstanceSelectMode.HomeRealm));
 #else
-        player.Teleport(newPos);
+        player.TeleportThreadSafe(newPos);
 #endif
     }
 
@@ -359,4 +366,10 @@ public static class PlayerExtensions
 
     public static void PlaySound(this Player player, Sound sound, float volume = 1f) =>
         player.EnqueueBroadcast(new GameMessageSound(player.Guid, sound, volume));
+
+#if REALM
+    public static void TeleportThreadSafe(this Player player, InstancedPosition position, bool fromInstance = true) => WorldManager.ThreadSafeTeleport(player, position, fromInstance);
+#else
+    public static void TeleportThreadSafe(this Player player, Position position) => WorldManager.ThreadSafeTeleport(player, position);
+#endif
 }

@@ -1,14 +1,17 @@
 ﻿using ACE.Server.Physics;
 using ACE.Server.WorldObjects;
+using System.Collections.Frozen;
+using System.Linq;
 
 namespace ACE.Shared.Helpers;
 
 public static class SplashHelper
 {
+    #region Objects Sorted by Distance
     /// <summary>
     /// Gets a list of PhysicsObj visible to a Player sorted by distance using their visible objects
     /// </summary>
-    public static List<PhysicsObj> GetVisibleCreaturesByDistance(this Player origin) => origin.GetVisibleCreaturesByDistance(origin);
+    public static List<PhysicsObj> GetKnownCreaturesByDistance(this Player origin) => origin.GetKnownCreaturesByDistance(origin);
 
     //Todo: implement on per-landblock level if reference approach doesn't work.  Maybe look at spatial hashing
     /// <summary>
@@ -17,7 +20,7 @@ public static class SplashHelper
     /// <param name="reference">A player with similar vision to the origin</param>
     /// <param name="origin">Center of distance comparison</param>
     /// <returns></returns>
-    public static List<PhysicsObj> GetVisibleCreaturesByDistance(this Player reference, WorldObject origin)
+    public static List<PhysicsObj> GetKnownCreaturesByDistance(this Player reference, WorldObject origin)
     {
         if (reference is null || reference.PhysicsObj is null)
             return new();
@@ -32,71 +35,57 @@ public static class SplashHelper
 
         return visible;
     }
+    #endregion
+
+    #region Filters
+    /// <summary>
+    /// Predicates created for each exclusion filter flag or composite flag
+    /// </summary>
+    static FrozenDictionary<TargetExclusionFilter, Func<WorldObject, Creature, bool>> predicates =
+        Enum.GetValues<TargetExclusionFilter>().ToFrozenDictionary(x => x, x => x.GetExclusionFilterPredicate());
 
     /// <summary>
-    /// Gets targets within a radius of the origin using a reference Player
+    /// Creates a filter that excludes targets from an origin's search for nearest neighbors
     /// </summary>
-    //public static IEnumerable<Creature> GetSplashTargets(this Player reference, WorldObject origin, int maxTargets = 3, float maxRange = 5.0f, bool targetsPlayers = true)
-    //{
-    //    if (origin is null || reference is null)
-    //    {
-    //        ModManager.Log($"Failed to get splash targets.", ModManager.LogLevel.Warn);
-    //        return new List<Creature>();
-    //    }
-    //    //List<PhysicsObj> visible;
-    //    //// sort visible objects by ascending distance
-    //    //if (origin is Player)
-    //    //    visible = (origin as Player).GetVisibleCreaturesByDistance();
+    public static Func<WorldObject, Creature, bool> GetExclusionFilterPredicate(this TargetExclusionFilter filter)
+    {
+        return (origin, target) =>
+        {
+            if (target is null)
+                return false;
 
-    //    //else visible = null;
-    //    //origin.GetVisibleCreaturesByDistance();
-    //    var visible = reference.GetVisibleCreaturesByDistance(origin);
+            if (filter.HasFlag(TargetExclusionFilter.Original) && origin.PhysicsObj.ID == target.PhysicsObj.ID)
+                return false;
 
-    //    var splashTargets = new List<Creature>();
+            if (filter.HasFlag(TargetExclusionFilter.Teleporting) && target.Teleporting)
+                return false;
 
-    //    foreach (var obj in visible)
-    //    {
-    //        //Splashing skips original target?
-    //        if (obj.ID == origin.PhysicsObj.ID)
-    //            continue;
+            if (filter.HasFlag(TargetExclusionFilter.Dead) && target.IsDead)
+                return false;
 
-    //        //Only splash creatures?
-    //        var creature = obj.WeenieObj.WorldObject as Creature;
-    //        if (creature == null || creature.Teleporting || creature.IsDead) continue;
+            //NPC check without redundant null check
+            if (filter.HasFlag(TargetExclusionFilter.NPC) && (!target.Attackable && target.TargetingTactic == TargetingTactic.None))
+                return false;
 
-    //        if (!targetsPlayers && creature is Player)
-    //            continue;
+            //Todo: check assumption that only Creatures are considered to begin with
+            if (filter.HasFlag(TargetExclusionFilter.Creature) && target is Creature && target is not Player)
+                return false;
 
-    //        //Check pk error?
-    //        //if (origin.CheckPKStatusVsTarget(creature, null) != null)
-    //        //    continue;
+            if (filter.HasFlag(TargetExclusionFilter.Player) && target is Player)
+                return false;
 
-    //        if (!creature.Attackable && creature.TargetingTactic == TargetingTactic.None || creature.Teleporting)
-    //            continue;
+            if (filter.HasFlag(TargetExclusionFilter.OutOfSight) && !origin.IsDirectVisible(target))
+            //if (filter.HasFlag(TargetExclusionFilter.OutOfSight) && !origin.IsMeleeVisible(target))
+                return false;
 
-    //        //if (creature is CombatPet && (player != null || this is CombatPet))
-    //        //    continue;
+            if (filter.HasFlag(TargetExclusionFilter.LineOfSight) && origin.IsDirectVisible(target))
+            //if (filter.HasFlag(TargetExclusionFilter.LineOfSight) && origin.IsMeleeVisible(target))
+                return false;
 
-    //        //No objects in range
-    //        var cylDist = origin.GetCylinderDistance(creature);
-    //        if (cylDist > maxRange)
-    //            return splashTargets;
 
-    //        //Filter by angle?
-    //        //var angle = creature.GetAngle(origin);
-    //        // if (Math.Abs(angle) > splashAngle / 2.0f)
-    //        //     continue;
-
-    //        //Found splash object
-    //        splashTargets.Add(creature);
-
-    //        //Stop if you've found enough targets
-    //        if (splashTargets.Count == maxTargets)
-    //            break;
-    //    }
-    //    return splashTargets;
-    //}
-
+            return true;
+        };
+    }
 
     /// <summary>
     /// Common splash filter
@@ -104,6 +93,9 @@ public static class SplashHelper
     public static bool StandardSplashFilter(WorldObject origin, Creature creature)
     {
         if (creature is null)
+            return false;
+
+        if (origin.PhysicsObj.ID == creature.PhysicsObj.ID)
             return false;
 
         if (creature.Teleporting || creature.IsDead)
@@ -123,113 +115,128 @@ public static class SplashHelper
         return true;
     }
 
+
     /// <summary>
     /// Excludes Players from standard checks
     /// </summary>
-    public static bool CreatureSplashFilter(WorldObject origin, Creature creature)
-    {
-        //Do standard check
-        if (!StandardSplashFilter(origin, creature))
-            return false;
+    private static bool CreatureSplashFilter(WorldObject origin, Creature target) => StandardSplashFilter(origin, target) && target is not Player player;
+    private static bool VisibleCreatureSplashFilter(WorldObject origin, Creature target) => CreatureSplashFilter(origin, target) && origin.IsDirectVisible(target);
 
-        if (creature is Player player)
-            return false;
+    /// <summary>
+    /// Excludes Players from standard checks
+    /// </summary>
+    //private static bool CreatureOnlySplashFilter(WorldObject origin, Creature creature) => StandardSplashFilter(origin, creature) && creature is Player player;
 
-        return true;
-    }
+    #endregion
 
-    public static List<Creature> GetSplashTargets(this Player reference, WorldObject origin, float maxRange = 5.0f)
+    #region Splash
+    public static List<Creature> GetSplashCreatures(this Player reference, WorldObject origin, float maxRange = 5.0f)
     {
         if (reference is null) return new List<Creature>();
 
-        return reference.GetSplashTargets(origin, StandardSplashFilter, maxRange).ToList();
+        origin.InLineOfSight(reference);
+        return reference.GetSplashTargets(origin, CreatureSplashFilter, maxRange).ToList();
     }
 
+    public static IEnumerable<Creature> GetSplashTargets(this Player reference, WorldObject origin, TargetExclusionFilter filter, float maxRange = 5.0f)
+    {
+        if (reference is null) return new List<Creature>();
+
+        //Try to get a cached predicate and build one if not created (should only happen with novel combinations of filters
+        if (!predicates.TryGetValue(filter, out var predicate))
+            predicate = filter.GetExclusionFilterPredicate();
+
+        return reference.GetSplashTargets(origin, predicate, maxRange);
+    }
+
+    /// <summary>
+    /// Finds nearest neighbors to an origin matching a predicate and using a players known PhysicsObjs
+    /// </summary>
     public static IEnumerable<Creature> GetSplashTargets(this Player reference, WorldObject origin, Func<WorldObject, Creature, bool> predicate, float maxRange = 5.0f)
     {
-        if (origin is null || reference is null)
+        if (origin is null || reference is null || predicate is null)
         {
-            //ModManager.Log($"Failed to get splash targets.", ModManager.LogLevel.Warn);
+            ModManager.Log($"Failed to get splash targets.", ModManager.LogLevel.Warn);
             yield break;
         }
 
-        var visible = reference.GetVisibleCreaturesByDistance(origin);
+        var visible = reference.GetKnownCreaturesByDistance(origin);
 
         foreach (var obj in visible)
         {
-            //Splashing skips original target?
-            if (obj.ID == origin.PhysicsObj.ID)
-                continue;
-
             //Only splash creatures?
             var creature = obj.WeenieObj.WorldObject as Creature;
+
+            if (creature is null)
+                continue;
 
             //Todo: think about this -- max range halts evaluation instead of skipping, but might be nice to open 
             //No more objects in range
             if (origin.GetCylinderDistance(creature) > maxRange)
                 yield break;
 
-            //Filter by angle?
-            //var angle = creature.GetAngle(origin);
-            // if (Math.Abs(angle) > splashAngle / 2.0f)
-            //     continue;
+            //Check filter conditions
+            if (!predicate(origin, creature))
+                continue;
 
             //Found splash object
             yield return creature;
         }
     }
+    #endregion
 
+    #region Split
+    public static IEnumerable<Creature> GetSplitTargets(this Player player, WorldObject target, TargetExclusionFilter filter, float maxRange = 5.0f, float splitAngle = 360)
+    {
+        if (player is null) return new List<Creature>();
+
+        //Try to get a cached predicate and build one if not created (should only happen with novel combinations of filters
+        if (!predicates.TryGetValue(filter, out var predicate))
+            predicate = filter.GetExclusionFilterPredicate();
+        
+        return player.GetSplitTargets(target, predicate, maxRange, splitAngle);
+    }
 
     /// <summary>
-    /// Gets targets within a radius and angle of the player and their target
+    /// Finds nearest neighbors to an origin matching a predicate and falling within an angle of the player and a target
     /// </summary>
-    public static List<Creature> GetSplitTargets(this Player player, Creature target, int maxTargets = 3, float maxRange = 5.0f, float cleaveAngle = 360)
+    public static IEnumerable<Creature> GetSplitTargets(this Player origin, WorldObject target, Func<WorldObject, Creature, bool> predicate, float maxRange = 5.0f, float splitAngle = 360)
     {
-        // sort visible objects by ascending distance
-        var visible = player.PhysicsObj.ObjMaint.GetVisibleObjectsValuesWhere(o => o.WeenieObj.WorldObject != null);
-        visible.Sort(player.DistanceComparator);
+        if (origin is null || target is null || predicate is null)
+        {
+            ModManager.Log($"Failed to get split targets.", ModManager.LogLevel.Warn);
+            yield break;
+        }
 
-        var cleaveTargets = new List<Creature>();
-
-        if (player is null)
-            return cleaveTargets;
+        var visible = origin.GetKnownCreaturesByDistance(origin);
 
         foreach (var obj in visible)
-        {
-            // cleaving skips original target
-            if (obj.ID == target.PhysicsObj.ID)
-                continue;
-
-            // only cleave creatures
+        {     
+            //Only splash creatures?
             var creature = obj.WeenieObj.WorldObject as Creature;
-            if (creature == null || creature.Teleporting || creature.IsDead) continue;
 
-            if (player.CheckPKStatusVsTarget(creature, null) != null)
+            if (creature is null)
                 continue;
 
-            if (!creature.Attackable && creature.TargetingTactic == TargetingTactic.None || creature.Teleporting)
+            //No more objects in range
+            if (origin.GetCylinderDistance(creature) > maxRange)
+                yield break;
+
+                //Check filter conditions
+            if (!predicate(origin, creature))
                 continue;
 
-            if (creature is CombatPet)
+            //Filter by angle?
+            var angle = origin.GetAngle(creature);
+            if (Math.Abs(angle) > splitAngle / 2.0f)
                 continue;
 
-            // no more objects in cleave range
-            var cylDist = player.GetCylinderDistance(creature);
-            if (cylDist > maxRange)
-                return cleaveTargets;
-
-            // only cleave in front of attacker
-            var angle = player.GetAngle(creature);
-            if (Math.Abs(angle) > cleaveAngle / 2.0f)
-                continue;
-
-            // found cleavable object
-            cleaveTargets.Add(creature);
-            if (cleaveTargets.Count == maxTargets)
-                break;
+            //Found splash object
+            yield return creature;
         }
-        return cleaveTargets;
     }
+    #endregion
+
 
     /// <summary>
     /// Gets nearby creatures or players using a reference Player
@@ -243,7 +250,7 @@ public static class SplashHelper
             return new List<Creature>();
         }
 
-        var visible = reference.GetVisibleCreaturesByDistance(origin);
+        var visible = reference.GetKnownCreaturesByDistance(origin);
 
         //var sb = new StringBuilder("\r\n");
         //foreach (var obj in visible.Where(x => x.WeenieObj.IsPlayer()))
@@ -300,4 +307,71 @@ public static class SplashHelper
     }
     public static List<Creature> GetNearbyCreatures(this Player reference, WorldObject origin, int maxTargets = 3, float maxRange = 5.0f) => GetNearby(reference, origin, maxTargets, maxRange, false, true);
     public static List<Creature> GetNearbyPlayers(this Player reference, WorldObject origin, int maxTargets = 3, float maxRange = 5.0f) => GetNearby(reference, origin, maxTargets, maxRange, true, false);
+}
+
+
+/// <summary>
+/// Exclusion filters for common WorldObject target selection
+/// </summary>
+[Flags]
+public enum TargetExclusionFilter
+{
+    /// <summary>
+    /// No filtering
+    /// </summary>
+    None                = 0x0000,
+    /// <summary>
+    /// Ignores Creatures
+    /// </summary>
+    Creature            = 0x0001,
+    /// <summary>
+    /// Ignores players
+    /// </summary>
+    Player              = 0x0002,
+    /// <summary>
+    /// Check for the origin being the same as the target
+    /// </summary>
+    Original            = 0x0004,
+    /// <summary>
+    /// Excludes dead creatures
+    /// </summary>
+    Dead                = 0x0008,
+    /// <summary>
+    /// Excludes teleporting creatures
+    /// </summary>
+    Teleporting         = 0x0010,
+    /// <summary>
+    /// Excludes NPCs
+    /// </summary>
+    NPC                 = 0x0020,
+    /// <summary>
+    /// Ignores WorldObjects in line-of-sight
+    /// </summary>
+    LineOfSight         = 0x1000,
+    /// <summary>
+    /// Ignores WorldObjects out of line-of-sight
+    /// </summary>
+    OutOfSight          = 0x2000,
+
+
+    /// <summary>
+    /// Ignores the things typically not of interest
+    /// </summary>
+    Standard = Original | Dead | Teleporting | NPC,
+    /// <summary>
+    /// Excludes all but visible creatures
+    /// </summary>
+    OnlyCreature = Standard | Player,
+    /// <summary>
+    /// Excludes all but visible creatures
+    /// </summary>
+    OnlyVisibleCreature = OnlyCreature | OutOfSight,
+    /// <summary>
+    /// Excludes all but players
+    /// </summary>
+    OnlyPlayer = Standard | Creature,
+    /// <summary>
+    /// Excludes all but visible players
+    /// </summary>
+    OnlyVisiblePlayer = OnlyPlayer | OutOfSight,
 }

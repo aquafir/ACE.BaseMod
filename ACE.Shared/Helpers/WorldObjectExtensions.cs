@@ -1,4 +1,5 @@
 ﻿using ACE.Server.Network.GameMessages.Messages;
+using System.Runtime.CompilerServices;
 
 namespace ACE.Shared.Helpers;
 
@@ -33,5 +34,14 @@ public static class WorldObjectExtensions
 #else
         obj.Location.LandblockId = new LandblockId(obj.Location.GetCell());
 #endif        
+    }
+
+
+    public static bool InLineOfSight(this WorldObject source, WorldObject target)
+    {
+        return source.IsMeleeVisible(target);
+
+        return source.IsProjectileVisible(target);
+       
     }
 }
