@@ -39,7 +39,7 @@ public class Warder : CreatureEx
             return true;
 
         //Could go either way with the target being the warded area or the player
-        if (!__instance.GetNearbyCreatures(target, candidates, range).Any(x => x is Warder w))
+        if (!__instance.GetSplashTargets(target, TargetExclusionFilter.OnlyCreature, range).Any(x => x is Warder w))
             return true;
 
         target.PlayAnimation(PlayScript.RestrictionEffectBlue);

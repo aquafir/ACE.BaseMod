@@ -49,7 +49,7 @@ public class Exploder : CreatureEx
         }
 
         //Damage up to 10 players within 5 units of the exploder, using the player as a hack for the distance
-        var targets = player.GetNearbyPlayers(this, 10, 20).Where(x => x is Player);
+        var targets = player.GetSplashTargets(player, TargetExclusionFilter.OnlyPlayer, 20).Take(10);
 
         var damage = this.PercentHealth() * 1000;
         foreach (Player p in targets)

@@ -36,7 +36,7 @@ public class Healer : CreatureEx
         if (--ticks > 0) return;
 
         //Look up to number of candidates in range to heal
-        foreach (var creature in p.GetNearbyCreatures(this, candidates, range))
+        foreach (var creature in p.GetSplashTargets(this, TargetExclusionFilter.OnlyCreature, range).Take(candidates))
         {
             var percentHealth = creature.PercentHealth();
             if (percentHealth > healThreshold) continue;

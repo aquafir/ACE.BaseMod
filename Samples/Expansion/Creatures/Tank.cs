@@ -36,7 +36,7 @@ public class Tank : CreatureEx
             return;
 
         //If there is a Tank nearby swap that for the target dealt damage and mitigate
-        var nearby = p.GetNearbyCreatures(__instance, candidates, range);
+        var nearby = p.GetSplashTargets(__instance, TargetExclusionFilter.OnlyCreature, range);
         foreach (var creature in nearby)
         {
             if (creature is Tank)

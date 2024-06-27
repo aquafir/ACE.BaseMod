@@ -37,9 +37,9 @@ public class Merger : CreatureEx
             return;
 
         //Get something to merge with of the same wcid but not a merger?
-        var mergeTarget = p.GetNearbyCreatures(this, 5, 10).Where(x =>
-        x.WeenieClassId == this.WeenieClassId &&
-        x is not Merger).FirstOrDefault();
+        var mergeTarget = p.GetSplashTargets(this, TargetExclusionFilter.OnlyCreature, 10).Take(5)
+            .Where(x => x.WeenieClassId == this.WeenieClassId && x is not Merger)
+            .FirstOrDefault();
 
         if (mergeTarget is null) return;
 

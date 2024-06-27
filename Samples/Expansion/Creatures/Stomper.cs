@@ -30,7 +30,7 @@ public class Stomper : CreatureEx
         if (attacker is not Stomper c || defender is not Player p)
             return;
 
-        foreach (Player n in p.GetNearbyPlayers(c, targets, range))
+        foreach (Player n in p.GetSplashTargets(c, TargetExclusionFilter.OnlyPlayer, range))
         {
             //Skip self
             if (n == p) continue;
