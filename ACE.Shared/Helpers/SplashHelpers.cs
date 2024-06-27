@@ -1,7 +1,9 @@
-﻿using ACE.Server.Physics;
+﻿using ACE.Adapter.GDLE.Models;
+using ACE.Server.Physics;
 using ACE.Server.WorldObjects;
 using System.Collections.Frozen;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace ACE.Shared.Helpers;
 
@@ -37,107 +39,7 @@ public static class SplashHelper
     }
     #endregion
 
-    #region Filters
-    /// <summary>
-    /// Predicates created for each exclusion filter flag or composite flag
-    /// </summary>
-    static FrozenDictionary<TargetExclusionFilter, Func<WorldObject, Creature, bool>> predicates =
-        Enum.GetValues<TargetExclusionFilter>().ToFrozenDictionary(x => x, x => x.GetExclusionFilterPredicate());
-
-    /// <summary>
-    /// Creates a filter that excludes targets from an origin's search for nearest neighbors
-    /// </summary>
-    public static Func<WorldObject, Creature, bool> GetExclusionFilterPredicate(this TargetExclusionFilter filter)
-    {
-        return (origin, target) =>
-        {
-            if (target is null)
-                return false;
-
-            if (filter.HasFlag(TargetExclusionFilter.Original) && origin.PhysicsObj.ID == target.PhysicsObj.ID)
-                return false;
-
-            if (filter.HasFlag(TargetExclusionFilter.Teleporting) && target.Teleporting)
-                return false;
-
-            if (filter.HasFlag(TargetExclusionFilter.Dead) && target.IsDead)
-                return false;
-
-            //NPC check without redundant null check
-            if (filter.HasFlag(TargetExclusionFilter.NPC) && (!target.Attackable && target.TargetingTactic == TargetingTactic.None))
-                return false;
-
-            //Todo: check assumption that only Creatures are considered to begin with
-            if (filter.HasFlag(TargetExclusionFilter.Creature) && target is Creature && target is not Player)
-                return false;
-
-            if (filter.HasFlag(TargetExclusionFilter.Player) && target is Player)
-                return false;
-
-            if (filter.HasFlag(TargetExclusionFilter.OutOfSight) && !origin.IsDirectVisible(target))
-            //if (filter.HasFlag(TargetExclusionFilter.OutOfSight) && !origin.IsMeleeVisible(target))
-                return false;
-
-            if (filter.HasFlag(TargetExclusionFilter.LineOfSight) && origin.IsDirectVisible(target))
-            //if (filter.HasFlag(TargetExclusionFilter.LineOfSight) && origin.IsMeleeVisible(target))
-                return false;
-
-
-            return true;
-        };
-    }
-
-    /// <summary>
-    /// Common splash filter
-    /// </summary>
-    public static bool StandardSplashFilter(WorldObject origin, Creature creature)
-    {
-        if (creature is null)
-            return false;
-
-        if (origin.PhysicsObj.ID == creature.PhysicsObj.ID)
-            return false;
-
-        if (creature.Teleporting || creature.IsDead)
-            return false;
-
-        //NPC check
-        if (!creature.Attackable && creature.TargetingTactic == TargetingTactic.None)
-            return false;
-
-        //Cleave's pk check?
-        //if (origin.CheckPKStatusVsTarget(creature, null) != null)
-        //    continue;
-
-        //if (creature is CombatPet && (player != null || this is CombatPet))
-        //    continue;
-
-        return true;
-    }
-
-
-    /// <summary>
-    /// Excludes Players from standard checks
-    /// </summary>
-    private static bool CreatureSplashFilter(WorldObject origin, Creature target) => StandardSplashFilter(origin, target) && target is not Player player;
-    private static bool VisibleCreatureSplashFilter(WorldObject origin, Creature target) => CreatureSplashFilter(origin, target) && origin.IsDirectVisible(target);
-
-    /// <summary>
-    /// Excludes Players from standard checks
-    /// </summary>
-    //private static bool CreatureOnlySplashFilter(WorldObject origin, Creature creature) => StandardSplashFilter(origin, creature) && creature is Player player;
-
-    #endregion
-
     #region Splash
-    public static List<Creature> GetSplashCreatures(this Player reference, WorldObject origin, float maxRange = 5.0f)
-    {
-        if (reference is null) return new List<Creature>();
-
-        origin.InLineOfSight(reference);
-        return reference.GetSplashTargets(origin, CreatureSplashFilter, maxRange).ToList();
-    }
-
     public static IEnumerable<Creature> GetSplashTargets(this Player reference, WorldObject origin, TargetExclusionFilter filter, float maxRange = 5.0f)
     {
         if (reference is null) return new List<Creature>();
@@ -152,9 +54,9 @@ public static class SplashHelper
     /// <summary>
     /// Finds nearest neighbors to an origin matching a predicate and using a players known PhysicsObjs
     /// </summary>
-    public static IEnumerable<Creature> GetSplashTargets(this Player reference, WorldObject origin, Func<WorldObject, Creature, bool> predicate, float maxRange = 5.0f)
+    public static IEnumerable<Creature> GetSplashTargets(this Player reference, WorldObject origin, Func<WorldObject, Creature, bool> isFiltered, float maxRange = 5.0f)
     {
-        if (origin is null || reference is null || predicate is null)
+        if (origin is null || reference is null || isFiltered is null)
         {
             ModManager.Log($"Failed to get splash targets.", ModManager.LogLevel.Warn);
             yield break;
@@ -176,7 +78,7 @@ public static class SplashHelper
                 yield break;
 
             //Check filter conditions
-            if (!predicate(origin, creature))
+            if (isFiltered(origin, creature))
                 continue;
 
             //Found splash object
@@ -193,16 +95,16 @@ public static class SplashHelper
         //Try to get a cached predicate and build one if not created (should only happen with novel combinations of filters
         if (!predicates.TryGetValue(filter, out var predicate))
             predicate = filter.GetExclusionFilterPredicate();
-        
+
         return player.GetSplitTargets(target, predicate, maxRange, splitAngle);
     }
 
     /// <summary>
     /// Finds nearest neighbors to an origin matching a predicate and falling within an angle of the player and a target
     /// </summary>
-    public static IEnumerable<Creature> GetSplitTargets(this Player origin, WorldObject target, Func<WorldObject, Creature, bool> predicate, float maxRange = 5.0f, float splitAngle = 360)
+    public static IEnumerable<Creature> GetSplitTargets(this Player origin, WorldObject target, Func<WorldObject, Creature, bool> isFiltered, float maxRange = 5.0f, float splitAngle = 360)
     {
-        if (origin is null || target is null || predicate is null)
+        if (origin is null || target is null || isFiltered is null)
         {
             ModManager.Log($"Failed to get split targets.", ModManager.LogLevel.Warn);
             yield break;
@@ -211,7 +113,7 @@ public static class SplashHelper
         var visible = origin.GetKnownCreaturesByDistance(origin);
 
         foreach (var obj in visible)
-        {     
+        {
             //Only splash creatures?
             var creature = obj.WeenieObj.WorldObject as Creature;
 
@@ -222,8 +124,8 @@ public static class SplashHelper
             if (origin.GetCylinderDistance(creature) > maxRange)
                 yield break;
 
-                //Check filter conditions
-            if (!predicate(origin, creature))
+            //Check filter conditions
+            if (isFiltered(origin, creature))
                 continue;
 
             //Filter by angle?
@@ -237,6 +139,73 @@ public static class SplashHelper
     }
     #endregion
 
+    #region Filters/Expression/Funcs
+    /// <summary>
+    /// Predicates created for each exclusion filter flag or composite flag
+    /// </summary>
+    static FrozenDictionary<TargetExclusionFilter, Func<WorldObject, Creature, bool>> predicates =
+        Enum.GetValues<TargetExclusionFilter>().ToFrozenDictionary(x => x, x => x.GetExclusionFilterPredicate());
+
+    /// <summary>
+    /// Creates a filter that excludes targets from an origin's search for nearest neighbors
+    /// </summary>
+    public static Func<WorldObject, Creature, bool> GetExclusionFilterPredicate(this TargetExclusionFilter filter)
+    {
+        //Get filtering that is always required (null checks)
+        Expression<Func<WorldObject, Creature, bool>> combinedExpression = TargetExclusionFilter.None.GetPredicateExpression();
+
+        //Get the simple flags representing a single criterion being checked
+        var flags = filter.GetIndividualFlags();
+
+        //Combine them
+        foreach (var flag in flags)
+            combinedExpression = CombineWithOr(combinedExpression, flag.GetPredicateExpression());
+
+        //Return the combined function
+        return combinedExpression.Compile();
+    }
+
+    /// <summary>
+    /// Returns an expression for the atomic criterion of the filter
+    /// </summary>
+    public static Expression<Func<WorldObject, Creature, bool>> GetPredicateExpression(this TargetExclusionFilter filter)
+    {
+        Func<WorldObject, Creature, bool> predicate = filter switch
+        {
+            TargetExclusionFilter.None => (origin, target) => target is null,
+            TargetExclusionFilter.Creature => (origin, target) => target is Creature && target is not Player,
+            TargetExclusionFilter.Player => (origin, target) => target is Player,
+            TargetExclusionFilter.Original => (origin, target) => origin.PhysicsObj.ID == target.PhysicsObj.ID,
+            TargetExclusionFilter.Dead => (origin, target) => target.IsDead,
+            TargetExclusionFilter.Teleporting => (origin, target) => target.Teleporting,
+            TargetExclusionFilter.NPC => (origin, target) => (!target.Attackable && target.TargetingTactic == TargetingTactic.None),
+            TargetExclusionFilter.LineOfSight => (origin, target) => origin.IsDirectVisible(target),
+            TargetExclusionFilter.OutOfSight => (origin, target) => !origin.IsDirectVisible(target),
+            _ => (origin, target) => target is null,
+        };
+
+        return (origin, target) => predicate(origin, target);
+    }
+
+    /// <summary>
+    /// Returns an expression combining two filtering functions
+    /// </summary>
+    public static Expression<Func<WorldObject, Creature, bool>> CombineWithOr(
+    Expression<Func<WorldObject, Creature, bool>> expr1,
+    Expression<Func<WorldObject, Creature, bool>> expr2)
+    {
+        var parameter1 = Expression.Parameter(typeof(WorldObject), "origin");
+        var parameter2 = Expression.Parameter(typeof(Creature), "target");
+
+        //var body = Expression.AndAlso(
+        var body = Expression.OrElse(
+            Expression.Invoke(expr1, parameter1, parameter2),
+            Expression.Invoke(expr2, parameter1, parameter2)
+        );
+
+        return Expression.Lambda<Func<WorldObject, Creature, bool>>(body, parameter1, parameter2);
+    }
+    #endregion
 
     /// <summary>
     /// Gets nearby creatures or players using a reference Player
@@ -319,39 +288,39 @@ public enum TargetExclusionFilter
     /// <summary>
     /// No filtering
     /// </summary>
-    None                = 0x0000,
+    None = 0x0000,
     /// <summary>
     /// Ignores Creatures
     /// </summary>
-    Creature            = 0x0001,
+    Creature = 0x0001,
     /// <summary>
     /// Ignores players
     /// </summary>
-    Player              = 0x0002,
+    Player = 0x0002,
     /// <summary>
     /// Check for the origin being the same as the target
     /// </summary>
-    Original            = 0x0004,
+    Original = 0x0004,
     /// <summary>
     /// Excludes dead creatures
     /// </summary>
-    Dead                = 0x0008,
+    Dead = 0x0008,
     /// <summary>
     /// Excludes teleporting creatures
     /// </summary>
-    Teleporting         = 0x0010,
+    Teleporting = 0x0010,
     /// <summary>
     /// Excludes NPCs
     /// </summary>
-    NPC                 = 0x0020,
+    NPC = 0x0020,
     /// <summary>
     /// Ignores WorldObjects in line-of-sight
     /// </summary>
-    LineOfSight         = 0x1000,
+    LineOfSight = 0x1000,
     /// <summary>
     /// Ignores WorldObjects out of line-of-sight
     /// </summary>
-    OutOfSight          = 0x2000,
+    OutOfSight = 0x2000,
 
 
     /// <summary>
