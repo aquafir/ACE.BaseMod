@@ -13,9 +13,12 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<PublicizeAll>true</PublicizeAll>
+		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
 	</PropertyGroup>
-
+	<ItemGroup>
+		<Publicize Include="ACE.Server" />
+	</ItemGroup>
+	
 	<ItemGroup>
 		<Compile Remove=".template.config\**" />
 		<EmbeddedResource Remove=".template.config\**" />
@@ -29,7 +32,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Discord.Net" Version="3.13.0" />
+		<PackageReference Include="Discord.Net" Version="3.15.2" />
 		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -40,7 +43,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.0" />
+		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.1" />
 		<!--<PackageReference Include="System.Text.Json" Version="7.0.0" Aliases="Json" />-->
 	</ItemGroup>
 

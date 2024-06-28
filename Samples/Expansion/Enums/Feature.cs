@@ -56,6 +56,14 @@ public enum Feature
     /// </summary>
     OverrideSpellProjectiles,
     /// <summary>
+    /// Breaks up code for PlayerFactory.Create to enable custom handling of player creation
+    /// </summary>
+    OverrideCreatePlayer,
+    /// <summary>
+    /// Breaks up code related to usage requirements
+    /// </summary>
+    OverrideCheckUseRequirements,
+    /// <summary>
     /// On logging out it stores the amount of time in game for a more accurate measure of total time played
     /// </summary>
     TimeInGame,
@@ -64,5 +72,10 @@ public enum Feature
     /// Enables scaling of Life projectiles by ElementalDamageMod
     /// </summary>
     LifeMagicElementalMod,
+    /// <summary>
+    /// Attempts to equip any starter gear post-creation
+    /// </summary>
+    EquipPostCreation,
+    PetSummonMultiple,
 }
 

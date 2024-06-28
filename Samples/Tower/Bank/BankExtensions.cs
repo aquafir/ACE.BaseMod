@@ -14,8 +14,6 @@ public static class BankExtensions
     public static void IncBanked(this OfflinePlayer player, int prop, double amount) =>
         player.SetProperty((PropertyFloat)prop, player.GetBanked(prop) + amount);
 
-
-
     private static Dictionary<uint, BankItem> bankLookup = null;
     /// <summary>
     /// Called on plugin startup to populate a lookup for bankable items
@@ -29,9 +27,6 @@ public static class BankExtensions
     /// </summary>
     public static bool TryGetBankedItem(this WorldObject wo, out BankItem item) =>
         bankLookup.TryGetValue(wo.WeenieClassId, out item);
-
-
-
 
     //Parsing
     static readonly string[] USAGES = new string[] {

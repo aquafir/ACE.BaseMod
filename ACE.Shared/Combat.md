@@ -539,3 +539,28 @@
   * `OnCollideObject(WorldObject target)`
 
 
+
+
+
+
+
+
+
+## Pets
+
+* `PetDevice`
+  * `SummonCreature(Player player, uint wcid)`
+    * `Pet.Init(Player player, PetDevice petDevice)`
+      * Checks `HandleCurrentActivePet(Player player)`
+        * Based on setting uses replace / retail
+        * `HandleCurrentActivePet_Replace(Player player)` 
+          * Destroys pet and replaces (if different wcid?)
+        * `HandleCurrentActivePet_Retail(player)`
+          * Fails if already summoned
+        * True if player's `CurrentActivePet` is null
+      * If null / false returned
+
+
+
+### CurrentActivePet
+

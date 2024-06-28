@@ -2,7 +2,7 @@
 
 public class BankSettings
 {
-    public bool VendorsUseBank { get; set; } = true;
+    //public bool VendorsUseBank { get; set; } = true;
     //Doesn't print blank banked items
     public bool SkipMissingBankedItems { get; set; } = true;
 

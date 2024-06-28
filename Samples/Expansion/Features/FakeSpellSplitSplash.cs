@@ -16,11 +16,7 @@ internal class FakeSpellSplitSplash
         if (__instance is not Player player)
             return;
 
-        //Skip procs?
-        if (fromProc)
-            return;
-
-        //Require targeted spells
+        //Require targeted spells?
         if (target is null)
             return;
 
@@ -49,7 +45,9 @@ internal class FakeSpellSplitSplash
                 return;
 
             var rangeScale = S.Settings.SpellSettings.SplitRange; //(1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplitRangeScale)) * S.Settings.SpellSettings.SplitRange;
-            var targets = player.GetSplashTargets(target, rangeScale).Where(x => x is not Player).Take(splitCount).ToList();
+            //var targets = player.GetSplashTargets(target, rangeScale).Where(x => x is not Player).Take(splitCount).ToList();
+            var targets = player.GetSplashTargets(target, TargetExclusionFilter.OnlyVisibleCreature, rangeScale).Take(splitCount).ToList();
+
 
             if (targets.Count < 1)
                 return;
@@ -57,21 +55,11 @@ internal class FakeSpellSplitSplash
             //Splitting is going to occur, so set the cooldown
             player.SetProperty(FakeFloat.TimestampLastSpellSplit, current);
 
-            //Bit of debug
-            //var sb = new StringBuilder($"\nSplit Targets:");
-            //foreach (var t in targets)
-            //    sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
-            //player.SendMessage(sb.ToString());
-            //player.SendMessage($"Spell split after {delta:F1}/{scaledInterval:F1} seconds with {targets.Count}/{splitCount} targets within {rangeScale} units");
-
-            //var splitTo = Math.Min(S.Settings.SpellSettings.SplitCount, targets.Count);
             for (var i = 0; i < targets.Count; i++)
-            {
                 __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
-            }
         }
-        //Non-profile but harmful splashes
-        else if (spell.IsHarmful)
+        //Non-projectile but harmful splashes
+        else 
         {
             //Check any splash
             var splashCount = S.Settings.SpellSettings.SplashCount; //player.GetCachedFake(FakeInt.ItemSpellSplashCount);
@@ -87,7 +75,9 @@ internal class FakeSpellSplitSplash
                 return;
 
             var rangeScale = S.Settings.SpellSettings.SplitRange;//(1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplashRangeScale)) * S.Settings.SpellSettings.SplitRange;
-            var targets = player.GetSplashTargets(target, rangeScale).Where(x => x is not Player).Take(splashCount).ToList();
+            var targets = spell.IsHarmful ?
+                player.GetSplashTargets(target, TargetExclusionFilter.OnlyCreature, rangeScale).Take(splashCount).ToList() :
+                player.GetSplashTargets(target, TargetExclusionFilter.OnlyPlayer, rangeScale).Take(splashCount).ToList();
 
             if (targets.Count < 1)
                 return;
@@ -95,18 +85,8 @@ internal class FakeSpellSplitSplash
             //Splashing is going to occur, so set the cooldown
             player.SetProperty(FakeFloat.TimestampLastSpellSplash, current);
 
-            //Bit of debug
-            //var sb = new StringBuilder($"\nSplash Targets:");
-            //foreach (var t in targets)
-            //    sb.Append($"\n  {t?.Name} - {t?.GetDistance(target)}");
-            //player.SendMessage(sb.ToString());
-            //player.SendMessage($"Spell splashed after {delta:F1}/{scaledInterval:F1} seconds with {targets.Count}/{splashCount} targets within {rangeScale} units");
-
             for (var i = 0; i < targets.Count; i++)
-            {
                 __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
-            }
-        }
+        }        
     }
-
 }

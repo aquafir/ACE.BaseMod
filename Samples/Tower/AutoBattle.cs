@@ -60,7 +60,7 @@ public static class AutoBattle
         float time = 2;
         actionChain.AddAction(player, () =>
         {
-            var nearest = player.GetSplashTargets(player, 5).FirstOrDefault();
+            var nearest = player.GetSplashTargets(player, TargetExclusionFilter.OnlyCreature, 5).FirstOrDefault();
 
             if (nearest is null)
             {

@@ -41,8 +41,8 @@ internal class FakeMissileSplitSplash
 
         //Radius, range, etc.
         var radius = weapon.GetProperty(FakeFloat.ItemMissileSplashRadius) ?? 4;
-        //var targets = player.GetSplashTargets(target, splashCount, (float)radius);
-        var targets = player.GetSplashTargets(target, (float)radius).Where(x => x is not Player).Take(splashCount).ToList();
+        //var targets = player.GetSplashTargets(target, (float)radius).Where(x => x is not Player).Take(splashCount).ToList();
+        var targets = player.GetSplashTargets(target, TargetExclusionFilter.OnlyVisibleCreature, (float)radius).Take(splashCount).ToList();
         //player.SendMessage($"Radius: {radius} - {targets.Count}");
 
         if (targets.Count < 1)
@@ -94,7 +94,7 @@ internal class FakeMissileSplitSplash
 
         //Radius, range, etc.
         var angle = weapon.GetProperty(FakeFloat.ItemMissileSplitAngle) ?? 45;
-        var targets = player.GetSplitTargets(target, splitCount, player.GetMaxMissileRange(), (float)angle);
+        var targets = player.GetSplitTargets(target, TargetExclusionFilter.OnlyVisibleCreature, player.GetMaxMissileRange(), (float)angle).Take(splitCount).ToList();
 
         if (targets.Count < 1)
             return false;

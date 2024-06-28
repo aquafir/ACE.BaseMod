@@ -1,4 +1,6 @@
-﻿namespace Expansion.Features;
+﻿using ACE.Server.WorldObjects;
+
+namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.PetAttackSelected))]
 [HarmonyPatchCategory(nameof(Feature.PetAttackSelected))]
@@ -23,14 +25,4 @@ internal class PetAttackSelected
             player.CurrentActivePet.AttackTarget = __instance;
         }
     }
-
-    //[HarmonyPostfix]
-    //[HarmonyPatch(typeof(Creature), nameof(Creature.OnTargetDeselected), new Type[] { typeof(Player) })]
-    //public static void PreOnTargetDeselected(Player player, ref Creature __instance, ref bool __result)
-    //{
-    //    player?.CurrentActivePet?.StartFollow();
-    //}
-
-
-    //AttackTarget = nearest[0].Target;
 }

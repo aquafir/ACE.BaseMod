@@ -4,6 +4,7 @@ using ACE.Server.Command;
 using ACE.Server.Network;
 using ACE.Server.Network.GameMessages.Messages;
 using ACE.Server.WorldObjects;
+//using Discord;
 using Expansion.Creatures;
 using System.Text;
 
@@ -16,65 +17,91 @@ public static class Commands
     {
         var player = session.Player;
 
-        var profiles = player.CurrentLandblock.GetCreatureProfiles();
 
-        var sb = new StringBuilder("\n");
-
-        //DatabaseManager.World.GetCachedWeenie(weenieClassId)
-        //Base on spawned?
-        //foreach (var g in gens)
+        //var mod = ModManager.GetModContainerByName(nameof(Discord));
+        //if (mod is null)
         //{
-        //    foreach (var spawns in g.GeneratorProfiles.GroupBy(x => x.WeenieClassId))
-        //    {
-        //        DatabaseManager.World.GetCachedWeenie(spawns.Key);
-        //        //WorldObjectFactory.CreateNewWorldObject
-        //        //profile.Biota.ToString
-        //        //profile.Biota.WeenieClassId
-        //    }
+        //    ModManager.Log($"Host not found.");
+        //    return;
+        //}
+        //var relay = Discord.PatchClass.DiscordRelay;
+        //if (mod.Instance is InterModHost.Mod hostMod && hostMod.Patch is InterModHost.HostPatchClass host)
+        //    ModManager.Log($"Found host: {host.InstanceCounter++}");
+
+        //relay.QueueMessageForDiscord("Hello?");
+
+        //var profiles = player.CurrentLandblock.GetCreatureProfiles();
+
+        //var sb = new StringBuilder("\n");
+
+        ////DatabaseManager.World.GetCachedWeenie(weenieClassId)
+        ////Base on spawned?
+        ////foreach (var g in gens)
+        ////{
+        ////    foreach (var spawns in g.GeneratorProfiles.GroupBy(x => x.WeenieClassId))
+        ////    {
+        ////        DatabaseManager.World.GetCachedWeenie(spawns.Key);
+        ////        //WorldObjectFactory.CreateNewWorldObject
+        ////        //profile.Biota.ToString
+        ////        //profile.Biota.WeenieClassId
+        ////    }
+        ////}
+
+
+        //foreach (var spawns in profiles.GroupBy(x => x.WeenieClassId))
+        //{
+        //    var weenie = DatabaseManager.World.GetCachedWeenie(spawns.Key);
+
+        //    if (weenie is null || weenie.WeenieType != WeenieType.Creature || weenie.IsNpc())
+        //        continue;
+
+        //    sb.Append($"{spawns.Count(),-8}{weenie.GetName()}\n");
+
+        //    var wo = WorldObjectFactory.CreateNewWorldObject(weenie, null) as Creature;
+        //    if (wo is null)
+        //        continue;
+
+        //    var de = player.SimulateDamage(wo, player);
+        //    de.ShowInfo(player);
+        //    sb.Append($"  Evasion: {de.EvasionChance:P3}\n");
+        //    sb.Append($"  PreMit: {de.DamageBeforeMitigation:0.00)}\n");
+        //    sb.Append($"  Damage: {de.Damage:0.00)}\n");
+        //    sb.Append($"  Weapon: {de.Weapon?.Name}\n");
+        //    //sb.Append($"  Damage: {de.Damage}\n");
+        //    //WorldObjectFactory.CreateNewWorldObject
+        //    //profile.Biota.ToString
+        //    //profile.Biota.WeenieClassId
         //}
 
-
-        foreach (var spawns in profiles.GroupBy(x => x.WeenieClassId))
-        {
-            var weenie = DatabaseManager.World.GetCachedWeenie(spawns.Key);
-
-            if (weenie is null || weenie.WeenieType != WeenieType.Creature || weenie.IsNpc())
-                continue;
-
-            sb.Append($"{spawns.Count(),-8}{weenie.GetName()}\n");
-
-            var wo = WorldObjectFactory.CreateNewWorldObject(weenie, null) as Creature;
-            if (wo is null)
-                continue;
-
-            var de = player.SimulateDamage(wo, player);
-            de.ShowInfo(player);
-            sb.Append($"  Evasion: {de.EvasionChance:P3}\n");
-            sb.Append($"  PreMit: {de.DamageBeforeMitigation:0.00)}\n");
-            sb.Append($"  Damage: {de.Damage:0.00)}\n");
-            sb.Append($"  Weapon: {de.Weapon?.Name}\n");
-            //sb.Append($"  Damage: {de.Damage}\n");
-            //WorldObjectFactory.CreateNewWorldObject
-            //profile.Biota.ToString
-            //profile.Biota.WeenieClassId
-        }
-
-        player.SendMessage($"{sb}");
-        //player.CurrentLandblock.RespawnCreatures
+        //player.SendMessage($"{sb}");
+        ////player.CurrentLandblock.RespawnCreatures
     }
 
 
-    [CommandHandler("t4", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-    public static void T4(Session session, params string[] parameters)
+    [CommandHandler("t1", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
+    public static void T1(Session session, params string[] parameters)
     {
         var player = session.Player;
-        var t = player.GetSplitTargets(player, 1, 3, 45f).FirstOrDefault();
+        var selected = player.selectedTarget?.TryGetWorldObject();
+        if (player is null || selected is null)
+            return;
+
+        selected.PlayAnimation(PlayScript.AttribDownGreen);
+
+        var t = player.GetSplitTargets(selected, TargetExclusionFilter.OnlyPlayer, 120f, 30)?.TakeWhile(x => x.Guid != selected.Guid).ToList();
         if (t is null)
             return;
 
-        player.PrevMotionCommand = MotionCommand.Invalid;
-        player.AttackHeight = AttackHeight.Low;
-        player.T4(t, out var frames);
+        foreach (var item in t)
+        {
+            item.PlayAnimation(PlayScript.AttribUpBlue);
+        }
+
+        var msg = "\nTargets:\n" + String.Join("\n", t.Select(x => x.Name));
+        player.SendMessage(msg);
+        //player.PrevMotionCommand = MotionCommand.Invalid;
+        //player.AttackHeight = AttackHeight.Low;
+        //player.T4(t, out var frames);
     }
 
     public static float T4(this Player player, WorldObject target, out List<(float time, ACE.DatLoader.Entity.AnimationHooks.AttackHook attackHook)> attackFrames)

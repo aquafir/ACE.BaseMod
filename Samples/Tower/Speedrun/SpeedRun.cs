@@ -95,8 +95,9 @@ public static class Speedrun
                     var timeFirst = player.GetFirstCompletionTime(challengedFloor);
                     if (timeFirst is null)
                     {
-                        player.SendMessage($"Congratulations!  You first finished floor {challengedFloor.Name} after {player.TotalTimeInGame().ToTimeSpan().GetFriendlyString()}");
+                        player.SendMessage($"Congratulations!  You first finished floor {challengedFloor.Name} at level {player.Level} after {player.TotalTimeInGame().ToTimeSpan().GetFriendlyString()}");
                         player.SetFirstCompletionTime(challengedFloor, player.TotalTimeInGame());
+                        player.SetFirstCompletionLevel(challengedFloor, player.Level ?? 1);
                     }
 
                     //Check for speed from level start

@@ -15,7 +15,7 @@ internal class FakeItemLoot
     public static bool PreGenerateTreasure(DamageHistoryInfo killer, Corpse corpse, ref Creature __instance, ref List<WorldObject> __result)
     {
         //Modified loot
-        var lootProfile = __instance?.DeathTreasure?.MemberwiseClone() as TreasureDeath;
+        var lootProfile = __instance?.DeathTreasure?.Clone() as TreasureDeath;
 
         bool replaceProfile = false;
 
