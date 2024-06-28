@@ -1,8 +1,4 @@
-﻿using ACE.Adapter.GDLE.Models;
-using ACE.Server.Physics;
-using ACE.Server.WorldObjects;
-using System.Collections.Frozen;
-using System.Linq;
+﻿using System.Collections.Frozen;
 using System.Linq.Expressions;
 
 namespace ACE.Shared.Helpers;
