@@ -77,5 +77,6 @@ public enum Feature
     /// </summary>
     EquipPostCreation,
     PetSummonMultiple,
+    PetEx,
 }
 

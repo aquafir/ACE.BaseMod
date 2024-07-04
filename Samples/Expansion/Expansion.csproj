@@ -86,6 +86,7 @@
 			<FilesToDelete Include="$(OutDir)Humanizer.dll" />
 			<FilesToDelete Include="$(OutDir)ACE.*.dll" Exclude="$(OutDir)ACE.Shared.dll" />
 			<FilesToDelete Include="$(OutDir)Microsoft.*.dll" />
+			<FilesToDelete Include="$(OutDir)Discord.*.dll" />
 			<FilesToDelete Include="$(OutDir)Mono.*.dll" />
 			<FilesToDelete Include="$(OutDir)MonoMod.*.dll" />
 			<FilesToDelete Include="$(OutDir)System.*.dll" Exclude="$(OutDir)System.Text.*.dll" />

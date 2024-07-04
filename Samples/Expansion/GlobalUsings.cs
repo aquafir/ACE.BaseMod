@@ -27,12 +27,15 @@ global using Expansion.Creatures;
 global using Expansion.Enums;
 global using Expansion.Helpers;
 global using HarmonyLib;
+global using System.Collections.Concurrent;
 global using System.Diagnostics;
 global using System.Numerics;
 global using System.Reflection;
+global using System.Text;
 global using System.Text.Encodings.Web;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
+global using System.Text.RegularExpressions;
 global using Weenie = ACE.Entity.Models.Weenie;
 global using Spell = ACE.Server.Entity.Spell;
 //Aliases for polluted types

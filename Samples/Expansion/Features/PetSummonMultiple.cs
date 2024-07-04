@@ -1,5 +1,7 @@
-﻿using ACE.Database;
-using System.Collections.Concurrent;
+﻿using ACE.Common.Extensions;
+using ACE.Database;
+using System.Collections;
+using System.ComponentModel.Design;
 
 namespace Expansion.Features;
 
@@ -7,8 +9,13 @@ namespace Expansion.Features;
 [HarmonyPatchCategory(nameof(Feature.PetSummonMultiple))]
 public static class PetSummonMultiple
 {
-    const int MAXPETS = 3;
+    const double MAXPETS = 2;
     static Dictionary<Player, ConcurrentQueue<Pet>> playerPets { get; set; } = new();
+
+    static decimal MaxPetWeight(this Player player) => Convert.ToDecimal(2.25);
+    static decimal PetWeight(this Pet pet) => Convert.ToDecimal(pet.GetProperty(FakeFloat.PetWeight) ?? 1);
+    static decimal TotalPetWeight(this ConcurrentQueue<Pet> pets) => pets.Where(x => x is not null && x.IsAlive).Sum(x => x.PetWeight());
+    //static double TotalPetWeight(this Player player) => playerPets.Count;
 
     //[HarmonyPrefix]
     //[HarmonyPatch(typeof(Pet), nameof(Pet.HandleCurrentActivePet), new Type[] { typeof(Player) })]
@@ -33,6 +40,17 @@ public static class PetSummonMultiple
         //    return false;
         //}
 
+
+        //Check if pet could be summoned
+        var weight = __instance.PetWeight();
+        var max = player.MaxPetWeight();
+        if (weight > max)
+        {
+            __result = false;
+            return false;
+        }
+
+        //Try to create
         // get physics radius of player and pet
         var playerRadius = player.PhysicsObj.GetPhysicsRadius();
         var petRadius = __instance.GetPetRadius();
@@ -59,7 +77,6 @@ public static class PetSummonMultiple
         // All pets don't leave corpses, this maybe should have been in data, but isn't so lets make sure its true.
         __instance.NoCorpse = true;
 
-        Debugger.Break();
         var success = __instance.EnterWorld();
 
         if (!success)
@@ -70,26 +87,50 @@ public static class PetSummonMultiple
         }
 
 
-        //Assume permission to create
+        //If the pet was created, remove excess pets and add the new one to the collection of known player pets
         //Find or create the pet queue
         if (!playerPets.TryGetValue(player, out var pets))
         {
             pets = new();
             playerPets.TryAdd(player, pets);
         }
+        player.SendMessage($"Trying to add {__instance.Name} ({weight:F2}), {pets.TotalPetWeight():F2}/{max:F2} weight");
 
         //Destroy pet if needed
-        if (pets.Count >= MAXPETS)
+        var excessWeight = pets.TotalPetWeight() + weight - max;
+        var removedWeight = 0m;
+
+        if (excessWeight > 0)
         {
-            if (pets.TryDequeue(out var pet))
+            player.SendMessage($"Excess = {excessWeight:F2}");
+            var msg = new StringBuilder($"\nRemoved:");
+            while (removedWeight < excessWeight)
             {
-                player.SendMessage($"Your {pet.Name} has been sent to a peaceful farm.");
-                pet?.Destroy();
+                if (pets.TryDequeue(out var removedPet))
+                {
+                    //Ignore dead pets
+                    if (removedPet is null)
+                        continue;
+
+                    removedWeight += removedPet.PetWeight();
+                    msg.Append($"\n  {removedPet.Name}  ({removedPet.PetWeight():F2})");
+                    removedPet.Destroy();
+                }
+                else
+                {
+                    ModManager.Log($"Failed to dequeue pet to spawn {__instance.Name}", ModManager.LogLevel.Error);
+                    __result = false;
+                    return false;
+                }
             }
+            msg.Append($"\n  ={excessWeight:F2} excess - {removedWeight:F2} total -> {(pets.TotalPetWeight() + weight):F2}/{max:F2} current weight");
+
+            player.SendMessage($"{msg}");
         }
+
         //Also add pet to queue
         pets.Enqueue(__instance);
-        player.SendMessage($"Summoned {pets.Count}th pet");
+        player.SendMessage($"Summoned pet #{pets.Count}");
 
         player.CurrentActivePet = __instance;
 
@@ -149,13 +190,9 @@ public static class PetSummonMultiple
         }
 
         //Check base requirements
-        var asWorldObject = __instance as WorldObject;
-        
-        if (asWorldObject is null || !asWorldObject.CheckUseRequirements(activator).Success)
-        {
-            __result = new ActivationResult(false);
+        __result = __instance.CheckUseRequirements();
+        if (!__result.Success)
             return false;
-        }
 
         // verify summoning mastery
         if (__instance.SummoningMastery != null && player.SummoningMastery != __instance.SummoningMastery)
@@ -220,4 +257,155 @@ public static class PetSummonMultiple
         pets = null;
         playerPets.Remove(__instance);
     }
+
+
+    //[HarmonyPrefix]
+    //[HarmonyPatch(typeof(WorldObject), nameof(WorldObject.Destroy), new Type[] { typeof(bool), typeof(bool) })]
+    //public static bool PreDestroy(bool raiseNotifyOfDestructionEvent, bool fromLandblockUnload, ref WorldObject __instance)
+    //{
+    //    if (__instance is not Pet pet)
+    //        return true;
+
+    //    //Override destroy behavior without redundant check
+    //    if (__instance.IsDestroyed)
+    //        return false;
+
+    //    __instance.IsDestroyed = true;
+    //    __instance.ReleasedTimestamp = Time.GetUnixTime();
+
+
+    //    //if (__instance is Creature creature)
+    //    //{
+    //    //    foreach (var item in creature.EquippedObjects.Values)
+    //    //        item.Destroy();
+    //    //}
+
+    //    if (pet.P_PetOwner?.CurrentActivePet == __instance)
+    //        pet.P_PetOwner.CurrentActivePet = null;
+
+    //    if (pet.P_PetDevice?.Pet == __instance.Guid.Full)
+    //        pet.P_PetDevice.Pet = null;
+
+    //    if (raiseNotifyOfDestructionEvent)
+    //        __instance.NotifyOfEvent(RegenerationType.Destruction);
+
+    //    __instance.CurrentLandblock?.RemoveWorldObject(__instance.Guid);
+    //    __instance.RemoveBiotaFromDatabase();
+
+    //    if (__instance.Guid.IsDynamic())
+    //        GuidManager.RecycleDynamicGuid(__instance.Guid);
+
+    //    if (playerPets.TryGetValue(pet.P_PetOwner, out var pets))
+    //    {
+    //        //Todo: find a non-terrible way to do this?
+    //        var livingPets = pets.Where(x => x.Guid != pet.Guid);
+    //        playerPets[pet.P_PetOwner] = new(livingPets);
+
+    //        pet.P_PetOwner?.SendMessage($"{pet.Name} shuffled off this mortal coil.");
+    //        pet = null;
+    //    }
+
+
+    //    return false;
+    //}
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.Destroy), new Type[] { typeof(bool), typeof(bool) })]
+    public static void PostDestroy(bool raiseNotifyOfDestructionEvent, bool fromLandblockUnload, ref WorldObject __instance)
+    {
+        if (__instance is not Pet pet)
+            return;
+
+        pet.Health.Current = 0;
+
+        //Recreate?  Terrible way of doing this
+        //if (playerPets.TryGetValue(pet.P_PetOwner, out var pets))
+        //{
+        //    pets.get
+        //    //Todo: find a non-terrible way to do this?
+        //    var livingPets = pets.Where(x => x.Guid != pet.Guid);
+        //    playerPets[pet.P_PetOwner] = new(livingPets);
+
+        //    pet.P_PetOwner?.SendMessage($"{pet.Name} shuffled off this mortal coil.");
+        //    pet = null;
+        //}
+    }
+
+    #region Commands
+    static string Commands => string.Join(", ", Enum.GetNames<PetCommand>());
+    static readonly string[] USAGES = new string[] {
+            $@"(?<verb>{PetCommand.List})$",
+            $@"(?<verb>{PetCommand.Kill})$",
+            //$@"(?<verb>{PetCommand.Warp})$",
+        };
+    //Join usages in a regex pattern
+    static string Pattern => string.Join("|", USAGES.Select(x => $"({x})"));
+    static Regex CommandRegex = new(Pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    [CommandHandler("pet", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
+    public static void Sim(Session session, params string[] parameters)
+    {
+        var player = session.Player;
+
+        if (!TryParseCommand(parameters, out var verb))
+        {
+            player.SendMessage($"Unknown usage");
+            return;
+        }
+
+        if (!playerPets.TryGetValue(player, out var pets) || pets.Count == 0)
+        {
+            player.SendMessage($"No pets found.");
+            return;
+        }
+
+        var sb = new StringBuilder("\n");
+        switch (verb)
+        {
+            case PetCommand.List:
+                sb.Append($"\nPets ({pets.TotalPetWeight():F2}/{player.MaxPetWeight()}):");
+                foreach (var pet in pets)
+                {
+                    if (pet.IsAlive)
+                        sb.Append($"\n{pet.Name} ({pet.PetWeight():F2})");
+                }
+
+                break;
+            case PetCommand.Kill:
+                sb.Append($"\nDestroyed:");
+                foreach (var pet in pets)
+                {
+                    sb.Append($"\n{pet.Name} ({pet.PetWeight():F2})");
+                    pet?.Destroy();
+                }
+                pets.Clear();
+                break;
+        }
+        player.SendMessage($"{sb}");
+    }
+
+
+    static bool TryParseCommand(string[] parameters, out PetCommand verb)
+    {
+        //Set defaults
+        verb = 0;
+
+        //Check for valid command
+        var match = CommandRegex.Match(string.Join(" ", parameters));
+        if (!match.Success)
+            return false;
+
+        //Parse verb
+        return Enum.TryParse(match.Groups["verb"].Value, true, out verb);
+    }
+
+    enum PetCommand
+    {
+        List,
+        Kill,
+        Come,
+        Warp,
+    }
+    #endregion
+
 }

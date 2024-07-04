@@ -21,7 +21,10 @@ internal class PetMessageDamage
         }
         if (__instance is Pet pet)
         {
+            //if (pet.Health.Current > amount)
             pet.P_PetOwner.SendMessage($"{pet.Name} has been {(crit ? "critically " : "")}hit for {(int)amount} by {source.Name} {damageType} damage.", ChatMessageType.CombatEnemy);
+            //else
+            //    pet?.P_PetOwner?.SendMessage($"Your {pet.Name} has been killed by {source.Name}.");
         }
     }
 }
