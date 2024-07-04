@@ -19,6 +19,7 @@ public enum Patches
     Animations,
     Defaults,
     Fellowships,
-    Recklessness,
     PermanentObjects,
+    Recklessness,
+    SpellDefault,
 }

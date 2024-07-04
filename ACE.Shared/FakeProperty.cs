@@ -70,6 +70,10 @@ public enum FakeFloat
     TimeInGame = 20007,
     ItemMissileSplashCooldown = 20008,
     ItemMissileSplitCooldown = 20009,
+    /// <summary>
+    /// Used by PetSummonMultiple to define non-default weights for a Pet that count against the total
+    /// </summary>
+    PetWeight = 20010,
 }
 public enum FakeIID
 {
