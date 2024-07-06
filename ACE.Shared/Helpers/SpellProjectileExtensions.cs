@@ -1,5 +1,6 @@
 ﻿namespace ACE.Shared.Helpers;
 
+#if REALM
 public static class SpellProjectileExtensions
 {
     public static ProjectileSpellType Nova = (ProjectileSpellType)9;
@@ -103,7 +104,6 @@ public static class SpellProjectileExtensions
             // set orientation
             var dir = Vector3.Normalize(sp.Velocity);
             sp.PhysicsObj.Position.Frame.set_vector_heading(dir);
-
 
             sp.Location.Position.Rotation = sp.PhysicsObj.Position.Frame.Orientation;
 
@@ -518,3 +518,7 @@ public static class SpellProjectileExtensions
         return rotate;
     }
 }
+
+#else
+
+#endif

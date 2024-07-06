@@ -109,9 +109,6 @@ public class PatchClass
 
         if (Settings.Patches.Contains(Patches.Fellowships))
             Fellowships.SetFellowshipSettings();
-
-        if (Settings.Patches.Contains(Patches.Fellowships))
-            SpellDefault.SetupSpells();
     }
 
     [HarmonyPrefix]
