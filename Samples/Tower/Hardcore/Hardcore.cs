@@ -41,12 +41,7 @@ public static class Hardcore
         //Handle perma-death
         PlayerManager.BroadcastToChannelFromConsole(Channel.Advocate1, $"{player?.Name} has met an untimely demise at the hands of {lastDamager?.Name ?? ""}!");
         if (Settings.QuarantineOnDeath)
-        {
-            player.QuarantinePlayer();
-            //{ 0x010D, "Admin Waiting Room?" },
-            //{ 0x010E, "Admin Waiting Room? #2" },
-            //{ 0x010F, "Admin Waiting Room? #3" },
-        }
+            player.QuarantinePlayer(Settings.QuarantineLoc);
         else
             player.PermaDeath();
     }
@@ -70,6 +65,9 @@ public static class Hardcore
         player.SetProperty(FakeFloat.TimestampLastPlayerDeath, Time.GetUnixTime());
         player.SetProperty(FakeBool.Hardcore, true);
         player.SendMessage($"\nYou are now hardcore with {Settings.HardcoreStartingLives} remaining.");
+
+        foreach(var item in Settings.Items)
+            player.TryCreateItems(item);
     }
 
     [CommandHandler("hc", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 0)]

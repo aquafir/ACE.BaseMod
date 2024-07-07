@@ -1,5 +1,9 @@
 ﻿
+using ACE.Database.Models.Auth;
+using ACE.Entity.Enum;
+using ACE.Server.Entity;
 using ACE.Server.Realms;
+using ACE.Server.WorldObjects;
 using System;
 
 namespace Expansion.Features;
@@ -43,6 +47,21 @@ public static class PetEx
         return false;
     }
     #endregion
+
+
+    //Tell owner about damage pet deals
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Creature), nameof(Creature.TakeDamage), new Type[] { typeof(WorldObject), typeof(DamageType), typeof(float), typeof(bool) })]
+    public static void PostTakeDamage(WorldObject source, DamageType damageType, float amount, bool crit, ref Creature __instance, ref uint __result)
+    {
+        if (source is Pet target)
+        {
+            if (!__instance.IsAlive)
+                target.P_PetOwner.SendMessage($"Your {source.Name} has slain {__instance.Name}.");
+            else
+                target.P_PetOwner.SendMessage($"Your {source.Name} has {(crit ? "critically " : "")}hit {__instance.Name} for {(int)amount} {damageType} damage.", ChatMessageType.CombatSelf);
+        }
+    }
 }
 
 public class CombatPetEx : CombatPet
@@ -67,6 +86,20 @@ public class CombatPetEx : CombatPet
         RadarBehavior = ACE.Entity.Enum.RadarBehavior.ShowAlways;
         RadarColor = ACE.Entity.Enum.RadarColor.Green;
         Name += " (Ex)";
+    }
+
+    public override uint TakeDamage(WorldObject source, DamageType damageType, float amount, bool crit = false)
+    {
+        P_PetOwner.SendMessage($"{Name} has been {(crit ? "critically " : "")}hit for {(int)amount} by {source.Name} {damageType} damage.", ChatMessageType.CombatEnemy);
+
+        return base.TakeDamage(source, damageType, amount, crit);
+    }
+
+    public override void Die(DamageHistoryInfo lastDamager, DamageHistoryInfo topDamager)
+    {
+        P_PetOwner.SendMessage($"{Name} has been been killed by {topDamager.Name ?? "Unknown"}.", ChatMessageType.System);
+
+        base.Die(lastDamager, topDamager);
     }
 
     public override void Heartbeat(double currentUnixTime)
