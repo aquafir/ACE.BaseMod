@@ -564,3 +564,16 @@
 
 ### CurrentActivePet
 
+
+
+
+
+
+
+## Skills
+
+* `HandleActionTrainSkill(Skill skill, int creditsSpent)`
+* 
+
+* 
+

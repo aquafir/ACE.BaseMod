@@ -7,7 +7,7 @@ public static class PlayerLootExtensions
     /// <summary>
     /// Create items based on the Admin /ci command
     /// </summary>
-    public static bool TryCreateItems(this Player player, string command)//Session session, params string[] parameters)
+    public static bool TryCreateItems(this Player player, string command)
     {
         if (player is null)
             return false;
@@ -19,12 +19,12 @@ public static class PlayerLootExtensions
         if (weenie == null)
             return false;
 
-        uint amount = 0;
+        uint amount = 1;
         int? palette = null;
         float? shade = null;
 
-        //Parse quantity if available
-        if (parameters.Length < 2 || !uint.TryParse(parameters[1], out amount) || amount == 0)
+        //Try to parse quantity and fail on a failure or invalid quantity
+        if (parameters.Length >= 2 && (!uint.TryParse(parameters[1], out amount) || amount < 1))
             return false;
 
         //Parse palette

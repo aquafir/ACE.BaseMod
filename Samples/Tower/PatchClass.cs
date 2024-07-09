@@ -82,7 +82,21 @@ public class PatchClass
 
         BankExtensions.Init();
         FloorExtensions.Init();
+
+        DoThing();
+
         Mod.State = ModState.Running;
+    }
+
+    static void DoThing()
+    {
+        var custom = ContentHelpers.GetCustomWeenies().Where(x => x is not null);
+        //&& x.WeenieType == WeenieType.Creature);
+        //var sb = new StringBuilder();
+        //foreach (var weenie in custom)
+        //    sb.Append($"{weenie.GetName()}");
+        var str = String.Join(", ", custom.Select(x => x.GetName()));
+        ModManager.Log($"\nCustom creatures are:\n{str}");
     }
 
     public void Shutdown()
