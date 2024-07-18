@@ -104,37 +104,37 @@ public static class AutoLoot
     /// <summary>
     /// Return a list of loot items the way ACE would
     /// </summary>
-    private static List<WorldObject> GetLoot(Player player, Creature __instance)
+    public static List<WorldObject> GetLoot(Player player, Creature creature)
     {
         var droppedItems = new List<WorldObject>();
 
         //Death
-        if (__instance.DeathTreasure != null)
+        if (creature.DeathTreasure != null)
         {
-            foreach (var item in LootGenerationFactory.CreateRandomLootObjects(__instance.DeathTreasure))
+            foreach (var item in LootGenerationFactory.CreateRandomLootObjects(creature.DeathTreasure))
                 //if (!player.TryCreateInInventoryWithNetworking(item))
                 droppedItems.Add(item);
         }
 
         //Wielded
         var dropFlags = PropertyManager.GetBool("creatures_drop_createlist_wield").Item ? DestinationType.WieldTreasure : DestinationType.Treasure;
-        var wieldedTreasure = __instance.Inventory.Values.Concat(__instance.EquippedObjects.Values).Where(i => (i.DestinationType & dropFlags) != 0);
+        var wieldedTreasure = creature.Inventory.Values.Concat(creature.EquippedObjects.Values).Where(i => (i.DestinationType & dropFlags) != 0);
         foreach (var item in wieldedTreasure)
         {
             if (item.Bonded == BondedStatus.Destroy)
                 continue;
 
-            if (__instance.TryDequipObjectWithBroadcasting(item.Guid, out var wo, out var wieldedLocation))
-                __instance.EnqueueBroadcast(new GameMessagePublicUpdateInstanceID(item, PropertyInstanceId.Wielder, ObjectGuid.Invalid));
+            if (creature.TryDequipObjectWithBroadcasting(item.Guid, out var wo, out var wieldedLocation))
+                creature.EnqueueBroadcast(new GameMessagePublicUpdateInstanceID(item, PropertyInstanceId.Wielder, ObjectGuid.Invalid));
 
             //if (!player.TryCreateInInventoryWithNetworking(item))
             droppedItems.Add(item);
         }
 
         //Non-wielded Create
-        if (__instance.Biota.PropertiesCreateList != null)
+        if (creature.Biota.PropertiesCreateList != null)
         {
-            var createList = __instance.Biota.PropertiesCreateList.Where(i => (i.DestinationType & DestinationType.Contain) != 0 ||
+            var createList = creature.Biota.PropertiesCreateList.Where(i => (i.DestinationType & DestinationType.Contain) != 0 ||
                             (i.DestinationType & DestinationType.Treasure) != 0 && (i.DestinationType & DestinationType.Wield) == 0).ToList();
 
             var selected = Creature.CreateListSelect(createList);

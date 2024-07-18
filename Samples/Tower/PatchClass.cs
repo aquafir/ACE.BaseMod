@@ -83,7 +83,7 @@ public class PatchClass
         BankExtensions.Init();
         FloorExtensions.Init();
 
-        DoThing();
+        //DoThing();
 
         Mod.State = ModState.Running;
     }

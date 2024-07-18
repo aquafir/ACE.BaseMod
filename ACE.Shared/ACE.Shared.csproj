@@ -16,6 +16,15 @@
 	<PropertyGroup>
 		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Settings\BasicMod.cs" />
+	  <Compile Remove="Settings\BasicPatch.cs" />
+	  <Compile Remove="Settings\IPatch.cs" />
+	  <Compile Remove="Settings\ISettings.cs" />
+	  <Compile Remove="Settings\JsonSettings.cs" />
+	  <Compile Remove="Settings\SettingsContainer.cs" />
+	</ItemGroup>
 	<ItemGroup>
 		<Publicize Include="ACE.Server" />
 	</ItemGroup>
@@ -61,6 +70,10 @@
 
 	<ItemGroup>
 		<None Include="M:\Projects\ACE.BaseMod\ACE.Shared\.editorconfig" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Settings\" />
 	</ItemGroup>
 
 </Project>

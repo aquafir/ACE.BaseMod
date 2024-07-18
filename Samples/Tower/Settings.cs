@@ -1,4 +1,5 @@
-﻿using Tower.Bank;
+﻿using Tower.Aetheria;
+using Tower.Bank;
 using Tower.Floor;
 using Tower.Hardcore;
 using Tower.Loot;
@@ -15,6 +16,7 @@ public class Settings
         new()
         {
             //Feature.AutoBattle,
+            Feature.AetheriaLoot,
             Feature.AutoLoot,
             //Feature.Bank,
             Feature.Hardcore,
@@ -23,6 +25,7 @@ public class Settings
             Feature.Speedrun,
         };
 
+    public AetheriaSettings Aetheria { get; set; } = new();
     public BankSettings Bank { get; set; } = new();
     public HardcoreSettings Hardcore { get; set; } = new();
     public LootSettings Loot { get; set; } = new();
@@ -44,4 +47,5 @@ public enum Feature
     //WIP
     FloorBonus,
     AutoBattle,
+    AetheriaLoot,
 }

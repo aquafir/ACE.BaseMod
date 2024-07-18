@@ -51,7 +51,6 @@ public static class ContentHelpers
 
     public static IEnumerable<Weenie> GetCustomWeenies()
     {
-        Debugger.Break();
         var wcids = GetCustomWcids();
         foreach(var wcid in wcids)
         {
