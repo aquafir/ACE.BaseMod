@@ -14,3 +14,8 @@ global using System;
 global using System.Text;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
+
+#if REALM
+global using Session = ACE.Server.Network.ISession;
+global using BinaryWriter = ACE.Server.Network.GameMessages.RealmsBinaryWriter;
+#endif
