@@ -12,7 +12,9 @@ public static class PetSummonMultiple
     const double MAXPETS = 2;
     static Dictionary<Player, ConcurrentQueue<Pet>> playerPets { get; set; } = new();
 
-    static decimal MaxPetWeight(this Player player) => Convert.ToDecimal(2.25);
+    static decimal MaxPetWeight(this Player player) => 
+        Convert.ToDecimal(player.GetProperty(FakeFloat.PetWeightMax) ?? 1)
+        + Convert.ToDecimal(player.GetCachedFake(FakeFloat.PetWeightMax));
     static decimal PetWeight(this Pet pet) => Convert.ToDecimal(pet.GetProperty(FakeFloat.PetWeight) ?? 1);
     static decimal TotalPetWeight(this ConcurrentQueue<Pet> pets) => pets.Where(x => x is not null && x.IsAlive).Sum(x => x.PetWeight());
     //static double TotalPetWeight(this Player player) => playerPets.Count;

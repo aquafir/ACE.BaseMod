@@ -59,14 +59,14 @@ public static class FakePropertyCache
             if (S.Settings.BonusCaps.MinFloat.TryGetValue(watched, out var min) &&
                 floatCache.TryGetValue(watched, out var value))
             {
-                player.SendMessage($"min {watched} from {value} to {min}");
+                //player.SendMessage($"min {watched} from {value} to {min}");
                 floatCache[watched] = Math.Max(value, min);
             }
 
             if (S.Settings.BonusCaps.MaxFloat.TryGetValue(watched, out var max) &&
                 floatCache.TryGetValue(watched, out value))
             {
-                player.SendMessage($"Max {watched} from {value} to {max}");
+                //player.SendMessage($"Max {watched} from {value} to {max}");
                 floatCache[watched] = Math.Min(value, max);
             }
         }
@@ -145,7 +145,8 @@ public static class FakePropertyCache
 
         //Watch property
         if (watchedFloats.Add(prop))
-            player.SendMessage($"Added {prop} to cache: {value}");
+        { }
+            //player.SendMessage($"Added {prop} to cache: {value}");
 
         //watch.Stop();
         //player.SendMessage($"Fetched in {watch.ElapsedTicks} ticks / {watch.ElapsedMilliseconds} ms.");
