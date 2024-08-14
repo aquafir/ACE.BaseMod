@@ -159,7 +159,7 @@ public static class FakePropertyCache
             cache = new();
             cachedFloats.Add(player, cache);
 
-            player.SendMessage($"Created cache.");
+            //player.SendMessage($"Created cache.");
         }
 
         return cache;
@@ -195,7 +195,7 @@ public static class FakePropertyCache
             cache = new();
             cachedInts.Add(player, cache);
 
-            player.SendMessage($"Created cache.");
+            //player.SendMessage($"Created cache.");
         }
 
         return cache;

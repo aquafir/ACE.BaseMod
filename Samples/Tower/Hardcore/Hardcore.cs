@@ -1,4 +1,6 @@
-﻿namespace Tower.Hardcore;
+﻿using ACE.Entity.Enum;
+
+namespace Tower.Hardcore;
 
 [CommandCategory(nameof(Feature.Hardcore))]
 [HarmonyPatchCategory(nameof(Feature.Hardcore))]
@@ -16,6 +18,23 @@ public static class Hardcore
 
         if (player.GetProperty(FakeBool.Hardcore) != true)
             return;
+
+        //Check for PK deaths
+        if (__instance.IsPKDeath(lastDamager) || __instance.IsPKLiteDeath(lastDamager))
+        {
+            if (Settings.StayWhite)
+            {
+                player.PlayerKillerStatus = PlayerKillerStatus.NPK;
+                player.PkLevel = PKLevel.NPK;
+                player.SendMessage($"You have been forced to NPK status.");
+            }
+
+            if(Settings.IgnorePK)
+            {
+                player.SendMessage($"PK deaths not counted against hardcore players.");
+                return;
+            }
+        }
 
         //Check death interval
         var current = Time.GetUnixTime();
@@ -66,7 +85,7 @@ public static class Hardcore
         player.SetProperty(FakeBool.Hardcore, true);
         player.SendMessage($"\nYou are now hardcore with {Settings.HardcoreStartingLives} remaining.");
 
-        foreach(var item in Settings.Items)
+        foreach (var item in Settings.Items)
             player.TryCreateItems(item);
     }
 
@@ -75,13 +94,13 @@ public static class Hardcore
     {
         var player = session.Player;
 
-        if(player.IsHardcore())
+        if (player.IsHardcore())
         {
             player.SendMessage($"You have {player.Lives()} lives remaining.");
         }
-        else if(player.Level <= Settings.MaxLevel)
+        else if (player.Level <= Settings.MaxLevel)
             player.ApplyHardcore();
-        else 
+        else
             player.SendMessage($"Only players before level {Settings.MaxLevel} may become hardcore.");
     }
 }
