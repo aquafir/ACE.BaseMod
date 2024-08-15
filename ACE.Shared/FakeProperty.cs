@@ -74,6 +74,7 @@ public enum FakeFloat
     /// Used by PetSummonMultiple to define non-default weights for a Pet that count against the total
     /// </summary>
     PetWeight = 20010,
+    PetWeightMax = 20011,
 }
 public enum FakeIID
 {
