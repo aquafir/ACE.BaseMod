@@ -74,6 +74,10 @@ The below renames "Strength Self I", lowers it to 5 before updating the `Templat
 
 
 
+`/listset` is added as a command to list the set tiers/spells of the last appraised item.
+
+
+
 The below updates the `Adepts` `EquipmentSet` to have two tiers (@ 3/4 equipped) with the shown spells.  It also creates a fake set that can be used with the key "999".
 
 ```json
