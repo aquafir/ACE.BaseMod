@@ -1,11 +1,4 @@
-﻿using ACE.DatLoader.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CustomSpells;
+﻿namespace CustomSpells;
 public static class SpellExtensions
 {
     /// <summary>
@@ -52,5 +45,4 @@ public static class SpellExtensions
 
         return clone;
     }
-
 }

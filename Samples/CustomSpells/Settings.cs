@@ -8,6 +8,9 @@ public class Settings
     //public double Duration { get; set; } = TimeSpan.FromHours(24).TotalSeconds;
     //public SetSettings Sets {get;set;} = new();
 
+    public string CustomSpellsSpreadsheet { get; set; } = Path.Combine(Mod.ModPath, "Spells.xlsx");
+    //public string SpellExportSpreadsheet { get; set; } = Path.Combine(Mod.ModPath, "SpellExports.xlsx");
+
     /// <summary>
     /// Custom Spells use a template, make modifications, then add the custom spell as the Id
     /// </summary>
@@ -22,11 +25,6 @@ public class Settings
     {
         [EquipmentSet.Adepts] = new()
         {
-            new(1, new()
-            {
-                SpellId.HarmSelf1,
-                SpellId.AcidProtectionSelf1,
-            }),
             new(3, new()
             {
                 SpellId.HarmSelf3,
@@ -54,3 +52,4 @@ public class Settings
     };
 }
 
+public record struct SetTier(uint NumEquipped, List<SpellId> Spells);

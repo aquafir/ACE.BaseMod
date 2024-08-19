@@ -1,5 +1,6 @@
 ﻿using ACE.Database;
 using ACE.DatLoader.FileTypes;
+using System.IO;
 
 namespace CustomSpells;
 
@@ -107,11 +108,18 @@ public class PatchClass
 
     private static void SetupSpells()
     {
-        foreach (var customSpell in Settings.CustomSpells)
+        CustomizeSpells(Settings.CustomSpells);
+
+        OverrideSpellSets();
+    }
+
+    private static void CustomizeSpells(List<SpellCustomization> customSpells)
+    {
+        foreach (var customSpell in customSpells)
         {
-            //Get keys from SpellId
+            //Get keys from SpellId, defaulting to overriding the template
             uint template = (uint)customSpell.Template;
-            uint key = (uint)customSpell.Id;
+            uint key = (uint)(customSpell.Id ?? customSpell.Template);
 
             try
             {
@@ -140,8 +148,6 @@ public class PatchClass
                 ModManager.Log($"Failed to customized {customSpell.Template} -> {customSpell.Id}");
             }
         }
-
-        OverrideSpellSets();
     }
 
     private static void OverrideSpellSets()
@@ -196,6 +202,51 @@ public class PatchClass
 
         ModManager.Log($"Replaced {Settings.Sets.Count} EquipmentSets with a combined {Settings.Sets.Sum(x => x.Value.Count())} tiers and {Settings.Sets.Sum(x => x.Value.Sum(s => s.Spells.Count))} set spells");
     }
+
+    [CommandHandler("lss", AccessLevel.Player, CommandHandlerFlag.None)]
+    public static void HandleLoadSpellSpreadsheet(Session session, params string[] parameters)
+    {
+        var spells = SpellCustomization.ParseCustomizations();
+        CustomizeSpells(spells);
+
+        var msg = $"Loaded custom spells ({spells.Count})";
+        ModManager.Log(msg);
+        session?.Player?.SendMessage(msg);
+    }
+
+    //[CommandHandler("editspell", AccessLevel.Developer, CommandHandlerFlag.None, -1, "Modify ")]
+    //public static void HandleEditSpell(Session session, params string[] parameters)
+    //{
+    //    //Get spreadsheet to export one or more spells to
+    //    if (parameters.Length == 0 || !SpellCustomization.TryGetSpreadsheet(Settings.SpellExportSpreadsheet, out var excel))
+    //        return;
+
+    //    List<SpellCustomization> exported = new();
+    //    foreach (var stringId in parameters)
+    //    {
+    //        if (!SpellCustomization.TryParseCellEnum<SpellId>(stringId, out var id) || id is null)
+    //                continue;
+
+    //        Spell spell = new(id.Value);
+    //        if (spell is null)
+    //            continue;
+
+
+    //        exported.Add(new((SpellId)spell.Id, (SpellId)spell.Id, spell.Name));
+    //    }
+
+    //    var msg = $"Exported {exported.Count} spells...";
+    //    try
+    //    {
+    //        excel.Save(Settings.SpellExportSpreadsheet, exported, "Spells");
+    //    }catch(Exception ex)
+    //    {
+    //        msg = $"Failed to exported {exported.Count} spells:\n{ex.Message}";
+    //    }
+    //    ModManager.Log(msg);
+    //    session?.Player?.SendMessage(msg);
+    //}
+
 
     [CommandHandler("listset", AccessLevel.Player, CommandHandlerFlag.None)]
     public static void HandleSS(Session session, params string[] parameters)
