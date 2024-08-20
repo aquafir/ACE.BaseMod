@@ -1,6 +1,14 @@
 ﻿## Spell Customization
 
-`CusomSpellsSpreadsheet` is the name of an Excel spreadsheet relative to the mod folder.  You can download this [Google Sheets template](https://docs.google.com/spreadsheets/d/1Ya_oDlCZ-AJwV4qcXsZ3m15NqgSGOgtLlPAPuIn8bj0/edit?usp=sharing) with `File→Download→Microsoft Excel (.xlsx)` and place that file in your mod directory.
+`CusomSpellsSpreadsheet` is the name of an Excel spreadsheet relative to the mod folder.  
+
+
+
+You can download this [Google Sheets template](https://docs.google.com/spreadsheets/d/1Ya_oDlCZ-AJwV4qcXsZ3m15NqgSGOgtLlPAPuIn8bj0/edit?usp=sharing) with `File→Download→Microsoft Excel (.xlsx)` and place that file in your mod directory.
+
+
+
+The `/spelldump` console command will output a spreadsheet with a `SpellCustomization` for each `SpellId` to `Dump.xlsx` in the mod's folder, for reference and ease of modification.
 
 
 

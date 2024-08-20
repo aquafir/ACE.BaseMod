@@ -214,6 +214,31 @@ public class PatchClass
         session?.Player?.SendMessage(msg);
     }
 
+    [CommandHandler("spelldump", AccessLevel.Developer, CommandHandlerFlag.ConsoleInvoke)]
+    public static void HandleSpellDump(Session session, params string[] parameters)
+    {
+        List<SpellCustomization> sc = new();
+        foreach(var spellId in Enum.GetValues<SpellId>())
+        {
+            var spell = new Spell(spellId);
+            if (spell is null || spell._spellBase is null || spell._spell is null)
+                continue;
+
+            var custom = new SpellCustomization(spell._spellBase, spell._spell);
+            if (custom is null)
+                continue;
+
+            sc.Add(custom);
+        }
+
+        var path = Path.Combine(Mod.ModPath, "Dump.xlsx");
+        new ExcelMapper().Save(path, sc, "Spells");
+
+        var msg = $"Exported {sc.Count} spells to be customized to:\n{path}";
+        ModManager.Log(msg);
+    }
+
+
     //[CommandHandler("editspell", AccessLevel.Developer, CommandHandlerFlag.None, -1, "Modify ")]
     //public static void HandleEditSpell(Session session, params string[] parameters)
     //{

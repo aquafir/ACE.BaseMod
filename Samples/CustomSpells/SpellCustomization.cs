@@ -1,89 +1,153 @@
 ﻿
 namespace CustomSpells;
 
-public class SpellCustomization(
-        SpellId Template,
-        SpellId? Id = default(SpellId),
-        string Name = null,
-        string SpellWords = null,
-        MagicSchool? School = null,
-        SpellCategory? Category = null,
-        SpellFlags? Bitfield = null,
-        uint? BaseMana = null,
-        float? BaseRangeConstant = null,
-        float? BaseRangeMod = null,
-        uint? Power = null,
-        EnchantmentTypeFlags? StatModType = null,
-        uint? StatModKey = null,
-        float? StatModVal = null,
-        DamageType? EType = null,
-        DamageType? DamageType = null,
-        int? BaseIntensity = null,
-        int? Variance = null,
-        int? NumProjectiles = null,
-        float? DrainPercentage = null,
-        float? DamageRatio = null,
-        double? Duration = null,
-        double? DotDuration = null,
-        PlayScript? CasterEffect = null,
-        PlayScript? TargetEffect = null,
-        uint? Wcid = null
-    )
+public class SpellCustomization
 {
     [FormulaResult]
-    public SpellId Template { get; set; } = Template;
+    public SpellId Template { get; set; }
     [FormulaResult]
-    public SpellId? Id { get; set; } = Id;
+    public SpellId? Id { get; set; }
     [FormulaResult]
-    public string Name { get; set; } = Name;
+    public string Name { get; set; }
     [FormulaResult]
-    public string SpellWords { get; set; } = SpellWords;
+    public string SpellWords { get; set; }
     [FormulaResult]
-    public MagicSchool? School { get; set; } = School;
+    public MagicSchool? School { get; set; }
     [FormulaResult]
-    public SpellCategory? Category { get; set; } = Category;
+    public SpellCategory? Category { get; set; }
     [FormulaResult]
-    public SpellFlags? Bitfield { get; set; } = Bitfield;
+    public SpellFlags? Bitfield { get; set; }
     [FormulaResult]
-    public uint? BaseMana { get; set; } = BaseMana;
+    public uint? BaseMana { get; set; }
     [FormulaResult]
-    public float? BaseRangeConstant { get; set; } = BaseRangeConstant;
+    public float? BaseRangeConstant { get; set; }
     [FormulaResult]
-    public float? BaseRangeMod { get; set; } = BaseRangeMod;
+    public float? BaseRangeMod { get; set; }
     [FormulaResult]
-    public uint? Power { get; set; } = Power;
+    public uint? Power { get; set; }
     [FormulaResult]
-    public EnchantmentTypeFlags? StatModType { get; set; } = StatModType;
+    public EnchantmentTypeFlags? StatModType { get; set; }
     [FormulaResult]
-    public uint? StatModKey { get; set; } = StatModKey;
+    public uint? StatModKey { get; set; }
     [FormulaResult]
-    public float? StatModVal { get; set; } = StatModVal;
+    public float? StatModVal { get; set; }
     [FormulaResult]
-    public DamageType? EType { get; set; } = EType;
+    public DamageType? EType { get; set; }
     [FormulaResult]
-    public DamageType? DamageType { get; set; } = DamageType;
+    public DamageType? DamageType { get; set; }
     [FormulaResult]
-    public int? BaseIntensity { get; set; } = BaseIntensity;
+    public int? BaseIntensity { get; set; }
     [FormulaResult]
-    public int? Variance { get; set; } = Variance;
+    public int? Variance { get; set; }
     [FormulaResult]
-    public int? NumProjectiles { get; } = NumProjectiles;
+    public int? NumProjectiles { get; }
     [FormulaResult]
-    public float? DrainPercentage { get; } = DrainPercentage;
+    public float? DrainPercentage { get; }
     [FormulaResult]
-    public float? DamageRatio { get; } = DamageRatio;
+    public float? DamageRatio { get; }
     [FormulaResult]
-    public double? Duration { get; set; } = Duration;
+    public double? Duration { get; set; }
     [FormulaResult]
-    public double? DotDuration { get; set; } = DotDuration;
+    public double? DotDuration { get; set; }
     [FormulaResult]
-    public PlayScript? CasterEffect { get; set; } = CasterEffect;
+    public PlayScript? CasterEffect { get; set; }
     [FormulaResult]
-    public PlayScript? TargetEffect { get; set; } = TargetEffect;
+    public PlayScript? TargetEffect { get; set; }
     [FormulaResult]
-    public uint? Wcid { get; set; } = Wcid;
+    public uint? Wcid { get; set; }
 
     static Settings Settings => PatchClass.Settings;
+
+    public SpellCustomization() { }
+    public SpellCustomization(
+            SpellId Template,
+            SpellId? Id = default(SpellId),
+            string Name = null,
+            string SpellWords = null,
+            MagicSchool? School = null,
+            SpellCategory? Category = null,
+            SpellFlags? Bitfield = null,
+            uint? BaseMana = null,
+            float? BaseRangeConstant = null,
+            float? BaseRangeMod = null,
+            uint? Power = null,
+            EnchantmentTypeFlags? StatModType = null,
+            uint? StatModKey = null,
+            float? StatModVal = null,
+            DamageType? EType = null,
+            DamageType? DamageType = null,
+            int? BaseIntensity = null,
+            int? Variance = null,
+            int? NumProjectiles = null,
+            float? DrainPercentage = null,
+            float? DamageRatio = null,
+            double? Duration = null,
+            double? DotDuration = null,
+            PlayScript? CasterEffect = null,
+            PlayScript? TargetEffect = null,
+            uint? Wcid = null
+    )
+    {
+        this.Template = Template;
+        this.Id = Id;
+        this.Name = Name;
+        this.SpellWords = SpellWords;
+        this.School = School;
+        this.Category = Category;
+        this.Bitfield = Bitfield;
+        this.BaseMana = BaseMana;
+        this.BaseRangeConstant = BaseRangeConstant;
+        this.BaseRangeMod = BaseRangeMod;
+        this.Power = Power;
+        this.StatModType = StatModType;
+        this.StatModKey = StatModKey;
+        this.StatModVal = StatModVal;
+        this.EType = EType;
+        this.DamageType = DamageType;
+        this.BaseIntensity = BaseIntensity;
+        this.Variance = Variance;
+        this.NumProjectiles = NumProjectiles;
+        this.DrainPercentage = DrainPercentage;
+        this.DamageRatio = DamageRatio;
+        this.Duration = Duration;
+        this.DotDuration = DotDuration;
+        this.CasterEffect = CasterEffect;
+        this.TargetEffect = TargetEffect;
+        this.Wcid = Wcid;
+    }
+
+    /// <summary>
+    /// Creates a spell customization from a SpellBase and Database Spell
+    /// </summary>
+    public SpellCustomization(SpellBase sb, ACE.Database.Models.World.Spell db)
+    {
+        Template = (SpellId)db.Id;
+        Id = (SpellId?)db.Id;
+        Name = db.Name;
+        SpellWords = sb.spellWords;
+        School = sb.School;
+        Category = sb.Category;
+        Bitfield = (SpellFlags?)sb.Bitfield;
+        BaseMana = sb.BaseMana;
+        BaseRangeConstant = sb.BaseRangeConstant;
+        BaseRangeMod = sb.BaseRangeMod;
+        Power = sb.Power;
+        StatModType = (EnchantmentTypeFlags?)db.StatModType;
+        StatModKey = db.StatModKey;
+        StatModVal = db.StatModVal;
+        EType = (DamageType?)db.EType;
+        DamageType = (DamageType?)db.DamageType;
+        BaseIntensity = db.BaseIntensity;
+        Variance = db.Variance;
+        NumProjectiles = db.NumProjectiles;
+        DrainPercentage = db.DrainPercentage;
+        DamageRatio = db.DamageRatio;
+        Duration = sb.Duration;
+        DotDuration = db.DotDuration;
+        CasterEffect = (PlayScript?)sb.CasterEffect;
+        TargetEffect = (PlayScript?)sb.TargetEffect;
+        Wcid = db.Wcid;
+    }
 
     /// <summary>
     /// Applies non-null values of a SpellCustomization to a SpellBase and Database Spell
