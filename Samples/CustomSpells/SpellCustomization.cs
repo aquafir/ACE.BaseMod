@@ -20,9 +20,9 @@ public class SpellCustomization(
         DamageType? DamageType = null,
         int? BaseIntensity = null,
         int? Variance = null,
-        //int? NumProjectiles = null,
-        //float? DrainPercentage = null,
-        //float? DamageRatio = null,
+        int? NumProjectiles = null,
+        float? DrainPercentage = null,
+        float? DamageRatio = null,
         double? Duration = null,
         double? DotDuration = null,
         PlayScript? CasterEffect = null,
@@ -66,6 +66,12 @@ public class SpellCustomization(
     public int? BaseIntensity { get; set; } = BaseIntensity;
     [FormulaResult]
     public int? Variance { get; set; } = Variance;
+    [FormulaResult]
+    public int? NumProjectiles { get; } = NumProjectiles;
+    [FormulaResult]
+    public float? DrainPercentage { get; } = DrainPercentage;
+    [FormulaResult]
+    public float? DamageRatio { get; } = DamageRatio;
     [FormulaResult]
     public double? Duration { get; set; } = Duration;
     [FormulaResult]
@@ -212,9 +218,10 @@ public class SpellCustomization(
         db.StatModVal = StatModVal ?? db.StatModVal;
         db.BaseIntensity = BaseIntensity ?? db.BaseIntensity;
         db.Variance = Variance ?? db.Variance;
-        //db.NumProjectiles = NumProjectiles ?? db.NumProjectiles;
-        //db.DrainPercentage = DrainPercentage ?? db.DrainPercentage;
-        //db.DamageRatio = DamageRatio ?? db.DamageRatio;
+
+        db.NumProjectiles = NumProjectiles ?? db.NumProjectiles;
+        db.DrainPercentage = DrainPercentage ?? db.DrainPercentage;
+        db.DamageRatio = DamageRatio ?? db.DamageRatio;
 
         #region Used?
         //USED / Converted
@@ -273,11 +280,20 @@ public class SpellCustomization(
         {
             if (!File.Exists(path) && createMissing)
             {
-                new ExcelMapper().Save(path, new List<SpellCustomization>(), "Spells");
+                new ExcelMapper().Save(path, new List<SpellCustomization>() { new(SpellId.StrengthSelf1, SpellId.StrengthSelf1,"Buff Buff Self I", StatModVal: 7) }, "Spells");
                 ModManager.Log($"Created: {path}");
             }
 
-            excel = new(path);
+            //Copy to a temp file to avoid locks?  Not sure why Read access fails while copying works
+            var loadedPath = $"{path}.load";
+            
+            //Could use temp files?
+            //Path.GetTempFileName()
+
+            File.Copy(path, loadedPath, true);
+            //var stream = new FileStream(xlsxPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+            excel = new(loadedPath);
         }
         catch (Exception ex)
         {

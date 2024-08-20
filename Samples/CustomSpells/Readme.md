@@ -1,5 +1,9 @@
 ﻿## Spell Customization
 
+`CusomSpellsSpreadsheet` is the name of an Excel spreadsheet relative to the mod folder.  You can download this [Google Sheets template](https://docs.google.com/spreadsheets/d/1Ya_oDlCZ-AJwV4qcXsZ3m15NqgSGOgtLlPAPuIn8bj0/edit?usp=sharing) with `File→Download→Microsoft Excel (.xlsx)` and place that file in your mod directory.
+
+
+
 `CustomSpells` contains a list of `SpellCustomization` that either create or update spells.
 
 Default values use the required `SpellId` `Template`, and the spell that is created/updated is the required destination `Id`.  
@@ -42,7 +46,10 @@ Values that may be set (not hard to support other `SpellBase` / `Spell` values i
 * `double` DotDuration -  The DoT (damage over time) duration for the spell
 * `PlayScript` CasterEffect -  Effect that plays on the caster for this spell (ie. for buffs, protects, etc.)
 * `PlayScript` TargetEffect -  Effect that plays on the target for this spell (ie. for debuffs, vulns, etc.)
-* `uint` Wcid = null -  The weenie class ID associated for this spell, ie. the projectile weenie class id
+* `uint` Wcid -  The weenie class ID associated for this spell, ie. the projectile weenie class id
+* `int` NumProjectiles - The total # of projectiles launched for this spell
+* `float` DrainPercentage - The amount of source vital to drain for a life spell
+* `float` DamageRatio - The percentage of DrainPercentage to damage a target for life projectiles
 
 
 
