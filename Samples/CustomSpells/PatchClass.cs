@@ -220,13 +220,13 @@ public class PatchClass
     public static void HandleSpellDump(Session session, params string[] parameters)
     {
         List<SpellCustomization> sc = new();
-        foreach(var spellId in Enum.GetValues<SpellId>())
+        foreach(var spellId in Enum.GetValues<SpellId>().Take(2000))
         {
             var spell = new Spell(spellId);
             if (spell is null || spell._spellBase is null || spell._spell is null)
                 continue;
 
-            var custom = new SpellCustomization(spell._spellBase, spell._spell);
+            var custom = new SpellCustomization(spell._spellBase, spell._spell, spell);
             if (custom is null)
                 continue;
 
@@ -234,7 +234,8 @@ public class PatchClass
         }
 
         var path = Path.Combine(Mod.ModPath, "Dump.xlsx");
-        new ExcelMapper().Save(path, sc, "Spells");
+        if(SpellCustomization.TryGetSpreadsheet(path, out var excel))
+            excel.Save(path, sc, "Spells");
 
         var msg = $"Exported {sc.Count} spells to be customized to:\n{path}";
         ModManager.Log(msg);

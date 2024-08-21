@@ -1,4 +1,8 @@
 ﻿
+using NPOI.SS.Formula;
+using System.Globalization;
+using JsonAttribute = Ganss.Excel.JsonAttribute;
+
 namespace CustomSpells;
 
 public class SpellCustomization
@@ -54,6 +58,8 @@ public class SpellCustomization
     [FormulaResult]
     public PlayScript? TargetEffect { get; set; }
     [FormulaResult]
+    public ItemType? NonComponentTargetType { get; set; }
+    [FormulaResult]
     public uint? Wcid { get; set; }
     [FormulaResult]
     public int? Boost { get; set; }
@@ -69,9 +75,49 @@ public class SpellCustomization
     public float? LossPercent { get; set; }
     [FormulaResult]
     public int? TransferCap { get; set; }
+    [FormulaResult]
+    public TransferFlags? TransferFlags { get; set; }
+    [FormulaResult]
+    public double? PortalLifetime { get; set; }
+    [FormulaResult]
+    public int? Link { get; set; }
+    [FormulaResult]
+    public float? SpreadAngle { get; set; }
+    [FormulaResult]
+    public bool? NonTracking { get; set; }
+    [FormulaResult]
+    [Json]
+    public Vector3? CreateOffset { get; set; }
+    [FormulaResult]
+    [Json]
+    public Vector3? Padding { get; set; }
+    [FormulaResult]
+    [Json]
+    public Vector3? Peturbation { get; set; }
+    [FormulaResult]
+    public int? MinPower { get; set; }
+    [FormulaResult]
+    public int? MaxPower { get; set; }
+    [FormulaResult]
+    public MagicSchool? DispelSchool { get; set; }
+    [FormulaResult]
+    public DispelType? Align { get; set; }
+    [FormulaResult]
+    public int? Number { get; set; }
+    [FormulaResult]
+    public float? NumberVariance { get; set; }
+    [FormulaResult]
+    public List<uint>? Formula { get; set; }
+    //    [FormulaResult]
+    //#if REALM
+    //    public LocalPosition? Position { get; set; }
+    //#else
+    //    public Position? Position { get; set; }
+    //#endif
 
     static Settings Settings => PatchClass.Settings;
 
+    public SpellCustomization() { }
     public SpellCustomization(
             SpellId Template,
             SpellId? Id = default(SpellId),
@@ -98,6 +144,7 @@ public class SpellCustomization
             double? DotDuration = null,
             PlayScript? CasterEffect = null,
             PlayScript? TargetEffect = null,
+            ItemType? NonComponentTargetType = null,
             uint? Wcid = null,
             int? Boost = null,
             int? BoostVariance = null,
@@ -105,7 +152,28 @@ public class SpellCustomization
             PropertyAttribute2nd? Destination = null,
             float? Proportion = null,
             float? LossPercent = null,
-            int? TransferCap = null
+            int? TransferCap = null,
+            TransferFlags? TransferFlags = null,
+            double? PortalLifetime = null,
+            int? Link = null,
+            float? SpreadAngle = null,
+            bool? NonTracking = null,
+            Vector3? CreateOffset = null,
+            Vector3? Padding = null,
+            Vector3? Peturbation = null,
+            int? MinPower = null,
+            int? MaxPower = null,
+            MagicSchool? DispelSchool = null,
+            DispelType? Align = null,
+            int? Number = null,
+            float? NumberVariance = null
+            //List<uint>? Formula = null
+    //        ,
+    //#if REALM
+    //            LocalPosition? Position = null
+    //#else
+    //        Position? Position = null
+    //#endif
     )
     {
         this.Template = Template;
@@ -133,6 +201,7 @@ public class SpellCustomization
         this.DotDuration = DotDuration;
         this.CasterEffect = CasterEffect;
         this.TargetEffect = TargetEffect;
+        this.NonComponentTargetType = NonComponentTargetType;
         this.Wcid = Wcid;
         this.Boost = Boost;
         this.BoostVariance = BoostVariance;
@@ -141,12 +210,29 @@ public class SpellCustomization
         this.Proportion = Proportion;
         this.LossPercent = LossPercent;
         this.TransferCap = TransferCap;
+        this.TransferFlags = TransferFlags;
+        this.PortalLifetime = PortalLifetime;
+        this.Link = Link;
+        this.SpreadAngle = SpreadAngle;
+        this.NonTracking = NonTracking;
+        this.CreateOffset = CreateOffset;
+        this.Padding = Padding;
+        this.Peturbation = Peturbation;
+        this.MinPower = MinPower;
+        this.MaxPower = MaxPower;
+        this.DispelSchool = DispelSchool;
+        this.Align = Align;
+        this.Number = Number;
+        this.NumberVariance = NumberVariance;
+
+        this.Formula = Formula;
+        //this.Position = Position;
     }
 
     /// <summary>
     /// Creates a spell customization from a SpellBase and Database Spell
     /// </summary>
-    public SpellCustomization(SpellBase sb, ACE.Database.Models.World.Spell db)
+    public SpellCustomization(SpellBase sb, ACE.Database.Models.World.Spell db, ACE.Server.Entity.Spell spell)
     {
         Template = (SpellId)db.Id;
         Id = (SpellId?)db.Id;
@@ -173,6 +259,7 @@ public class SpellCustomization
         DotDuration = db.DotDuration;
         CasterEffect = (PlayScript?)sb.CasterEffect;
         TargetEffect = (PlayScript?)sb.TargetEffect;
+        NonComponentTargetType = (ItemType?)sb.NonComponentTargetType;
         Wcid = db.Wcid;
         Boost = db.Boost;
         BoostVariance = db.BoostVariance;
@@ -181,6 +268,37 @@ public class SpellCustomization
         Proportion = db.Proportion;
         LossPercent = db.LossPercent;
         TransferCap = db.TransferCap;
+
+        TransferFlags = (TransferFlags?)db.TransferBitfield;
+        PortalLifetime = sb.PortalLifetime;
+        Link = db.Link;
+        SpreadAngle = db.SpreadAngle;
+        NonTracking = db.NonTracking;
+
+        MinPower = db.MinPower;
+        MaxPower = db.MaxPower;
+        DispelSchool = (MagicSchool?)db.DispelSchool;
+        Align = (DispelType?)db.Align;
+        Number = db.Number;
+        NumberVariance = db.NumberVariance;
+
+        //TODO: Property write Vector3 / Lists
+        //CreateOffset = db.CreateOffsetOriginX is null ? null : default;
+        //new Vector3(db.CreateOffsetOriginX ?? 0.0f, db.CreateOffsetOriginY ?? 0.0f, db.CreateOffsetOriginZ ?? 0.0f);
+        //Padding = db.PaddingOriginX is null ? null : //default;
+        //new Vector3(db.PaddingOriginX ?? 0.0f, db.PaddingOriginY ?? 0.0f, db.PaddingOriginZ ?? 0.0f);
+        //Peturbation = db.PeturbationOriginX is null ? null : //default;
+        //    new Vector3(db.PeturbationOriginX ?? 0.0f, db.PeturbationOriginY ?? 0.0f, db.PeturbationOriginZ ?? 0.0f);
+        CreateOffset = spell.CreateOffset;
+        Padding = spell.Padding;
+        Peturbation = spell.Peturbation;
+        //Formula = sb.Formula;
+
+        //#if REALM
+        //        LocalPosition? Position = null
+        //#else
+        //        Position? Position = null
+        //#endif
     }
 
     /// <summary>
@@ -304,7 +422,7 @@ public class SpellCustomization
         sb.Duration = Duration ?? sb.Duration;
         sb.CasterEffect = CasterEffect is not null ? (uint)CasterEffect : sb.CasterEffect;
         sb.TargetEffect = TargetEffect is not null ? (uint)TargetEffect : sb.TargetEffect;
-        //sb.NonComponentTargetType = NonComponentTargetType is not null ? (uint) sb.NonComponentTargetType;
+        sb.NonComponentTargetType = NonComponentTargetType is not null ? (uint)NonComponentTargetType : sb.NonComponentTargetType;
 
         db.Id = ID;
         db.Wcid = Wcid ?? db.Wcid;
@@ -328,6 +446,46 @@ public class SpellCustomization
         db.Proportion = Proportion ?? db.Proportion;
         db.LossPercent = LossPercent ?? db.LossPercent;
         db.TransferCap = TransferCap ?? db.TransferCap;
+
+        db.TransferBitfield = TransferFlags is not null ? (uint)TransferFlags : db.TransferBitfield;
+        sb.PortalLifetime = PortalLifetime ?? sb.PortalLifetime;
+        db.Link = Link ?? db.Link;
+        db.SpreadAngle = SpreadAngle ?? db.SpreadAngle;
+        db.NonTracking = NonTracking ?? db.NonTracking;
+
+        if (CreateOffset is not null)
+        {
+            db.CreateOffsetOriginX = CreateOffset.Value.X;
+            db.CreateOffsetOriginY = CreateOffset.Value.Y;
+            db.CreateOffsetOriginZ = CreateOffset.Value.Z;
+        }
+        if (Padding is not null)
+        {
+            db.PaddingOriginX = Padding.Value.X;
+            db.PaddingOriginY = Padding.Value.Y;
+            db.PaddingOriginZ = Padding.Value.Z;
+        }
+        if (Peturbation is not null)
+        {
+            db.PeturbationOriginX = Peturbation.Value.X;
+            db.PeturbationOriginY = Peturbation.Value.Y;
+            db.PeturbationOriginZ = Peturbation.Value.Z;
+        }
+
+        db.MinPower = MinPower ?? db.MinPower;
+        db.MaxPower = MaxPower ?? db.MaxPower;
+        db.DispelSchool = DispelSchool is not null ? (int)DispelSchool : db.DispelSchool;
+        db.Align = Align is not null ? (int)Align : db.Align;
+        db.Number = Number ?? db.Number;
+        db.NumberVariance = NumberVariance ?? db.NumberVariance;
+
+        //sb.Formula = Formula ?? sb.Formula;
+
+        //#if REALM
+        //        LocalPosition? Position = null
+        //#else
+        //        Position? Position = null
+        //#endif
     }
 
     /// <summary>
@@ -396,13 +554,66 @@ public class SpellCustomization
         //PlayScript? TargetEffect
         excel.AddMapping<SpellCustomization>(nameof(b.TargetEffect), p => p.TargetEffect)
             .SetPropertyUsing(cellValue => TryParseCellEnum<PlayScript>(cellValue, out var parsed) ? parsed : null);
+        //ItemType? NonComponentTargetType
+        excel.AddMapping<SpellCustomization>(nameof(b.NonComponentTargetType), p => p.NonComponentTargetType)
+            .SetPropertyUsing(cellValue => TryParseCellEnum<ItemType>(cellValue, out var parsed) ? parsed : null);
         //PropertyAttribute2nd? Source
         excel.AddMapping<SpellCustomization>(nameof(b.Source), p => p.Source)
             .SetPropertyUsing(cellValue => TryParseCellEnum<PropertyAttribute2nd>(cellValue, out var parsed) ? parsed : null);
         //PropertyAttribute2nd? Destination
         excel.AddMapping<SpellCustomization>(nameof(b.Destination), p => p.Destination)
             .SetPropertyUsing(cellValue => TryParseCellEnum<PropertyAttribute2nd>(cellValue, out var parsed) ? parsed : null);
+        //TransferFlags? TransferFlags
+        excel.AddMapping<SpellCustomization>(nameof(b.TransferFlags), p => p.TransferFlags)
+            .SetPropertyUsing(cellValue => TryParseCellEnum<TransferFlags>(cellValue, out var parsed) ? parsed : null);
+        //MagicSchool? DispelSchool
+        excel.AddMapping<SpellCustomization>(nameof(b.DispelSchool), p => p.DispelSchool)
+            .SetPropertyUsing(cellValue => TryParseCellEnum<MagicSchool>(cellValue, out var parsed) ? parsed : null);
+        //DispelType? Align
+        excel.AddMapping<SpellCustomization>(nameof(b.Align), p => p.Align)
+            .SetPropertyUsing(cellValue => TryParseCellEnum<DispelType>(cellValue, out var parsed) ? parsed : null);
 
+        //Vector3? CreateOffset
+        //excel.AddMapping<SpellCustomization>(nameof(b.CreateOffset), p => p.CreateOffset)
+        //    .SetCellUsing<Vector3>((c, o) =>
+        //    {
+        //        if (o == default) c.SetCellValue(""); else c.SetCellValue(o.Serialize());
+        //    })
+        //    .SetPropertyUsing(cellValue => TryParseVector3(cellValue, out var parsed) ? parsed : null);
+        ////Vector3? Padding
+        //excel.AddMapping<SpellCustomization>(nameof(b.Padding), p => p.Padding)
+        //    .SetCellUsing<Vector3>((c, o) =>
+        //    {
+        //        if (o == default) c.SetCellValue(""); else c.SetCellValue(o.Serialize());
+        //    })
+        //    .SetPropertyUsing(cellValue => TryParseVector3(cellValue, out var parsed) ? parsed : null);
+        ////Vector3? Peturbation
+        //excel.AddMapping<SpellCustomization>(nameof(b.Peturbation), p => p.Peturbation)
+        //    .SetCellUsing<Vector3>((c, o) =>
+        //    {
+        //        if (o == default) c.SetCellValue(""); else c.SetCellValue(o.Serialize());
+        //    })
+        //    .SetPropertyUsing(cellValue => TryParseVector3(cellValue, out var parsed) ? parsed : null);
+
+        //List<uint> Formula
+        //excel.AddMapping<SpellCustomization>(nameof(b.Formula), p => p.Formula)
+        //    .SetCellUsing<List<uint>>((c, o) =>
+        //    {
+        //        Debugger.Break();
+        //        if (o == null || o.Count == 0) c.SetCellValue(""); 
+        //        else c.SetCellValue(String.Join(',',o));
+        //    })
+        //    .SetPropertyUsing(cellValue => TryParseList<uint>(cellValue, out var parsed) ? parsed : null);
+
+
+        //Ignore zeros
+        excel.AddMapping<SpellCustomization>(nameof(b.PortalLifetime), p => p.PortalLifetime)
+            .SetCellUsing<double?>((c, o) =>
+            {
+                if (o is null || o == 0) return;
+                //c.SetCellValue("");
+                else c.SetCellValue(o.ToString());
+            });
 
         return true;
     }
@@ -469,4 +680,64 @@ public class SpellCustomization
         //Fall back to string
         //return cellValue.TryConvertToEnum(out parsed);
     }
+
+    public static bool TryParseVector3(object vector, out Vector3 result)
+    {
+        result = default;
+        if (vector is not string vectorString || string.IsNullOrEmpty(vectorString))
+            return false;
+            //throw new ArgumentException("Input string cannot be null or empty.", nameof(vectorString));
+
+        string[] components = vectorString.Split(',');
+
+        if (components.Length != 3)
+            return false;
+            //throw new FormatException("Input string is not in the correct format for a Vector3.");
+
+        float x = float.Parse(components[0]);
+        float y = float.Parse(components[1]);
+        float z = float.Parse(components[2]);
+
+        result = new Vector3(x, y, z);
+
+        return true;
+    }
+
+    public static bool TryParseList<T>(object value,  out List<T> result, string separator = ",")
+    {
+        result = new List<T>();
+
+        if (value is not string input || string.IsNullOrEmpty(input))
+            return false; // Return an empty list if the input is null or empty
+
+        // Split the input string by the separator
+        string[] items = input.Split(separator);
+
+        foreach (string item in items)
+        {
+            try
+            {
+                // Convert each item to the desired type T and add it to the list
+                T converted = (T)Convert.ChangeType(item.Trim(), typeof(T), CultureInfo.InvariantCulture);
+                result.Add(converted);
+            }
+            catch (Exception ex)
+            {
+                return false;
+                //throw new FormatException($"Could not convert '{item}' to {typeof(T)}", ex);
+            }
+        }
+
+        return true;
+    }
+}
+
+public static class Vector3Serialization
+{
+    public static string Serialize(this Vector3 vector)
+    {
+        return $"{vector.X},{vector.Y},{vector.Z}";
+    }
+
+
 }
