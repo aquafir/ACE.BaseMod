@@ -55,6 +55,20 @@ public class SpellCustomization
     public PlayScript? TargetEffect { get; set; }
     [FormulaResult]
     public uint? Wcid { get; set; }
+    [FormulaResult]
+    public int? Boost { get; set; }
+    [FormulaResult]
+    public int? BoostVariance { get; set; }
+    [FormulaResult]
+    public PropertyAttribute2nd? Source { get; set; }
+    [FormulaResult]
+    public PropertyAttribute2nd? Destination { get; set; }
+    [FormulaResult]
+    public float? Proportion { get; set; }
+    [FormulaResult]
+    public float? LossPercent { get; set; }
+    [FormulaResult]
+    public int? TransferCap { get; set; }
 
     static Settings Settings => PatchClass.Settings;
 
@@ -85,7 +99,14 @@ public class SpellCustomization
             double? DotDuration = null,
             PlayScript? CasterEffect = null,
             PlayScript? TargetEffect = null,
-            uint? Wcid = null
+            uint? Wcid = null,
+            int? Boost = null,
+            int? BoostVariance = null,
+            PropertyAttribute2nd? Source = null,
+            PropertyAttribute2nd? Destination = null,
+            float? Proportion = null,
+            float? LossPercent = null,
+            int? TransferCap = null
     )
     {
         this.Template = Template;
@@ -114,6 +135,13 @@ public class SpellCustomization
         this.CasterEffect = CasterEffect;
         this.TargetEffect = TargetEffect;
         this.Wcid = Wcid;
+        this.Boost = Boost;
+        this.BoostVariance = BoostVariance;
+        this.Source = Source;
+        this.Destination = Destination;
+        this.Proportion = Proportion;
+        this.LossPercent = LossPercent;
+        this.TransferCap = TransferCap;
     }
 
     /// <summary>
@@ -147,6 +175,13 @@ public class SpellCustomization
         CasterEffect = (PlayScript?)sb.CasterEffect;
         TargetEffect = (PlayScript?)sb.TargetEffect;
         Wcid = db.Wcid;
+        Boost = db.Boost;
+        BoostVariance = db.BoostVariance;
+        Source = (PropertyAttribute2nd?)db.Source;
+        Destination = (PropertyAttribute2nd?)db.Destination;
+        Proportion = db.Proportion;
+        LossPercent = db.LossPercent;
+        TransferCap = db.TransferCap;
     }
 
     /// <summary>
@@ -287,50 +322,13 @@ public class SpellCustomization
         db.DrainPercentage = DrainPercentage ?? db.DrainPercentage;
         db.DamageRatio = DamageRatio ?? db.DamageRatio;
 
-        #region Used?
-        //USED / Converted
-        //uint? MetaSpellId = ID
-        //string? spellWords
-        //string? Name
-        //MagicSchool? School
-        //SpellCategory? Category
-        //SpellFlags? Bitfield
-        //uint? BaseMana
-        //float? BaseRangeConstant
-        //float? BaseRangeMod
-        //uint? Power
-        //double? Duration
-        //PlayScript? CasterEffect
-        //PlayScript? TargetEffect
-        //PlayScript? FizzleEffect
-        //ItemType? NonComponentTargetType
-        //uint? Wcid
-
-        //uint? Id
-        //string? Name
-        //EnchantmentTypeFlags? StatModType
-        //One of: Skill | PropertyAttribute | PropertyAttribute2nd | PropertyInt | PropertyFloat
-        //uint? StatModKey
-        //DamageType? EType
-        //DamageType? DamageType
-        //float? StatModVal
-        //int? BaseIntensity
-        //int? Variance
-        //int? NumProjectiles
-        //float? DrainPercentage
-        //float? DamageRatio
-        //double? DotDuration
-
-        //Life stuff
-        //int? Boost
-        //int? BoostVariance
-        //PropertyAttribute2nd? Source
-        //PropertyAttribute2nd? Destination
-        //float? Proportion
-        //float? LossPercent
-        //int? SourceLoss
-        //int? TransferCap
-        #endregion
+        db.Boost = Boost ?? db.Boost;
+        db.BoostVariance = BoostVariance ?? db.BoostVariance;
+        db.Source = Source is not null ? (int)Source : db.Source;
+        db.Destination = Destination is not null ? (int)Destination : db.Destination;
+        db.Proportion = Proportion ?? db.Proportion;
+        db.LossPercent = LossPercent ?? db.LossPercent;
+        db.TransferCap = TransferCap ?? db.TransferCap;
     }
 
     /// <summary>
@@ -399,6 +397,13 @@ public class SpellCustomization
         //PlayScript? TargetEffect
         excel.AddMapping<SpellCustomization>(nameof(b.TargetEffect), p => p.TargetEffect)
             .SetPropertyUsing(cellValue => TryParseCellEnum<PlayScript>(cellValue, out var parsed) ? parsed : null);
+        //PropertyAttribute2nd? Source
+        excel.AddMapping<SpellCustomization>(nameof(b.Source), p => p.Source)
+            .SetPropertyUsing(cellValue => TryParseCellEnum<PropertyAttribute2nd>(cellValue, out var parsed) ? parsed : null);
+        //PropertyAttribute2nd? Destination
+        excel.AddMapping<SpellCustomization>(nameof(b.Destination), p => p.Destination)
+            .SetPropertyUsing(cellValue => TryParseCellEnum<PropertyAttribute2nd>(cellValue, out var parsed) ? parsed : null);
+
 
         return true;
     }
