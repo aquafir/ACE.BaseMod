@@ -72,7 +72,6 @@ public class SpellCustomization
 
     static Settings Settings => PatchClass.Settings;
 
-    public SpellCustomization() { }
     public SpellCustomization(
             SpellId Template,
             SpellId? Id = default(SpellId),
