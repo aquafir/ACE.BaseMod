@@ -40,11 +40,11 @@ public class SpellCustomization
     [FormulaResult]
     public int? Variance { get; set; }
     [FormulaResult]
-    public int? NumProjectiles { get; }
+    public int? NumProjectiles { get; set; }
     [FormulaResult]
-    public float? DrainPercentage { get; }
+    public float? DrainPercentage { get; set; }
     [FormulaResult]
-    public float? DamageRatio { get; }
+    public float? DamageRatio { get; set; }
     [FormulaResult]
     public double? Duration { get; set; }
     [FormulaResult]
@@ -344,13 +344,13 @@ public class SpellCustomization
         {
             if (!File.Exists(path) && createMissing)
             {
-                new ExcelMapper().Save(path, new List<SpellCustomization>() { new(SpellId.StrengthSelf1, SpellId.StrengthSelf1,"Buff Buff Self I", StatModVal: 7) }, "Spells");
+                new ExcelMapper().Save(path, new List<SpellCustomization>() { new(SpellId.StrengthSelf1, SpellId.StrengthSelf1, "Buff Buff Self I", StatModVal: 7) }, "Spells");
                 ModManager.Log($"Created: {path}");
             }
 
             //Copy to a temp file to avoid locks?  Not sure why Read access fails while copying works
             var loadedPath = $"{path}.load";
-            
+
             //Could use temp files?
             //Path.GetTempFileName()
 
@@ -402,7 +402,6 @@ public class SpellCustomization
 
         return true;
     }
-
 
     /// <summary>
     /// Tries to load SpellCustomizations from the path in Settings

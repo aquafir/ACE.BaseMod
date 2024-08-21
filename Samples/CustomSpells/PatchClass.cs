@@ -141,7 +141,7 @@ public class PatchClass
                 //Set DB Spell - DatabaseManager.World.spellCache / GetCachedSpell
                 DatabaseManager.World.spellCache[key] = dbSpell;
 
-                ModManager.Log($"Customized Spell: {customSpell.Template} -> {customSpell.Id}");
+                //ModManager.Log($"Customized Spell: {customSpell.Template} -> {customSpell.Id}");
             }
             catch (Exception)
             {
@@ -206,10 +206,12 @@ public class PatchClass
     [CommandHandler("lss", AccessLevel.Player, CommandHandlerFlag.None)]
     public static void HandleLoadSpellSpreadsheet(Session session, params string[] parameters)
     {
+        var sw = Stopwatch.StartNew();
         var spells = SpellCustomization.ParseCustomizations();
         CustomizeSpells(spells);
+        sw.Stop();
 
-        var msg = $"Loaded custom spells ({spells.Count})";
+        var msg = $"Loaded {spells.Count} custom spells in {sw.ElapsedMilliseconds}ms from:\n{Settings.CustomSpellsSpreadsheet}";
         ModManager.Log(msg);
         session?.Player?.SendMessage(msg);
     }
