@@ -39,7 +39,7 @@ The below renames "Strength Self I", lowers it to 5 before updating the `Templat
 
 ### Spreadsheet
 
-If `AutoloadSpreadsheet` is true, a valid Excel spreadsheet set with `CustomSpellsSpreadsheet` will be applied when starting.  This may be done manually with the `/loadspells` command.
+If `AutoloadSpreadsheet` is true, a valid Excel spreadsheet set with `Spreadsheet` will be applied when starting.  This may be done manually with the `/loadspells` command.
 
 
 

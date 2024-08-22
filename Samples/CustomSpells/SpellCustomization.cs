@@ -111,6 +111,7 @@ public class SpellCustomization
 
     static Settings Settings => PatchClass.Settings;
 
+    public SpellCustomization() { }
     public SpellCustomization(
             SpellId Template,
             SpellId? Id = default(SpellId),
@@ -436,7 +437,7 @@ public class SpellCustomization
     /// </summary>
     public static List<SpellCustomization> ParseCustomizations()
     {
-        if (TryGetSpreadsheet(Settings.CustomSpellsSpreadsheet, out var excel))
+        if (TryGetSpreadsheet(Settings.Spreadsheet, out var excel))
             return ParseCustomizations(excel);
 
         return new();

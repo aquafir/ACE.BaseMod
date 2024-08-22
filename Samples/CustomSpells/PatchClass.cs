@@ -108,6 +108,9 @@ public class PatchClass
 
     private static void SetupSpells()
     {
+        if (Settings.AutoloadSpreadsheet)
+            LoadSpellSpreadsheet();
+
         CustomizeSpells(Settings.CustomSpells);
 
         OverrideSpellSets();
@@ -115,9 +118,6 @@ public class PatchClass
 
     private static void CustomizeSpells(List<SpellCustomization> customSpells)
     {
-        if (Settings.AutoloadSpreadsheet)
-            LoadSpellSpreadsheet();
-
         foreach (var customSpell in customSpells)
         {
             //Get keys from SpellId, defaulting to overriding the template
@@ -161,7 +161,7 @@ public class PatchClass
         CustomizeSpells(spells);
         sw.Stop();
 
-        var msg = $"Loaded {spells.Count} custom spells in {sw.ElapsedMilliseconds}ms from:\n{Settings.CustomSpellsSpreadsheet}";
+        var msg = $"Loaded {spells.Count} custom spells in {sw.ElapsedMilliseconds}ms from:\n{Settings.Spreadsheet}";
         ModManager.Log(msg);
         player?.SendMessage(msg);
     }
