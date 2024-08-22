@@ -1,6 +1,5 @@
 ﻿
 using NPOI.SS.Formula;
-using System.Globalization;
 using JsonAttribute = Ganss.Excel.JsonAttribute;
 
 namespace CustomSpells;
@@ -21,6 +20,8 @@ public class SpellCustomization
     public SpellCategory? Category { get; set; }
     [FormulaResult]
     public SpellFlags? Bitfield { get; set; }
+    [FormulaResult]
+    public SpellType? MetaSpellType { get; set; }
     [FormulaResult]
     public uint? BaseMana { get; set; }
     [FormulaResult]
@@ -86,13 +87,10 @@ public class SpellCustomization
     [FormulaResult]
     public bool? NonTracking { get; set; }
     [FormulaResult]
-    [Json]
     public Vector3? CreateOffset { get; set; }
     [FormulaResult]
-    [Json]
     public Vector3? Padding { get; set; }
     [FormulaResult]
-    [Json]
     public Vector3? Peturbation { get; set; }
     [FormulaResult]
     public int? MinPower { get; set; }
@@ -108,16 +106,11 @@ public class SpellCustomization
     public float? NumberVariance { get; set; }
     [FormulaResult]
     public List<uint>? Formula { get; set; }
-    //    [FormulaResult]
-    //#if REALM
-    //    public LocalPosition? Position { get; set; }
-    //#else
-    //    public Position? Position { get; set; }
-    //#endif
+    [FormulaResult]
+    public Position? Position { get; set; }
 
     static Settings Settings => PatchClass.Settings;
 
-    public SpellCustomization() { }
     public SpellCustomization(
             SpellId Template,
             SpellId? Id = default(SpellId),
@@ -126,6 +119,7 @@ public class SpellCustomization
             MagicSchool? School = null,
             SpellCategory? Category = null,
             SpellFlags? Bitfield = null,
+            SpellType? MetaSpellType = null,
             uint? BaseMana = null,
             float? BaseRangeConstant = null,
             float? BaseRangeMod = null,
@@ -166,14 +160,9 @@ public class SpellCustomization
             MagicSchool? DispelSchool = null,
             DispelType? Align = null,
             int? Number = null,
-            float? NumberVariance = null
-            //List<uint>? Formula = null
-    //        ,
-    //#if REALM
-    //            LocalPosition? Position = null
-    //#else
-    //        Position? Position = null
-    //#endif
+            float? NumberVariance = null,
+            List<uint>? Formula = null,
+            Position? Position = null
     )
     {
         this.Template = Template;
@@ -183,6 +172,7 @@ public class SpellCustomization
         this.School = School;
         this.Category = Category;
         this.Bitfield = Bitfield;
+        this.MetaSpellType = MetaSpellType;
         this.BaseMana = BaseMana;
         this.BaseRangeConstant = BaseRangeConstant;
         this.BaseRangeMod = BaseRangeMod;
@@ -224,16 +214,18 @@ public class SpellCustomization
         this.Align = Align;
         this.Number = Number;
         this.NumberVariance = NumberVariance;
-
         this.Formula = Formula;
-        //this.Position = Position;
+        this.Position = Position;
     }
 
     /// <summary>
     /// Creates a spell customization from a SpellBase and Database Spell
     /// </summary>
-    public SpellCustomization(SpellBase sb, ACE.Database.Models.World.Spell db, ACE.Server.Entity.Spell spell)
+    public SpellCustomization(ACE.Server.Entity.Spell spell)
     {
+        var sb = spell._spellBase;
+        var db = spell._spell; ;
+
         Template = (SpellId)db.Id;
         Id = (SpellId?)db.Id;
         Name = db.Name;
@@ -241,6 +233,7 @@ public class SpellCustomization
         School = sb.School;
         Category = sb.Category;
         Bitfield = (SpellFlags?)sb.Bitfield;
+        MetaSpellType = sb.MetaSpellType;
         BaseMana = sb.BaseMana;
         BaseRangeConstant = sb.BaseRangeConstant;
         BaseRangeMod = sb.BaseRangeMod;
@@ -292,13 +285,9 @@ public class SpellCustomization
         CreateOffset = spell.CreateOffset;
         Padding = spell.Padding;
         Peturbation = spell.Peturbation;
-        //Formula = sb.Formula;
+        Formula = sb.Formula;
 
-        //#if REALM
-        //        LocalPosition? Position = null
-        //#else
-        //        Position? Position = null
-        //#endif
+        Position = spell.Position;
     }
 
     /// <summary>
@@ -306,105 +295,6 @@ public class SpellCustomization
     /// </summary>
     public void Apply(SpellBase sb, ACE.Database.Models.World.Spell db)
     {
-        #region SpellBase
-        //string spellWords;
-        //string Name
-        //string Desc
-        //MagicSchool School
-        //uint Icon
-        //SpellCategory Category
-        //uint Bitfield
-        //uint BaseMana
-        //float BaseRangeConstant
-        //float BaseRangeMod
-        //uint Power
-        //float SpellEconomyMod
-        //uint FormulaVersion
-        //float ComponentLoss
-        //SpellType MetaSpellType
-        //uint MetaSpellId
-        //double Duration
-        //float DegradeModifier
-        //float DegradeLimit
-        //double PortalLifetime
-        //List<uint> Formula
-        //uint CasterEffect
-        //uint TargetEffect
-        //uint FizzleEffect
-        //double RecoveryInterval
-        //float RecoveryAmount
-        //uint DisplayOrder
-        //uint NonComponentTargetType
-        //uint ManaMod
-        #endregion
-        #region ACE.Database.Models.World.Spell
-        //uint Id
-        //string Name
-        //uint? StatModType
-        //uint? StatModKey
-        //float? StatModVal
-        //uint? EType
-        //int? BaseIntensity
-        //int? Variance
-        //uint? Wcid
-        //int? NumProjectiles
-        //int? NumProjectilesVariance
-        //float? SpreadAngle
-        //float? VerticalAngle
-        //float? DefaultLaunchAngle
-        //bool? NonTracking
-        //float? CreateOffsetOriginX
-        //float? CreateOffsetOriginY
-        //float? CreateOffsetOriginZ
-        //float? PaddingOriginX
-        //float? PaddingOriginY
-        //float? PaddingOriginZ
-        //float? DimsOriginX
-        //float? DimsOriginY
-        //float? DimsOriginZ
-        //float? PeturbationOriginX
-        //float? PeturbationOriginY
-        //float? PeturbationOriginZ
-        //uint? ImbuedEffect
-        //int? SlayerCreatureType
-        //float? SlayerDamageBonus
-        //double? CritFreq
-        //double? CritMultiplier
-        //int? IgnoreMagicResist
-        //double? ElementalModifier
-        //float? DrainPercentage
-        //float? DamageRatio
-        //int? DamageType
-        //int? Boost
-        //int? BoostVariance
-        //int? Source
-        //int? Destination
-        //float? Proportion
-        //float? LossPercent
-        //int? SourceLoss
-        //int? TransferCap
-        //int? MaxBoostAllowed
-        //uint? TransferBitfield
-        //int? Index
-        //int? Link
-        //uint? PositionObjCellId
-        //float? PositionOriginX
-        //float? PositionOriginY
-        //float? PositionOriginZ
-        //float? PositionAnglesW
-        //float? PositionAnglesX
-        //float? PositionAnglesY
-        //float? PositionAnglesZ
-        //int? MinPower
-        //int? MaxPower
-        //float? PowerVariance
-        //int? DispelSchool
-        //int? Align
-        //int? Number
-        //float? NumberVariance
-        //double? DotDuration
-        #endregion
-
         Id = Id ?? Template;
         uint ID = (uint)Id;
 
@@ -415,6 +305,7 @@ public class SpellCustomization
         sb.School = School ?? sb.School;
         sb.Category = Category ?? sb.Category;
         sb.Bitfield = Bitfield is not null ? (uint)Bitfield.Value : sb.Bitfield;
+        sb.MetaSpellType = MetaSpellType ?? sb.MetaSpellType;
         sb.BaseMana = BaseMana ?? sb.BaseMana;
         sb.BaseRangeConstant = BaseRangeConstant ?? sb.BaseRangeConstant;
         sb.BaseRangeMod = BaseRangeMod ?? sb.BaseRangeMod;
@@ -479,13 +370,20 @@ public class SpellCustomization
         db.Number = Number ?? db.Number;
         db.NumberVariance = NumberVariance ?? db.NumberVariance;
 
-        //sb.Formula = Formula ?? sb.Formula;
+        sb.Formula = Formula ?? sb.Formula;
 
-        //#if REALM
-        //        LocalPosition? Position = null
-        //#else
-        //        Position? Position = null
-        //#endif
+        if(Position is not null && Position.LandblockId != default)
+        {
+            //new LocalPosition(_spell.PositionObjCellId ?? 0, new Vector3(_spell.PositionOriginX ?? 0.0f, _spell.PositionOriginY ?? 0.0f, _spell.PositionOriginZ ?? 0.0f), new Quaternion(_spell.PositionAnglesX ?? 0.0f, _spell.PositionAnglesY ?? 0.0f, _spell.PositionAnglesZ ?? 0.0f, _spell.PositionAnglesW ?? 0.0f))
+            db.PositionObjCellId = Position.LandblockId.Raw;
+            db.PositionOriginX = Position.PositionX;
+            db.PositionOriginY = Position.PositionY;
+            db.PositionOriginZ = Position.PositionZ;
+            db.PositionAnglesW = Position.RotationW;
+            db.PositionAnglesX = Position.RotationX;
+            db.PositionAnglesY = Position.RotationY;
+            db.PositionAnglesZ = Position.RotationZ;
+        }
     }
 
     /// <summary>
@@ -495,13 +393,11 @@ public class SpellCustomization
     {
         //Save out a default if missing?
         excel = null;
+
         try
         {
             if (!File.Exists(path) && createMissing)
-            {
-                new ExcelMapper().Save(path, new List<SpellCustomization>() { new(SpellId.StrengthSelf1, SpellId.StrengthSelf1, "Buff Buff Self I", StatModVal: 7) }, "Spells");
-                ModManager.Log($"Created: {path}");
-            }
+                CreateDefaultSpreadsheet(path);
 
             //Copy to a temp file to avoid locks?  Not sure why Read access fails while copying works
             var loadedPath = $"{path}.load";
@@ -513,6 +409,7 @@ public class SpellCustomization
             //var stream = new FileStream(xlsxPath, FileMode.Open, FileAccess.Read, FileShare.Read);
 
             excel = new(loadedPath);
+            excel.SetupCustomSpellMappings();
         }
         catch (Exception ex)
         {
@@ -520,102 +417,18 @@ public class SpellCustomization
             return false;
         }
 
-
-        //Set up mappings - blank SpellCustomization used for nameof for refactoring
-        SpellCustomization b = new(SpellId.AcidArc1);
-
-        //SpellId Template
-        excel.AddMapping<SpellCustomization>(nameof(b.Template), p => p.Template)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<SpellId>(cellValue, out var parsed) ? parsed : null);
-        //SpellId Id
-        excel.AddMapping<SpellCustomization>(nameof(b.Id), p => p.Id)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<SpellId>(cellValue, out var parsed) ? parsed : null);
-        //MagicSchool School
-        excel.AddMapping<SpellCustomization>(nameof(b.School), p => p.School)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<MagicSchool>(cellValue, out var parsed, true) ? parsed : null);
-        //SpellCategory Category
-        excel.AddMapping<SpellCustomization>(nameof(b.Category), p => p.Category)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<SpellCategory>(cellValue, out var parsed) ? parsed : null);
-        //SpellFlags Bitfield
-        excel.AddMapping<SpellCustomization>(nameof(b.Bitfield), p => p.Bitfield)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<SpellFlags>(cellValue, out var parsed) ? parsed : null);
-        //EnchantmentTypeFlags? StatModType
-        excel.AddMapping<SpellCustomization>(nameof(b.StatModType), p => p.StatModType)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<EnchantmentTypeFlags>(cellValue, out var parsed) ? parsed : null);
-        //DamageType? EType
-        excel.AddMapping<SpellCustomization>(nameof(b.EType), p => p.EType)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<DamageType>(cellValue, out var parsed, true) ? parsed : null);
-        //DamageType? DamageType
-        excel.AddMapping<SpellCustomization>(nameof(b.DamageType), p => p.DamageType)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<DamageType>(cellValue, out var parsed, true) ? parsed : null);
-        //PlayScript? CasterEffect
-        excel.AddMapping<SpellCustomization>(nameof(b.CasterEffect), p => p.CasterEffect)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<PlayScript>(cellValue, out var parsed) ? parsed : null);
-        //PlayScript? TargetEffect
-        excel.AddMapping<SpellCustomization>(nameof(b.TargetEffect), p => p.TargetEffect)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<PlayScript>(cellValue, out var parsed) ? parsed : null);
-        //ItemType? NonComponentTargetType
-        excel.AddMapping<SpellCustomization>(nameof(b.NonComponentTargetType), p => p.NonComponentTargetType)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<ItemType>(cellValue, out var parsed) ? parsed : null);
-        //PropertyAttribute2nd? Source
-        excel.AddMapping<SpellCustomization>(nameof(b.Source), p => p.Source)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<PropertyAttribute2nd>(cellValue, out var parsed) ? parsed : null);
-        //PropertyAttribute2nd? Destination
-        excel.AddMapping<SpellCustomization>(nameof(b.Destination), p => p.Destination)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<PropertyAttribute2nd>(cellValue, out var parsed) ? parsed : null);
-        //TransferFlags? TransferFlags
-        excel.AddMapping<SpellCustomization>(nameof(b.TransferFlags), p => p.TransferFlags)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<TransferFlags>(cellValue, out var parsed) ? parsed : null);
-        //MagicSchool? DispelSchool
-        excel.AddMapping<SpellCustomization>(nameof(b.DispelSchool), p => p.DispelSchool)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<MagicSchool>(cellValue, out var parsed) ? parsed : null);
-        //DispelType? Align
-        excel.AddMapping<SpellCustomization>(nameof(b.Align), p => p.Align)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<DispelType>(cellValue, out var parsed) ? parsed : null);
-
-        //Vector3? CreateOffset
-        //excel.AddMapping<SpellCustomization>(nameof(b.CreateOffset), p => p.CreateOffset)
-        //    .SetCellUsing<Vector3>((c, o) =>
-        //    {
-        //        if (o == default) c.SetCellValue(""); else c.SetCellValue(o.Serialize());
-        //    })
-        //    .SetPropertyUsing(cellValue => TryParseVector3(cellValue, out var parsed) ? parsed : null);
-        ////Vector3? Padding
-        //excel.AddMapping<SpellCustomization>(nameof(b.Padding), p => p.Padding)
-        //    .SetCellUsing<Vector3>((c, o) =>
-        //    {
-        //        if (o == default) c.SetCellValue(""); else c.SetCellValue(o.Serialize());
-        //    })
-        //    .SetPropertyUsing(cellValue => TryParseVector3(cellValue, out var parsed) ? parsed : null);
-        ////Vector3? Peturbation
-        //excel.AddMapping<SpellCustomization>(nameof(b.Peturbation), p => p.Peturbation)
-        //    .SetCellUsing<Vector3>((c, o) =>
-        //    {
-        //        if (o == default) c.SetCellValue(""); else c.SetCellValue(o.Serialize());
-        //    })
-        //    .SetPropertyUsing(cellValue => TryParseVector3(cellValue, out var parsed) ? parsed : null);
-
-        //List<uint> Formula
-        //excel.AddMapping<SpellCustomization>(nameof(b.Formula), p => p.Formula)
-        //    .SetCellUsing<List<uint>>((c, o) =>
-        //    {
-        //        Debugger.Break();
-        //        if (o == null || o.Count == 0) c.SetCellValue(""); 
-        //        else c.SetCellValue(String.Join(',',o));
-        //    })
-        //    .SetPropertyUsing(cellValue => TryParseList<uint>(cellValue, out var parsed) ? parsed : null);
-
-
-        //Ignore zeros
-        excel.AddMapping<SpellCustomization>(nameof(b.PortalLifetime), p => p.PortalLifetime)
-            .SetCellUsing<double?>((c, o) =>
-            {
-                if (o is null || o == 0) return;
-                //c.SetCellValue("");
-                else c.SetCellValue(o.ToString());
-            });
-
         return true;
+    }
+
+    public static void CreateDefaultSpreadsheet(string path)
+    {
+        var template = new ExcelMapper();
+        template.SetupCustomSpellMappings();
+        template.CreateMissingHeaders = true;
+
+        var spell = new Spell(SpellId.AcidStrike);
+        template.Save(path, new List<SpellCustomization>() { new(spell) }, "Spells");
+        ModManager.Log($"Created: {path}");
     }
 
     /// <summary>
@@ -651,93 +464,4 @@ public class SpellCustomization
 
         return customSpells;
     }
-
-    /// <summary>
-    /// Tries to convert a cell to an Enum, attempting to parse as a number first
-    /// </summary>
-    public static bool TryParseCellEnum<T>(object cellValue, out T parsed, bool requireDefined = false) where T : struct, Enum
-    {
-        parsed = default;
-
-        //Make sure the cell has a string value and add a special case where 'null' is ignored?
-        //if ((cellValue is not string stringValue)) //|| String.Equals(stringValue, "null", StringComparison.InvariantCultureIgnoreCase))
-        //    return false;
-
-        return cellValue.TryConvertToEnum(out parsed, requireDefined);
-
-        //if (cellValue.TryConvertToEnum(out parsed))
-        //    return true;
-
-        //if (long.TryParse(stringValue, out var numberValue))
-        //    return numberValue.TryConvertToEnum<T>(out parsed);
-
-        //return false;
-
-        //Check for number value first?
-        //if (long.TryParse(stringValue, out var numberValue))
-        //    return numberValue.TryConvertToEnum<T>(out parsed);
-
-        //Fall back to string
-        //return cellValue.TryConvertToEnum(out parsed);
-    }
-
-    public static bool TryParseVector3(object vector, out Vector3 result)
-    {
-        result = default;
-        if (vector is not string vectorString || string.IsNullOrEmpty(vectorString))
-            return false;
-            //throw new ArgumentException("Input string cannot be null or empty.", nameof(vectorString));
-
-        string[] components = vectorString.Split(',');
-
-        if (components.Length != 3)
-            return false;
-            //throw new FormatException("Input string is not in the correct format for a Vector3.");
-
-        float x = float.Parse(components[0]);
-        float y = float.Parse(components[1]);
-        float z = float.Parse(components[2]);
-
-        result = new Vector3(x, y, z);
-
-        return true;
-    }
-
-    public static bool TryParseList<T>(object value,  out List<T> result, string separator = ",")
-    {
-        result = new List<T>();
-
-        if (value is not string input || string.IsNullOrEmpty(input))
-            return false; // Return an empty list if the input is null or empty
-
-        // Split the input string by the separator
-        string[] items = input.Split(separator);
-
-        foreach (string item in items)
-        {
-            try
-            {
-                // Convert each item to the desired type T and add it to the list
-                T converted = (T)Convert.ChangeType(item.Trim(), typeof(T), CultureInfo.InvariantCulture);
-                result.Add(converted);
-            }
-            catch (Exception ex)
-            {
-                return false;
-                //throw new FormatException($"Could not convert '{item}' to {typeof(T)}", ex);
-            }
-        }
-
-        return true;
-    }
-}
-
-public static class Vector3Serialization
-{
-    public static string Serialize(this Vector3 vector)
-    {
-        return $"{vector.X},{vector.Y},{vector.Z}";
-    }
-
-
 }

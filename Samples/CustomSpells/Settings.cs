@@ -4,12 +4,8 @@ namespace CustomSpells;
 
 public class Settings
 {
-    //public List<SpellId> Spells { get; set; } = new();//Enum.GetValues<SpellId>().Where(x => x.ToString().Contains("Paragon")).ToList();
-    //public double Duration { get; set; } = TimeSpan.FromHours(24).TotalSeconds;
-    //public SetSettings Sets {get;set;} = new();
-
+    public bool AutoloadSpreadsheet { get; set; } = true;
     public string CustomSpellsSpreadsheet { get; set; } = Path.Combine(Mod.ModPath, "Spells.xlsx");
-    //public string SpellExportSpreadsheet { get; set; } = Path.Combine(Mod.ModPath, "SpellExports.xlsx");
 
     /// <summary>
     /// Custom Spells use a template, make modifications, then add the custom spell as the Id
