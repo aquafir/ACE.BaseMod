@@ -97,6 +97,16 @@
 			<FilesToDelete Include="$(OutDir)MonoMod.*.dll" />
 			<FilesToDelete Include="$(OutDir)System.Security.*.dll" />
 			<FilesToDelete Include="$(OutDir)System.Drawing.*.dll" />
+
+			<!--Not positive about the cleanup list-->
+			<FilesToDelete Include="$(OutDir)BouncyCastle.Cryptography.dll" />
+			<FilesToDelete Include="$(OutDir)ExtendedNumerics.BigDecimal.dll" />
+			<FilesToDelete Include="$(OutDir)MathNet.Numerics.dll" />
+			<FilesToDelete Include="$(OutDir)SixLabors.Fonts.dll" />
+			<FilesToDelete Include="$(OutDir)SixLabors.ImageSharp.dll" />
+			<FilesToDelete Include="$(OutDir)System.Text.Json.dll" />
+			<FilesToDelete Include="$(OutDir)Enums.NET.dll" />
+			<FilesToDelete Include="$(OutDir)System.Windows.Extensions.dll" />
 		</ItemGroup>
 		<Message Text="Deleting Files @(FilesToDelete)" />
 		<Delete Files="@(FilesToDelete)">
