@@ -28,6 +28,8 @@ global using ACE.Server.Realms;
 global using Session = ACE.Server.Network.ISession;
 global using BinaryWriter = ACE.Server.Network.GameMessages.RealmsBinaryWriter;
 global using Position = ACE.Server.Realms.LocalPosition;
+#else
+global using Position = ACE.Entity.Position;
 #endif
 
 global using HarmonyLib;

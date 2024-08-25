@@ -577,3 +577,17 @@
 
 * 
 
+
+
+
+
+
+
+
+
+## Appraisal
+
+* `GameEventType.IdentifyObjectResponse` builds an `AppraiseInfo`
+  * Either empty or for a player
+* `AppraiseInfo` handles calculating and sending all object appraisal info
+* 
