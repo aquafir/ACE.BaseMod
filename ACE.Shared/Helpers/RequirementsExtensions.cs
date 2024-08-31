@@ -12,12 +12,12 @@ public static class RequirementsExtensions
     /// </summary>
     public static ActivationResult CheckUseRequirements(this WorldObject activator)
     {
-        ActivationResult result = new(false);
+        ActivationResult result = new(true);
         if (activator == null)
             return result;
 
-        //Non-players have no checks?
-        if (!(activator is Player player))
+        //Try to find the player doing the activation?
+        if (activator is not Player player && !activator.TryGetOwner(out player))
             return new ActivationResult(true);
 
         result = CheckArcaneLore(activator, result, player);

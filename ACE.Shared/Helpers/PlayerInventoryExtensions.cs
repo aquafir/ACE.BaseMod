@@ -167,22 +167,22 @@ public static class PlayerInventoryExtensions
 #endif        
 }
 
-/// <summary>
-/// Remove items from inventory and optionally equipment
-/// </summary>
-public static void WipeInventory(this Player player, bool equipment = false)
-    {
-        foreach (var item in player.Inventory.Values)
-            item.DeleteObject(player);
-
-        if (equipment)
+    /// <summary>
+    /// Remove items from inventory and optionally equipment
+    /// </summary>
+    public static void WipeInventory(this Player player, bool equipment = false)
         {
-            foreach (var item in player.EquippedObjects.Values)
+            foreach (var item in player.Inventory.Values)
                 item.DeleteObject(player);
-        }
 
-        player.SendMessage($"Inventory wiped.");
-    }
+            if (equipment)
+            {
+                foreach (var item in player.EquippedObjects.Values)
+                    item.DeleteObject(player);
+            }
+
+            player.SendMessage($"Inventory wiped.");
+        }
 
     /// <summary>
     /// Delete an item from a player's inventory
@@ -192,5 +192,11 @@ public static void WipeInventory(this Player player, bool equipment = false)
         wo.DeleteObject(player);
         //Unsure if needed?
         //player.Session.Network.EnqueueSend(new GameMessageDeleteObject(wo));
+    }
+
+    public static bool TryGetOwner(this WorldObject wo, out Player owner)
+    {
+        owner = PlayerManager.GetOnlinePlayer(wo.OwnerId ?? 0);
+        return owner is not null;
     }
 }
