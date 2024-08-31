@@ -1,6 +1,6 @@
-﻿namespace ImGuiTest;
+﻿namespace ImGuiHud;
 
 public class Settings
 {
-    // Your settings here
+    public bool AutostartGui { get; set; } = true;
 }

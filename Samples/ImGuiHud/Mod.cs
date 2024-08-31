@@ -1,4 +1,4 @@
-﻿namespace ImGuiTest;
+﻿namespace ImGuiHud;
 
 public class Mod : IHarmonyMod
 {
@@ -7,10 +7,10 @@ public class Mod : IHarmonyMod
     public const bool DEBUGGING = false;
     //Point to your mod directory
     public static ModContainer Container => ModManager.GetModContainerByPath(Mod.ModPath);
-    public static string ModPath = Path.Combine(ModManager.ModPath, "ImGuiTest");
+    public static string ModPath = Path.Combine(ModManager.ModPath, "ImGuiHud");
 
     //IDs are used by Harmony to separate multiple patches
-    const string ID = "com.ACE.ACEmulator.ImGuiTest";
+    const string ID = "com.ACE.ACEmulator.ImGuiHud";
     public static Harmony Harmony { get; set; } = new(ID);
 
     private bool disposedValue;
