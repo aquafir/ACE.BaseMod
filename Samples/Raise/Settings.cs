@@ -21,4 +21,12 @@ public class Settings
     //Conversion of RaiseTarget to the PropertyInt key that tracks them
     public int PropertyOffset { get; set; } = 1000;
     //public TimeSpan RAISE_TIME_BETWEEN_REFUND { get; set; } = TimeSpan.FromMinutes(60.0);
+
+
+    public AlternateLevelingSettings AltLeveling {get;set;} = new();
+}
+
+public class RaiseSettings
+{
+
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -12,6 +12,13 @@
 		<PlatformTarget>x64</PlatformTarget>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
+	</PropertyGroup>
+	<ItemGroup>
+		<Publicize Include="ACE.Server" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<Compile Remove=".template.config\**" />
 		<EmbeddedResource Remove=".template.config\**" />
@@ -19,8 +26,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Lib.Harmony" Version="2.3.3" />
 		<!--<PackageReference Include="System.Text.Json" Version="7.0.0" Aliases="Json" />-->
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

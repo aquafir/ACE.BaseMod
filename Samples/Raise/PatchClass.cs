@@ -1,8 +1,4 @@
-﻿using ACE.Server.Managers;
-using System.Runtime.CompilerServices;
-using System.Text.Encodings.Web;
-
-namespace Raise;
+﻿using Raise;
 
 [HarmonyPatch]
 public class PatchClass
@@ -89,6 +85,13 @@ public class PatchClass
                 break;
 
             await Task.Delay(1000);
+        }
+        
+        if(Settings.AltLeveling.Enabled)
+        {
+
+            Mod.Harmony.PatchCategory(nameof(AlternateLeveling));
+            Mod.Container.RegisterCommandCategory(nameof(AlternateLeveling));
         }
 
         storedCosts = DatManager.PortalDat.XpTable.CharacterLevelXPList.ToList();

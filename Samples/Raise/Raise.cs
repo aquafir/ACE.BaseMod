@@ -1,7 +1,4 @@
-﻿using ACE.Entity.Enum.Properties;
-using ACE.Server.Network.GameMessages.Messages;
-
-namespace Raise;
+﻿namespace Raise;
 
 public static class Raise
 {
