@@ -1,7 +1,6 @@
 ﻿//using ACE.DatLoader.FileTypes;
 
 
-
 //public class SpellPicker : TexturedPicker<SpellInfo>
 //{
 //    static readonly SpellTable table = UBService.PortalDat.SpellTable;

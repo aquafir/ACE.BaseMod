@@ -10,7 +10,7 @@ public abstract class IPagedPicker<T> : ICollectionPicker<T>  //where T
     public T[] ChoiceArray => Choices is T[] ca ? ca : Choices.ToArray(); //Choices as T[];
 
     public int Pages => Choices is null ? 0 : (int)(ChoiceArray.Length / PerPage);
-    int offset => CurrentPage * PerPage;
+    protected int offset => CurrentPage * PerPage;
 
     public virtual void DrawPageControls()
     {

@@ -58,7 +58,7 @@ public abstract class IModal : IComp
             size.Y -= ImGui.GetFrameHeightWithSpacing() + 5;
 
             // Draw your area using the calculated size
-            ImGui.BeginChild($"{Name}B", size, true);
+            ImGui.BeginChild($"{Name}B", size, ImGuiChildFlags.None);//, true);
             DrawBody();
             ImGui.EndChild();
 

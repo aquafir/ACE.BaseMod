@@ -1,14 +1,16 @@
-﻿using ClickableTransparentOverlay;
+﻿using ACE.Server.Entity;
+using ClickableTransparentOverlay;
 
 namespace ImGuiHud;
 
 public class SimpleOverlay : Overlay
 {
-    private bool wantKeepDemoWindow = true;
+    bool isRunning = true;
 
-    public SimpleOverlay() : base(1920, 1080)
-    {
-    }
+    FlagsPicker<SpellFlags> Flags = new();
+    TextSpellPicker SpellPicker = new();
+
+    public SimpleOverlay() : base(1920, 1080) { }
 
     protected override Task PostInitialized()
     {
@@ -17,17 +19,6 @@ public class SimpleOverlay : Overlay
     }
 
     protected override void Render()
-    {
-        RenderMainMenu();
-        //ImGui.ShowDemoWindow(ref wantKeepDemoWindow);
-        //if (!this.wantKeepDemoWindow)
-        //{
-        //    this.Close();
-        //}
-    }
-
-    bool isRunning = true;
-    private void RenderMainMenu()
     {
         bool isCollapsed = !ImGui.Begin(
             "Overlay Main Menu",
@@ -44,6 +35,14 @@ public class SimpleOverlay : Overlay
         }
 
         ImGui.Text("Hello!");
+
+        if (Flags.Check())
+        {
+            ModManager.Log($"Selected {Flags.Selection}!");
+        }
+
+        if(SpellPicker.Check())
+            ModManager.Log($"Selected {SpellPicker.Selection.Name}!");
 
         ImGui.End();
     }
