@@ -1,4 +1,7 @@
-﻿namespace Raise;
+﻿using ACE.Server.Entity.Chess;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace Raise;
 
 public class Settings
 {
@@ -23,10 +26,11 @@ public class Settings
     //public TimeSpan RAISE_TIME_BETWEEN_REFUND { get; set; } = TimeSpan.FromMinutes(60.0);
 
 
-    public AlternateLevelingSettings AltLeveling {get;set;} = new();
+    public AlternateLevelingSettings AltLeveling { get; set; } = new();
 }
 
 public class RaiseSettings
 {
 
 }
+

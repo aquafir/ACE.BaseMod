@@ -1,6 +1,7 @@
 ﻿using Raise;
+using System.Diagnostics;
 
-public static class AltLevelExtensions
+public static class AlternateLevelingExtensions
 {
     static AlternateLevelingSettings Settings => PatchClass.Settings.AltLeveling;
 
@@ -62,15 +63,62 @@ public static class AltLevelExtensions
     #endregion
 
     #region Cost Functions
-    static double SkillCost(SkillAdvancementClass sac, int level) => sac switch
+    static double SkillCost(SkillAdvancementClass sac, int level) 
     {
-        SkillAdvancementClass.Untrained => 100 * Math.Pow(level, 1.3),
-        SkillAdvancementClass.Trained => 60 * Math.Pow(level, 1.2),
-        SkillAdvancementClass.Specialized => 20 * Math.Pow(level, 1.1),
-    };
+        if (Settings.PreferStandard)
+        {
+            //Return standard cost
+            var table = sac == SkillAdvancementClass.Specialized ? DatManager.PortalDat.XpTable.SpecializedSkillXpList : DatManager.PortalDat.XpTable.TrainedSkillXpList;
 
-    static double AttributeCost(int level) => 100 * Math.Pow(level, 1.3);
-    static double VitalCost(int level) => 100 * Math.Pow(level, 1.3);
+            if (table.Count > level)
+                return table[level];
+
+            //If past standard costs optionally remove the offset from the level
+            if (Settings.OffsetByLastStandard)
+                level -= table.Count;
+        }
+
+        return sac switch
+        {
+            SkillAdvancementClass.Specialized => Settings.Specialized.GetCost(level),
+            _ => Settings.Trained.GetCost(level),
+        };
+    }
+
+    static double AttributeCost(int level)
+    {
+        if (Settings.PreferStandard)
+        {
+            //Return standard cost
+            var table = DatManager.PortalDat.XpTable.AttributeXpList;
+
+            if (table.Count > level)
+                return table[level];
+
+            //If past standard costs optionally remove the offset from the level
+            if (Settings.OffsetByLastStandard)
+                level -= table.Count;
+        }
+
+        return Settings.Attribute.GetCost(level);
+    }
+    static double VitalCost(int level)
+    {
+        if (Settings.PreferStandard)
+        {
+            //Return standard cost
+            var table = DatManager.PortalDat.XpTable.VitalXpList;
+
+            if (table.Count > level)
+                return table[level];
+
+            //If past standard costs optionally remove the offset from the level
+            if (Settings.OffsetByLastStandard)
+                level -= table.Count;
+        }
+
+        return Settings.Vital.GetCost(level);
+    }
     #endregion
 
     #region Skills
@@ -268,3 +316,4 @@ public static class AltLevelExtensions
     //public static int Purchaseable(int currency, int owned) => (int)Math.Floor(Math.Log(Math.Pow(multiplier, (double)owned) - (currency * (1 - multiplier) / basePrice), multiplier) - owned);
     //public static int CurrentLevel(int totalSpent) => Purchaseable(totalSpent, 0);
 }
+
