@@ -108,13 +108,14 @@ public class CombatPetEx : CombatPet
 
         if (P_PetOwner is not null && (AttackTarget is null || AttackTarget.IsDestroyed))
         {
-            if (P_PetOwner.GetCylinderDistance(this) > 60)
-            {
-                //Todo: ask RF about FakeTeleport
-                FakeTeleport(P_PetOwner.Location.InFrontOf(1));
-                P_PetOwner.SendMessage($"{Name} has caught up to you.");
-            }
-            else if(!IsMoving)
+            //Teleport if too far?
+            //if (P_PetOwner.GetCylinderDistance(this) > 60)
+            //{
+            //    //Todo: ask RF about FakeTeleport
+            //    FakeTeleport(P_PetOwner.Location.InFrontOf(1));
+            //    P_PetOwner.SendMessage($"{Name} has caught up to you.");
+            //}
+            //else if(!IsMoving)
                 MoveTo(P_PetOwner);
         }
     }
