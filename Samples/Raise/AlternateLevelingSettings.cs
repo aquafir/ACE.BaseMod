@@ -13,8 +13,8 @@ public class AlternateLevelingSettings
     //Instead of treating the level after the last standard value, treat it as 0 ranks
     public bool OffsetByLastStandard { get; set; } = true;
 
-    public LevelCost Attribute { get; set; } = new(10000000, 2, 5000000, GrowthType.Polynomial);
-    public LevelCost Vital { get; set; } = new(1000000000, 1000000000, 0, GrowthType.Linear);
+    public LevelCost Attribute { get; set; } = new(10000000, 2, 5000000, GrowthType: GrowthType.Polynomial);
+    public LevelCost Vital { get; set; } = new(1000000000, 1000000000, 0, GrowthType: GrowthType.Linear);
     public LevelCost Trained { get; set; } = new();
     public LevelCost Specialized { get; set; } = new(100, 1.5);
 }

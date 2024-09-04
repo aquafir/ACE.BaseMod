@@ -11,3 +11,30 @@ The number of times a target has been raised is stored using an offset to its en
 
 https://github.com/aquafir/ACE.BaseMod/assets/83029060/4b79d8e0-cc86-4359-802d-c15d5ee79497
 
+
+
+
+
+`LevelCost` are used to define the function that determine costs:
+
+* `C` is a constant
+
+* `Rate` = `r`, the rate of growth 
+
+* `Coefficient` = `a`, scales the polynomial term
+
+* `Offset` is added to the level, `n`
+
+  * Such as if you want to ignore all the levels coming from the standard costs
+
+* Available `GrowthType` are:
+
+  * `Linear` 
+    * 
+    * $C(n)=C+n*r$
+
+  * `Exponential`
+    * Use if you want each level to cost a fraction more than the previous
+    * $C(n)=C*r^n$
+  * `Polynomial`
+    * $C(n)=C+a*n^r$
