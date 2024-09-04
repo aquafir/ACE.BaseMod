@@ -192,10 +192,6 @@ public static class AlternateLevelingExtensions
     {
         cost = long.MaxValue;
 
-        //Verify player can spend xp on Attribute
-        if (!player.Attributes.TryGetValue(attribute, out var creatureAttribute))
-            return false;
-
         //Use fake Attribute level and trained status to get a cost for the next level
         var currentLevel = player.GetLevel(attribute);
         cost = Convert.ToInt64(AttributeCost(currentLevel));
@@ -254,9 +250,6 @@ public static class AlternateLevelingExtensions
     public static bool TryGetVitalCost(this Creature player, PropertyAttribute2nd vital, out long cost)
     {
         cost = long.MaxValue;
-
-        //Verify player can spend xp on vital
-        var creatureVital = player.GetCreatureVital(vital);
 
         //Use fake vital level and trained status to get a cost for the next level
         var currentLevel = player.GetLevel(vital);
