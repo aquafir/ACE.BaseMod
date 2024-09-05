@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<DefineConstants>REALM</DefineConstants>
-		<ACEPath >C:\ACE\Server</ACEPath>
+		<DefineConstants>AREALM</DefineConstants>
+		<ACEPath >C:\ACE\AServer</ACEPath>
 	</PropertyGroup>
 </Project>
