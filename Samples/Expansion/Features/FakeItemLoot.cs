@@ -1,7 +1,4 @@
-﻿using ACE.Server.Managers;
-using ACE.Server.Network.GameMessages.Messages;
-
-namespace Expansion.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.FakeItemLoot))]
 [HarmonyPatchCategory(nameof(Feature.FakeItemLoot))]

@@ -1,19 +1,11 @@
-﻿using ACE.Common.Extensions;
-using ACE.Database;
-using ACE.Server.Command;
-using ACE.Server.Command.Handlers;
-using ACE.Server.Network;
-using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.WorldObjects;
+﻿using ACE.Server.Command.Handlers;
 //using Discord;
-using Expansion.Creatures;
-using System.Text;
 
 namespace Expansion.Helpers;
 public static class Commands
 {
     [CommandHandler("sp", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 2)]
-    public static void HandleSetProperty(ISession session, params string[] parameters)
+    public static void HandleSetProperty(Session session, params string[] parameters)
     {
         DeveloperCommands.HandleSetProperty(session, parameters);
     }

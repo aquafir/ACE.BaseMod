@@ -1,7 +1,4 @@
-﻿using ACE.Server.Entity.Actions;
-using System.Numerics;
-
-namespace Expansion.Creatures;
+﻿namespace Expansion.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.Boss))]
 public class Boss : CreatureEx

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Expansion.Helpers;
+﻿namespace Expansion.Helpers;
 
 public static class CreatureExHelpers
 {

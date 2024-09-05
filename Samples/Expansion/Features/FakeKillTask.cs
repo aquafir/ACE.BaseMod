@@ -1,6 +1,4 @@
-﻿using ACE.Server.Managers;
-
-namespace Expansion.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.FakeKillTask))]
 [HarmonyPatchCategory(nameof(Feature.FakeKillTask))]

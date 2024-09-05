@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Expansion.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.FakeReflection))]
 [HarmonyPatchCategory(nameof(Feature.FakeReflection))]

@@ -1,6 +1,4 @@
-﻿using ACE.Server.WorldObjects;
-
-namespace Expansion.Creatures;
+﻿namespace Expansion.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.Banisher))]
 public class Banisher : CreatureEx

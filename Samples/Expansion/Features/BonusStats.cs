@@ -1,9 +1,4 @@
-﻿using ACE.DatLoader;
-using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.WorldObjects.Entity;
-using ACE.Server.WorldObjects.Managers;
-
-namespace Expansion.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.BonusStats))]
 [HarmonyPatchCategory(nameof(Feature.BonusStats))]

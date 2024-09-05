@@ -17,8 +17,6 @@ global using ACE.Server.Mods;
 global using ACE.Server.Network;
 global using ACE.Server.Network.GameEvent.Events;
 global using ACE.Server.Network.GameMessages.Messages;
-global using ACE.Server.Physics;
-global using ACE.Server.Realms;
 global using ACE.Server.WorldObjects;
 global using ACE.Server.WorldObjects.Entity;
 global using ACE.Shared.Helpers;

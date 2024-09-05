@@ -1,7 +1,4 @@
-﻿using ACE.Server.Realms;
-using System;
-
-namespace Expansion.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.CreatureEx))]
 [HarmonyPatchCategory(nameof(Feature.CreatureEx))]

@@ -1,6 +1,4 @@
-﻿using ACE.Server.Managers;
-
-namespace Expansion.Enums;
+﻿namespace Expansion.Enums;
 
 public enum Augment
 {

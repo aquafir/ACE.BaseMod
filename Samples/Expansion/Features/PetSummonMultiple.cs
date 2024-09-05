@@ -1,9 +1,4 @@
-﻿using ACE.Common.Extensions;
-using ACE.Database;
-using System.Collections;
-using System.ComponentModel.Design;
-
-namespace Expansion.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.PetSummonMultiple))]
 [HarmonyPatchCategory(nameof(Feature.PetSummonMultiple))]
@@ -69,7 +64,10 @@ public static class PetSummonMultiple
             __instance.Location = player.Location.InFrontOf(spawnDist, false);
         }
 
+#if REALM
         __instance.Location = __instance.Location.SetLandblockId(new LandblockId(__instance.Location.GetCell()));
+#else
+#endif
 
         __instance.Name = player.Name + "'s " + __instance.Name;
 
@@ -388,9 +386,12 @@ public static class PetSummonMultiple
                 {
                     if (player.GetCylinderDistance(pet) > 5)
                     {
-                        //Todo: ask RF about FakeTeleport
+                        //Todo: fix teleport
+#if REALM
                         pet.TryTeleport(player.Location.InFrontOf(1));
                         player.SendMessage($"{pet.Name} has caught up to you.");
+#else
+#endif
                     }
                 }
                 break;

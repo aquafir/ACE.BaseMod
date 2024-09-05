@@ -1,12 +1,4 @@
-﻿
-using ACE.Database.Models.Auth;
-using ACE.Entity.Enum;
-using ACE.Server.Entity;
-using ACE.Server.Realms;
-using ACE.Server.WorldObjects;
-using System;
-
-namespace Expansion.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.PetEx))]
 [HarmonyPatchCategory(nameof(Feature.PetEx))]
