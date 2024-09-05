@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 public static class AlternateLevelingExtensions
 {
-    static AlternateLevelingSettings Settings => PatchClass.Settings.AltLeveling;
+    static AlternateLevelingSettings Settings => PatchClass.Settings.AlternateLeveling;
 
     const int ATTR_OFFSET = 55;
     const int VITAL_OFFSET = 62;

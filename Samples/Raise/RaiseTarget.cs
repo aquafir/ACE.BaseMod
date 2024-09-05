@@ -20,6 +20,8 @@ public enum RaiseTarget
 
 public static class TargetHelpers
 {
+    static RaiseSettings Settings => PatchClass.Settings.Raise;
+
     // Needed to support different handling for the type of target being raised
     public static bool IsAttribute(this RaiseTarget target) => (target >= RaiseTarget.Str && target <= RaiseTarget.Self);
     public static bool IsRating(this RaiseTarget target) => (target >= RaiseTarget.World && target <= RaiseTarget.Defense);
@@ -28,7 +30,7 @@ public static class TargetHelpers
     /// <summary>
     /// Returns a fake PropertyInt based on the RaiseTarget to store the level on the server
     /// </summary>
-    public static PropertyInt ToOffsetProperty(this RaiseTarget target) => (PropertyInt)(PatchClass.Settings.PropertyOffset + target);
+    public static PropertyInt ToOffsetProperty(this RaiseTarget target) => (PropertyInt)(Settings.PropertyOffset + target);
     public static PropertyInt ToPropertyInt(this RaiseTarget target) => (PropertyInt)target;
     public static int FromProperty(this RaiseTarget target, Player player) => player.GetProperty(target.ToOffsetProperty()) ?? 0;
 
@@ -111,7 +113,7 @@ public static class TargetHelpers
             return false;
 
         var avgLevel = (2 * startLevel + numLevels) / 2.0;
-        long avgCost = (long)(PatchClass.Settings.RaiseMulti * avgLevel / (PatchClass.Settings.RaiseDecay - PatchClass.Settings.LevelDecay * avgLevel));
+        long avgCost = (long)(Settings.RaiseMulti * avgLevel / (Settings.RaiseDecay - Settings.LevelDecay * avgLevel));
         try
         {
             checked
@@ -121,9 +123,9 @@ public static class TargetHelpers
                     RaiseTarget t when t.IsAttribute() => checked(avgCost * numLevels),
 
                     //Custom flat costs
-                    RaiseTarget.Offense => checked(numLevels * PatchClass.Settings.RatingMulti),
-                    RaiseTarget.Defense => checked(numLevels * PatchClass.Settings.RatingMulti),
-                    RaiseTarget.World => checked(numLevels * PatchClass.Settings.WorldMult),
+                    RaiseTarget.Offense => checked(numLevels * Settings.RatingMulti),
+                    RaiseTarget.Defense => checked(numLevels * Settings.RatingMulti),
+                    RaiseTarget.World => checked(numLevels * Settings.WorldMult),
                 };
             }
             return true;

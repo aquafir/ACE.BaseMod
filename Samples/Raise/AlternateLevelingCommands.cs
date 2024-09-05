@@ -13,7 +13,7 @@ public class AlternateLevelingCommands
         var sb = new StringBuilder();
 
         sb.Append($"\n====================Attributes====================");
-        sb.Append($"\n{"Level",spacing}{"Next",spacing}{"Total",spacing}{"Name",spacing}");
+        sb.Append($"\n{"Level",spacing:N0}{"Next",spacing:N0}{"Total",spacing:N0}{"Name",spacing}");
         foreach (var attr in Enum.GetValues<PropertyAttribute>().OrderBy(x => x.ToString()))
         {
             //Skip skills you can't level?
@@ -25,7 +25,7 @@ public class AlternateLevelingCommands
         }
 
         sb.Append($"\n\n====================Vitals====================");
-        sb.Append($"\n{"Level",spacing}{"Next",spacing}{"Total",spacing}{"Name",spacing}");
+        sb.Append($"\n{"Level",spacing:N0}{"Next",spacing:N0}{"Total",spacing:N0}{"Name",spacing}");
         foreach (var attr in Enum.GetValues<PropertyAttribute2nd>().OrderBy(x => x.ToString()))
         {
             //Skip skills you can't level?
@@ -37,7 +37,7 @@ public class AlternateLevelingCommands
         }
 
         sb.Append($"\n\n====================Skills====================");
-        sb.Append($"\n{"Level",spacing}{"Next",spacing}{"Total",spacing}{"Name",spacing}");
+        sb.Append($"\n{"Level",spacing:N0}{"Next",spacing:N0}{"Total",spacing:N0}{"Name",spacing}");
         foreach (var attr in Enum.GetValues<Skill>().OrderBy(x => x.ToString()))
         {
             //Skip skills you can't level?

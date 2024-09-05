@@ -1,7 +1,11 @@
 ﻿namespace Raise;
 
+[HarmonyPatchCategory(nameof(Raise))]
+[CommandCategory(nameof(Raise))]
 public static class Raise
 {
+    static RaiseSettings Settings => PatchClass.Settings.Raise;
+
     [CommandHandler("raise", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, "/raise str/end/coord/focus/self, /raise enlighten, /raise offense, and /raise defense..", "/raise <target> <amount>")]
     public static void HandleAttribute(Session session, params string[] parameters)
     {
@@ -26,9 +30,9 @@ public static class Raise
             }
         }
         //Check for bad amounts to level
-        if (amt < 1 || amt > PatchClass.Settings.RaiseMax)
+        if (amt < 1 || amt > Settings.RaiseMax)
         {
-            session.Network.EnqueueSend(new GameMessageSystemChat($"Provide an amount from 1-{PatchClass.Settings.RaiseMax}: /raise <{String.Join("|", Enum.GetNames(typeof(RaiseTarget)))}> [amount]", ChatMessageType.Broadcast));
+            session.Network.EnqueueSend(new GameMessageSystemChat($"Provide an amount from 1-{Settings.RaiseMax}: /raise <{String.Join("|", Enum.GetNames(typeof(RaiseTarget)))}> [amount]", ChatMessageType.Broadcast));
             return;
         }
         #endregion
@@ -95,7 +99,7 @@ public static class Raise
         //Handle luminance
         if (cost > player.AvailableLuminance || !player.SpendLuminance(cost))
         {
-            var lumMult = (target == RaiseTarget.World ? PatchClass.Settings.WorldMult : PatchClass.Settings.RatingMulti);
+            var lumMult = (target == RaiseTarget.World ? Settings.WorldMult : Settings.RatingMulti);
             ChatPacket.SendServerMessage(session, $"Not enough Luminance, you require {lumMult} Luminance per point of {target}.", ChatMessageType.Broadcast);
             return;
         }
@@ -142,7 +146,7 @@ public static class Raise
     {
         var player = session.Player;
         //var timeLapse = DateTime.Now - new DateTime(player.LastRaisedRefundTimestamp);
-        //var timeToUse = PatchClass.Settings.RAISE_TIME_BETWEEN_REFUND - timeLapse;
+        //var timeToUse = Settings.RAISE_TIME_BETWEEN_REFUND - timeLapse;
 
         ////Check if enough time has passed
         //if (timeToUse.TotalSeconds > 0)

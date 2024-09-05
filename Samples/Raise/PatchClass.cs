@@ -1,4 +1,5 @@
 ﻿using Raise;
+using System.Diagnostics;
 
 [HarmonyPatch]
 public class PatchClass
@@ -87,7 +88,7 @@ public class PatchClass
             await Task.Delay(1000);
         }
         
-        if(Settings.AltLeveling.Enabled)
+        if(Settings.AlternateLeveling.Enabled)
         {
 
             Mod.Harmony.PatchCategory(nameof(AlternateLeveling));
@@ -119,16 +120,17 @@ public class PatchClass
         RestoreMaxLevel();
 
         //Add levels up to max
-        for (int i = DatManager.PortalDat.XpTable.CharacterLevelXPList.Count; i <= PatchClass.Settings.MaxLevel; i++)
+        for (int i = DatManager.PortalDat.XpTable.CharacterLevelXPList.Count; i <= Settings.MaxLevel; i++)
         {
-            var cost = DatManager.PortalDat.XpTable.CharacterLevelXPList.Last() + PatchClass.Settings.CostPerLevel;
-            var credits = (uint)(i % PatchClass.Settings.CreditInterval == 0 ? 1 : 0);
+            //var cost = DatManager.PortalDat.XpTable.CharacterLevelXPList.Last() + PatchClass.Settings.CostPerLevel;
+            var cost = DatManager.PortalDat.XpTable.CharacterLevelXPList.Last() + (ulong)Settings.LevelCost.GetCost(i);
+            var credits = (uint)(i % Settings.CreditInterval == 0 ? 1 : 0);
             DatManager.PortalDat.XpTable.CharacterLevelXPList.Add(cost);
             DatManager.PortalDat.XpTable.CharacterLevelSkillCreditList.Add(credits);
             //session?.Player?.SendMessage($"Adding level {i} for {cost}.  {credits} skill credits.");
         }
 
-        ModManager.Log($"Set max level to {PatchClass.Settings.MaxLevel}");
+        ModManager.Log($"Set max level to {Settings.MaxLevel}");
     }
 
     private static async void RestoreMaxLevel()
