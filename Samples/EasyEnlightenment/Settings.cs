@@ -25,6 +25,10 @@ public class Settings
     {
         [PropertyFloat.CriticalFrequency] = .01,
     };
+    public Dictionary<Skill, int> SkillAugments { get; set; } = new();
+    public Dictionary<PropertyAttribute, int> AttributeAugments { get; set; } = new();
+    public Dictionary<PropertyAttribute2nd, int> VitalAugments { get; set; } = new();
+
 
     //public PropertyBool UsingNewLuminance { get; set; } = (PropertyBool)11111;
     public int SkillCreditAmount { get; set; } = 1;

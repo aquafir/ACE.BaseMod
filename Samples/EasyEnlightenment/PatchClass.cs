@@ -1,6 +1,8 @@
 ﻿using ACE.Entity.Enum.Properties;
 using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
+using ACE.Server.WorldObjects;
+using ACE.Shared.Helpers;
 
 namespace EasyEnlightenment;
 
@@ -115,6 +117,60 @@ public class PatchClass
         player.SetProperty(FakeBool.UsingNewLuminance, true);
     }
 
+    [CommandHandler("fixee", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 0)]
+    public static void HandleFix(Session session, params string[] parameters)
+    {
+        ApplyBonuses(session.Player);
+    }
+
+    static void ApplyBonuses(Player player)
+    {
+        //PRESUMES NO OTHER BONUSES TO SET PROPS
+        var e = player.Enlightenment;
+
+        //Custom props
+        foreach (var prop in Settings.IntAugments)
+        {
+            var current = player.GetProperty(prop.Key) ?? 0;
+            //var value = prop.Key.ToString().StartsWith("Lum") ? player.Enlightenment * prop.Value : current + prop.Value;
+            var value = player.Enlightenment * prop.Value;
+            player.UpdateProperty(player, prop.Key, value, true);
+            player.SendMessage($"You've been awarded {value} {prop.Key}");
+        }
+        foreach (var prop in Settings.FloatAugments)
+        {
+            var current = player.GetProperty(prop.Key) ?? 0;
+            //var value = prop.Key.ToString().StartsWith("Lum") ? player.Enlightenment * prop.Value : current + prop.Value;
+            var value = player.Enlightenment * prop.Value;
+            player.UpdateProperty(player, prop.Key, value, true);
+            player.SendMessage($"You've been awarded {value} {prop.Key}");
+        }
+
+        //Bonuses enabled with Expansion
+        foreach (var prop in Settings.SkillAugments)
+        {
+            var value = prop.Value * player.Enlightenment;
+            player.SetBonus(prop.Key, value);
+            player.SendUpdated(prop.Key);
+            player.SendMessage($"You've been awarded {value} {prop.Key}");
+        }
+        foreach (var prop in Settings.AttributeAugments)
+        {
+            var value = prop.Value * player.Enlightenment;
+            player.SetBonus(prop.Key, value);
+            player.SendUpdated(prop.Key);
+            player.SendMessage($"You've been awarded {value} {prop.Key}");
+        }
+        foreach (var prop in Settings.VitalAugments)
+        {
+            var value = prop.Value * player.Enlightenment;
+            player.SetBonus(prop.Key, value);
+            player.SendUpdated(prop.Key);
+            player.SendMessage($"You've been awarded {value} {prop.Key}");
+        }
+    }
+
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Enlightenment), nameof(Enlightenment.RemoveAbility), new Type[] { typeof(Player) })]
     public static bool PreRemoveAbility(Player player, ref Enlightenment __instance)
@@ -218,24 +274,8 @@ public class PatchClass
         PlayerManager.LogBroadcastChat(Channel.AllBroadcast, null, msg);
 
 
-
-
-
         //Custom props
-        foreach (var prop in Settings.IntAugments)
-        {
-            var current = player.GetProperty(prop.Key) ?? 0;
-            var value = prop.Key.ToString().StartsWith("Lum") ? player.Enlightenment * prop.Value : current + prop.Value;
-            player.UpdateProperty(player, prop.Key, value, true);
-            player.SendMessage($"You've been awarded {prop.Value} {prop.Key}");
-        }
-        foreach (var prop in Settings.FloatAugments)
-        {
-            var current = player.GetProperty(prop.Key) ?? 0;
-            var value = prop.Key.ToString().StartsWith("Lum") ? player.Enlightenment * prop.Value : current + prop.Value;
-            player.UpdateProperty(player, prop.Key, value, true);
-            player.SendMessage($"You've been awarded {prop.Value} {prop.Key}");
-        }
+        ApplyBonuses(player);
 
         //Credits
         var creditsOwed = player.Enlightenment / Settings.SkillCreditInterval * Settings.SkillCreditAmount;

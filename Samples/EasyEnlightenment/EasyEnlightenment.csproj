@@ -29,6 +29,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Reference Include="ACE.Adapter">
 			<HintPath>$(ACEPath)\ACE.Adapter.dll</HintPath>
 			<Private>False</Private>
