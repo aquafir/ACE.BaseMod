@@ -1,4 +1,6 @@
-﻿namespace ACE.Shared.Helpers;
+﻿using ACE.Server.Physics.Common;
+
+namespace ACE.Shared.Helpers;
 
 public static class PositionExtensions
 {
@@ -109,4 +111,34 @@ public static class PositionExtensions
 
         return true;
     }
+
+
+
+    /// <summary>
+    /// TODO: Figure this ACRealms stuff out
+    /// </summary>
+    public static void TryTeleport(this Creature c, InstancedPosition _newPosition)
+    {
+        InstancedPosition instancedPosition = _newPosition.SetPositionZ(_newPosition.PositionZ + 0.005f * c.ObjScale.GetValueOrDefault(1f));
+        if (c.Location.InstancedLandblock != instancedPosition.InstancedLandblock)
+        {
+            //log.Error((object)$"{c.Name} tried to teleport from {c.Location} to a different landblock {instancedPosition}");
+        }
+        else
+        {
+            c.PhysicsObj.report_collision_end(forceEnd: true);
+            SetPosition setPosition = new SetPosition(instancedPosition.Instance);
+            setPosition.Pos = new PhysicsPosition(instancedPosition);
+            setPosition.Flags = SetPositionFlags.Placement | SetPositionFlags.Teleport | SetPositionFlags.Slide | SetPositionFlags.SendPositionEvent;
+            c.PhysicsObj.SetPosition(setPosition);
+            c.SyncLocation();
+            c.SendUpdatePosition(adminMove: true);
+        }
+    }
+    //May be needed no non-Realms?
+    //public void SendUpdatePosition(bool adminMove = false)
+    //{
+    //    EnqueueBroadcast(new GameMessageUpdatePosition(this, adminMove));
+    //    LastUpdatePosition = DateTime.UtcNow;
+    //}
 }
