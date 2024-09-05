@@ -338,10 +338,11 @@ public static class PetSummonMultiple
     static readonly string[] USAGES = new string[] {
             $@"(?<verb>{PetCommand.List})$",
             $@"(?<verb>{PetCommand.Kill})$",
-            //$@"(?<verb>{PetCommand.Warp})$",
+            $@"(?<verb>{PetCommand.Warp})$",
         };
     //Join usages in a regex pattern
     static string Pattern => string.Join("|", USAGES.Select(x => $"({x})"));
+    static string Desc => $"pet {string.Join("|",Enum.GetNames<PetCommand>())}";
     static Regex CommandRegex = new(Pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     [CommandHandler("pet", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
@@ -351,7 +352,7 @@ public static class PetSummonMultiple
 
         if (!TryParseCommand(parameters, out var verb))
         {
-            player.SendMessage($"Unknown usage");
+            player.SendMessage(Desc);
             return;
         }
 
@@ -382,6 +383,17 @@ public static class PetSummonMultiple
                 }
                 pets.Clear();
                 break;
+            case PetCommand.Warp:
+                foreach (var pet in pets)
+                {
+                    if (player.GetCylinderDistance(pet) > 5)
+                    {
+                        //Todo: ask RF about FakeTeleport
+                        pet.TryTeleport(player.Location.InFrontOf(1));
+                        player.SendMessage($"{pet.Name} has caught up to you.");
+                    }
+                }
+                break;
         }
         player.SendMessage($"{sb}");
     }
@@ -405,9 +417,8 @@ public static class PetSummonMultiple
     {
         List,
         Kill,
-        Come,
+        //Come,
         Warp,
     }
     #endregion
-
 }

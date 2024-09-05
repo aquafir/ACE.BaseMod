@@ -6,6 +6,10 @@ public enum Feature
     /// Augments a property of equipment on leveling based on its type
     /// </summary>
     ItemLevelUpGrowth,
+    /// <summary>
+    /// Enables Bonus FakeProps to be added to attributes, vitals, and skills
+    /// </summary>
+    BonusStats,
     CorpseInfo,
     PetAttackSelected,
     PetMessageDamage,
@@ -27,7 +31,6 @@ public enum Feature
     FakeCulling,
     FakeItemLoot,
     FakeKillTask,
-    FakeAttributes,
     FakeReflection,
     FakeSpellReflection,
     FakeDurability,
