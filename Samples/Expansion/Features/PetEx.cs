@@ -108,14 +108,13 @@ public class CombatPetEx : CombatPet
             //Teleport if too far?
             if (P_PetOwner.GetCylinderDistance(this) > 15)
             {
-                //if (P_PetOwner.Location.InstancedLandblock == Location.InstancedLandblock)
-                //{
-                //    //Todo: ask RF about FakeTeleport
-                //    FakeTeleport(P_PetOwner.Location.InFrontOf(1));
-                //    P_PetOwner.SendMessage($"{Name} has caught up to you.");
-                //}
-                //else
-                if (!IsMoving)
+                if (P_PetOwner.Location.InstancedLandblock == Location.InstancedLandblock)
+                {
+                    //Todo: ask RF about FakeTeleport
+                    FakeTeleport(P_PetOwner.Location.InFrontOf(.1));
+                    //P_PetOwner.SendMessage($"{Name} has caught up to you.");
+                }
+                else if (!IsMoving)
                     MoveTo(P_PetOwner);
             }
         }

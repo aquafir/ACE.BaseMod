@@ -389,7 +389,6 @@ public static class PetSummonMultiple
             player.SendMessage(Desc);
             return;
         }
-
         if (!playerPets.TryGetValue(player, out var pets) || pets.Count == 0)
         {
             player.SendMessage($"No pets found.");
