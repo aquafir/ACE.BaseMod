@@ -4,13 +4,7 @@
 namespace Expansion.Helpers;
 public static class Commands
 {
-    [CommandHandler("sp", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 2)]
-    public static void HandleSetProperty(Session session, params string[] parameters)
-    {
-        DeveloperCommands.HandleSetProperty(session, parameters);
-    }
-
-        [CommandHandler("sim", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
+    [CommandHandler("sim", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
     public static void Sim(Session session, params string[] parameters)
     {
         var player = session.Player;
@@ -124,14 +118,14 @@ public static class Commands
         motion.TargetGuid = target.Guid;
         player.CurrentMotionState = motion;
 
-        for(var i = 0; i < 20; i++)
-        player.EnqueueBroadcastMotion(motion);
+        for (var i = 0; i < 20; i++)
+            player.EnqueueBroadcastMotion(motion);
 
         if (player.FastTick)
             player.PhysicsObj.stick_to_object(target.Guid.Full);
 
         return animLength;
-     }
+    }
 
 
     //Todo: remove in release
