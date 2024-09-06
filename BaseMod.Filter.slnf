@@ -4,7 +4,7 @@
     "projects": [
       "ACE.Shared\\ACE.Shared.csproj",
       "Samples\\Expansion\\Expansion.csproj",
-      "Samples\\Raise\\Raise.csproj"
+      "Samples\\Tower\\Tower.csproj"
     ]
   }
 }

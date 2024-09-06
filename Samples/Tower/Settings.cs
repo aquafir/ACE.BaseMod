@@ -48,4 +48,5 @@ public enum Feature
     FloorBonus,
     AutoBattle,
     AetheriaLoot,
+    Chaos,
 }
