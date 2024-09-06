@@ -7,11 +7,35 @@ public static class PetSummonMultiple
     const double MAXPETS = 2;
     static Dictionary<Player, ConcurrentQueue<Pet>> playerPets { get; set; } = new();
 
-    static decimal MaxPetWeight(this Player player) => 
+    static decimal MaxPetWeight(this Player player) =>
         Convert.ToDecimal(player.GetProperty(FakeFloat.PetWeightMax) ?? 1)
         + Convert.ToDecimal(player.GetCachedFake(FakeFloat.PetWeightMax));
     static decimal PetWeight(this Pet pet) => Convert.ToDecimal(pet.GetProperty(FakeFloat.PetWeight) ?? 1);
-    static decimal TotalPetWeight(this ConcurrentQueue<Pet> pets) => pets.Where(x => x is not null && x.IsAlive).Sum(x => x.PetWeight());
+
+    /// <summary>
+    /// Sums the weight of living pets and removes null or dead pets
+    /// </summary>
+    static decimal TotalPetWeight(this ConcurrentQueue<Pet> pets)
+    {
+        decimal total = 0;
+
+        for (var i = 0; i < pets.Count; i++)
+        {
+            if (!pets.TryDequeue(out var pet) || pet is null)
+                continue;
+
+            if (pet.IsAlive)
+            {
+                total += pet.PetWeight();
+                pets.Enqueue(pet);
+            }
+            else
+                pet.Destroy();
+        }
+
+        return total;
+        //return pets.Where(x => x is not null && x.IsAlive).Sum(x => x.PetWeight());
+    }
     //static double TotalPetWeight(this Player player) => playerPets.Count;
 
     //[HarmonyPrefix]
@@ -94,7 +118,7 @@ public static class PetSummonMultiple
             pets = new();
             playerPets.TryAdd(player, pets);
         }
-        player.SendMessage($"Trying to add {__instance.Name} ({weight:F2}), {pets.TotalPetWeight():F2}/{max:F2} weight");
+        player.SendMessage($"Trying to add {__instance.Name} ({weight:F2}) to current weight of {pets.TotalPetWeight():F2}/{max:F2}");
 
         //Destroy pet if needed
         var excessWeight = pets.TotalPetWeight() + weight - max;
@@ -102,8 +126,8 @@ public static class PetSummonMultiple
 
         if (excessWeight > 0)
         {
-            player.SendMessage($"Excess = {excessWeight:F2}");
-            var msg = new StringBuilder($"\nRemoved:");
+            //player.SendMessage($"");
+            var msg = new StringBuilder($"\nRemoving {excessWeight:F2} excess weight:");
             while (removedWeight < excessWeight)
             {
                 if (pets.TryDequeue(out var removedPet))
@@ -116,14 +140,26 @@ public static class PetSummonMultiple
                     msg.Append($"\n  {removedPet.Name}  ({removedPet.PetWeight():F2})");
                     removedPet.Destroy();
                 }
-                else
-                {
-                    ModManager.Log($"Failed to dequeue pet to spawn {__instance.Name}", ModManager.LogLevel.Error);
-                    __result = false;
-                    return false;
-                }
+                //Skip problem pets
+                //else
+                //{
+                //    ModManager.Log($"Failed to dequeue pet to spawn {__instance.Name}", ModManager.LogLevel.Error);
+                //    __result = false;
+                //    return false;
+                //}
             }
-            msg.Append($"\n  ={excessWeight:F2} excess - {removedWeight:F2} total -> {(pets.TotalPetWeight() + weight):F2}/{max:F2} current weight");
+
+            //Double check for problems occuring?
+            //if (removedWeight < excessWeight)
+            //{
+            //    msg.Append($"\nCulled {pets.Count} misbehaving pets...");
+            //    foreach (var pet in pets)
+            //        pet?.Destroy();
+
+            //    pets.Clear();
+            //}
+            //else
+            msg.Append($"\n  ={excessWeight:F2} excess - {removedWeight:F2} removed -> {(pets.TotalPetWeight() + weight):F2}/{max:F2} current weight");
 
             player.SendMessage($"{msg}");
         }
@@ -340,7 +376,7 @@ public static class PetSummonMultiple
         };
     //Join usages in a regex pattern
     static string Pattern => string.Join("|", USAGES.Select(x => $"({x})"));
-    static string Desc => $"pet {string.Join("|",Enum.GetNames<PetCommand>())}";
+    static string Desc => $"pet {string.Join("|", Enum.GetNames<PetCommand>())}";
     static Regex CommandRegex = new(Pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     [CommandHandler("pet", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]

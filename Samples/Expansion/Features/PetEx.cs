@@ -1,4 +1,6 @@
-﻿namespace Expansion.Features;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+
+namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.PetEx))]
 [HarmonyPatchCategory(nameof(Feature.PetEx))]
@@ -15,11 +17,11 @@ public static class PetEx
     public static bool PreCreateWorldObject(Weenie weenie, ObjectGuid guid, ref WorldObject __result)
 #endif
     {
-        if (weenie.WeenieType != WeenieType.CombatPet || weenie is null) 
+        if (weenie.WeenieType != WeenieType.CombatPet || weenie is null)
             return true;
 
 #if REALM
-            __result = new CombatPetEx(weenie, guid, ruleset);
+        __result = new CombatPetEx(weenie, guid, ruleset);
 #else
             __result = new CombatPetEx(weenie, guid);
 #endif
@@ -94,6 +96,9 @@ public class CombatPetEx : CombatPet
         base.Die(lastDamager, topDamager);
     }
 
+
+    const int ORPHAN_HEARTBEATS = 5;
+    int idleCount = 0;
     public override void Heartbeat(double currentUnixTime)
     {
         base.Heartbeat(currentUnixTime);
@@ -101,7 +106,7 @@ public class CombatPetEx : CombatPet
         if (P_PetOwner is not null && (AttackTarget is null || AttackTarget.IsDestroyed))
         {
             //Teleport if too far?
-            if (P_PetOwner.GetCylinderDistance(this) > 15)                
+            if (P_PetOwner.GetCylinderDistance(this) > 15)
             {
                 //if (P_PetOwner.Location.InstancedLandblock == Location.InstancedLandblock)
                 //{
@@ -109,10 +114,14 @@ public class CombatPetEx : CombatPet
                 //    FakeTeleport(P_PetOwner.Location.InFrontOf(1));
                 //    P_PetOwner.SendMessage($"{Name} has caught up to you.");
                 //}
-                //else if (!IsMoving)
+                //else
+                if (!IsMoving)
                     MoveTo(P_PetOwner);
-            }            
+            }
         }
+        //Add check to destroy orphaned pets?
+        else if (idleCount++ > ORPHAN_HEARTBEATS)
+            Destroy();
     }
 
     //public override void OnMoveComplete(WeenieError status)

@@ -1,4 +1,6 @@
-﻿namespace ACE.Shared.Helpers;
+﻿using ACE.Server.Physics.Common;
+
+namespace ACE.Shared.Helpers;
 
 public static class PositionExtensions
 {
@@ -133,12 +135,12 @@ public static class PositionExtensions
             c.SendUpdatePosition(adminMove: true);
         }
     }
-    May be needed no non-Realms?
-    public void SendUpdatePosition(bool adminMove = false)
-    {
-        EnqueueBroadcast(new GameMessageUpdatePosition(this, adminMove));
-        LastUpdatePosition = DateTime.UtcNow;
-    }
+    //May be needed no non-Realms?
+    //public void SendUpdatePosition(bool adminMove = false)
+    //{
+    //    EnqueueBroadcast(new GameMessageUpdatePosition(this, adminMove));
+    //    LastUpdatePosition = DateTime.UtcNow;
+    //}
 #else
 #endif
 }
