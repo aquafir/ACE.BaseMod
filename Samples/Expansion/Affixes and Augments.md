@@ -18,10 +18,12 @@ An `Augment` describes a reversible change to a `WorldObject`:
   * Operations are:
     * Assign
     * Add
+      * Subtract?
     * Multiply
+      * Divide?
     * BitSet
     * BitClear
-
+  
 * `Value`
   * Normalized value the target property is set to
 * When applied it 

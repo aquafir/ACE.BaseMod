@@ -202,6 +202,8 @@ public enum AugmentType
     Float = 3,
     Bool = 4,
     DataID = 5,
+    InstanceID = 6,
+
 
     //Require Creature 
     AttributeRanks = 10,    //Ranks from experience

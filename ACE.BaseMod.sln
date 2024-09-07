@@ -81,6 +81,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomSpells", "Samples\Cus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImGuiHud", "Samples\ImGuiHud\ImGuiHud.csproj", "{ACC53BD9-C22B-4D8E-87D9-B39B97B18505}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACE.Shared.Tests", "ACE.Shared.Tests\ACE.Shared.Tests.csproj", "{B7E606D4-4BE7-4D5B-A66F-86768C07085C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -209,6 +211,10 @@ Global
 		{ACC53BD9-C22B-4D8E-87D9-B39B97B18505}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACC53BD9-C22B-4D8E-87D9-B39B97B18505}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACC53BD9-C22B-4D8E-87D9-B39B97B18505}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7E606D4-4BE7-4D5B-A66F-86768C07085C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7E606D4-4BE7-4D5B-A66F-86768C07085C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7E606D4-4BE7-4D5B-A66F-86768C07085C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7E606D4-4BE7-4D5B-A66F-86768C07085C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
