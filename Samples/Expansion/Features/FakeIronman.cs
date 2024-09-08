@@ -1,6 +1,4 @@
-﻿using ACE.Database;
-
-namespace Expansion.Features;
+﻿namespace Expansion.Features;
 #if REALM
 
 #else

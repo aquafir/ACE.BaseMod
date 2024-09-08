@@ -1,6 +1,4 @@
-﻿using ACE.Database;
-
-namespace Expansion.Mutators;
+﻿namespace Expansion.Mutators;
 
 #if REALM
 

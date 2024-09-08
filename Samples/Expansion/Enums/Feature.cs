@@ -82,5 +82,6 @@ public enum Feature
     PetSummonMultiple,
     PetEx,
     UnarmedWeapon,
+    PetExShareDamage,
 }
 

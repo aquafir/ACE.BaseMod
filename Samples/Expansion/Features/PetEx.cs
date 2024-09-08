@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
-
-namespace Expansion.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.PetEx))]
 [HarmonyPatchCategory(nameof(Feature.PetEx))]
@@ -41,7 +39,6 @@ public static class PetEx
         return false;
     }
     #endregion
-
 
     //Tell owner about damage pet deals
     [HarmonyPostfix]
