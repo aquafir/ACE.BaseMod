@@ -106,7 +106,8 @@ public class CombatPetEx : CombatPet
         if (P_PetOwner is not null && (AttackTarget is null || AttackTarget.IsDestroyed))
         {
             //Teleport if too far?
-            if (P_PetOwner.GetCylinderDistance(this) > 15)
+            var dist = P_PetOwner.GetCylinderDistance(this);
+            if (dist > 15)
             {
                 if (P_PetOwner.Location.InstancedLandblock == Location.InstancedLandblock)
                 {
@@ -117,6 +118,8 @@ public class CombatPetEx : CombatPet
                 else if (!IsMoving)
                     MoveTo(P_PetOwner);
             }
+            else if (dist > 250)
+                Destroy();
         }
         //Add check to destroy orphaned pets?
         else if (idleCount++ > ORPHAN_HEARTBEATS)

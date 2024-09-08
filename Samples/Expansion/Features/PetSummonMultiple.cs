@@ -1,4 +1,6 @@
-﻿namespace Expansion.Features;
+﻿using ACE.Server.WorldObjects;
+
+namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.PetSummonMultiple))]
 [HarmonyPatchCategory(nameof(Feature.PetSummonMultiple))]
@@ -294,6 +296,18 @@ public static class PetSummonMultiple
         playerPets.Remove(__instance);
     }
 
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(Player), nameof(Player.Teleport), new Type[] { typeof(InstancedPosition), typeof(bool), typeof(bool) })]
+    public static void PostTeleport(InstancedPosition newPosition, bool teleportingFromInstance, bool fromPortal, ref Player __instance)
+    {
+        //Destroy pets on teleport
+        if (!playerPets.TryGetValue(__instance, out var pets))
+            return;
+
+        foreach (var pet in pets)
+            pet?.Destroy();
+    }
+
 
     //[HarmonyPrefix]
     //[HarmonyPatch(typeof(WorldObject), nameof(WorldObject.Destroy), new Type[] { typeof(bool), typeof(bool) })]
@@ -366,6 +380,8 @@ public static class PetSummonMultiple
         //    pet = null;
         //}
     }
+
+
 
     #region Commands
     static string Commands => string.Join(", ", Enum.GetNames<PetCommand>());
