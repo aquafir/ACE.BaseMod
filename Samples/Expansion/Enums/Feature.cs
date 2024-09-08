@@ -81,5 +81,6 @@ public enum Feature
     EquipPostCreation,
     PetSummonMultiple,
     PetEx,
+    UnarmedWeapon,
 }
 

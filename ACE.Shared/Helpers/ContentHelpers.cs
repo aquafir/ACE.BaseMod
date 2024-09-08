@@ -137,22 +137,22 @@ public static class ContentHelpers
     /// <summary>
     /// Saves a ACE.Database.Models.World.Weenie
     /// </summary>
-    public static void SaveWeenie(string path, ACE.Entity.Models.Weenie weenie)
-    {
+    //public static void SaveWeenie(string path, ACE.Entity.Models.Weenie weenie)
+    //{
 
-        var dbWeenie =  Helpers.ConvertFromEntityWeenie(weenie);
+    //    var dbWeenie =  Helpers.ConvertFromEntityWeenie(weenie);
 
-        if (!LifestonedConverter.TryConvertACEWeenieToLSDJSON(dbWeenie, out var json, out var json_weenie))
-        {
-            Console.WriteLine($"Failed to convert {dbWeenie.ClassId} - {dbWeenie.ClassName} to json");
-            return;
-        }
+    //    if (!LifestonedConverter.TryConvertACEWeenieToLSDJSON(dbWeenie, out var json, out var json_weenie))
+    //    {
+    //        Console.WriteLine($"Failed to convert {dbWeenie.ClassId} - {dbWeenie.ClassName} to json");
+    //        return;
+    //    }
 
-        File.WriteAllText(path, json);
-    }
+    //    File.WriteAllText(path, json);
+    //}
 
-    public static Weenie ImportWeenie(string path)
-    {
+    //public static Weenie ImportWeenie(string path)
+    //{
 
-    }
+    //}
 }
