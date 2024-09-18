@@ -17,6 +17,8 @@ public static class Augment
         if (!wo.TryGetAugmentTarget(type, key, out var current))
             return false;
 
+
+
         //If value was missing set a default based on the operation
         if (current is null)
         {
@@ -94,11 +96,6 @@ public static class Augment
                 AugmentType.Float => wo.GetProperty((PropertyFloat)key)?.Normalize(),
                 AugmentType.Bool => wo.GetProperty((PropertyBool)key)?.Normalize(),
                 AugmentType.DataID => wo.GetProperty((PropertyDataId)key)?.Normalize(),
-
-                //Todo
-                //AugmentType.Attribute => (creature.Attributes.TryGetValue((PropertyAttribute)key, out var attribute) ? 
-                //AugmentType.Vital => wo.GetProperty((Property)key).Normalize(),
-                //AugmentType.Skill => wo.GetProperty((Property)key).Normalize(),
                 _ => null,
             };
         }
@@ -180,6 +177,26 @@ public enum Operation
     BitSet,
     BitClear,
 
+    /*
+     * value |= (1 << n); // Set the nth bit
+     * value &= ~(1 << n); // Clear the nth bit
+     * value ^= (1 << n); // Toggle the nth bit
+     * (value & (1 << n)) != 0; // Check if the nth bit is set
+     * 
+     * checked { int result = int.MaxValue + 1; // Throws an OverflowException }
+     */
+
+    //Modulo,
+    //BitShift,
+    //BitAND,
+    //BitOR,
+    //BitXOR,
+
+    //BitNOT,
+
+
+
+
     //Subtract,
     //Divide,
     //AtLeastAdd,
@@ -204,18 +221,17 @@ public enum AugmentType
     DataID = 5,
 
     //Require Creature 
-    AttributeRanks = 10,    //Ranks from experience
-    AttributeStart = 11,    //Starting value
-    VitalRanks = 12,
-    VitalStart = 13,
-    SkillRanks = 14,
-    //SkillStart = 15,
-    //SkillAdvancementClass = 16,
+    AttributeRanks = 100,    //Ranks from experience
+    AttributeStart = 101,    //Starting value
+    VitalRanks = 102,
+    VitalStart = 103,
+    SkillRanks = 104,
+    //SkillStart = 105,
+    //SkillAdvancementClass = 106,
 
     //Unused
     //Position = 3,
     //String = 5,
-    //DID = 6,
     //IID = 7,
     //BodyDamageValue = 10,
     //BodyDamageVariance = 11,

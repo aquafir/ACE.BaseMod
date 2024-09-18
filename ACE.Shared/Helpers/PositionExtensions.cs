@@ -4,56 +4,127 @@ namespace ACE.Shared.Helpers;
 
 public static class PositionExtensions
 {
-    //    public static Position Translate(this Position p, float distanceInFront, float radians = 0)
-    //    {
-    //        //Add rotation?
-    //        //Quaternion.CreateFromYawPitchRoll()
-    //        var pos = new Position();
-    //        //pos.landblockId.Raw = p.LandblockId.Raw;
-    //        pos.Rotation = p.Rotation;
+    const float PI = (float)Math.PI;
+    static float ToRadians(this float degrees) => degrees * PI / 180;
+    static float ToDegrees(this float radians) => radians * 180 / PI;
 
-    //        // Create a Quaternion representing the rotation
-    //        Quaternion rotationQuaternion = Quaternion.CreateFromYawPitchRoll(radians, 0, 0);
-
-    //        // Multiply a unit vector by distance/rotation
-    //        Vector3 rotatedPosition = Vector3.Transform(Vector3.One * distanceInFront, rotationQuaternion);
-
-    //        // Add the rotated position to the original position to obtain the translated position
-    //        pos.Pos = p.Pos + rotatedPosition;
-
-    //        return pos;
-    //        //p.FindZ()
-    ////        return new Position(p.LandblockId.Raw, p.PositionX + num2, p.PositionY + num3, p.PositionZ + num4, 0f, 0f, rotationZ, rotationW);
-    //    }
-
-
-    public static ACE.Entity.Position Shifted(this ACE.Entity.Position pos, float dx, float dy, float dz)
+    /// <summary>
+    /// Translate a new Position without changing the angle
+    /// </summary>
+    public static Position Shifted(this Position origin, Vector3 shift)
     {
+        Entity.Position pos = new(origin.LandblockId.Raw, shift + origin.Pos, origin.Rotation);
+
 #if REALM
-        throw new NotImplementedException();
+        Position newPos = new(pos, origin.Instance);
+        newPos.SetLandblockId(new LandblockId(newPos.GetCell()));
+        return newPos;
 #else
-        //float qw = RotationW; // north
-        //float qz = RotationZ; // south
-
-        //double x = 2 * qw * qz;
-        //double y = 1 - 2 * qz * qz;
-
-        //var heading = Math.Atan2(x, y);
-        //var dx = -1 * Convert.ToSingle(Math.Sin(heading) * distanceInFront);
-        //var dy = Convert.ToSingle(Math.Cos(heading) * distanceInFront);
-
-        //// move the Z slightly up and let gravity pull it down.  just makes things easier.
-        //var bumpHeight = 0.05f;
-        //if (rotate180)
-        //{
-        //    var rotate = new Quaternion(0, 0, qz, qw) * Quaternion.CreateFromYawPitchRoll(0, 0, (float)Math.PI);
-        //    return new Position(LandblockId.Raw, PositionX + dx, PositionY + dy, PositionZ + bumpHeight, 0f, 0f, rotate.Z, rotate.W);
-        //}
-        //else
-        //    return new Position(LandblockId.Raw, PositionX + dx, PositionY + dy, PositionZ + bumpHeight, 0f, 0f, qz, qw);
-
-        return new ACE.Entity.Position(pos.LandblockId.Raw, pos.PositionX + dx, pos.PositionY + dy, pos.PositionZ + dz, 0f, 0f, 0f, 0f);
+        return pos;
 #endif
+    }
+    public static Position Shifted(this Position origin, float dx, float dy, float dz = 0) => origin.Shifted(new(dx, dy, dz));
+
+    public static Position AdjustZ(this Position origin, float objScale = 1f) =>
+        origin.SetPositionZ(origin.PositionZ + 0.005f * objScale);
+
+    /// <summary>
+    /// Returns a new Position rotated to a heading, yaw, and pitch in radians
+    /// </summary>
+    public static Position RotatedTo(this Position origin, float heading, float yaw = 0, float pitch = 0)
+    {
+        Quaternion rot = Quaternion.CreateFromYawPitchRoll(yaw, pitch, heading);
+        Entity.Position pos = new(origin.LandblockId.Raw, origin.Pos, rot);
+
+#if REALM
+        return new(pos, origin.Instance);
+#else
+        return pos;
+#endif
+    }
+    /// <summary>
+    /// Returns a new Position rotated relate to its current heading by a number of radians
+    /// </summary>
+    public static Position RotatedBy(this Position origin, float heading, float yaw = 0, float pitch = 0)
+    {
+        //Working
+        float qw = origin.RotationW; // north
+        float qz = origin.RotationZ; // south
+        var rotation = new Quaternion(0, 0, qz, qw) * Quaternion.CreateFromYawPitchRoll(yaw, pitch, heading);
+        Entity.Position pos = new(origin.LandblockId.Raw, origin.Pos, rotation);
+#if REALM
+        return new(pos, origin.Instance);
+#else
+        return pos;
+#endif
+    }
+    public static Position RotatedTo(this Position origin, Position target)
+        => origin.RotatedTo(origin.GetAngle(target));
+    public static Position RotatedTo(this WorldObject origin, WorldObject target)
+        => origin.Location.RotatedTo(origin.GetAngle(target));
+
+
+    /// <summary>
+    /// Returns the 2D angle between current direction and position from an input target, rotated by -PI/2 to face it
+    /// </summary>
+    public static float GetAngle(this Position origin, Position target)
+    {
+        var indoors = origin.Indoors == target.Indoors;
+        var a = indoors ? origin.ToGlobal() : origin.Pos;
+        var b = indoors ? target.ToGlobal() : target.Pos;
+
+        return a.GetAngle(b) - PI / 2;    //Sub Pi/2 to face North instead of East?
+    }
+    public static float GetAngleDegrees(this Position origin, Position target) => origin.GetAngle(target) * (180.0f / PI);
+    public static float GetAngle(this WorldObject origin, WorldObject target)
+        => origin.Location.GetAngle(target.Location);
+
+
+    /// <summary>
+    /// Returns the 2D angle between current direction and position from an input target
+    /// </summary>
+    public static Vector3 GetDirection(this Position origin, Position target, bool useRadians = true)
+    {
+        if (origin.Indoors == target.Indoors)
+            return origin.ToGlobal().GetDirection(target.ToGlobal());
+
+        return origin.Pos.GetDirection(target.Pos);
+    }
+    /// <summary>
+    /// Returns a normalized 2D vector from self to target
+    /// </summary>
+    public static Vector3 GetDirection(this Vector3 self, Vector3 target)
+    {
+        var target2D = new Vector3(self.X, self.Y, 0);
+        var self2D = new Vector3(target.X, target.Y, 0);
+
+        return Vector3.Normalize(target - self);
+    }
+
+    /// <summary>
+    /// Returns the 2D angle between 2 vectors in radians.  
+    /// Creature_Navigation method with normalized offset vectors and arccos fails over 180 degrees
+    /// </summary>
+    public static float GetAngle(this Vector3 a, Vector3 b)
+    {
+        var dx = b.X - a.X;
+        var dy = b.Y - a.Y;
+
+        var rads = Math.Atan2(dy, dx);
+        if (double.IsNaN(rads)) return 0.0f;
+
+        return (float)rads;
+    }
+    /// <summary>
+    /// Returns the 2D angle between 2 vectors
+    /// </summary>
+    public static float GetAngleDegrees(this Vector3 a, Vector3 b)
+    {
+        var rads = a.GetAngle(b);
+        if (double.IsNaN(rads)) return 0.0f;
+
+        var angle = rads * (180.0f / PI);
+        return angle;
     }
 
     /// <summary>
@@ -99,7 +170,7 @@ public static class PositionExtensions
             }
 
 #if REALM
-            p = new (cell, positionData[0], positionData[1], positionData[2], positionData[4], positionData[5], positionData[6], positionData[3]);
+            p = new(cell, positionData[0], positionData[1], positionData[2], positionData[4], positionData[5], positionData[6], positionData[3]);
 #else
             p = new (cell, positionData[0], positionData[1], positionData[2], positionData[4], positionData[5], positionData[6], positionData[3]);
 #endif
@@ -112,14 +183,13 @@ public static class PositionExtensions
         return true;
     }
 
-
 #if REALM
     /// <summary>
     /// TODO: Figure this ACRealms stuff out
     /// </summary>
-    public static void TryTeleport(this Creature c, InstancedPosition _newPosition)
+    public static void TryTeleport(this Creature c, Position _newPosition)
     {
-        InstancedPosition instancedPosition = _newPosition.SetPositionZ(_newPosition.PositionZ + 0.005f * c.ObjScale.GetValueOrDefault(1f));
+        Position instancedPosition = _newPosition.SetPositionZ(_newPosition.PositionZ + 0.005f * c.ObjScale.GetValueOrDefault(1f));
         if (c.Location.InstancedLandblock != instancedPosition.InstancedLandblock)
         {
             //log.Error((object)$"{c.Name} tried to teleport from {c.Location} to a different landblock {instancedPosition}");

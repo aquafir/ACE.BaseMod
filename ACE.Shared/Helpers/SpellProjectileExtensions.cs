@@ -96,7 +96,8 @@ public static class SpellProjectileExtensions
 
             sp.Setup(spell, spellType);
 #if REALM
-            source.SetSpellRotation(i, spell, spellType, target, velocity, strikeSpell, casterLoc.Position, targetLoc.Position, origin, sp);
+            //TODO: fix
+            //source.SetSpellRotation(i, spell, spellType, target, velocity, strikeSpell, casterLoc.Position, targetLoc.Position, origin, sp);
 #else
             source.SetSpellRotation(i, spell, spellType, target, velocity, strikeSpell, casterLoc, targetLoc, origin, sp);
 #endif

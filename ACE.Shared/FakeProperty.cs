@@ -53,6 +53,11 @@ public enum FakeFloat
     ItemSpellSplashCooldownScale = 10026,
     ItemSpellMetaPower = 10027,
     SpellChainChance = 10028,
+    /// <summary>
+    /// Used by PetSummonMultiple to define non-default weights for a Pet that count against the total
+    /// </summary>
+    PetWeight = 10029,
+    PetWeightMax = 10030,
 
 
 
@@ -70,11 +75,6 @@ public enum FakeFloat
     TimeInGame = 20007,
     ItemMissileSplashCooldown = 20008,
     ItemMissileSplitCooldown = 20009,
-    /// <summary>
-    /// Used by PetSummonMultiple to define non-default weights for a Pet that count against the total
-    /// </summary>
-    PetWeight = 20010,
-    PetWeightMax = 20011,
 }
 public enum FakeIID
 {
