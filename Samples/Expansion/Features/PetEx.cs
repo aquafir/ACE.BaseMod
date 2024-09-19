@@ -45,7 +45,6 @@ public static class PetEx
     [HarmonyPatch(typeof(Creature), nameof(Creature.TakeDamage), new Type[] { typeof(WorldObject), typeof(DamageType), typeof(float), typeof(bool) })]
     public static void PostTakeDamage(WorldObject source, DamageType damageType, float amount, bool crit, ref Creature __instance, ref uint __result)
     {
-
         if (source is Pet target)
         {
             if (!__instance.IsAlive)
@@ -82,7 +81,8 @@ public class CombatPetEx : CombatPet
 
     public override uint TakeDamage(WorldObject source, DamageType damageType, float amount, bool crit = false)
     {
-        P_PetOwner.SendMessage($"{Name} has been {(crit ? "critically " : "")}hit for {(int)amount} by {source.Name} {damageType} damage.", ChatMessageType.CombatEnemy);
+        if(source is not null)
+            P_PetOwner.SendMessage($"{Name} has been {(crit ? "critically " : "")}hit for {(int)amount} by {(source.Name)} {damageType} damage.", ChatMessageType.CombatEnemy);
 
         return base.TakeDamage(source, damageType, amount, crit);
     }

@@ -69,6 +69,17 @@ public static class Commands
         ////player.CurrentLandblock.RespawnCreatures
     }
 
+    [CommandHandler("t2", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
+    public static void T2(Session session, params string[] parameters)
+    {
+        var p = session.Player;
+        var s = p.selectedTarget?.TryGetWorldObject();
+        if (p is null || s is null || s is not Creature c)
+            return;
+
+        Debugger.Break();
+        c.TakeDamage(null, DamageType.Undef, 10);
+    }
 
     [CommandHandler("t1", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
     public static void T1(Session session, params string[] parameters)
