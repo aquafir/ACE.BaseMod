@@ -39,7 +39,8 @@ An `Affix` is a collection of `Augment` which may apply to some eligible WorldOb
 
 ### Operation
 
-
+* Determines how the property is changed
+* Related to `MutationEffectType`
 
 
 

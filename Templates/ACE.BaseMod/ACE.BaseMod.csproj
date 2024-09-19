@@ -18,9 +18,22 @@
 		<None Remove=".template.config\**" />
 	</ItemGroup>
 
+	<!--Krafs Publicizer for access to private members of ACE-->
+	<!--<PropertyGroup>
+		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
+	</PropertyGroup>-->
+	<!--<ItemGroup>
+		<Publicize Include="ACE.Server" />
+	</ItemGroup>-->
 	<!--<PropertyGroup>
 		<PublicizeAll>true</PublicizeAll>
 	</PropertyGroup>-->
+	<!--<ItemGroup>
+		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>-->
 
 	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.3.3" />

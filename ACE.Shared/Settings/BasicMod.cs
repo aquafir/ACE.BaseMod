@@ -121,25 +121,25 @@ public enum ModState
 
 
 
-public class Mod : BasicMod//() : BasicMod("MyMod", new BasicPatch<Settings>(this))
-{
-    public Mod() : base()
-    {
-        var patch = new BasicPatch<Settings>(this);
+//public class Mod : BasicMod//() : BasicMod("MyMod", new BasicPatch<Settings>(this))
+//{
+//    public Mod() : base()
+//    {
+//        var patch = new BasicPatch<Settings>(this);
 
-        Setup("MyName", patch);
-    }
-}
+//        Setup("MyName", patch);
+//    }
+//}
 
-public class Settings : JsonSettings, ISettings
-{
-    public Task CreateAsync()
-    {
-        throw new NotImplementedException();
-    }
+//public class Settings : JsonSettings, ISettings
+//{
+//    public Task CreateAsync()
+//    {
+//        throw new NotImplementedException();
+//    }
 
-    public Task CreateOrLoadAsync()
-    {
-        throw new NotImplementedException();
-    }
-}
+//    public Task CreateOrLoadAsync()
+//    {
+//        throw new NotImplementedException();
+//    }
+//}
