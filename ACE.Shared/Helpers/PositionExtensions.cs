@@ -5,8 +5,6 @@ namespace ACE.Shared.Helpers;
 public static class PositionExtensions
 {
     const float PI = (float)Math.PI;
-    static float ToRadians(this float degrees) => degrees * PI / 180;
-    static float ToDegrees(this float radians) => radians * 180 / PI;
 
     /// <summary>
     /// Translate a new Position without changing the angle
@@ -79,11 +77,18 @@ public static class PositionExtensions
     public static float GetAngle(this WorldObject origin, WorldObject target)
         => origin.Location.GetAngle(target.Location);
 
+    //Use GetOffset for now
+    //public static Vector3 GetOffset3d(this Position origin, Position target)
+    //{
+    //    if (origin.Indoors == target.Indoors)
+    //        return Vector3.Normalize(target.ToGlobal() - origin.ToGlobal());
+    //    return Vector3.Normalize(target.Pos - origin.Pos);
+    //}
 
     /// <summary>
     /// Returns the 2D angle between current direction and position from an input target
     /// </summary>
-    public static Vector3 GetDirection(this Position origin, Position target, bool useRadians = true)
+    public static Vector3 GetDirection(this Position origin, Position target)
     {
         if (origin.Indoors == target.Indoors)
             return origin.ToGlobal().GetDirection(target.ToGlobal());
@@ -183,27 +188,42 @@ public static class PositionExtensions
         return true;
     }
 
-#if REALM
     /// <summary>
     /// TODO: Figure this ACRealms stuff out
     /// </summary>
-    public static void TryTeleport(this Creature c, Position _newPosition)
+    public static bool TryTeleport(this Creature c, Position _newPosition, out SetPositionError result)
     {
+        result = SetPositionError.OK;
+
         Position instancedPosition = _newPosition.SetPositionZ(_newPosition.PositionZ + 0.005f * c.ObjScale.GetValueOrDefault(1f));
+#if REALM
         if (c.Location.InstancedLandblock != instancedPosition.InstancedLandblock)
         {
             //log.Error((object)$"{c.Name} tried to teleport from {c.Location} to a different landblock {instancedPosition}");
+            result = SetPositionError.InvalidArguments;
+            return false;
         }
-        else
-        {
-            c.PhysicsObj.report_collision_end(forceEnd: true);
-            SetPosition setPosition = new SetPosition(instancedPosition.Instance);
-            setPosition.Pos = new PhysicsPosition(instancedPosition);
-            setPosition.Flags = SetPositionFlags.Placement | SetPositionFlags.Teleport | SetPositionFlags.Slide | SetPositionFlags.SendPositionEvent;
-            c.PhysicsObj.SetPosition(setPosition);
-            c.SyncLocation();
-            c.SendUpdatePosition(adminMove: true);
-        }
+#endif
+
+        // force out of hotspots
+        c.PhysicsObj.report_collision_end(forceEnd: true);
+
+        // do the physics teleport
+        SetPosition setPosition = new SetPosition(instancedPosition.Instance);
+        setPosition.Pos = new PhysicsPosition(instancedPosition);
+        setPosition.Flags = SetPositionFlags.Placement | SetPositionFlags.Teleport | SetPositionFlags.Slide | SetPositionFlags.SendPositionEvent;
+        
+        result = c.PhysicsObj.SetPosition(setPosition);
+        if (result != SetPositionError.OK)
+            return false;
+
+        // update ace location
+        c.SyncLocation();
+
+        // broadcast blip to new position
+        c.SendUpdatePosition(adminMove: true);
+
+        return true;
     }
     //May be needed no non-Realms?
     //public void SendUpdatePosition(bool adminMove = false)
@@ -211,6 +231,5 @@ public static class PositionExtensions
     //    EnqueueBroadcast(new GameMessageUpdatePosition(this, adminMove));
     //    LastUpdatePosition = DateTime.UtcNow;
     //}
-#else
-#endif
+
 }

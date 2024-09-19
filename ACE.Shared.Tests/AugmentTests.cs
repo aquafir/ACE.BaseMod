@@ -3,7 +3,7 @@ using ACE.Shared.Augments;
 
 namespace ACE.Shared.Tests;
 
-public class Tests
+public class AugmentTests
 {
     IEnumerable<Weenie> content;
     FakeWorldObject wo;
