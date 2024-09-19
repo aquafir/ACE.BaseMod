@@ -437,8 +437,8 @@ public static class PetSummonMultiple
                     {
                         //Todo: fix teleport
 #if REALM
-                        pet.TryTeleport(player.Location.InFrontOf(1));
-                        player.SendMessage($"{pet.Name} has caught up to you.");
+                        if(pet.TryTeleport(player.Location.InFrontOf(1), out var result))
+                            player.SendMessage($"{pet.Name} has caught up to you.");
 #else
 #endif
                     }

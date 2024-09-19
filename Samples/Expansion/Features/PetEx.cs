@@ -45,6 +45,7 @@ public static class PetEx
     [HarmonyPatch(typeof(Creature), nameof(Creature.TakeDamage), new Type[] { typeof(WorldObject), typeof(DamageType), typeof(float), typeof(bool) })]
     public static void PostTakeDamage(WorldObject source, DamageType damageType, float amount, bool crit, ref Creature __instance, ref uint __result)
     {
+
         if (source is Pet target)
         {
             if (!__instance.IsAlive)
