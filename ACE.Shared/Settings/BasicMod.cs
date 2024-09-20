@@ -41,7 +41,7 @@ public class BasicMod : IHarmonyMod
     }
 
     #region Initialize / Dispose (called by ACE)
-    public void Initialize()
+    public virtual void Initialize()
     {
         if (DEBUGGING)
         {

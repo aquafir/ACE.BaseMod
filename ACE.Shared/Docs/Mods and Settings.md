@@ -50,9 +50,16 @@ Settings : JsonSettings
     * Calls `Shutdown` on patches
   * Static `Instance` reference to self
   * `State` that tracks status of the mod when starting/loading settings/etc.
-  * Starts/stops PatchClass
-  * Starts an `IPatchClass`
-* `Patch`
+  * Creates and passes itself to an `IPatch`
+    * Calls `Startup` / `Shutdown`
+
+* `PatchClass` is used in the template to implement an `IPatch` and is responsible for
+  * Creating/reading/watching settings for some set of patches
+  * Applying/removing patches on events like the mod shutting down or the settings changing
+* `BasicPatch` implementing `IPatch` and passed an `ISettings`
+
+* 
+* `IPatch`
   * Startup / Shutdown
 * `BasicPatch<T>`
   * Contains a `SettingsContainer<T>` which creates/loads/reloads for settings `T` 
