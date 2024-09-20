@@ -56,10 +56,13 @@ internal class FakeSpellSplitSplash
             player.SetProperty(FakeFloat.TimestampLastSpellSplit, current);
 
             for (var i = 0; i < targets.Count; i++)
-                __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
+            {
+                if (player.IsInvalidTarget(spell, targets[i]))
+                    __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
+            }
         }
         //Non-projectile but harmful splashes
-        else 
+        else
         {
             //Check any splash
             var splashCount = S.Settings.SpellSettings.SplashCount; //player.GetCachedFake(FakeInt.ItemSpellSplashCount);
@@ -86,7 +89,10 @@ internal class FakeSpellSplitSplash
             player.SetProperty(FakeFloat.TimestampLastSpellSplash, current);
 
             for (var i = 0; i < targets.Count; i++)
-                __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
-        }        
+            {
+                if (player.IsInvalidTarget(spell, targets[i]))
+                    __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
+            }
+        }
     }
 }
