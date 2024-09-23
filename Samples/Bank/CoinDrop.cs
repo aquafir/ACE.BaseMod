@@ -12,7 +12,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bank;
+namespace Tinkering;
 
 [HarmonyPatch]
 internal class CoinDrop

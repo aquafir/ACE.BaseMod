@@ -1,7 +1,7 @@
 ﻿using ClickableTransparentOverlay;
 using ClickableTransparentOverlay.Win32;
 
-namespace ImGuiHud;
+namespace Tinkering;
 
 public class SampleOverlay : Overlay
 {

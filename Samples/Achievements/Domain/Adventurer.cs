@@ -1,4 +1,4 @@
-﻿namespace Achievements.Domain;
+﻿namespace Tinkering.Domain;
 
 public class Adventurer
 {

@@ -1,4 +1,4 @@
-﻿namespace Expansion.Enums;
+﻿namespace Tinkering.Enums;
 
 /// <summary>
 /// MATCH THE CLASS NAME OF THE MUTATOR

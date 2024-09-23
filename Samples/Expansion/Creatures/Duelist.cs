@@ -1,4 +1,4 @@
-﻿namespace Expansion.Creatures;
+﻿namespace Tinkering.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.Duelist))]
 public class Duelist : CreatureEx

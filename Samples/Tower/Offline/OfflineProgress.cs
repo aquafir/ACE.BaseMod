@@ -2,10 +2,10 @@
 using ACE.Database.Models.Shard;
 using ACE.DatLoader;
 using ACE.Server.Network;
-using Tower.Floor;
+using Tinkering.Floor;
 using Biota = ACE.Database.Models.Shard.Biota;
 
-namespace Tower.Offline;
+namespace Tinkering.Offline;
 
 [CommandCategory(nameof(Feature.OfflineProgress))]
 [HarmonyPatchCategory(nameof(Feature.OfflineProgress))]

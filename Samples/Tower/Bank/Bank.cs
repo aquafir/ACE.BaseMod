@@ -1,4 +1,4 @@
-﻿namespace Tower.Bank;
+﻿namespace Tinkering.Bank;
 
 [CommandCategory(nameof(Feature.Bank))]
 [HarmonyPatchCategory(nameof(Feature.Bank))]

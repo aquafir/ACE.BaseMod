@@ -1,8 +1,8 @@
 ﻿using ACE.Server.Managers;
-using Achievements.Data;
-using Achievements.Domain;
+using Tinkering.Data;
+using Tinkering.Domain;
 
-namespace Achievements;
+namespace Tinkering;
 
 public class AdventurerTracker
 {

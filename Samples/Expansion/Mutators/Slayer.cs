@@ -1,4 +1,4 @@
-﻿namespace Expansion.Mutators;
+﻿namespace Tinkering.Mutators;
 
 public class Slayer : Mutator
 {

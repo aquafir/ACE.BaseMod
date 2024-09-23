@@ -1,4 +1,4 @@
-﻿namespace Ironman.FlagEvents;
+﻿namespace Tinkering.FlagEvents;
 
 [HarmonyPatchCategory(nameof(FlagChest))]
 public static class FlagChest

@@ -3,7 +3,7 @@ using ACE.Entity.Enum.Properties;
 using ACE.Entity.Models;
 using Biota = ACE.Database.Models.Shard.Biota;
 
-namespace PlayerSave.Helpers;
+namespace Tinkering.Helpers;
 
 public static class BiotaHelpers
 {

@@ -1,4 +1,4 @@
-﻿namespace AutoLoot;
+﻿namespace Tinkering;
 
 public class Settings
 {

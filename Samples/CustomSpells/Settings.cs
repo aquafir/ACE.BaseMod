@@ -1,5 +1,5 @@
 ﻿
-namespace CustomSpells;
+namespace Tinkering;
 
 
 public class Settings

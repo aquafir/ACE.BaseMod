@@ -1,4 +1,4 @@
-﻿namespace Expansion;
+﻿namespace Tinkering;
 
 /// <summary>
 /// Patch settings are used to serialized patches

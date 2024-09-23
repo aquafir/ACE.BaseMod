@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Discord.Modules;
+namespace Tinkering.Modules;
 public class ChatCommandModule : InteractionModuleBase<SocketInteractionContext>
 {
     public InteractionService Commands { get; set; }

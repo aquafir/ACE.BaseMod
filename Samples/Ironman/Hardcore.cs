@@ -1,4 +1,4 @@
-﻿namespace Ironman;
+﻿namespace Tinkering;
 
 [HarmonyPatchCategory(nameof(Hardcore))]
 public static class Hardcore

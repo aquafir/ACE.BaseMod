@@ -1,6 +1,6 @@
 ﻿using static ACE.Server.WorldObjects.WorldObject;
 
-namespace Balance.Patches
+namespace Tinkering.Patches
 {
     [HarmonyPatch]
     [HarmonyPatchCategory(nameof(MeleeArmorRending))]

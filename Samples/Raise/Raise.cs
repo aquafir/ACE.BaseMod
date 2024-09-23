@@ -1,4 +1,4 @@
-﻿namespace Raise;
+﻿namespace Tinkering;
 
 [HarmonyPatchCategory(nameof(Raise))]
 [CommandCategory(nameof(Raise))]

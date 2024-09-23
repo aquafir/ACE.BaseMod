@@ -1,6 +1,6 @@
 ﻿using ACE.Database.Models.Shard;
 
-namespace PlayerSave;
+namespace Tinkering;
 
 public class PlayerSave
 {

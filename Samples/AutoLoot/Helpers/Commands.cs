@@ -1,8 +1,8 @@
 ﻿using ACE.Server.Command;
 using ACE.Server.Network;
-using AutoLoot.Loot;
+using Tinkering.Loot;
 
-namespace AutoLoot.Helpers;
+namespace Tinkering.Helpers;
 internal class Commands
 {
     //Dump tests here

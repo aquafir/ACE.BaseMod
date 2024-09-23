@@ -1,10 +1,10 @@
 ﻿using ACE.Database.Models.Shard;
 using ACE.Server.Managers;
 
-namespace QuestBonus;
+namespace Tinkering;
 
 [HarmonyPatch]
-public class PatchClass
+public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
     #region Settings
     //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);

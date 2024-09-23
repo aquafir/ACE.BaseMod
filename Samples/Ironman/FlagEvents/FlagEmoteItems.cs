@@ -1,4 +1,4 @@
-﻿namespace Ironman.FlagEvents;
+﻿namespace Tinkering.FlagEvents;
 
 [HarmonyPatchCategory(nameof(FlagEmoteItems))]
 public static class FlagEmoteItems

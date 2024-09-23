@@ -1,6 +1,6 @@
 ﻿using ACE.Database;
 
-namespace Expansion.Features;
+namespace Tinkering.Features;
 
 [CommandCategory(nameof(Feature.SummonCreatureAsPet))]
 [HarmonyPatchCategory(nameof(Feature.SummonCreatureAsPet))]

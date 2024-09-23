@@ -1,7 +1,7 @@
 ﻿using AngouriMath.Core.Compilation.IntoLinq;
 using static AngouriMath.Entity.Number;
 
-namespace Balance;
+namespace Tinkering;
 
 public static class AngouriHelpers
 {

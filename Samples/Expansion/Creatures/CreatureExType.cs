@@ -1,4 +1,4 @@
-﻿namespace Expansion.Creatures;
+﻿namespace Tinkering.Creatures;
 
 public enum CreatureExType
 {

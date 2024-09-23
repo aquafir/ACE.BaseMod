@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Ironman;
+namespace Tinkering;
 
 public static class IronmanPlayerCommands
 {

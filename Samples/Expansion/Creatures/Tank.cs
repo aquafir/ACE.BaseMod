@@ -1,4 +1,4 @@
-﻿namespace Expansion.Creatures;
+﻿namespace Tinkering.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.Tank))]
 public class Tank : CreatureEx

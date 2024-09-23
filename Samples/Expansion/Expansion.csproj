@@ -76,9 +76,12 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
+	
 	<ItemGroup>
+		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.0" />
 		<ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
 	</ItemGroup>
+
 	<!--Get rid of assemblies that should be present in ACE-->
 	<Target Name="CleanupFiles" AfterTargets="PostBuildEvent">
 		<ItemGroup>

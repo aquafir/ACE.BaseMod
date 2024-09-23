@@ -24,15 +24,18 @@
 	<ItemGroup>
 		<Publicize Include="ACE.Server" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Lib.Harmony" Version="2.3.3" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.0" />
-		<!--<PackageReference Include="System.Text.Json" Version="7.0.0" Aliases="Json" />-->
+		<ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -65,10 +68,10 @@
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
-		  <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
+			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore.Relational">
-		  <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

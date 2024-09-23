@@ -2,7 +2,7 @@
 using ACE.Server.Entity.Actions;
 using ACE.Server.Network.GameMessages.Messages;
 
-namespace Ironman;
+namespace Tinkering;
 
 [HarmonyPatch]
 public static class FakeIronman

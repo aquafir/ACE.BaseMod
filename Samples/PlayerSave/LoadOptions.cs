@@ -1,6 +1,6 @@
 ﻿using ACE.Entity.Models;
 
-namespace PlayerSave;
+namespace Tinkering;
 
 public class LoadOptions
 {

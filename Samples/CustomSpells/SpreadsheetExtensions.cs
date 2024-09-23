@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using static ACE.Server.Physics.Common.LandDefs;
 
-namespace CustomSpells;
+namespace Tinkering;
 
 public static class SpreadsheetExtensions
 {

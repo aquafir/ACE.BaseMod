@@ -1,6 +1,6 @@
 ﻿using ACE.Server.Physics;
 
-namespace Spells
+namespace Tinkering
 {
     public static class SplashHelper
     {

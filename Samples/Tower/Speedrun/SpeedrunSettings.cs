@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tower.Speedrun;
+namespace Tinkering.Speedrun;
 public class SpeedrunSettings
 {
     //Tracks PropInt/Float for level first completed and fastest time

@@ -1,4 +1,4 @@
-﻿namespace QuestBonus;
+﻿namespace Tinkering;
 
 public class Settings
 {

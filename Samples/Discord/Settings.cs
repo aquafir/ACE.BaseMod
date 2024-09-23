@@ -1,4 +1,4 @@
-﻿namespace Discord;
+﻿namespace Tinkering;
 
 public class Settings
 {

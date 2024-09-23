@@ -1,7 +1,7 @@
 ﻿using ACE.Server.Entity.Actions;
 using System.Numerics;
 
-namespace ExtendACE.Creatures;
+namespace Tinkering.Creatures;
 
 [HarmonyPatch]
 public class Boss : CreatureEx

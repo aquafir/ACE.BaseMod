@@ -1,4 +1,4 @@
-﻿namespace Expansion.Mutators;
+﻿namespace Tinkering.Mutators;
 
 [HarmonyPatchCategory(nameof(Mutation.Enlightened))]  //Mutator categories not used, just convenience for generating enum or a placeholder
 public class Enlightened : Mutator

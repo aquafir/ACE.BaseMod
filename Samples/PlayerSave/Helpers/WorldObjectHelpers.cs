@@ -1,7 +1,7 @@
 ﻿using ACE.Entity;
 using ACE.Entity.Enum.Properties;
 
-namespace PlayerSave.Helpers;
+namespace Tinkering.Helpers;
 
 public static class WorldObjectHelpers
 {

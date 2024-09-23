@@ -1,6 +1,6 @@
 ﻿using ACE.Common;
 
-namespace Balance.Patches
+namespace Tinkering.Patches
 {
     [HarmonyPatch]
     [HarmonyPatchCategory(nameof(HealingDifficulty))]

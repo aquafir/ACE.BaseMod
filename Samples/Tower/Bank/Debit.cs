@@ -8,7 +8,7 @@ using ACE.Server.Network.GameMessages.Messages;
 using ACE.Shared.Helpers;
 using static ACE.Server.WorldObjects.Player;
 
-namespace Tower.Bank;
+namespace Tinkering.Bank;
 
 /// <summary>
 /// Overrides purchase w/pyreals and alt currency

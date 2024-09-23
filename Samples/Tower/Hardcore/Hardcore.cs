@@ -1,6 +1,6 @@
 ﻿using ACE.Entity.Enum;
 
-namespace Tower.Hardcore;
+namespace Tinkering.Hardcore;
 
 [CommandCategory(nameof(Feature.Hardcore))]
 [HarmonyPatchCategory(nameof(Feature.Hardcore))]

@@ -1,4 +1,4 @@
-﻿namespace Tower.Bank;
+﻿namespace Tinkering.Bank;
 
 public static class BankExtensions
 {

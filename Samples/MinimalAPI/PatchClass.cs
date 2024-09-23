@@ -1,7 +1,7 @@
 ﻿namespace MinimalAPI
 {
     [HarmonyPatch]
-    public class PatchClass
+    public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
     {
         private WebApp app = new();
 

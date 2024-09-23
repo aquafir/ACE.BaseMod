@@ -1,4 +1,4 @@
-﻿namespace Expansion.Creatures;
+﻿namespace Tinkering.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.Rogue))]
 public class Rogue : CreatureEx

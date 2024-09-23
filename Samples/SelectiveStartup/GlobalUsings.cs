@@ -1,5 +1,4 @@
-﻿//extern alias Json;
-global using ACE.Common;
+﻿global using ACE.Common;
 global using ACE.Common.Extensions;
 global using ACE.Database.Models.Shard;
 global using ACE.DatLoader;
@@ -23,8 +22,10 @@ global using ACE.Server.WorldObjects.Entity;
 global using ACE.Server.WorldObjects;
 #if REALM
 global using ACE.Server.Realms;
+//global using ACE.Database.Models.World;
 global using Session = ACE.Server.Network.ISession;
 global using BinaryWriter = ACE.Server.Network.GameMessages.RealmsBinaryWriter;
+global using Position = ACE.Server.Realms.InstancedPosition;
 #endif
 
 global using HarmonyLib;
@@ -38,6 +39,7 @@ global using System.Text.Json;
 global using System.Text.Json.Serialization;
 global using System.Text.RegularExpressions;
 
-global using ACE.Shared.Helpers;
 global using ACE.Shared;
+global using ACE.Shared.Helpers;
+global using ACE.Shared.Mods;
 

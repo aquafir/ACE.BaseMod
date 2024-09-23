@@ -6,10 +6,10 @@ using ACE.Server.Network.GameMessages.Messages;
 using System.Diagnostics;
 using MotionTable = ACE.DatLoader.FileTypes.MotionTable;
 
-namespace QualityOfLife;
+namespace Tinkering;
 
 [HarmonyPatch]
-public class PatchClass
+public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
     #region Settings
     //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);

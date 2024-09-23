@@ -7,7 +7,7 @@ using ACE.Server.Factories;
 using static ACE.Server.Factories.PlayerFactory;
 using Biota = ACE.Entity.Models.Biota;
 
-namespace Ironman.FlagEvents;
+namespace Tinkering.FlagEvents;
 
 [HarmonyPatchCategory(nameof(ForceTemplatePlayer))]
 public class ForceTemplatePlayer

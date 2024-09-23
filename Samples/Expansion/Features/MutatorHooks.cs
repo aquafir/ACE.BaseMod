@@ -1,4 +1,4 @@
-﻿namespace Expansion.Features;
+﻿namespace Tinkering.Features;
 [CommandCategory(nameof(Feature.MutatorHooks))]
 [HarmonyPatchCategory(nameof(Feature.MutatorHooks))]
 internal class MutatorHooks

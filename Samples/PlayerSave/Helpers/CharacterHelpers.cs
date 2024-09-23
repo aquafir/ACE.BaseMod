@@ -1,7 +1,7 @@
 ﻿using ACE.Database.Models.Shard;
 using ACE.Server.Managers;
 
-namespace PlayerSave.Helpers;
+namespace Tinkering.Helpers;
 
 public static class CharacterHelpers
 {

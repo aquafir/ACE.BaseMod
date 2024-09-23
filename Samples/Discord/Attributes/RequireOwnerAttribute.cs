@@ -1,4 +1,4 @@
-namespace Discord.Attributes;
+namespace Tinkering.Attributes;
 
 public class RequireOwnerAttribute : PreconditionAttribute
 {

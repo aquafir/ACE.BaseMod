@@ -1,4 +1,4 @@
-﻿namespace Discord.Autocomplete;
+﻿namespace Tinkering.Autocomplete;
 
 public class AceCommandAutocompleteHandler : AutocompleteHandler
 {

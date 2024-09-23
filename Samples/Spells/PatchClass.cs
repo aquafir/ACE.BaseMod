@@ -3,10 +3,10 @@ using ACE.Entity;
 using System.Diagnostics;
 using static ACE.Server.WorldObjects.Player;
 
-namespace Spells;
+namespace Tinkering;
 
 [HarmonyPatch]
-public class PatchClass
+public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
     private static Random gen = new();
 

@@ -1,4 +1,4 @@
-﻿namespace Expansion.Mutators;
+﻿namespace Tinkering.Mutators;
 internal class GrowthItem : Mutator
 {
     public override bool TryMutateLoot(HashSet<Mutation> mutations, TreasureDeath profile, TreasureRoll roll, WorldObject item)

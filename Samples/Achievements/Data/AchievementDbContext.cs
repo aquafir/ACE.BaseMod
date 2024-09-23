@@ -1,7 +1,7 @@
-﻿using Achievements.Domain;
+﻿using Tinkering.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Achievements.Data;
+namespace Tinkering.Data;
 
 public class AchievementDbContext : DbContext
 {

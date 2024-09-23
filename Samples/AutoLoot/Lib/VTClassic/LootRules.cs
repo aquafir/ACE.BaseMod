@@ -27,7 +27,7 @@
 //  THE SOFTWARE.
 ///////////////////////////////////////////////////////////////////////////////
 
-using AutoLoot.Lib;
+using Tinkering.Lib;
 using System.Collections.ObjectModel;
 
 

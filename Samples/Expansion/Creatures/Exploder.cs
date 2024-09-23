@@ -1,4 +1,4 @@
-﻿namespace Expansion.Creatures;
+﻿namespace Tinkering.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.Exploder))]
 public class Exploder : CreatureEx

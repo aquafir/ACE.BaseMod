@@ -1,6 +1,6 @@
-using Discord.WebSocket;
+using Tinkering.WebSocket;
 
-namespace Discord.Attributes;
+namespace Tinkering.Attributes;
 
 internal class DoUserCheck : PreconditionAttribute
 {

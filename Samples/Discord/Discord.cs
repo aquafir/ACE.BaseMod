@@ -1,13 +1,13 @@
 ﻿using ACE.Server.Network.GameEvent.Events;
 using ACE.Server.Network.GameMessages.Messages;
-using Discord.WebSocket;
+using Tinkering.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
 using System.Timers;
 
-namespace Discord;
+namespace Tinkering;
 public class Discord
 {
     private DiscordSocketClient _client;

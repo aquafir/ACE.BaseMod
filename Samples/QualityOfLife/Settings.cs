@@ -1,4 +1,4 @@
-﻿namespace QualityOfLife;
+﻿namespace Tinkering;
 
 public class Settings
 {

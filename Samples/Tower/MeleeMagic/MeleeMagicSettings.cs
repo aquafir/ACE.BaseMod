@@ -1,4 +1,4 @@
-﻿namespace Tower.MeleeMagic;
+﻿namespace Tinkering.MeleeMagic;
 
 public class MeleeMagicSettings
 {

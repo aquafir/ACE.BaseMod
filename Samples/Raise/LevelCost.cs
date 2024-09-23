@@ -1,4 +1,4 @@
-﻿namespace Raise;
+﻿namespace Tinkering;
 
 public class LevelCost(double C = 100, double Rate = 2, double Coefficient = 2, int Offset = 0, GrowthType GrowthType = GrowthType.Exponential)
 {

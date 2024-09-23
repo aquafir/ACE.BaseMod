@@ -1,6 +1,6 @@
 ﻿using ACE.Entity.Enum.Properties;
 
-namespace QualityOfLife;
+namespace Tinkering;
 
 [HarmonyPatchCategory(nameof(Defaults))]
 internal static class Defaults

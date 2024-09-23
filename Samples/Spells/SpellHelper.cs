@@ -4,7 +4,7 @@ using ACE.DatLoader.Entity;
 using Newtonsoft.Json;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Spells;
+namespace Tinkering;
 
 public static class SpellHelper
 {

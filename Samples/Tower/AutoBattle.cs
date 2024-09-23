@@ -1,4 +1,4 @@
-﻿namespace Tower;
+﻿namespace Tinkering;
 
 [CommandCategory(nameof(Feature.AutoBattle))]
 [HarmonyPatchCategory(nameof(Feature.AutoBattle))]

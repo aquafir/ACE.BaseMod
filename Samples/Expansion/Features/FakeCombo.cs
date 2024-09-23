@@ -1,6 +1,6 @@
 ﻿using ACE.Server.WorldObjects.Managers;
 
-namespace Expansion.Features;
+namespace Tinkering.Features;
 
 [CommandCategory(nameof(Feature.FakeCombo))]
 [HarmonyPatchCategory(nameof(Feature.FakeCombo))]

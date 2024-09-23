@@ -1,4 +1,4 @@
-namespace Discord.Modules;
+namespace Tinkering.Modules;
 
 // Interaction modules must be public and inherit from an IInteractionModuleBase
 public class CommandModule : InteractionModuleBase<SocketInteractionContext>

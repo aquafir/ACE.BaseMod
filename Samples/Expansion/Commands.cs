@@ -1,6 +1,6 @@
 ﻿//using Discord;
 
-namespace Expansion.Helpers;
+namespace Tinkering.Helpers;
 public static class Commands
 {
     [CommandHandler("sim", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]

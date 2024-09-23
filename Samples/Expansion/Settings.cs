@@ -1,4 +1,4 @@
-﻿namespace Expansion;
+﻿namespace Tinkering;
 
 public class Settings
 {

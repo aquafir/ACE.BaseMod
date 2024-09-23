@@ -1,4 +1,4 @@
-﻿namespace Expansion.Creatures;
+﻿namespace Tinkering.Creatures;
 
 //[HarmonyPatchCategory(nameof(CreatureExType.Reaper))]
 public class Reaper : CreatureEx

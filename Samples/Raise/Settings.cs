@@ -1,7 +1,7 @@
 ﻿using ACE.Server.Entity.Chess;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Raise;
+namespace Tinkering;
 
 public class Settings
 {

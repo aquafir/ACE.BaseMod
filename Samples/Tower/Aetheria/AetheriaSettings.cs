@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tower.Aetheria;
+namespace Tinkering.Aetheria;
 public class AetheriaSettings
 {
     public PropertyDataId AetheriaLootGroupProperty { get; set; } = (PropertyDataId)49999;

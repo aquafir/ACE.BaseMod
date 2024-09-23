@@ -1,4 +1,4 @@
-﻿namespace ChatFilter;
+﻿namespace Tinkering;
 
 public class Settings
 {

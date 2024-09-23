@@ -1,9 +1,9 @@
 ﻿using ACE.Database;
 using ACE.Entity.Enum.Properties;
 using ACE.Server.Network.GameMessages.Messages;
-using PlayerSave.Helpers;
+using Tinkering.Helpers;
 
-namespace PlayerSave;
+namespace Tinkering;
 
 internal class SnapshotCommand
 {

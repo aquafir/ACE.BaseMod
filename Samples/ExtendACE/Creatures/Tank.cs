@@ -1,4 +1,4 @@
-﻿namespace ExtendACE.Creatures;
+﻿namespace Tinkering.Creatures;
 
 [HarmonyPatch]
 public class Tank : CreatureEx

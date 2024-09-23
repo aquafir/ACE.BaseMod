@@ -1,4 +1,4 @@
-﻿namespace Expansion.Mutators;
+﻿namespace Tinkering.Mutators;
 public class TowerLocked : Mutator
 {
     public override bool CheckMutates(WorldObject item, int tier = 0)

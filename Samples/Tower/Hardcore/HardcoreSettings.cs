@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tower.Hardcore;
+namespace Tinkering.Hardcore;
 public class HardcoreSettings
 {
     public double SecondsBetweenDeathAllowed { get; set; } = TimeSpan.FromDays(365).TotalSeconds;

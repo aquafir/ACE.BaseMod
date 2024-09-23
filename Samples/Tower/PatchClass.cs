@@ -2,13 +2,13 @@
 using ACE.Server.Command;
 using ACE.Server.Managers;
 using System.Text;
-using Tower.Bank;
-using Tower.Floor;
+using Tinkering.Bank;
+using Tinkering.Floor;
 
-namespace Tower;
+namespace Tinkering;
 
 [HarmonyPatch]
-public class PatchClass
+public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
     #region Settings
     const int RETRIES = 10;

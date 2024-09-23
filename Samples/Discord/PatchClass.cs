@@ -3,10 +3,10 @@ using ACE.Server.Network.GameAction.Actions;
 using ACE.Server.Network.GameMessages.Messages;
 using System.Text.Encodings.Web;
 
-namespace Discord;
+namespace Tinkering;
 
 [HarmonyPatch]
-public class PatchClass
+public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
     #region Settings
     const int RETRIES = 10;

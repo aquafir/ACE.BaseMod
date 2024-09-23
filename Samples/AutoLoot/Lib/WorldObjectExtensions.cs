@@ -1,4 +1,4 @@
-﻿namespace AutoLoot.Lib
+﻿namespace Tinkering.Lib
 {
     public static class WorldObjectExtensions
     {

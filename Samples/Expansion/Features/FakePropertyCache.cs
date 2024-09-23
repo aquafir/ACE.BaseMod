@@ -1,6 +1,6 @@
 ﻿using ACE.Server.Command.Handlers;
 
-namespace Expansion.Features;
+namespace Tinkering.Features;
 
 [CommandCategory(nameof(Feature.FakePropertyCache))]
 [HarmonyPatchCategory(nameof(Feature.FakePropertyCache))]

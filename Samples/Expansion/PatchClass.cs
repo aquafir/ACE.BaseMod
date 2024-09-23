@@ -1,10 +1,10 @@
-﻿using Expansion.Features;
+﻿using Tinkering.Features;
 
 
-namespace Expansion;
+namespace Tinkering;
 
 [HarmonyPatch]
-public class PatchClass
+public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
     #region Settings
     //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);

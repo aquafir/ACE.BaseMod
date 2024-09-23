@@ -1,4 +1,4 @@
-﻿namespace Tower.Loot;
+﻿namespace Tinkering.Loot;
 
 [CommandCategory(nameof(Feature.AutoLoot))]
 [HarmonyPatchCategory(nameof(Feature.AutoLoot))]

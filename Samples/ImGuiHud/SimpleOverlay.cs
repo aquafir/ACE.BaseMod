@@ -1,7 +1,7 @@
 ﻿using ACE.Server.Entity;
 using ClickableTransparentOverlay;
 
-namespace ImGuiHud;
+namespace Tinkering;
 
 public class SimpleOverlay : Overlay
 {

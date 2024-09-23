@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
-using Tower.Loot;
+using Tinkering.Loot;
 
-namespace Tower.Aetheria;
+namespace Tinkering.Aetheria;
 
 [CommandCategory(nameof(Feature.AetheriaLoot))]
 [HarmonyPatchCategory(nameof(Feature.AetheriaLoot))]
@@ -21,7 +21,7 @@ public static class AetheriaLoot
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(AutoLoot), nameof(AutoLoot.GetLoot), new Type[] { typeof(Player), typeof(Creature) })]
+    [HarmonyPatch(typeof(AutoLoot), nameof(global::Tinkering.GetLoot), new Type[] { typeof(Player), typeof(Creature) })]
     public static void PostGetLoot(Player player, Creature creature, ref List<WorldObject> __result)
     {
         //Adds a roll for aetheria in Tower's loot generation

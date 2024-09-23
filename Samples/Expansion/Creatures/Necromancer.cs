@@ -1,4 +1,4 @@
-﻿namespace Expansion.Creatures;
+﻿namespace Tinkering.Creatures;
 
 //[HarmonyPatchCategory(nameof(CreatureExType.Necromancer))]
 public class Necromancer : CreatureEx

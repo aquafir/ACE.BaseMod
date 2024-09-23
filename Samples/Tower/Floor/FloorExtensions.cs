@@ -1,6 +1,6 @@
-﻿using Tower.Speedrun;
+﻿using Tinkering.Speedrun;
 
-namespace Tower.Floor;
+namespace Tinkering.Floor;
 public static class FloorExtensions
 {
     static FloorSettings Settings => PatchClass.Settings.Tower;

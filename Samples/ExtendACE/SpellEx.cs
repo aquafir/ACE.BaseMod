@@ -1,4 +1,4 @@
-﻿namespace ExtendACE;
+﻿namespace Tinkering;
 
 public class SpellEx : Spell
 {

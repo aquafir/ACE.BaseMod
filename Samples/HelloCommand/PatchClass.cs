@@ -1,7 +1,7 @@
-﻿namespace HelloCommand;
+﻿namespace Tinkering;
 
 [HarmonyPatch]
-public class PatchClass
+public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
     private const string HELLO_COMMAND = "hello";
     private const string BYE_COMMAND = "bye";

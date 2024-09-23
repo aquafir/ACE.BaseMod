@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tower.Floor;
+namespace Tinkering.Floor;
 
 [CommandCategory(nameof(Feature.FloorBonus))]
 [HarmonyPatchCategory(nameof(Feature.FloorBonus))]

@@ -1,4 +1,4 @@
-﻿namespace ChatFilter;
+﻿namespace Tinkering;
 
 [HarmonyPatchCategory(Settings.ChatCategory)]
 internal static class OnTalk

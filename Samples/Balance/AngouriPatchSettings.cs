@@ -1,4 +1,4 @@
-﻿namespace Balance;
+﻿namespace Tinkering;
 
 public partial class AngouriPatchSettings
 {

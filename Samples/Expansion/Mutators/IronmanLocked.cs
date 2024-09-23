@@ -1,4 +1,4 @@
-﻿namespace Expansion.Mutators;
+﻿namespace Tinkering.Mutators;
 internal class IronmanLocked : Mutator
 {
     //Apply to corpses with an Ironman killer

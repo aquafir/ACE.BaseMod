@@ -2,7 +2,7 @@
 using NPOI.SS.Formula;
 using JsonAttribute = Ganss.Excel.JsonAttribute;
 
-namespace CustomSpells;
+namespace Tinkering;
 
 public class SpellCustomization
 {

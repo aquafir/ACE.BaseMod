@@ -1,6 +1,6 @@
 ﻿using ACE.Entity.Enum;
 
-namespace Tower.MeleeMagic;
+namespace Tinkering.MeleeMagic;
 
 [CommandCategory(nameof(Feature.MeleeMagic))]
 [HarmonyPatchCategory(nameof(Feature.MeleeMagic))]

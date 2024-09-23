@@ -1,4 +1,4 @@
-﻿namespace Achievements.Domain;
+﻿namespace Tinkering.Domain;
 
 //Todo
 //public class Combat

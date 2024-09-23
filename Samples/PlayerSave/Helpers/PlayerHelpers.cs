@@ -2,7 +2,7 @@
 using ACE.Database.Models.Shard;
 using System.Collections.Concurrent;
 
-namespace PlayerSave.Helpers;
+namespace Tinkering.Helpers;
 
 public static class PlayerHelpers
 {

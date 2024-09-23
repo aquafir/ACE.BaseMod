@@ -56,7 +56,18 @@ public static class WeenieExtensions
         if (weenie.PropertiesIID != null)
         {
             weenie2.WeeniePropertiesIID = new List<WeeniePropertiesIID>();
+#if REALM
             foreach (KeyValuePair<PropertyInstanceId, ulong> item5 in weenie.PropertiesIID)
+            {
+                weenie2.WeeniePropertiesIID.Add(new WeeniePropertiesIID
+                {
+                    //Todo: Properly support ACRealms?
+                    Value = (ulong)item5.Value,
+                    Type = (ushort)item5.Key
+                });
+            }
+#else
+            foreach (KeyValuePair<PropertyInstanceId, uint> item5 in weenie.PropertiesIID)
             {
                 weenie2.WeeniePropertiesIID.Add(new WeeniePropertiesIID
                 {
@@ -65,6 +76,7 @@ public static class WeenieExtensions
                     Type = (ushort)item5.Key
                 });
             }
+#endif
         }
 
         if (weenie.PropertiesInt != null)

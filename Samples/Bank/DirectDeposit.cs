@@ -2,7 +2,7 @@
 using ACE.Shared;
 using static ACE.Server.WorldObjects.Player;
 
-namespace Bank;
+namespace Tinkering;
 [HarmonyPatchCategory(nameof(DirectDeposit))]
 public class DirectDeposit
 {

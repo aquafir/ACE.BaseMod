@@ -1,4 +1,4 @@
-﻿namespace PlayerSave;
+﻿namespace Tinkering;
 
 public static class SnapshotHelpers
 {

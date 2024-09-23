@@ -1,4 +1,4 @@
-﻿namespace Expansion.Mutators;
+﻿namespace Tinkering.Mutators;
 internal class LocationLocked : Mutator
 {
     //Corpse/Generators check landblock and other relevant things first to skip collection evaluation

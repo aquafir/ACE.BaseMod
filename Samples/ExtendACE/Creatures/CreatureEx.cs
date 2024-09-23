@@ -1,7 +1,7 @@
 ﻿using static ACE.Server.Factories.PlayerFactory;
 using Weenie = ACE.Entity.Models.Weenie;
 
-namespace ExtendACE.Creatures;
+namespace Tinkering.Creatures;
 
 [HarmonyPatch]
 public class CreatureEx : Creature

@@ -1,4 +1,4 @@
-﻿namespace Expansion.Features;
+﻿namespace Tinkering.Features;
 
 [CommandCategory(nameof(Feature.FakeLeech))]
 [HarmonyPatchCategory(nameof(Feature.FakeLeech))]

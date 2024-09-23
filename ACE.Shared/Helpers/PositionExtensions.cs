@@ -1,4 +1,5 @@
 ﻿using ACE.Server.Physics.Common;
+using Position = ACE.Entity.Position;
 
 namespace ACE.Shared.Helpers;
 
@@ -177,7 +178,7 @@ public static class PositionExtensions
 #if REALM
             p = new(cell, positionData[0], positionData[1], positionData[2], positionData[4], positionData[5], positionData[6], positionData[3]);
 #else
-            p = new (cell, positionData[0], positionData[1], positionData[2], positionData[4], positionData[5], positionData[6], positionData[3]);
+            p = new(cell, positionData[0], positionData[1], positionData[2], positionData[4], positionData[5], positionData[6], positionData[3]);
 #endif
         }
         catch (Exception ex)
@@ -195,7 +196,7 @@ public static class PositionExtensions
     {
         result = SetPositionError.OK;
 
-        Position instancedPosition = _newPosition.SetPositionZ(_newPosition.PositionZ + 0.005f * c.ObjScale.GetValueOrDefault(1f));
+        Position position = _newPosition.SetPositionZ(_newPosition.PositionZ + 0.005f * c.ObjScale.GetValueOrDefault(1f));
 #if REALM
         if (c.Location.InstancedLandblock != instancedPosition.InstancedLandblock)
         {
@@ -209,10 +210,16 @@ public static class PositionExtensions
         c.PhysicsObj.report_collision_end(forceEnd: true);
 
         // do the physics teleport
+#if REALM
         SetPosition setPosition = new SetPosition(instancedPosition.Instance);
         setPosition.Pos = new PhysicsPosition(instancedPosition);
+#else
+        SetPosition setPosition = new SetPosition();
+        setPosition.Pos = new ACE.Server.Physics.Common.Position(position);
+#endif
+
         setPosition.Flags = SetPositionFlags.Placement | SetPositionFlags.Teleport | SetPositionFlags.Slide | SetPositionFlags.SendPositionEvent;
-        
+
         result = c.PhysicsObj.SetPosition(setPosition);
         if (result != SetPositionError.OK)
             return false;
@@ -232,4 +239,19 @@ public static class PositionExtensions
     //    LastUpdatePosition = DateTime.UtcNow;
     //}
 
+
+    /// <summary>
+    /// Helper for compatibility with ACRealms
+    /// </summary>
+    public static Position SetPositionZ(this Position Position, float positionZ)
+    {
+        var pos = new Position(Position);
+        pos.PositionZ = positionZ;
+
+#if REALM
+        return new Position(pos, Instance);
+#else
+        return pos;
+#endif
+    }
 }

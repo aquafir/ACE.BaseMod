@@ -1,6 +1,6 @@
 ﻿using static ACE.Server.WorldObjects.Player;
 
-namespace ExtendACE.Creatures;
+namespace Tinkering.Creatures;
 
 [HarmonyPatch]
 public class Warder : CreatureEx

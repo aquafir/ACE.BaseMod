@@ -1,4 +1,4 @@
-﻿namespace Expansion.Helpers;
+﻿namespace Tinkering.Helpers;
 
 public class SpellSettings
 {

@@ -1,4 +1,4 @@
-﻿namespace Expansion.Features;
+﻿namespace Tinkering.Features;
 
 [CommandCategory(nameof(Feature.CreatureEx))]
 [HarmonyPatchCategory(nameof(Feature.CreatureEx))]

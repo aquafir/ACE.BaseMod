@@ -1,6 +1,6 @@
-﻿using ExtendACE.Creatures;
+﻿using Tinkering.Creatures;
 
-namespace ExtendACE;
+namespace Tinkering;
 
 public static class CreatureExHelpers
 {

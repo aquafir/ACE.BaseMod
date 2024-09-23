@@ -1,4 +1,4 @@
-﻿namespace AutoLoot.Loot;
+﻿namespace Tinkering.Loot;
 
 public enum Action
 { // all the available actions that can be taken in response to a loot rule matching

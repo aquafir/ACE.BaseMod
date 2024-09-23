@@ -1,4 +1,4 @@
-﻿namespace CriticalOverride
+﻿namespace Tinkering
 {
     public class Settings
     {

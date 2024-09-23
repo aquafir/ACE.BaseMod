@@ -3,7 +3,7 @@ using ACE.Server.Network;
 using System.Collections.Concurrent;
 using VTClassic;
 
-namespace AutoLoot;
+namespace Tinkering;
 
 [HarmonyPatch]
 public class AutoLoot

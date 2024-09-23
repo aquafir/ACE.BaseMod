@@ -1,4 +1,4 @@
-﻿namespace Tower.Offline;
+﻿namespace Tinkering.Offline;
 
 public class OfflineProgressSettings
 {

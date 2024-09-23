@@ -40,7 +40,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
+		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.0" />
+		<ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

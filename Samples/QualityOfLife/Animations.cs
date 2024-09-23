@@ -3,7 +3,7 @@ using ACE.Server.Entity.Actions;
 using ACE.Server.Managers;
 using ACE.Server.Network.GameMessages.Messages;
 
-namespace QualityOfLife;
+namespace Tinkering;
 
 [HarmonyPatchCategory(nameof(Animations))]
 internal static class Animations

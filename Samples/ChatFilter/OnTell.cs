@@ -1,4 +1,4 @@
-﻿namespace ChatFilter;
+﻿namespace Tinkering;
 
 [HarmonyPatchCategory(Settings.TellCategory)]
 internal static class OnTell

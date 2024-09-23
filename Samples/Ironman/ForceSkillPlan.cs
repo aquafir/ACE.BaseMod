@@ -1,7 +1,7 @@
 ﻿using ACE.Server.Network.GameMessages.Messages;
 using static ACE.Server.Mods.ModManager;
 
-namespace Ironman;
+namespace Tinkering;
 
 [HarmonyPatchCategory(nameof(ForceSkillPlan))]
 public class ForceSkillPlan

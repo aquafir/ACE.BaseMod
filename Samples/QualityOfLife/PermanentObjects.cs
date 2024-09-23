@@ -1,4 +1,4 @@
-﻿namespace QualityOfLife;
+﻿namespace Tinkering;
 
 [HarmonyPatchCategory(nameof(PermanentObjects))]
 public class PermanentObjects

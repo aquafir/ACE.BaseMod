@@ -29,6 +29,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.0" />
+		<ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Reference Include="ACE.Adapter">
 			<HintPath>$(ACEPath)\ACE.Adapter.dll</HintPath>
 			<Private>False</Private>

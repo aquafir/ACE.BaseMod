@@ -1,6 +1,6 @@
 ﻿using ACE.Entity;
 
-namespace Discord;
+namespace Tinkering;
 
 
 public class FakePlayer

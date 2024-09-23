@@ -3,10 +3,10 @@ using ACE.Server.Command.Handlers;
 using ACE.Server.Managers;
 using ACE.Server.Network;
 
-namespace ExtendACE;
+namespace Tinkering;
 
 [HarmonyPatch]
-public class PatchClass
+public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
     #region Settings
     //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);
@@ -140,7 +140,7 @@ public class PatchClass
     //    }
     //}
 
-    static ExtendACE.Creatures.CreatureType[] types = Enum.GetValues<ExtendACE.Creatures.CreatureType>();
+    static Tinkering.Creatures.CreatureType[] types = Enum.GetValues<Tinkering.Creatures.CreatureType>();
     static string availableTypes = String.Join('\n', types.Select(x => $"  {x.ToString()} - {(int)x}"));
     [CommandHandler("cex", AccessLevel.Sentinel, CommandHandlerFlag.RequiresWorld)]
     public static void HandleCreateEx(Session session, params string[] parameters)

@@ -1,4 +1,4 @@
-﻿namespace Expansion.Enums;
+﻿namespace Tinkering.Enums;
 
 public enum TargetGroup
 {
