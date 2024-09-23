@@ -11,7 +11,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     const int RETRIES = 10;
 
     public static Settings Settings = new();
-    private static string settingsPath = Path.Combine(Mod.ModPath, "Settings.json");
+    private static string settingsPath = Path.Combine(ModC.ModPath, "Settings.json");
     private static FileInfo settingsInfo = new(settingsPath);
 
     private static JsonSerializerOptions _serializeOptions = new()
@@ -29,7 +29,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         if (!settingsInfo.RetryWrite(jsonString, RETRIES))
         {
             ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
-            Mod.State = ModState.Error;
+            ModC.State = ModState.Error;
         }
     }
 
@@ -45,7 +45,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 
         if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
         {
-            Mod.State = ModState.Error;
+            ModC.State = ModState.Error;
             return;
         }
 
@@ -56,7 +56,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         catch (Exception)
         {
             ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
-            Mod.State = ModState.Error;
+            ModC.State = ModState.Error;
             return;
         }
     }
@@ -66,30 +66,30 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     public static void Start()
     {
         //Need to decide on async use
-        Mod.State = ModState.Loading;
+        ModC.State = ModState.Loading;
         LoadSettings();
 
-        if (Mod.State == ModState.Error)
+        if (ModC.State == ModState.Error)
         {
-            ModManager.DisableModByPath(Mod.ModPath);
+            ModManager.DisableModByPath(ModC.ModPath);
             return;
         }
 
         PatchCategories();
 
-        Mod.State = ModState.Running;
+        ModC.State = ModState.Running;
     }
 
     public static void Shutdown()
     {
-        if (Mod.State == ModState.Running)
+        if (ModC.State == ModState.Running)
         {
             if (Settings.Patches.Contains(Patches.Fellowships))
                 Fellowships.RestoreFellowSettings();
         }
 
-        if (Mod.State == ModState.Error)
-            ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
+        if (ModC.State == ModState.Error)
+            ModManager.Log($"Improper shutdown: {ModC.ModPath}", ModManager.LogLevel.Error);
     }
     #endregion
 
@@ -98,7 +98,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         //Assume names patch Patches enum
         foreach (var patch in Settings.Patches)
         {
-            Mod.Harmony.PatchCategory(patch.ToString());
+            ModC.Harmony.PatchCategory(patch.ToString());
             ModManager.Log($"QoL enabling: {patch}");
         }
 

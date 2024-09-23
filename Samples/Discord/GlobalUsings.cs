@@ -44,3 +44,11 @@ global using ACE.Shared;
 global using ACE.Shared.Helpers;
 global using ACE.Shared.Mods;
 
+global using Discord.Commands;
+global using Discord.Autocomplete;
+global using Discord.Interactions;
+global using Discord.WebSocket;
+global using PreconditionAttribute = Discord.Interactions.PreconditionAttribute;
+global using PreconditionResult = Discord.Interactions.PreconditionResult;
+global using SummaryAttribute = Discord.Interactions.SummaryAttribute;
+//Interactions is ambiguous

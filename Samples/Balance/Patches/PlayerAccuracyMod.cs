@@ -20,7 +20,7 @@ public class PlayerAccuracyMod : AngouriMathPatch
     {
         //If you can parse the formulas patch the corresponding category
         if (Formula.TryGetFunction(out func, Variables.TypesAndNames()))
-            Mod.Harmony.PatchCategory(nameof(PlayerAccuracyMod));
+            Mod.Instance.Harmony.PatchCategory(nameof(PlayerAccuracyMod));
         else
             throw new Exception($"Failure parsing formula: {Formula}");
     }

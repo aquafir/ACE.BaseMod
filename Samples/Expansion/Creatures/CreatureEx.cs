@@ -1,6 +1,4 @@
-﻿using ACE.Server.Command.Handlers;
-
-namespace Expansion.Creatures;
+﻿namespace Expansion.Creatures;
 
 //[HarmonyPatchCategory(nameof(CreatureEx))]
 public class CreatureEx : Creature

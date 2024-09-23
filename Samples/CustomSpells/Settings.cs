@@ -4,7 +4,7 @@
 public class Settings
 {
     public bool AutoloadSpreadsheet { get; set; } = true;
-    public string Spreadsheet { get; set; } = Path.Combine(Mod.ModPath, "Spells.xlsx");
+    public string Spreadsheet { get; set; } = Path.Combine(Mod.Instance.ModPath, "Spells.xlsx");
 
     /// <summary>
     /// Custom Spells use a template, make modifications, then add the custom spell as the Id

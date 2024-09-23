@@ -22,7 +22,7 @@ public class GrantExperience : AngouriMathPatch
     {
         //If you can parse the formulas patch the corresponding category
         if (Formula.TryGetFunction(out func, Variables.TypesAndNames()))
-            Mod.Harmony.PatchCategory(nameof(GrantExperience));
+            Mod.Instance.Harmony.PatchCategory(nameof(GrantExperience));
         else
             throw new Exception($"Failure parsing formula: {Formula}");
     }

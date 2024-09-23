@@ -7,7 +7,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     const int RETRIES = 10;
 
     public static Settings Settings = new();
-    static string settingsPath => Path.Combine(Mod.ModPath, "Settings.json");
+    static string settingsPath => Path.Combine(ModC.ModPath, "Settings.json");
     private FileInfo settingsInfo = new(settingsPath);
 
     private JsonSerializerOptions _serializeOptions = new()
@@ -25,7 +25,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         if (!settingsInfo.RetryWrite(jsonString, RETRIES))
         {
             ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
-            Mod.State = ModState.Error;
+            ModC.State = ModState.Error;
         }
     }
 
@@ -41,7 +41,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 
         if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
         {
-            Mod.State = ModState.Error;
+            ModC.State = ModState.Error;
             return;
         }
 
@@ -52,7 +52,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         catch (Exception)
         {
             ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
-            Mod.State = ModState.Error;
+            ModC.State = ModState.Error;
             return;
         }
     }
@@ -62,19 +62,19 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     public void Start()
     {
         //Need to decide on async use
-        Mod.State = ModState.Loading;
+        ModC.State = ModState.Loading;
         LoadSettings();
 
-        if (Mod.State == ModState.Error)
+        if (ModC.State == ModState.Error)
         {
-            ModManager.DisableModByPath(Mod.ModPath);
+            ModManager.DisableModByPath(ModC.ModPath);
             return;
         }
 
         if (Settings.AutostartGui)
             StartGui();
 
-        Mod.State = ModState.Running;
+        ModC.State = ModState.Running;
     }
 
     public void Shutdown()
@@ -87,8 +87,8 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 
         StopGui();
 
-        if (Mod.State == ModState.Error)
-            ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
+        if (ModC.State == ModState.Error)
+            ModManager.Log($"Improper shutdown: {ModC.ModPath}", ModManager.LogLevel.Error);
     }
     #endregion
 

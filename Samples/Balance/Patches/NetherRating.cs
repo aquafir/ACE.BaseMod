@@ -1,4 +1,6 @@
-﻿namespace Balance.Patches;
+﻿using ACE.Server.WorldObjects.Managers;
+
+namespace Balance.Patches;
 
 [HarmonyPatch]
 [HarmonyPatchCategory(nameof(NetherRating))]
@@ -22,7 +24,7 @@ public class NetherRating : AngouriMathPatch
     {
         //If you can parse the formulas patch the corresponding category
         if (Formula.TryGetFunction(out func, Variables.TypesAndNames()))
-            Mod.Harmony.PatchCategory(nameof(NetherRating));
+            Mod.Instance.Harmony.PatchCategory(nameof(NetherRating));
         else
             throw new Exception($"Failure parsing formula: {Formula}");
 

@@ -44,3 +44,6 @@ global using ACE.Shared;
 global using ACE.Shared.Helpers;
 global using ACE.Shared.Mods;
 
+global using AngouriMath.Core.Compilation.IntoLinq;
+global using AngouriMath.Extensions;
+

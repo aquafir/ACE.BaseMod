@@ -8,7 +8,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     const int RETRIES = 10;
 
     public static Settings Settings = new();
-    private static string settingsPath = Path.Combine(Mod.ModPath, "Settings.json");
+    private static string settingsPath = Path.Combine(ModC.ModPath, "Settings.json");
     private static FileInfo settingsInfo = new(settingsPath);
 
     private static JsonSerializerOptions _serializeOptions = new()
@@ -26,7 +26,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         if (!settingsInfo.RetryWrite(jsonString, RETRIES))
         {
             ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
-            Mod.State = ModState.Error;
+            ModC.State = ModState.Error;
         }
     }
 
@@ -42,7 +42,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 
         if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
         {
-            Mod.State = ModState.Error;
+            ModC.State = ModState.Error;
             return;
         }
 
@@ -53,7 +53,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         catch (Exception)
         {
             ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
-            Mod.State = ModState.Error;
+            ModC.State = ModState.Error;
             return;
         }
     }
@@ -63,19 +63,19 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     public static void Start()
     {
         //Need to decide on async use
-        Mod.State = ModState.Loading;
+        ModC.State = ModState.Loading;
         LoadSettings();
 
-        if (Mod.State == ModState.Error)
+        if (ModC.State == ModState.Error)
         {
-            ModManager.DisableModByPath(Mod.ModPath);
+            ModManager.DisableModByPath(ModC.ModPath);
             return;
         }
 
         //On reload recalculate QB
         UpdateIngamePlayers();
 
-        Mod.State = ModState.Running;
+        ModC.State = ModState.Running;
     }
 
     public static void Shutdown()
@@ -86,8 +86,8 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         //If the mod is making changes that need to be saved use this and only manually edit settings when the patch is not active.
         //SaveSettings();
 
-        if (Mod.State == ModState.Error)
-            ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
+        if (ModC.State == ModState.Error)
+            ModManager.Log($"Improper shutdown: {ModC.ModPath}", ModManager.LogLevel.Error);
     }
     #endregion
 

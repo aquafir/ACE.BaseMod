@@ -6,17 +6,17 @@
 public class BasicPatch<T> : IPatch where T : class?, new()
 {
     private bool disposedValue;
-    protected BasicMod Mod;
+    protected BasicMod ModC;
     protected SettingsContainer<T> SettingsContainer;
     public static T Settings { get; set; }
     protected string SettingsName;
-    protected string SettingsPath => Path.Combine(Mod.ModPath, SettingsName);
+    protected string SettingsPath => Path.Combine(ModC.ModPath, SettingsName);
 
 
     //public BasicPatch() { }
     public BasicPatch(BasicMod mod, string settingsName = "Settings.json")
     {
-        Mod = mod;
+        ModC = mod;
         SettingsName = settingsName;
     }
     
@@ -26,17 +26,17 @@ public class BasicPatch<T> : IPatch where T : class?, new()
     public virtual async void Start()
     {
         //Need to decide on async use
-        Mod.State = ModState.Loading;
+        ModC.State = ModState.Loading;
 
         if (!await SettingsContainer.LoadOrCreateAsync())
         {
-            Mod.State = ModState.Error;
-            ModManager.DisableModByPath(Mod.ModPath);
+            ModC.State = ModState.Error;
+            ModManager.DisableModByPath(ModC.ModPath);
             return;
         }
 
         Settings = SettingsContainer.Settings;
-        Mod.State = ModState.Running;
+        ModC.State = ModState.Running;
 
         await OnStartSuccess();
 
@@ -67,7 +67,7 @@ public class BasicPatch<T> : IPatch where T : class?, new()
     protected virtual void SettingsChanged(object? sender, EventArgs e)
     {
         //Only reload if currently running
-        if (Mod.State != ModState.Running)
+        if (ModC.State != ModState.Running)
             return;
 
         Task.Run(Stop).Wait();

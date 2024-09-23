@@ -23,7 +23,7 @@ namespace Balance.Patches
         {
             //If you can parse the formulas patch the corresponding category
             if (Formula.TryGetFunction(out func, Variables.TypesAndNames()))
-                Mod.Harmony.PatchCategory(nameof(ElementalRendingImbue));
+                Mod.Instance.Harmony.PatchCategory(nameof(ElementalRendingImbue));
             else
                 throw new Exception($"Failure parsing formula: {Formula}");
         }

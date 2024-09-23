@@ -1,4 +1,6 @@
-﻿namespace ChatFilter;
+﻿using ACE.Server.Network.GameAction.Actions;
+
+namespace ChatFilter;
 
 [HarmonyPatchCategory(Settings.TellCategory)]
 internal static class OnTell

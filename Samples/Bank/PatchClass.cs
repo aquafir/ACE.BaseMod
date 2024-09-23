@@ -1,97 +1,28 @@
-﻿namespace Bank;
+﻿
+namespace Bank;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
-    #region Settings
-    const int RETRIES = 10;
-
-    public static Settings Settings = new();
-    static string settingsPath => Path.Combine(Mod.ModPath, "Settings.json");
-    private FileInfo settingsInfo = new(settingsPath);
-
-    private JsonSerializerOptions _serializeOptions = new()
+    public override async Task OnWorldOpen()
     {
-        WriteIndented = true,
-        AllowTrailingCommas = true,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-    };
-
-    private void SaveSettings()
-    {
-        string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
-
-        if (!settingsInfo.RetryWrite(jsonString, RETRIES))
-        {
-            ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
-            Mod.State = ModState.Error;
-        }
-    }
-
-    private void LoadSettings()
-    {
-        if (!settingsInfo.Exists)
-        {
-            ModManager.Log($"Creating {settingsInfo}...");
-            SaveSettings();
-        }
-        else
-            ModManager.Log($"Loading settings from {settingsPath}...");
-
-        if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
-        {
-            Mod.State = ModState.Error;
-            return;
-        }
-
-        try
-        {
-            Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
-        }
-        catch (Exception)
-        {
-            ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
-            Mod.State = ModState.Error;
-            return;
-        }
-    }
-    #endregion
-
-    #region Start/Shutdown
-    public void Start()
-    {
-        //Need to decide on async use
-        Mod.State = ModState.Loading;
-        LoadSettings();
-
-        if (Mod.State == ModState.Error)
-        {
-            ModManager.DisableModByPath(Mod.ModPath);
-            return;
-        }
-
         if (Settings.VendorsUseBank)
-            Mod.Harmony.PatchCategory(nameof(Debit));
+            ModC.Harmony.PatchCategory(nameof(Debit));
 
         if (Settings.DirectDeposit)
-            Mod.Harmony.PatchCategory(nameof(DirectDeposit));
-
-        Mod.State = ModState.Running;
+            ModC.Harmony.PatchCategory(nameof(DirectDeposit));
     }
 
-    public void Shutdown()
+    public override void Stop()
     {
-        //if (Mod.State == ModState.Running)
-        // Shut down enabled mod...
+        base.Stop();
 
-        //If the mod is making changes that need to be saved use this and only manually edit settings when the patch is not active.
-        //SaveSettings();
+        if (Settings.VendorsUseBank)
+            ModC.Harmony.UnpatchCategory(nameof(Debit));
 
-        if (Mod.State == ModState.Error)
-            ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
-    }
-    #endregion
+        if (Settings.DirectDeposit)
+            ModC.Harmony.UnpatchCategory(nameof(DirectDeposit));
+}
 
     static string Currencies => string.Join(", ", Settings.Currencies.Select(x => x.Name));
     static string Commands => string.Join(", ", Enum.GetNames<Transaction>());

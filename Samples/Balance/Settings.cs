@@ -1,4 +1,6 @@
-﻿namespace Balance;
+﻿using Balance.Patches;
+
+namespace Balance;
 
 public class Settings
 {

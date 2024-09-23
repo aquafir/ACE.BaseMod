@@ -1,4 +1,6 @@
-﻿namespace CustomSpells;
+﻿using ACE.DatLoader.Entity;
+
+namespace CustomSpells;
 public static class SpellExtensions
 {
     /// <summary>

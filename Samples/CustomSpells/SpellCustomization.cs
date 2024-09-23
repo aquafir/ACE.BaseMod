@@ -1,4 +1,8 @@
-﻿namespace CustomSpells;
+﻿using ACE.DatLoader.Entity;
+using Ganss.Excel;
+using Position = ACE.Entity.Position;
+
+namespace CustomSpells;
 
 public class SpellCustomization
 {

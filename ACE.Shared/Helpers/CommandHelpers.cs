@@ -9,6 +9,7 @@
 //    /// </summary>
 //    public static bool TryParseCommand<TEnum>(this string[] command, out TEnum result, out string parameters) where TEnum : struct, Enum
 //    {
+//        parameters = null;
 //        var type = typeof(TEnum);
 
 //        if (!commandVerbs.TryGetValue(type, out var reg))
@@ -28,7 +29,7 @@
 //    {
 //        var type = typeof(TEnum);
 
-//        if(!commandVerbs.TryGetValue(type, out var reg))
+//        if (!commandVerbs.TryGetValue(type, out var reg))
 //        {
 //            string verbs = string.Join("|", Enum.GetNames(type));
 //            string pattern = $"(?<verb>{verbs})(?<params>.*)";
@@ -128,7 +129,7 @@
 //            }
 //            session = player.Session;
 //        }
-        
+
 //        //Parse command
 //        string command = null;
 //        string[] parameters = null;

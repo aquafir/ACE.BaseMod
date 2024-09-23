@@ -1,4 +1,5 @@
 ﻿using Expansion.Features;
+using System.Collections.Concurrent;
 
 namespace Expansion.Features;
 
@@ -297,8 +298,8 @@ public static class PetSummonMultiple
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(Player), nameof(Player.Teleport), new Type[] { typeof(InstancedPosition), typeof(bool), typeof(bool) })]
-    public static void PostTeleport(InstancedPosition newPosition, bool teleportingFromInstance, bool fromPortal, ref Player __instance)
+    [HarmonyPatch(typeof(Player), nameof(Player.Teleport), new Type[] { typeof(Position), typeof(bool), typeof(bool) })]
+    public static void PostTeleport(Position newPosition, bool teleportingFromInstance, bool fromPortal, ref Player __instance)
     {
         //Destroy pets on teleport
         if (!playerPets.TryGetValue(__instance, out var pets))

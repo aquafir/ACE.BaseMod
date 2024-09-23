@@ -10,7 +10,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         ModifyTinkering();
 
         if (Settings.EnableRecipeManagerPatch)
-            Mod.Harmony.PatchCategory(Settings.RecipeManagerCategory);
+            ModC.Harmony.PatchCategory(Settings.RecipeManagerCategory);
     }
 
     //Preserve/restore tinkering difficulties on start/shutdown

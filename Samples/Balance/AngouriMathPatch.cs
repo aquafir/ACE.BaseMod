@@ -23,7 +23,7 @@ public abstract class AngouriMathPatch : IPatchable
         //var formula = Formula;
         //if (formula.TryGetFunction<double, int>(out func, Variables.TypesAndNames()))
         //{
-        //    Mod.Harmony.PatchCategory(nameof(AngouriMathPatch));
+        //    Mod.Instance.Harmony.PatchCategory(nameof(AngouriMathPatch));
         //}
         ////Otherwise skip patching
         //else

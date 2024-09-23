@@ -23,7 +23,7 @@
         {
             //If you can parse the formulas patch the corresponding category
             if (Formula.TryGetFunction(out func, Variables.TypesAndNames()))
-                Mod.Harmony.PatchCategory(nameof(MagicWeaponCriticalChance));
+                Mod.Instance.Harmony.PatchCategory(nameof(MagicWeaponCriticalChance));
             else
                 throw new Exception($"Failure parsing formula: {Formula}");
         }

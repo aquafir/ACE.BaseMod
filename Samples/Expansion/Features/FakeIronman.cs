@@ -21,7 +21,7 @@ public class FakeIronman
             return;
         }
 
-        player.SetProperty(FakeInt.HardcoreLives, S.Settings.HardcoreStartingLives);
+        player.SetProperty(FakeInt.HardcoreLives, PatchClass.Settings.HardcoreStartingLives);
         player.SetProperty(FakeFloat.TimestampLastPlayerDeath, Time.GetUnixTime());
         player.SetProperty(FakeBool.Ironman, true);
         player.SetProperty(FakeBool.Hardcore, true);

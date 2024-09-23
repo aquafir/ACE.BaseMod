@@ -1,5 +1,6 @@
-﻿using AngouriMath.Core.Compilation.IntoLinq;
+﻿using static AngouriMath.Entity;
 using static AngouriMath.Entity.Number;
+using Complex = AngouriMath.Entity.Number.Complex;
 
 namespace Balance;
 

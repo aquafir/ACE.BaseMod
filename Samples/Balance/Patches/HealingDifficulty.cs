@@ -22,7 +22,7 @@
         {
             //If you can parse the formulas patch the corresponding category
             if (Formula.TryGetFunction(out func, Variables.TypesAndNames()))
-                Mod.Harmony.PatchCategory(nameof(HealingDifficulty));
+                Mod.Instance.Harmony.PatchCategory(nameof(HealingDifficulty));
             else
                 throw new Exception($"Failure parsing formula: {Formula}");
         }

@@ -6,8 +6,8 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 
     public override async Task OnWorldOpen()
     {
-        Mod.RegisterFeatureEnumCommands(Settings.Features);
-        Mod.RegisterFeatureEnumPatchCategories(Settings.Features);
+        ModC.RegisterFeatureEnumCommands(Settings.Features);
+        ModC.RegisterFeatureEnumPatchCategories(Settings.Features);
 
         BankExtensions.Init();
         FloorExtensions.Init();
@@ -17,8 +17,8 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     {
         base.Stop();
 
-        Mod.UnregisterFeatureEnumCommands(Settings.Features);
-        Mod.UnregisterFeatureEnumPatchCategories(Settings.Features);
+        ModC.UnregisterFeatureEnumCommands(Settings.Features);
+        ModC.UnregisterFeatureEnumPatchCategories(Settings.Features);
     }
 
     /// <summary>

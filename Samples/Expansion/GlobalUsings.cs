@@ -41,3 +41,18 @@ global using ACE.Shared;
 global using ACE.Shared.Helpers;
 global using ACE.Shared.Mods;
 
+global using ACE.Server.Command.Handlers;
+global using Biota = ACE.Entity.Models.Biota;
+global using Expansion.Creatures;
+global using Expansion.Enums;
+global using Expansion.Features;
+global using Expansion.Helpers;
+global using Expansion.Mutators;
+
+global using ACE.Database.Models.World;
+global using ACE.Server.Factories.Entity;
+global using Weenie = ACE.Entity.Models.Weenie;
+global using Spell = ACE.Server.Entity.Spell;
+global using CreatureEx = Expansion.Creatures.CreatureEx;
+
+global using ACE.Database;

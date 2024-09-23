@@ -4,8 +4,8 @@ public class Settings
 {
     //Filter list
     //Todo: decide about these being settings?
-    public string BlackList = Path.Combine(Mod.ModPath, "blacklist.txt");
-    public string WhiteList = Path.Combine(Mod.ModPath, "whitelist.txt");
+    public string BlackList = Path.Combine(Mod.Instance.ModPath, "blacklist.txt");
+    public string WhiteList = Path.Combine(Mod.Instance.ModPath, "whitelist.txt");
     public bool UseDefaultList { get; set; }
 
     //Valid filter communication
