@@ -6,11 +6,19 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>False</AllowUnsafeBlocks>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PlatformTarget>x64</PlatformTarget>
 		<Title>ACE.Shared</Title>
-		<Description>Shared utility code and enums for the ACEmulator modding framework.</Description>
+	</PropertyGroup>
+
+	<!--https://learn.microsoft.com/en-us/nuget/create-packages/package-authoring-best-practices#create-a-nuget-package-->
+	<PropertyGroup>
 		<PackageId>ACEmulator.$(AssemblyName)</PackageId>
+		<Version>1.0.3</Version>
+		<Authors>Aquafir</Authors>
+		<Description>Shared utility code and enums for the ACEmulator modding framework.</Description>
+		<RepositoryUrl>https://github.com/aquafir/ACE.BaseMod/</RepositoryUrl>
+		<PackageReleaseNotes>Moves basic shared mod logic to </PackageReleaseNotes>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<PropertyGroup>
