@@ -1,5 +1,7 @@
 ﻿
-namespace ACE.Shared.Settings;
+using System.IO;
+
+namespace ACE.Shared.Mods;
 public class BasicMod : IHarmonyMod
 {
     #region Members
@@ -24,13 +26,10 @@ public class BasicMod : IHarmonyMod
     private bool disposedValue;
 
     public BasicMod() { }
-    public BasicMod(string name, IPatch patch)
-    {
-        Setup(name, patch);
-    }
+    public BasicMod(string name, IPatch patch) => Setup(name, patch);
     #endregion
 
-    public void Setup(string name, IPatch patch)
+    protected virtual void Setup(string name, IPatch patch)
     {
         Name = name;
         ID = $"com.ACE.ACEmulator.{Name}";
@@ -62,8 +61,6 @@ public class BasicMod : IHarmonyMod
                 Stop();
             }
 
-            // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-            // TODO: set large fields to null
             disposedValue = true;
         }
     }
@@ -81,8 +78,8 @@ public class BasicMod : IHarmonyMod
     {
         try
         {
-            Harmony.PatchAllUncategorized();
-            Patch.Start();
+            Harmony.PatchAll(Container.ModAssembly);
+            Patch.Init();
         }
         catch (Exception ex)
         {
@@ -95,7 +92,7 @@ public class BasicMod : IHarmonyMod
     {
         try
         {
-            Patch.Shutdown();
+            Patch?.Dispose();
             Harmony.UnpatchAll(ID);
         }
         catch (Exception ex)
@@ -109,37 +106,20 @@ public class BasicMod : IHarmonyMod
 
 public enum ModState
 {
-    None,       // Mod instance freshly created
-    Loading,    // Patch class has been started
-    Error,      // An error has occurred (loading/saving/etc.)
-    Running     // Mod successfully started
+    /// <summary>
+    /// Mod instance freshly created
+    /// </summary>
+    None,
+    /// <summary>
+    /// Patch class has been started
+    /// </summary>
+    Loading,
+    /// <summary>
+    /// An error has occurred (loading/saving/etc.)
+    /// </summary>
+    Error,
+    /// <summary>
+    /// Mod successfully started
+    /// </summary>
+    Running
 }
-
-
-
-
-
-
-
-//public class Mod : BasicMod//() : BasicMod("MyMod", new BasicPatch<Settings>(this))
-//{
-//    public Mod() : base()
-//    {
-//        var patch = new BasicPatch<Settings>(this);
-
-//        Setup("MyName", patch);
-//    }
-//}
-
-//public class Settings : JsonSettings, ISettings
-//{
-//    public Task CreateAsync()
-//    {
-//        throw new NotImplementedException();
-//    }
-
-//    public Task CreateOrLoadAsync()
-//    {
-//        throw new NotImplementedException();
-//    }
-//}

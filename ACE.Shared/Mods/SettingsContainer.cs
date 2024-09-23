@@ -1,0 +1,94 @@
+﻿namespace ACE.Shared.Mods;
+public abstract class SettingsContainer<T> where T : class?, new()
+{
+    const int RETRIES = 10;
+
+    protected FileSystemWatcher _fileWatcher;
+    protected string SettingsPath;
+    protected FileInfo SettingsInfo;
+
+    public event EventHandler SettingsChanged;
+
+    public T Settings { get; set; }
+
+    public SettingsContainer(string filePath)
+    {
+        this.SettingsPath = filePath;
+        SettingsInfo = new(filePath);
+
+        _fileWatcher = new FileSystemWatcher(Path.GetDirectoryName(filePath))
+        {
+            //Path =
+            Filter = Path.GetFileName(filePath),
+            NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName,
+            EnableRaisingEvents = true,
+        };
+
+        _fileWatcher.Changed += OnSettingsChanged;
+        _fileWatcher.EnableRaisingEvents = true;
+    }
+
+    protected virtual async void OnSettingsChanged(object sender, FileSystemEventArgs e)
+    {
+        //Todo: think about better ways of doing this
+        //When the settings file is changed reload and raise the event
+        var result = await LoadOrCreateAsync();
+
+        if(result)
+            Console.WriteLine($"Reloaded settings: {SettingsPath}");
+
+        SettingsChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public virtual async Task<bool> LoadOrCreateAsync(int delay = 2000, int retries = 5) 
+    {
+        int attempt = 0;
+
+        //Retry up to a number of attempts
+        while (attempt < retries)
+        {
+            try
+            {
+                //Return successfully loaded settings
+                if (await LoadSettingsAsync() is T settings)
+                {
+                    Settings = settings;
+                    return true;
+                }
+                else
+                {
+                    //Otherwise try to save new settings, returning null on failure
+                    Settings = new();
+                    
+                    var success = await SaveSettingsAsync(Settings);
+                    if (!success)
+                        Settings = null;
+
+                    return Settings is null;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Attempt {attempt + 1} failed: {ex.Message}");
+                attempt++;
+
+                if (attempt >= retries)
+                {
+                    // If max retries reached, return failure
+                    return false;
+                }
+
+                // Wait before retrying
+                await Task.Delay(delay);
+            }
+        }
+
+        // Should never reach here
+        Settings = null;
+        return false;
+    }
+
+    protected abstract Task<T> LoadSettingsAsync();
+    protected abstract Task<bool> SaveSettingsAsync(T settings);
+}
