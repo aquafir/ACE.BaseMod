@@ -1,7 +1,7 @@
 ﻿namespace ACE.BaseMod;
 
 [HarmonyPatch]
-public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
+public class PatchClass//(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
     #region Settings
     const int RETRIES = 10;

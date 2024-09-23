@@ -1,4 +1,5 @@
-﻿using ACE.Server.Entity.Actions;
+﻿using ACE.Server.Entity;
+using ACE.Server.Entity.Actions;
 
 namespace Bank;
 
@@ -77,7 +78,11 @@ internal class CoinDrop
                     cash.StackSize = cash.MaxStackSize;
 
                 //Center on player
+#if REALM
+                cash.Location = player.PhysicsObj.Position.ACEPosition(player.Location.Instance);
+#else
                 cash.Location = player.PhysicsObj.Position.ACEPosition();
+#endif
                 cash.InitPhysicsObj();
 
                 //Explode from player

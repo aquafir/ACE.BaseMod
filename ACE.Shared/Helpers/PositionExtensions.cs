@@ -1,5 +1,8 @@
 ﻿using ACE.Server.Physics.Common;
+
+#if !REALM
 using Position = ACE.Entity.Position;
+#endif
 
 namespace ACE.Shared.Helpers;
 
@@ -198,7 +201,7 @@ public static class PositionExtensions
 
         Position position = _newPosition.SetPositionZ(_newPosition.PositionZ + 0.005f * c.ObjScale.GetValueOrDefault(1f));
 #if REALM
-        if (c.Location.InstancedLandblock != instancedPosition.InstancedLandblock)
+        if (c.Location.InstancedLandblock != position.InstancedLandblock)
         {
             //log.Error((object)$"{c.Name} tried to teleport from {c.Location} to a different landblock {instancedPosition}");
             result = SetPositionError.InvalidArguments;
@@ -211,8 +214,8 @@ public static class PositionExtensions
 
         // do the physics teleport
 #if REALM
-        SetPosition setPosition = new SetPosition(instancedPosition.Instance);
-        setPosition.Pos = new PhysicsPosition(instancedPosition);
+        SetPosition setPosition = new SetPosition(position.Instance);
+        setPosition.Pos = new PhysicsPosition(position);
 #else
         SetPosition setPosition = new SetPosition();
         setPosition.Pos = new ACE.Server.Physics.Common.Position(position);
@@ -243,15 +246,10 @@ public static class PositionExtensions
     /// <summary>
     /// Helper for compatibility with ACRealms
     /// </summary>
-    public static Position SetPositionZ(this Position Position, float positionZ)
+    public static Entity.Position SetPositionZ(this Entity.Position Position, float positionZ)
     {
-        var pos = new Position(Position);
+        var pos = new Entity.Position(Position);
         pos.PositionZ = positionZ;
-
-#if REALM
-        return new Position(pos, Instance);
-#else
         return pos;
-#endif
     }
 }

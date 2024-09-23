@@ -59,7 +59,7 @@ public abstract class SettingsContainer<T> where T : class?, new()
                 {
                     //Otherwise try to save new settings, returning null on failure
                     Settings = new();
-                    
+
                     var success = await SaveSettingsAsync(Settings);
                     if (!success)
                         Settings = null;
@@ -68,19 +68,23 @@ public abstract class SettingsContainer<T> where T : class?, new()
 
                 }
             }
-            catch (Exception ex)
+            catch (IOException ex)
             {
-                Console.WriteLine($"Attempt {attempt + 1} failed: {ex.Message}");
-                attempt++;
-
-                if (attempt >= retries)
+                if (attempt++ >= retries)
                 {
                     // If max retries reached, return failure
+                    ModManager.Log($"{Path.GetFileName(SettingsPath)} failed after {attempt} attempts: {ex.Message}", ModManager.LogLevel.Error);
                     return false;
                 }
 
                 // Wait before retrying
                 await Task.Delay(delay);
+            }
+            catch (Exception ex)
+            {
+                //Don't retry on non-IO exceptions
+                ModManager.Log($"{Path.GetFileName(SettingsPath)} failed: {ex.Message}", ModManager.LogLevel.Error);
+                return false;
             }
         }
 

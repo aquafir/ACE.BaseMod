@@ -1,7 +1,22 @@
 ﻿namespace Raise;
 
-public class LevelCost(double C = 100, double Rate = 2, double Coefficient = 2, int Offset = 0, GrowthType GrowthType = GrowthType.Exponential)
+public class LevelCost
 {
+    public double C { get; set; }
+    public double Rate { get; set; }
+    public double Coefficient { get; set; }
+    public int Offset { get; set; }
+    public GrowthType GrowthType { get; set; }
+
+    public LevelCost(double C = 100, double Rate = 2, double Coefficient = 2, int Offset = 0, GrowthType GrowthType = GrowthType.Exponential)
+    {
+        this.C = C;
+        this.Rate = Rate;
+        this.Coefficient = Coefficient;
+        this.Offset = Offset;
+        this.GrowthType = GrowthType;
+    }
+
     /// <summary>
     /// Get the cost needed to go from x to y
     /// </summary>

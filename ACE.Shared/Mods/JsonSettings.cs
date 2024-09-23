@@ -5,8 +5,11 @@ public class JsonSettings<T>(string filePath = "Settings.json") : SettingsContai
     {
         WriteIndented = true,
         AllowTrailingCommas = true,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+        Converters = { new JsonStringEnumConverter() },
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        IncludeFields = true,
+        UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     };
 
     protected override async Task<T> LoadSettingsAsync()
@@ -17,7 +20,7 @@ public class JsonSettings<T>(string filePath = "Settings.json") : SettingsContai
         // Try loading the settings from file
         using (FileStream fs = File.OpenRead(SettingsPath))
         {
-            return await JsonSerializer.DeserializeAsync<T>(fs);
+            return await JsonSerializer.DeserializeAsync<T>(fs, _serializeOptions);
         }
     }
 

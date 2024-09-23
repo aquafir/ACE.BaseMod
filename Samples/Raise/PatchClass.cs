@@ -12,7 +12,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 
             await Task.Delay(1000);
         }
-        
+
         if(Settings.AlternateLeveling.Enabled)
         {
 

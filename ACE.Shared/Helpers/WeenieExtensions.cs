@@ -62,7 +62,7 @@ public static class WeenieExtensions
                 weenie2.WeeniePropertiesIID.Add(new WeeniePropertiesIID
                 {
                     //Todo: Properly support ACRealms?
-                    Value = (ulong)item5.Value,
+                    Value = (uint)item5.Value,
                     Type = (ushort)item5.Key
                 });
             }

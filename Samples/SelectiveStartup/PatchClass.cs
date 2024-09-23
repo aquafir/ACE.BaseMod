@@ -102,12 +102,12 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         return !Settings.Skip.Contains(ServerTask.ServerManager);
     }
 
-    [HarmonyPrefix]
-    [HarmonyPatch(typeof(ShardDatabaseOfflineTools), nameof(ShardDatabaseOfflineTools.CheckForBiotaPropertiesPaletteOrderColumnInShard))]
-    public static bool PreCheckForBiotaPropertiesPaletteOrderColumnInShard()
-    {
-        return !Settings.Skip.Contains(ServerTask.CheckBiotaPropertiesPaletteOrder);
-    }
+    //[HarmonyPrefix]
+    //[HarmonyPatch(typeof(ShardDatabaseOfflineTools), nameof(ShardDatabaseOfflineTools.CheckForBiotaPropertiesPaletteOrderColumnInShard))]
+    //public static bool PreCheckForBiotaPropertiesPaletteOrderColumnInShard()
+    //{
+    //    return !Settings.Skip.Contains(ServerTask.CheckBiotaPropertiesPaletteOrder);
+    //}
 
 
 
