@@ -43,7 +43,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         }
 
         //Add commands of enabled features
-        ModC.RegisterFeatureEnumCommands(Settings.Features);
+        ModC.RegisterCommands(Settings.Features);
         //var commandRegex = string.Join("|", Settings.Features);
         //ModC.Container.RegisterCommandCategory(commandRegex);
     }

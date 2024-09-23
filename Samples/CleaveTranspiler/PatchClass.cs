@@ -5,11 +5,24 @@ namespace CleaveTranspiler;
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
+    public override Task OnStartSuccess()
+    {
+        Debugger.Break();
+        ModC.RegisterCommandsTower(nameof(TranspilerPatches));
+
+
+        return Task.CompletedTask;
+    }
+}
+
+[HarmonyPatchCategory(nameof(TranspilerPatches))]
+public class TranspilerPatches
+{
     [HarmonyPrefix]
     [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.IsCleaving), MethodType.Getter)]
     public static bool IsCleaving(WorldObject __instance, ref bool __result)
     {
-        if (Settings.AllMeleeCleaves)
+        if (PatchClass.Settings.AllMeleeCleaves)
         {
             __result = __instance is MeleeWeapon;
             return false;
@@ -22,7 +35,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.CleaveTargets), MethodType.Getter)]
     public static bool CleaveNumber(WorldObject __instance, ref int __result)
     {
-        __result = Settings.CleaveTargets;
+        __result = PatchClass.Settings.CleaveTargets;
         return false;
     }
 
@@ -41,12 +54,12 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
             if (codes[i].LoadsField(f_cleaveAngle))
             {
                 //ModManager.Log($"Replace cleave angle with modded value: {Settings.CleaveAngle}");
-                codes[i] = new CodeInstruction(OpCodes.Ldc_R4, Settings.CleaveAngle);
+                codes[i] = new CodeInstruction(OpCodes.Ldc_R4, PatchClass.Settings.CleaveAngle);
             }
             if (codes[i].LoadsField(f_cleaveCylDistance))
             {
                 //ModManager.Log($"Replace cleave angle with modded value: {Settings.CleaveCylRange}");
-                codes[i] = new CodeInstruction(OpCodes.Ldc_R4, Settings.CleaveCylRange);
+                codes[i] = new CodeInstruction(OpCodes.Ldc_R4, PatchClass.Settings.CleaveCylRange);
             }
         }
 

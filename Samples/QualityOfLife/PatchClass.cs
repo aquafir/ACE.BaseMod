@@ -8,7 +8,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 {
     public override async Task OnWorldOpen()
     {
-        ModC.RegisterFeatureEnumPatchCategories(Settings.Patches);
+        ModC.RegisterPatchCategories(Settings.Patches);
 
         if (Settings.Patches.Contains(Patches.Fellowships))
             Fellowships.SetFellowshipSettings();
