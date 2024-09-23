@@ -1,94 +1,14 @@
-﻿namespace Ironman;
+﻿
+namespace Ironman;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
-    #region Settings
-    const int RETRIES = 10;
-    public static Settings Settings = new();
-    static string settingsPath => Path.Combine(ModC.ModPath, "Settings.json");
-    private FileInfo settingsInfo = new(settingsPath);
-
-    private JsonSerializerOptions _serializeOptions = new()
+    public override async Task OnWorldOpen()
     {
-        WriteIndented = true,
-        AllowTrailingCommas = true,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-    };
-    private static int Alive;
-
-    private void SaveSettings()
-    {
-        string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
-
-        if (!settingsInfo.RetryWrite(jsonString, RETRIES))
-        {
-            ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
-            ModC.State = ModState.Error;
-        }
-    }
-
-    private void LoadSettings()
-    {
-        if (!settingsInfo.Exists)
-        {
-            ModManager.Log($"Creating {settingsInfo}...");
-            SaveSettings();
-        }
-        else
-            ModManager.Log($"Loading settings from {settingsPath}...");
-
-        if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
-        {
-            ModC.State = ModState.Error;
-            return;
-        }
-
-        try
-        {
-            Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
-        }
-        catch (Exception)
-        {
-            ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
-            ModC.State = ModState.Error;
-            return;
-        }
-    }
-    #endregion
-
-    #region Start/Shutdown
-    public void Start()
-    {
-        //Need to decide on async use
-        ModC.State = ModState.Loading;
-        LoadSettings();
-
-        if (ModC.State == ModState.Error)
-        {
-            ModManager.DisableModByPath(ModC.ModPath);
-            return;
-        }
-
         PatchFlaggingCategories();
         PatchRestrictionCategories();
-
-        ModC.State = ModState.Running;
     }
-
-    public void Shutdown()
-    {
-        //if (Mod.State == ModState.Running)
-        // Shut down enabled mod...
-
-        //If the mod is making changes that need to be saved use this and only manually edit settings when the patch is not active.
-        //SaveSettings();
-
-        if (ModC.State == ModState.Error)
-            ModManager.Log($"Improper shutdown: {ModC.ModPath}", ModManager.LogLevel.Error);
-    }
-    #endregion
 
     private void PatchFlaggingCategories()
     {

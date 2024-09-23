@@ -4,6 +4,7 @@ using ACE.Database.Models.Auth;
 using PlayerSave.Helpers;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
+using WeenieClassName = ACE.Entity.Enum.WeenieClassName;
 
 namespace PlayerSave;
 
@@ -207,9 +208,9 @@ internal class SaveCommand
         };
 
         if (string.IsNullOrEmpty(savePath))
-            savePath = Path.Combine(Mod.ModPath, "Saves", $"{character.Name} - {DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")}");
+            savePath = Path.Combine(Mod.Instance.ModPath, "Saves", $"{character.Name} - {DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")}");
         else
-            savePath = Path.Combine(Mod.ModPath, "Saves", savePath);
+            savePath = Path.Combine(Mod.Instance.ModPath, "Saves", savePath);
 
         var sb = new StringBuilder("\r\n");
         var watch = Stopwatch.StartNew();

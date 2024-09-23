@@ -51,8 +51,11 @@ global using Expansion.Mutators;
 
 global using ACE.Database.Models.World;
 global using ACE.Server.Factories.Entity;
+global using ACE.Server.Factories.Tables;
 global using Weenie = ACE.Entity.Models.Weenie;
 global using Spell = ACE.Server.Entity.Spell;
 global using CreatureEx = Expansion.Creatures.CreatureEx;
 
 global using ACE.Database;
+
+global using S = Expansion.PatchClass;

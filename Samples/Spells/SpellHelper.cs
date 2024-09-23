@@ -19,7 +19,7 @@ public static class SpellHelper
     //Groups use an index that points to their set of spell IDs
     static Dictionary<uint, List<uint>> _groups { get; set; } //= new();
 
-    static string _groupPath = Path.Combine(Mod.ModPath, "Groups.csv");
+    static string _groupPath = Path.Combine(Mod.Instance.ModPath, "Groups.csv");
 
     public static bool TryInitializeSpellGroups()
     {
@@ -78,7 +78,9 @@ public static class SpellHelper
                 File.WriteAllText(_groupPath, output.ToString());
 
                 PatchClass.Settings.LastGenerated = PatchClass.Settings.GroupType;
-                PatchClass.SaveSettings();
+                
+                //TODO: fix last generated if this is ever used again
+                //PatchClass.Settings.SaveSettings();
             }
         }
         catch (Exception ex)
@@ -143,7 +145,7 @@ public static class SpellHelper
         }
         watch.Stop();
         sb.Insert(0, $"{watch.ElapsedMilliseconds} ms\r\n\r\n");
-        File.WriteAllText(Path.Combine(Mod.ModPath, "Comparable Spell Dump.txt"), sb.ToString());
+        File.WriteAllText(Path.Combine(Mod.Instance.ModPath, "Comparable Spell Dump.txt"), sb.ToString());
         #endregion Group Dump
     }
 
@@ -237,7 +239,7 @@ public static class SpellHelper
         watch.Stop();
         //sb.Insert(0, $"{watch.ElapsedMilliseconds} ms\r\n\r\n");
         //File.WriteAllText(Path.Combine(Mod.ModPath, "Related Spell Dump.txt"), sb.ToString());
-        File.WriteAllText(Path.Combine(Mod.ModPath, "Related Spell Dump.csv"), sb.ToString());
+        File.WriteAllText(Path.Combine(Mod.Instance.ModPath, "Related Spell Dump.csv"), sb.ToString());
         #endregion Group Dump
     }
 

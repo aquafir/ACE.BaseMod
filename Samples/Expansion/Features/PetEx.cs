@@ -107,9 +107,13 @@ public class CombatPetEx : CombatPet
             var dist = P_PetOwner.GetCylinderDistance(this);
             if (dist > 15)
             {
+                //TODO: Figure out how to handle teleport
+#if REALM
                 if (P_PetOwner.Location.InstancedLandblock == Location.InstancedLandblock)
+#else
+                if(true)
+#endif
                 {
-                    //Todo: ask RF about FakeTeleport
                     FakeTeleport(P_PetOwner.Location.InFrontOf(.1));
                     //P_PetOwner.SendMessage($"{Name} has caught up to you.");
                 }

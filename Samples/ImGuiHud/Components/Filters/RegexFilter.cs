@@ -1,5 +1,7 @@
 ﻿
 
+using ImGuiNET;
+
 /// <summary>
 /// Draws a text field that builds a Regex
 /// </summary>

@@ -1,4 +1,6 @@
-﻿namespace PlayerSave;
+﻿using Biota = ACE.Database.Models.Shard.Biota;
+
+namespace PlayerSave;
 
 public class PlayerSave
 {

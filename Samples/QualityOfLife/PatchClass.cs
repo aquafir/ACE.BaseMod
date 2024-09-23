@@ -6,104 +6,23 @@ namespace QualityOfLife;
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
-    #region Settings
-    //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);
-    const int RETRIES = 10;
-
-    public static Settings Settings = new();
-    private static string settingsPath = Path.Combine(ModC.ModPath, "Settings.json");
-    private static FileInfo settingsInfo = new(settingsPath);
-
-    private static JsonSerializerOptions _serializeOptions = new()
+    public override async Task OnWorldOpen()
     {
-        WriteIndented = true,
-        AllowTrailingCommas = true,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-    };
+        ModC.RegisterFeatureEnumPatchCategories(Settings.Patches);
 
-    private static void SaveSettings()
-    {
-        string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
-
-        if (!settingsInfo.RetryWrite(jsonString, RETRIES))
-        {
-            ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
-            ModC.State = ModState.Error;
-        }
+        if (Settings.Patches.Contains(Patches.Fellowships))
+            Fellowships.SetFellowshipSettings();
     }
 
-    private static void LoadSettings()
+    public override void Stop()
     {
-        if (!settingsInfo.Exists)
-        {
-            ModManager.Log($"Creating {settingsInfo}...");
-            SaveSettings();
-        }
-        else
-            ModManager.Log($"Loading settings from {settingsPath}...");
+        base.Stop();
 
-        if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
-        {
-            ModC.State = ModState.Error;
-            return;
-        }
-
-        try
-        {
-            Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
-        }
-        catch (Exception)
-        {
-            ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
-            ModC.State = ModState.Error;
-            return;
-        }
-    }
-    #endregion
-
-    #region Start/Shutdown
-    public static void Start()
-    {
-        //Need to decide on async use
-        ModC.State = ModState.Loading;
-        LoadSettings();
-
-        if (ModC.State == ModState.Error)
-        {
-            ModManager.DisableModByPath(ModC.ModPath);
-            return;
-        }
-
-        PatchCategories();
-
-        ModC.State = ModState.Running;
-    }
-
-    public static void Shutdown()
-    {
         if (ModC.State == ModState.Running)
         {
             if (Settings.Patches.Contains(Patches.Fellowships))
                 Fellowships.RestoreFellowSettings();
         }
-
-        if (ModC.State == ModState.Error)
-            ModManager.Log($"Improper shutdown: {ModC.ModPath}", ModManager.LogLevel.Error);
-    }
-    #endregion
-
-    private static void PatchCategories()
-    {
-        //Assume names patch Patches enum
-        foreach (var patch in Settings.Patches)
-        {
-            ModC.Harmony.PatchCategory(patch.ToString());
-            ModManager.Log($"QoL enabling: {patch}");
-        }
-
-        if (Settings.Patches.Contains(Patches.Fellowships))
-            Fellowships.SetFellowshipSettings();
     }
 
     [HarmonyPrefix]
