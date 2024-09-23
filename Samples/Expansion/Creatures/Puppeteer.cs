@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Creatures;
+﻿namespace Expansion.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.Puppeteer))]
 public class Puppeteer : CreatureEx
@@ -9,7 +9,7 @@ public class Puppeteer : CreatureEx
 #else
     public Puppeteer(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
 #endif
- { }
+    { }
 
     private PropertiesGenerator generator;
 

@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace Raise;
 
 public class LevelCost(double C = 100, double Rate = 2, double Coefficient = 2, int Offset = 0, GrowthType GrowthType = GrowthType.Exponential)
 {
@@ -27,7 +27,7 @@ public class LevelCost(double C = 100, double Rate = 2, double Coefficient = 2, 
                 (n + 1) * C + Rate / 2 * n * (n + 1)
             ),
             GrowthType.Exponential => (long)(
-                Rate == 1 ? (C * (n + 1)) : (C * ((1 - Math.Pow(Rate, (n + 1))) / (1 - Rate)))
+                Rate == 1 ? C * (n + 1) : C * ((1 - Math.Pow(Rate, n + 1)) / (1 - Rate))
             ),
             //Computed, simplified case not easy without growth rate
             GrowthType.Polynomial => Enumerable.Range(0, (int)n + 1).Select(x => GetCost(x)).Sum(),

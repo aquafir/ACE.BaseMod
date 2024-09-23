@@ -1,13 +1,10 @@
-﻿using ACE.Database.Models.Shard;
-using ACE.Entity.Enum.Properties;
-using ACE.Entity.Models;
-using Biota = ACE.Database.Models.Shard.Biota;
+﻿using Biota = ACE.Database.Models.Shard.Biota;
 
-namespace Tinkering.Helpers;
+namespace PlayerSave.Helpers;
 
 public static class BiotaHelpers
 {
-    public static void Write(this List<ACE.Database.Models.Shard.Biota> biotas, BinaryWriter writer)
+    public static void Write(this List<Biota> biotas, BinaryWriter writer)
     {
         writer.Write(biotas != null);
         if (biotas is null)
@@ -18,7 +15,7 @@ public static class BiotaHelpers
         foreach (var biota in biotas)
             biota.Write(writer);
     }
-    public static void ReadBiotas(this List<ACE.Database.Models.Shard.Biota> biotas, BinaryReader reader)
+    public static void ReadBiotas(this List<Biota> biotas, BinaryReader reader)
     {
         if (!reader.ReadBoolean())
             return;
@@ -32,7 +29,7 @@ public static class BiotaHelpers
             biotas.Add(biota);
         }
     }
-    public static void Write(this ACE.Database.Models.Shard.Biota biota, BinaryWriter writer)
+    public static void Write(this Biota biota, BinaryWriter writer)
     {
         writer.Write(biota != null);
         if (biota is null)
@@ -72,7 +69,7 @@ public static class BiotaHelpers
         biota.BiotaPropertiesAllegiance.Write(writer);
         biota.HousePermission.Write(writer);
     }
-    public static void ReadBiota(this ACE.Database.Models.Shard.Biota biota, BinaryReader reader)
+    public static void ReadBiota(this Biota biota, BinaryReader reader)
     {
         if (!reader.ReadBoolean())
             return;
@@ -1595,8 +1592,8 @@ public static class BiotaHelpers
 
 
     public static Player CreatePlayer(this ACE.Entity.Models.Biota newPlayerBiota,
-    List<ACE.Database.Models.Shard.Biota> newInventoryItems,
-    List<ACE.Database.Models.Shard.Biota> newWieldedItems,
+    List<Biota> newInventoryItems,
+    List<Biota> newWieldedItems,
     Character newCharacter,
     Session session)
     {
@@ -1622,7 +1619,7 @@ public static class BiotaHelpers
         return newPlayer;
     }
 
-    public static ACE.Entity.Models.Biota CopyBiotaAs(this ACE.Database.Models.Shard.Biota playerBiota, Character newCharacter, LoadOptions options)
+    public static ACE.Entity.Models.Biota CopyBiotaAs(this Biota playerBiota, Character newCharacter, LoadOptions options)
     {
         //Create a new biota for a player
         var newPlayerBiota = ACE.Database.Adapter.BiotaConverter.ConvertToEntityBiota(playerBiota);

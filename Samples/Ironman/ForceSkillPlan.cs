@@ -1,7 +1,6 @@
-﻿using ACE.Server.Network.GameMessages.Messages;
-using static ACE.Server.Mods.ModManager;
+﻿using static ACE.Server.Mods.ModManager;
 
-namespace Tinkering;
+namespace Ironman;
 
 [HarmonyPatchCategory(nameof(ForceSkillPlan))]
 public class ForceSkillPlan
@@ -34,7 +33,7 @@ public class ForceSkillPlan
         {
             if (!Enum.TryParse<Skill>(plan[i], out var skill))
             {
-                ModManager.Log($"Unable to parse Skill from plan @ {plan[i]}", LogLevel.Error);
+                Log($"Unable to parse Skill from plan @ {plan[i]}", LogLevel.Error);
                 return;
             }
 
@@ -47,12 +46,12 @@ public class ForceSkillPlan
         if (i == 0)
             return;
 
-        var msg = $"{__instance.Name} advanced their skill plan {i} steps with {String.Join("->", plan.Take(i))}";
-        ModManager.Log(msg);
+        var msg = $"{__instance.Name} advanced their skill plan {i} steps with {string.Join("->", plan.Take(i))}";
+        Log(msg);
         __instance.SendMessage(msg);
 
         //Store the update plan
-        __instance.SetProperty(FakeString.IronmanPlan, String.Join(';', plan.Skip(i)));
+        __instance.SetProperty(FakeString.IronmanPlan, string.Join(';', plan.Skip(i)));
         __instance.SendUpdatedSkills();
     }
 }

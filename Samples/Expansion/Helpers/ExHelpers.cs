@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Helpers;
+﻿namespace Expansion.Helpers;
 
 public static class CreatureExHelpers
 {
@@ -70,7 +70,8 @@ public static class CreatureExHelpers
         _ => new Stunner(weenie, guid, ruleset),      //throw new NotImplementedException(),
     };
 #else
-    public static CreatureEx Create(this Creatures.CreatureExType type, Weenie weenie, ObjectGuid guid) => type switch {
+    public static CreatureEx Create(this Creatures.CreatureExType type, Weenie weenie, ObjectGuid guid) => type switch
+    {
         CreatureExType.Accurate => new Accurate(weenie, guid),
         //Creatures.CreatureType.Avenger => new Avenger(weenie, guid),
         CreatureExType.Banisher => new Banisher(weenie, guid),

@@ -1,4 +1,6 @@
-﻿namespace Tinkering.Features;
+﻿using Expansion;
+
+namespace Expansion.Features;
 [CommandCategory(nameof(Feature.MutatorHooks))]
 [HarmonyPatchCategory(nameof(Feature.MutatorHooks))]
 internal class MutatorHooks
@@ -60,7 +62,7 @@ internal class MutatorHooks
         {
             if (eventType is null)
                 continue;
-            
+
             //Todo: Prevent duplicate shutdowns..?
             HashSet<Mutator> encountered = new();
 
@@ -100,7 +102,7 @@ internal class MutatorHooks
         }
 
         if (PatchClass.Settings.Verbose && mutations.Count > 0)
-            ModManager.Log($"{__result.Name} was mutated with: {String.Join(", ", mutations)}");
+            ModManager.Log($"{__result.Name} was mutated with: {string.Join(", ", mutations)}");
 
     }
 
@@ -132,7 +134,7 @@ internal class MutatorHooks
                     mutations.Add(mutator.MutationType);
 
                 if (PatchClass.Settings.Verbose && mutations.Count > 0)
-                    ModManager.Log($"{item.Name} was mutated with: {String.Join(", ", mutations)}");
+                    ModManager.Log($"{item.Name} was mutated with: {string.Join(", ", mutations)}");
             }
         }
     }
@@ -164,15 +166,15 @@ internal class MutatorHooks
                     mutations.Add(mutator.MutationType);
 
                 if (PatchClass.Settings.Verbose && mutations.Count > 0)
-                    ModManager.Log($"{item.Name} was mutated with: {String.Join(", ", mutations)}");
+                    ModManager.Log($"{item.Name} was mutated with: {string.Join(", ", mutations)}");
             }
         }
     }
 
     #region WeenieFactory Methods
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(ACE.Entity.Models.Weenie), typeof(ObjectGuid) })]
-    public static void PostCreateWorldObject(ACE.Entity.Models.Weenie weenie, ObjectGuid guid, ref WorldObject __result)
+    [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(Weenie), typeof(ObjectGuid) })]
+    public static void PostCreateWorldObject(Weenie weenie, ObjectGuid guid, ref WorldObject __result)
         => MutateFactory(__result);
     [HarmonyPostfix]
     [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(ACE.Entity.Models.Biota) })]
@@ -208,7 +210,7 @@ internal class MutatorHooks
         }
 
         if (PatchClass.Settings.Verbose && mutations.Count > 0)
-            ModManager.Log($"{__result.Name} was mutated with: {String.Join(", ", mutations)}");
+            ModManager.Log($"{__result.Name} was mutated with: {string.Join(", ", mutations)}");
 
     }
     #endregion
@@ -235,7 +237,7 @@ internal class MutatorHooks
         }
 
         if (PatchClass.Settings.Verbose && mutations.Count > 0)
-            ModManager.Log($"{__instance.Name} was mutated with: {String.Join(", ", mutations)}");
+            ModManager.Log($"{__instance.Name} was mutated with: {string.Join(", ", mutations)}");
 
         return true;
     }
@@ -249,7 +251,7 @@ internal class MutatorHooks
     {
         if (!__result)
             return;
-        
+
         //if (__instance is null || item is null) return;
 
         //Keeps track of what mutations have been applied
@@ -267,7 +269,7 @@ internal class MutatorHooks
         }
 
         if (PatchClass.Settings.Verbose && mutations.Count > 0)
-            ModManager.Log($"{item.Name} was mutated with: {String.Join(", ", mutations)}");
+            ModManager.Log($"{item.Name} was mutated with: {string.Join(", ", mutations)}");
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Creatures;
+﻿namespace ExtendACE.Creatures;
 
 [HarmonyPatch]
 public class Merger : CreatureEx
@@ -33,7 +33,7 @@ public class Merger : CreatureEx
 
         //Get something to merge with of the same wcid but not a merger?
         var mergeTarget = p.GetNearbyCreatures(this, 5, 10).Where(x =>
-        x.WeenieClassId == this.WeenieClassId &&
+        x.WeenieClassId == WeenieClassId &&
         x is not Merger).FirstOrDefault();
 
         if (mergeTarget is null) return;
@@ -47,7 +47,7 @@ public class Merger : CreatureEx
         DamageHistory.OnHeal(mergeTarget.Health.Current);
 
         //Increase xp?
-        XpOverride += this.Weenie.GetProperty(PropertyInt.XpOverride);
+        XpOverride += Weenie.GetProperty(PropertyInt.XpOverride);
 
         mergeTarget.OnDeath();
         mergeTarget.Die();

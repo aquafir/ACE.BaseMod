@@ -1,6 +1,4 @@
-﻿using Tinkering.Speedrun;
-
-namespace Tinkering.Floor;
+﻿namespace Tower;
 public static class FloorExtensions
 {
     static FloorSettings Settings => PatchClass.Settings.Tower;
@@ -45,5 +43,5 @@ public static class FloorExtensions
     public static TowerFloor? GetHighestCompletedFloor(this Player player) =>
         Floors.OrderByDescending(x => x.Index).Where(x => player.GetFirstCompletionTime(x) != null).FirstOrDefault();
 
-    
+
 }

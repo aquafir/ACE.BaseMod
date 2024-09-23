@@ -1,6 +1,4 @@
-﻿using ACE.Server.Entity;
-
-public class TextSpellPicker : IPagedPicker<Spell>
+﻿public class TextSpellPicker : IPagedPicker<Spell>
 {
     protected string[] filteredChoices = { };
     protected RegexFilter<string> RegexFilter;

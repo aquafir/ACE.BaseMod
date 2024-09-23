@@ -1,7 +1,4 @@
-﻿using ACE.Database.Models.Shard;
-using ACE.Server.Managers;
-
-namespace Tinkering;
+﻿namespace QuestBonus;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
@@ -114,8 +111,8 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         var sb = new StringBuilder($"{player.QuestManager.GetQuests().Where(x => x.HasSolves()).Count()} count known to be solved for {session.Player.QuestBonus():P2} bonus.\nQuest Name/Completions/Points\n");
         foreach (var quest in quests)
         {
-            if (!PatchClass.Settings.QuestBonuses.TryGetValue(quest.QuestName, out var points))
-                points = PatchClass.Settings.DefaultPoints;
+            if (!Settings.QuestBonuses.TryGetValue(quest.QuestName, out var points))
+                points = Settings.DefaultPoints;
 
             sb.Append($"{quest.QuestName,-30}\n  {quest.NumTimesCompleted,-5} - {points}\n");
         }
@@ -158,7 +155,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         {
             player.IncQuestPoints(qst.Value());
 
-            if (PatchClass.Settings.NotifyQuest)
+            if (Settings.NotifyQuest)
                 player.SendMessage($"Removed {qst.Value()} QP on removing {questName}");
         }
     }
@@ -179,7 +176,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         {
             player.IncQuestPoints(-1 * qst.Value());
 
-            if (PatchClass.Settings.NotifyQuest)
+            if (Settings.NotifyQuest)
                 player.SendMessage($"Removed {qst.Value()} QP on removing {questName}");
         }
     }
@@ -228,7 +225,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
             {
                 player.IncQuestPoints(quest.Value());
 
-                if (PatchClass.Settings.NotifyQuest)
+                if (Settings.NotifyQuest)
                     player.SendMessage($"Added {quest.Value()} to QB from {questFormat}");
             }
         }
@@ -242,7 +239,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
             {
                 player.IncQuestPoints(-1 * quest.Value());
 
-                if (PatchClass.Settings.NotifyQuest)
+                if (Settings.NotifyQuest)
                     player.SendMessage($"Subtracted {quest.Value()} from QB from {questFormat}");
             }
         }
@@ -323,7 +320,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     public static void PreGrantXP(ref long amount, XpType xpType, ShareType shareType, ref Player __instance)
     {
         //Increment exp
-        if (PatchClass.Settings.NotifyExp)
+        if (Settings.NotifyExp)
             __instance.SendMessage($"Boosting xp from {amount} by {__instance.QuestBonus():P2} to {(long)(amount * __instance.QuestBonus())}");
 
         amount = (long)(amount * __instance.QuestBonus());

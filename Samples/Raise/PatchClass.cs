@@ -1,5 +1,4 @@
-﻿using Tinkering;
-using System.Diagnostics;
+﻿using Raise;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)

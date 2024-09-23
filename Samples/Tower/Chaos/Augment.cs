@@ -1,4 +1,4 @@
-﻿namespace ACE.Shared.Augments;
+﻿namespace Tower;
 public static class Augment
 {
     public static bool TryAugmentBit(this WorldObject wo, AugmentType type, Operation op, int key, double value)

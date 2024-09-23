@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Features;
+﻿namespace Expansion.Features;
 
 #if REALM
 
@@ -23,7 +23,7 @@ public class CorpseInfo
             {
                 if (!string.IsNullOrEmpty(item.Quest)) // if the item has a Quest string, make the creature a "generator" of the item so that the pickup action applies the quest. 
                     item.GeneratorId = __instance.Guid.Full;
-                item.Location = new ACE.Entity.Position(__instance.Location);
+                item.Location = new Position(__instance.Location);
                 LandblockManager.AddObject(item);
             }
             return false;
@@ -155,7 +155,7 @@ public class CorpseInfo
 
                 if ((player.Location.Cell & 0xFFFF) < 0x100)
                 {
-                    player.SetPosition(PositionType.LastOutsideDeath, new ACE.Entity.Position(corpse.Location));
+                    player.SetPosition(PositionType.LastOutsideDeath, new Position(corpse.Location));
                     player.Session.Network.EnqueueSend(new GameMessagePrivateUpdatePosition(player, PositionType.LastOutsideDeath, corpse.Location));
 
                     if (dropped.Count > 0)

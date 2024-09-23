@@ -1,7 +1,6 @@
-﻿using ACE.Common;
-using Tinkering.Loot;
+﻿using AutoLoot.Loot;
 
-namespace Tinkering.Helpers;
+namespace AutoLoot.Helpers;
 
 public static class RandomHelper
 {

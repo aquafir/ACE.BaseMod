@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Creatures;
+﻿namespace Expansion.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.Vampire))]
 public class Vampire : CreatureEx
@@ -9,7 +9,7 @@ public class Vampire : CreatureEx
 #else
     public Vampire(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
 #endif
- { }
+    { }
 
     //Mutate from the original weenie
     protected override void Initialize()

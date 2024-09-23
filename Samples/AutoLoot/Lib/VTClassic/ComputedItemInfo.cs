@@ -27,9 +27,9 @@
 //  THE SOFTWARE.
 ///////////////////////////////////////////////////////////////////////////////
 
-using Tinkering.Lib;
+using AutoLoot.Lib;
 
-namespace VTClassic
+namespace AutoLoot.Lib.VTClassic
 {
     internal class ComputedItemInfo
     {
@@ -134,7 +134,7 @@ namespace VTClassic
             {
                 double variance = gameItemInfo.GetValueDouble(DoubleValueKey.Variance, 0.0);
                 int maxDamage = GetBuffedLogValueKey(IntValueKey.MaxDamage);
-                double minDamage = maxDamage - (variance * maxDamage);
+                double minDamage = maxDamage - variance * maxDamage;
 
                 return (minDamage + maxDamage) / 2;
             }
@@ -242,14 +242,14 @@ namespace VTClassic
         /// <returns></returns>
         public static double CalculateDamageOverTime(int maxDamage, double variance, double critChance, double critMultiplier)
         {
-            return maxDamage * ((1 - critChance) * (2 - variance) / 2 + (critChance * critMultiplier));
+            return maxDamage * ((1 - critChance) * (2 - variance) / 2 + critChance * critMultiplier);
         }
 
         public double BuffedMissileDamage
         {
             get
             {
-                return GetBuffedLogValueKey(IntValueKey.MaxDamage) + (((GetBuffedDoubleValueKey(DoubleValueKey.DamageBonus) - 1) * 100) / 3) + GetBuffedLogValueKey(IntValueKey.ElementalDmgBonus);
+                return GetBuffedLogValueKey(IntValueKey.MaxDamage) + (GetBuffedDoubleValueKey(DoubleValueKey.DamageBonus) - 1) * 100 / 3 + GetBuffedLogValueKey(IntValueKey.ElementalDmgBonus);
             }
         }
 

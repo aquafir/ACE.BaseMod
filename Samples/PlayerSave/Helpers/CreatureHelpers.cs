@@ -1,7 +1,4 @@
-﻿using ACE.Entity.Enum.Properties;
-using ACE.Server.WorldObjects.Entity;
-
-namespace Tinkering.Helpers;
+﻿namespace PlayerSave.Helpers;
 
 public static class CreatureHelpers
 {
@@ -47,7 +44,7 @@ public static class CreatureHelpers
                     throw new MissingFieldException("No Creature to assign the skill to");
 
                 //Todo: This requires a creature
-                CreatureSkill skill = new CreatureSkill(creature, key, new ACE.Entity.Models.PropertiesSkill()
+                CreatureSkill skill = new CreatureSkill(creature, key, new PropertiesSkill()
                 {
                     SAC = sac,
                     //Bonus

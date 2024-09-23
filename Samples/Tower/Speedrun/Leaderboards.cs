@@ -1,6 +1,6 @@
 ﻿//using Tower.Floor;
 
-//namespace Tower.Speedrun;
+//namespace Tower;
 
 //[CommandCategory(nameof(Feature.Speedrun))]
 //[HarmonyPatchCategory(nameof(Feature.Speedrun))]

@@ -1,7 +1,7 @@
 ﻿using AngouriMath.Core.Compilation.IntoLinq;
 using static AngouriMath.Entity.Number;
 
-namespace Tinkering;
+namespace Balance;
 
 public static class AngouriHelpers
 {
@@ -309,21 +309,21 @@ sb.ToString()
     }
     //Use enum of Angouri-supported types
     public static bool TryGetFunction<T1, TResult>(this string formula, out Func<T1, TResult> func, List<(MType, Variable)> typesAndNames) =>
-        formula.TryGetFunction<T1, TResult>(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
+        formula.TryGetFunction(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
     public static bool TryGetFunction<T1, T2, TResult>(this string formula, out Func<T1, T2, TResult> func, List<(MType, Variable)> typesAndNames) =>
-        formula.TryGetFunction<T1, T2, TResult>(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
+        formula.TryGetFunction(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
     public static bool TryGetFunction<T1, T2, T3, TResult>(this string formula, out Func<T1, T2, T3, TResult> func, List<(MType, Variable)> typesAndNames) =>
-        formula.TryGetFunction<T1, T2, T3, TResult>(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
+        formula.TryGetFunction(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
     public static bool TryGetFunction<T1, T2, T3, T4, TResult>(this string formula, out Func<T1, T2, T3, T4, TResult> func, List<(MType, Variable)> typesAndNames) =>
-        formula.TryGetFunction<T1, T2, T3, T4, TResult>(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
+        formula.TryGetFunction(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
     public static bool TryGetFunction<T1, T2, T3, T4, T5, TResult>(this string formula, out Func<T1, T2, T3, T4, T5, TResult> func, List<(MType, Variable)> typesAndNames) =>
-        formula.TryGetFunction<T1, T2, T3, T4, T5, TResult>(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
+        formula.TryGetFunction(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
     public static bool TryGetFunction<T1, T2, T3, T4, T5, T6, TResult>(this string formula, out Func<T1, T2, T3, T4, T5, T6, TResult> func, List<(MType, Variable)> typesAndNames) =>
-        formula.TryGetFunction<T1, T2, T3, T4, T5, T6, TResult>(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
+        formula.TryGetFunction(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
     public static bool TryGetFunction<T1, T2, T3, T4, T5, T6, T7, TResult>(this string formula, out Func<T1, T2, T3, T4, T5, T6, T7, TResult> func, List<(MType, Variable)> typesAndNames) =>
-        formula.TryGetFunction<T1, T2, T3, T4, T5, T6, T7, TResult>(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
+        formula.TryGetFunction(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
     public static bool TryGetFunction<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(this string formula, out Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> func, List<(MType, Variable)> typesAndNames) =>
-        formula.TryGetFunction<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
+        formula.TryGetFunction(out func, typesAndNames.Select(x => (x.Item1.GetAngouriType(), x.Item2)).ToList());
     static Type GetAngouriType(this MType angouriType) => angouriType switch
     {
         MType.Bool => typeof(bool),
@@ -332,7 +332,7 @@ sb.ToString()
         MType.Float => typeof(float),
         MType.Double => typeof(double),
         MType.Complex => typeof(Complex),
-        MType.BigInt => typeof(System.Numerics.BigInteger),
+        MType.BigInt => typeof(BigInteger),
         _ => throw new NotImplementedException()
     };
 

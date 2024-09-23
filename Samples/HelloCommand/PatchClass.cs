@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace HelloCommand;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
@@ -27,7 +27,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 #if REALM
             ModManager.Log($"Created command: {info.Attribute.Command}");
 #else
-    ModManager.Log($"Non-realm command: {info.Attribute.Command}");
+            ModManager.Log($"Non-realm command: {info.Attribute.Command}");
 #endif
         }
         if (!CommandManager.TryAddCommand(info, false))
@@ -55,5 +55,5 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         //Commands with an attribute can be automatically unregistered
         //Mod.Container.UnregisterCommandHandlers();      //Commands added 
     }
-#endregion
+    #endregion
 }

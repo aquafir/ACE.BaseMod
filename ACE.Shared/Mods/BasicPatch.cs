@@ -1,7 +1,4 @@
-﻿using static ACE.Server.Mods.ModManager;
-using static ACE.Server.WorldObjects.Creature;
-
-namespace ACE.Shared.Mods;
+﻿namespace ACE.Shared.Mods;
 
 /// <summary>
 /// PatchClasses are entry points for logic of a loaded Mod responsible for loading settings, applying patches, registering commands, initializing needed plugin state, and shutting down if disabled.
@@ -11,7 +8,7 @@ public class BasicPatch<T> : IPatch where T : class?, new()
     private bool disposedValue;
     protected BasicMod Mod;
     protected SettingsContainer<T> SettingsContainer;
-    protected T Settings => SettingsContainer.Settings;
+    public static T Settings { get; set; }
     protected string SettingsName;
     protected string SettingsPath => Path.Combine(Mod.ModPath, SettingsName);
 
@@ -38,6 +35,7 @@ public class BasicPatch<T> : IPatch where T : class?, new()
             return;
         }
 
+        Settings = SettingsContainer.Settings;
         Mod.State = ModState.Running;
 
         await OnStartSuccess();

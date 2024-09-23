@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ACE.Shared.Helpers;
+﻿namespace ACE.Shared.Helpers;
 public static class BinaryExtensions
 {
     //private static uint CalculatePadMultipleM(uint length, uint multiple) { return multiple * ((length + multiple - 1u) / multiple) - length; }

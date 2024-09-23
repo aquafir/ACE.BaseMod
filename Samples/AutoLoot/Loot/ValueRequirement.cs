@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Loot;
+﻿namespace AutoLoot.Loot;
 
 public class ValueRequirement
 {
@@ -57,7 +57,7 @@ public class ValueRequirement
             CompareType.LessThanEqual => (prop ?? 0) <= TargetValue,
             CompareType.NotEqual => (prop ?? 0) != TargetValue,
             CompareType.Equal => (prop ?? 0) == TargetValue,
-            CompareType.NotEqualNotExist => (prop == null || prop.Value != TargetValue),    //Todo, not certain about the inversion.  I'm tired.
+            CompareType.NotEqualNotExist => prop == null || prop.Value != TargetValue,    //Todo, not certain about the inversion.  I'm tired.
             CompareType.NotExist => prop is null,
             CompareType.Exist => prop is not null,
             CompareType.NotHasBits => ((int)(prop ?? 0) & (int)TargetValue) == 0,

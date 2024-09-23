@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Creatures;
+﻿namespace Expansion.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.Merger))]
 public class Merger : CreatureEx
@@ -9,7 +9,7 @@ public class Merger : CreatureEx
 #else
     public Merger(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
 #endif
- { }
+    { }
 
     //Mutate from the original weenie
     protected override void Initialize()
@@ -38,7 +38,7 @@ public class Merger : CreatureEx
 
         //Get something to merge with of the same wcid but not a merger?
         var mergeTarget = p.GetSplashTargets(this, TargetExclusionFilter.OnlyCreature, 10).Take(5)
-            .Where(x => x.WeenieClassId == this.WeenieClassId && x is not Merger)
+            .Where(x => x.WeenieClassId == WeenieClassId && x is not Merger)
             .FirstOrDefault();
 
         if (mergeTarget is null) return;
@@ -52,7 +52,7 @@ public class Merger : CreatureEx
         DamageHistory.OnHeal(mergeTarget.Health.Current);
 
         //Increase xp?
-        XpOverride += this.Weenie.GetProperty(PropertyInt.XpOverride);
+        XpOverride += Weenie.GetProperty(PropertyInt.XpOverride);
 
         mergeTarget.OnDeath();
         mergeTarget.Die();

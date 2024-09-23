@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace SelectiveStartup;
 
 public class Settings
 {

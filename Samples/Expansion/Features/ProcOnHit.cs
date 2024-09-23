@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.ProcOnHit))]
 [HarmonyPatchCategory(nameof(Feature.ProcOnHit))]

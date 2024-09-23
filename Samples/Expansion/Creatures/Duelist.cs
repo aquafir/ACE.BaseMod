@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Creatures;
+﻿namespace Expansion.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.Duelist))]
 public class Duelist : CreatureEx
@@ -9,7 +9,7 @@ public class Duelist : CreatureEx
 #else
     public Duelist(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
 #endif
- { }
+    { }
 
     //Mutate from the original weenie
     protected override void Initialize()

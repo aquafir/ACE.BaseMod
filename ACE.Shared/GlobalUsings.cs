@@ -10,6 +10,7 @@ global using ACE.Entity.Models;
 
 global using ACE.Server.Command;
 global using ACE.Server.Entity;
+global using ACE.Server.Entity.Actions;
 global using ACE.Server.Factories;
 global using ACE.Server.Factories.Enum;
 global using ACE.Server.Managers;

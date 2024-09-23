@@ -1,9 +1,4 @@
-﻿using ACE.Entity.Enum.Properties;
-using ACE.Shared.Helpers;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-
-namespace Tinkering;
+﻿namespace Bank;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
@@ -98,8 +93,8 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     }
     #endregion
 
-    static string Currencies => String.Join(", ", Settings.Currencies.Select(x => x.Name));
-    static string Commands => String.Join(", ", Enum.GetNames<Transaction>());
+    static string Currencies => string.Join(", ", Settings.Currencies.Select(x => x.Name));
+    static string Commands => string.Join(", ", Enum.GetNames<Transaction>());
 
     [CommandHandler("bank", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
     public static void HandleBank(Session session, params string[] parameters)
@@ -114,9 +109,9 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         }
 
         //Parse weenie / amount if relevant to command
-        if ((verb == Transaction.Give || verb == Transaction.Take))
+        if (verb == Transaction.Give || verb == Transaction.Take)
         {
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 player.SendMessage($"Specify the name or WCID of the item to transact with.");
                 return;
@@ -248,7 +243,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
                 return;
 
             case Transaction.Take:
-                if (String.IsNullOrWhiteSpace(name))
+                if (string.IsNullOrWhiteSpace(name))
                 {
                     player.SendMessage($"Specify currency.");
                     return;
@@ -350,7 +345,7 @@ public static class BankExtensions
         $@"(?<verb>{Transaction.Give})$",
     };
     //Join usages in a regex pattern
-    static string Pattern => String.Join("|", USAGES.Select(x => $"({x})"));
+    static string Pattern => string.Join("|", USAGES.Select(x => $"({x})"));
     static Regex CommandRegex = new(Pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     public static bool TryParseCommand(this string[] parameters, out Transaction verb, out string name, out int amount, out bool wildcardAmount)
@@ -363,12 +358,12 @@ public static class BankExtensions
 
         //Debugger.Break();
         //Check for valid command
-        var match = CommandRegex.Match(String.Join(" ", parameters));
+        var match = CommandRegex.Match(string.Join(" ", parameters));
         if (!match.Success)
             return false;
 
         //Parse verb
-        if (!Enum.TryParse<Transaction>(match.Groups["verb"].Value, true, out verb))
+        if (!Enum.TryParse(match.Groups["verb"].Value, true, out verb))
             return false;
 
         //Set name
@@ -387,8 +382,8 @@ public static class BankExtensions
     }
 
     //Support for spaces in names
-    public static string ParseName(this string[] param, int skip = 1, int atEnd = 0) => (param.Length - skip - atEnd > 0) ?
-        String.Join(" ", param.Skip(skip).Take(param.Length - atEnd - skip)) : "";
+    public static string ParseName(this string[] param, int skip = 1, int atEnd = 0) => param.Length - skip - atEnd > 0 ?
+        string.Join(" ", param.Skip(skip).Take(param.Length - atEnd - skip)) : "";
 
     //Parse quantity from last parameter supporting wildcards
     public static bool TryParseAmount(this string[] param, out int amount, int max = int.MaxValue)

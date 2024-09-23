@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace Discord;
 
 public class Mod : BasicMod
 {

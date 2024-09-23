@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Loot;
+﻿namespace AutoLoot.Loot;
 
 public class StringRequirement
 {

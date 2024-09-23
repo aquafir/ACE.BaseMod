@@ -1,8 +1,7 @@
 ﻿using ACE.Database.Entity;
-using ACE.Database.Models.Shard;
 using System.Collections.Concurrent;
 
-namespace Tinkering.Helpers;
+namespace PlayerSave.Helpers;
 
 public static class PlayerHelpers
 {

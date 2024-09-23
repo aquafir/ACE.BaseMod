@@ -1,7 +1,7 @@
 ﻿using ClickableTransparentOverlay;
 using ClickableTransparentOverlay.Win32;
 
-namespace Tinkering;
+namespace ImGuiHud;
 
 public class SampleOverlay : Overlay
 {
@@ -30,7 +30,7 @@ public class SampleOverlay : Overlay
     public override void Close()
     {
         base.Close();
-        this.state.IsRunning = false;
+        state.IsRunning = false;
     }
 
     private void LogicUpdate(float updateDeltaTicks)
@@ -171,7 +171,7 @@ public class SampleOverlay : Overlay
             AddOrGetImagePointer(
                 "image.png",
                 false,
-                out IntPtr imgPtr,
+                out nint imgPtr,
                 out uint w,
                 out uint h);
             ImGui.Image(imgPtr, new Vector2(w, h));
@@ -199,7 +199,7 @@ public class SampleOverlay : Overlay
         ImGui.Text("I am sample Overlay to display stuff.");
         ImGui.Text("You can not click me.");
         ImGui.NewLine();
-        ImGui.Text($"Number of displays {Overlay.NumberVideoDisplays}");
+        ImGui.Text($"Number of displays {NumberVideoDisplays}");
         ImGui.Text($"Current Date: {DateTime.Now.Date.ToShortDateString()}");
         ImGui.Text($"Current Time: {DateTime.Now.TimeOfDay}");
         ImGui.Text($"Total Rendered Frames: {state.RenderFramesCounter.Count}");

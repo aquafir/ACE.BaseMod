@@ -1,7 +1,4 @@
-﻿using ACE.Server.Network.GameMessages.Messages;
-using System.Runtime.CompilerServices;
-
-namespace ACE.Shared.Helpers;
+﻿namespace ACE.Shared.Helpers;
 
 public static class WorldObjectExtensions
 {

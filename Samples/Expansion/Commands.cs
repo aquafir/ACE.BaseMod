@@ -1,6 +1,6 @@
 ﻿//using Discord;
 
-namespace Tinkering.Helpers;
+namespace Expansion;
 public static class Commands
 {
     [CommandHandler("sim", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
@@ -100,14 +100,14 @@ public static class Commands
             item.PlayAnimation(PlayScript.AttribUpBlue);
         }
 
-        var msg = "\nTargets:\n" + String.Join("\n", t.Select(x => x.Name));
+        var msg = "\nTargets:\n" + string.Join("\n", t.Select(x => x.Name));
         player.SendMessage(msg);
         //player.PrevMotionCommand = MotionCommand.Invalid;
         //player.AttackHeight = AttackHeight.Low;
         //player.T4(t, out var frames);
     }
 
-    public static float T4(this Player player, WorldObject target, out List<(float time, ACE.DatLoader.Entity.AnimationHooks.AttackHook attackHook)> attackFrames)
+    public static float T4(this Player player, WorldObject target, out List<(float time, AttackHook attackHook)> attackFrames)
     {
         var baseSpeed = player.GetAnimSpeed();
         var animSpeedMod = player.IsDualWieldAttack ? 1.2f : 1.0f;     // dual wield swing animation 20% faster

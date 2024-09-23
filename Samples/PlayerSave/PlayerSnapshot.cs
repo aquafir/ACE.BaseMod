@@ -1,26 +1,21 @@
-﻿using ACE.Database.Models.Shard;
-using ACE.Entity.Enum.Properties;
-using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.WorldObjects.Entity;
-
-namespace Tinkering
+﻿namespace PlayerSave
 {
 
     public class PlayerSnapshot
     {
         public DateTime Time { get; set; } = DateTime.Now;
 
-        public Dictionary<ACE.Entity.Enum.Skill, (uint? InitLevel, double? LastUsed, ushort? LevelFromPP, uint? PP, uint? ResistanceAtLastCheck, SkillAdvancementClass? SAC)> Skills { get; set; } = new();
-        public Dictionary<ACE.Entity.Enum.Properties.PropertyAttribute, (uint? ExperienceSpent, uint? Ranks, uint? StartingValue)> Attributes { get; set; } = new();
+        public Dictionary<Skill, (uint? InitLevel, double? LastUsed, ushort? LevelFromPP, uint? PP, uint? ResistanceAtLastCheck, SkillAdvancementClass? SAC)> Skills { get; set; } = new();
+        public Dictionary<PropertyAttribute, (uint? ExperienceSpent, uint? Ranks, uint? StartingValue)> Attributes { get; set; } = new();
         public Dictionary<Vital, uint> Vitals { get; set; } = new();
-        public Dictionary<ACE.Entity.Enum.Properties.PropertyInt, int> Ints { get; set; } = new();
-        public Dictionary<ACE.Entity.Enum.Properties.PropertyInt64, long> Longs { get; set; } = new();
-        public Dictionary<ACE.Entity.Enum.Properties.PropertyFloat, double> Floats { get; set; } = new();
-        public Dictionary<ACE.Entity.Enum.Properties.PropertyBool, bool> Bools { get; set; } = new();
-        public Dictionary<ACE.Entity.Enum.Properties.PropertyString, string> Strings { get; set; } = new();
-        public Dictionary<ACE.Entity.Enum.Properties.PropertyInstanceId, uint> IIDs { get; set; } = new();
-        public Dictionary<ACE.Entity.Enum.Properties.PropertyDataId, uint> DIDs { get; set; } = new();
-        public Dictionary<ACE.Entity.Enum.Properties.PositionType, ACE.Entity.Position> Positions { get; set; } = new();
+        public Dictionary<PropertyInt, int> Ints { get; set; } = new();
+        public Dictionary<PropertyInt64, long> Longs { get; set; } = new();
+        public Dictionary<PropertyFloat, double> Floats { get; set; } = new();
+        public Dictionary<PropertyBool, bool> Bools { get; set; } = new();
+        public Dictionary<PropertyString, string> Strings { get; set; } = new();
+        public Dictionary<PropertyInstanceId, uint> IIDs { get; set; } = new();
+        public Dictionary<PropertyDataId, uint> DIDs { get; set; } = new();
+        public Dictionary<PositionType, Position> Positions { get; set; } = new();
 
 
         public static PlayerSnapshot Take(Player player)
@@ -57,7 +52,7 @@ namespace Tinkering
 
             WorldObject wo = null;
             Creature cr = wo as Creature;
-            CreatureSkill cs = new(cr, Skill.Alchemy, new ACE.Entity.Models.PropertiesSkill()
+            CreatureSkill cs = new(cr, Skill.Alchemy, new PropertiesSkill()
             {
                 InitLevel = 0,
                 LastUsedTime = 0,
@@ -83,14 +78,14 @@ namespace Tinkering
             GameMessagePrivateUpdateAttribute attrs = new(wo, ca);
             //GameMessagePrivateUpdateVital vital = new(wo, cv);  //Difference from attr 2nd level?
             GameMessagePrivateUpdateAttribute2ndLevel attr2nd = new(wo, Vital.Health, 0u);
-            GameMessagePrivateUpdatePropertyInt ints = new(wo, ACE.Entity.Enum.Properties.PropertyInt.AugmentationInnateCoordination, 0);
-            GameMessagePrivateUpdatePropertyInt64 int64s = new(wo, ACE.Entity.Enum.Properties.PropertyInt64.AvailableExperience, 0l);
+            GameMessagePrivateUpdatePropertyInt ints = new(wo, PropertyInt.AugmentationInnateCoordination, 0);
+            GameMessagePrivateUpdatePropertyInt64 int64s = new(wo, PropertyInt64.AvailableExperience, 0l);
             GameMessagePrivateUpdatePropertyFloat floats = new(wo, PropertyFloat.AbsorbMagicDamage, 0.0);
             GameMessagePrivateUpdatePropertyBool bools = new(wo, PropertyBool.Attackable, false);
-            GameMessagePrivateUpdatePropertyString strings = new(wo, ACE.Entity.Enum.Properties.PropertyString.DisplayName, "");
+            GameMessagePrivateUpdatePropertyString strings = new(wo, PropertyString.DisplayName, "");
             GameMessagePrivateUpdateInstanceID iids = new(wo, PropertyInstanceId.ActivationTarget, 0);
             GameMessagePrivateUpdateDataID dids = new(wo, PropertyDataId.AccountHouseId, 0u);
-            GameMessagePrivateUpdatePosition positions = new(wo, PositionType.Target, new ACE.Entity.Position());
+            GameMessagePrivateUpdatePosition positions = new(wo, PositionType.Target, new Position());
             //var foo = new GameMessagePublicUpdateVital(uint ranks, uint baseValue, uint totalInvestment, uint currentValue)
 
             //GameMessagePrivateUpdatePropertyInt test = new(worldObject, ACE.Entity.Enum.Properties.PropertyInt.TotalExperience, 0);

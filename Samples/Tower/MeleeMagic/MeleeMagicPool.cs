@@ -1,4 +1,4 @@
-﻿namespace Tinkering.MeleeMagic;
+﻿namespace Tower;
 
 /// <summary>
 /// MeleeMagic pools contain a Power/Accuracy slider minimal requirement and a skill used for the breakpoints of a list of spells

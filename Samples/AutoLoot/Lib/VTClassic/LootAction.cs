@@ -1,7 +1,4 @@
-﻿
-using VTClassic;
-
-namespace uTank2.LootPlugins
+﻿namespace AutoLoot.Lib.VTClassic
 {
     public class LootAction
     {
@@ -11,20 +8,20 @@ namespace uTank2.LootPlugins
 
         internal LootAction(eLootAction A_0)
         {
-            this._lootAction = A_0;
+            _lootAction = A_0;
         }
 
         internal LootAction(eLootAction A_0, int A_1)
         {
-            this._lootAction = A_0;
-            this._data1 = A_1;
+            _lootAction = A_0;
+            _data1 = A_1;
         }
 
         public int Data1
         {
             get
             {
-                return this._data1;
+                return _data1;
             }
         }
 
@@ -32,7 +29,7 @@ namespace uTank2.LootPlugins
         {
             get
             {
-                return this._lootAction;
+                return _lootAction;
             }
         }
 
@@ -40,7 +37,7 @@ namespace uTank2.LootPlugins
         {
             get
             {
-                return this._lootAction == eLootAction.NoLoot;
+                return _lootAction == eLootAction.NoLoot;
             }
         }
 
@@ -48,7 +45,7 @@ namespace uTank2.LootPlugins
         {
             get
             {
-                return this._lootAction == eLootAction.Keep;
+                return _lootAction == eLootAction.Keep;
             }
         }
 
@@ -56,7 +53,7 @@ namespace uTank2.LootPlugins
         {
             get
             {
-                return this._lootAction == eLootAction.Salvage;
+                return _lootAction == eLootAction.Salvage;
             }
         }
 
@@ -64,7 +61,7 @@ namespace uTank2.LootPlugins
         {
             get
             {
-                return this._lootAction == eLootAction.Read;
+                return _lootAction == eLootAction.Read;
             }
         }
 
@@ -72,7 +69,7 @@ namespace uTank2.LootPlugins
         {
             get
             {
-                return this._lootAction == eLootAction.KeepUpTo;
+                return _lootAction == eLootAction.KeepUpTo;
             }
         }
 
@@ -80,7 +77,7 @@ namespace uTank2.LootPlugins
         {
             get
             {
-                return this._lootAction == eLootAction.Sell;
+                return _lootAction == eLootAction.Sell;
             }
         }
 
@@ -88,14 +85,14 @@ namespace uTank2.LootPlugins
         {
             get
             {
-                return this._ruleName;
+                return _ruleName;
             }
             set
             {
                 if (!string.IsNullOrEmpty(value))
-                    this._ruleName = value;
+                    _ruleName = value;
                 else
-                    this._ruleName = "";
+                    _ruleName = "";
             }
         }
 

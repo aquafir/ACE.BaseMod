@@ -1,5 +1,6 @@
 ﻿//extern alias Json;
 global using ACE.Server.Entity;
+global using ACE.Server.Entity.Actions;
 global using ACE.Server.Managers;
 global using ACE.Server.Mods;
 global using ACE.Server.WorldObjects;

@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace ImGuiHud;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
@@ -71,7 +71,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
             return;
         }
 
-        if(Settings.AutostartGui)
+        if (Settings.AutostartGui)
             StartGui();
 
         Mod.State = ModState.Running;

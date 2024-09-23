@@ -1,8 +1,6 @@
-﻿using ACE.Server.Network.GameMessages.Messages;
-using ACE.Shared;
-using static ACE.Server.WorldObjects.Player;
+﻿using static ACE.Server.WorldObjects.Player;
 
-namespace Tinkering;
+namespace Bank;
 [HarmonyPatchCategory(nameof(DirectDeposit))]
 public class DirectDeposit
 {

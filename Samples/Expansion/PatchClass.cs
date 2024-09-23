@@ -1,7 +1,6 @@
-﻿using Tinkering.Features;
+﻿using Expansion.Features;
 
-
-namespace Tinkering;
+namespace Expansion;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
@@ -120,7 +119,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         }
 
         //Add commands of enabled features
-        var commandRegex = String.Join("|", Settings.Features);
+        var commandRegex = string.Join("|", Settings.Features);
         Mod.Container.RegisterCommandCategory(commandRegex);
     }
 }

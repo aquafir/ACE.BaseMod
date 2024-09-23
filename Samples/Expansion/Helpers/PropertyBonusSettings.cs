@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Helpers;
+﻿namespace Expansion.Helpers;
 public class PropertyBonusSettings
 {
     public Dictionary<FakeInt, int> MinInt { get; set; } = new();

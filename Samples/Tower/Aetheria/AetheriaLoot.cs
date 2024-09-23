@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Tinkering.Loot;
-
-namespace Tinkering.Aetheria;
+﻿namespace Tower;
 
 [CommandCategory(nameof(Feature.AetheriaLoot))]
 [HarmonyPatchCategory(nameof(Feature.AetheriaLoot))]
@@ -12,7 +9,7 @@ public static class AetheriaLoot
 
     private static bool TryGetAetheriaDrops(this WorldObject wo, out AetheriaDrop aetheriaDrops)
     {
-        aetheriaDrops = default(AetheriaDrop);
+        aetheriaDrops = default;
 
         if (wo.GetProperty(GroupProp) is not uint group || !Settings.Groups.TryGetValue(group, out aetheriaDrops))
             return false;
@@ -21,7 +18,7 @@ public static class AetheriaLoot
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(AutoLoot), nameof(global::Tinkering.GetLoot), new Type[] { typeof(Player), typeof(Creature) })]
+    [HarmonyPatch(typeof(AutoLoot), nameof(AutoLoot.GetLoot), new Type[] { typeof(Player), typeof(Creature) })]
     public static void PostGetLoot(Player player, Creature creature, ref List<WorldObject> __result)
     {
         //Adds a roll for aetheria in Tower's loot generation

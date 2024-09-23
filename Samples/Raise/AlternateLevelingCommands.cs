@@ -1,7 +1,4 @@
-﻿
-using ACE.Shared.Helpers;
-
-[CommandCategory(nameof(AlternateLeveling))]
+﻿[CommandCategory(nameof(AlternateLeveling))]
 public class AlternateLevelingCommands
 {
     const int spacing = -20;

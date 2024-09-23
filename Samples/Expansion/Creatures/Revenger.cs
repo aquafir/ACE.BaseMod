@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Creatures;
+﻿namespace Expansion.Creatures;
 
 //[HarmonyPatchCategory(nameof(CreatureExType.Revenger))]
 public class Revenger : CreatureEx
@@ -9,7 +9,7 @@ public class Revenger : CreatureEx
 #else
     public Revenger(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
 #endif
- { }
+    { }
 
     //Mutate from the original weenie
     protected override void Initialize()

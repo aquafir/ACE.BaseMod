@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Restrictions;
+﻿namespace Ironman.Restrictions;
 
 //Check on add to inventory
 [HarmonyPatchCategory(nameof(RestrictCreateInInventory))]

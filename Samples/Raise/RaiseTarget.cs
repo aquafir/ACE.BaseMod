@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace Raise;
 
 public enum RaiseTarget
 {
@@ -23,8 +23,8 @@ public static class TargetHelpers
     static RaiseSettings Settings => PatchClass.Settings.Raise;
 
     // Needed to support different handling for the type of target being raised
-    public static bool IsAttribute(this RaiseTarget target) => (target >= RaiseTarget.Str && target <= RaiseTarget.Self);
-    public static bool IsRating(this RaiseTarget target) => (target >= RaiseTarget.World && target <= RaiseTarget.Defense);
+    public static bool IsAttribute(this RaiseTarget target) => target >= RaiseTarget.Str && target <= RaiseTarget.Self;
+    public static bool IsRating(this RaiseTarget target) => target >= RaiseTarget.World && target <= RaiseTarget.Defense;
 
     // Map RaiseTarget to a PropertyInt used by the server DB to track levels
     /// <summary>
@@ -65,7 +65,7 @@ public static class TargetHelpers
         if (target.TryGetAttribute(player, out CreatureAttribute attribute))
         {
             //Find the change in current and desired level
-            var levelChange = level - CurrentLevel(target, player);
+            var levelChange = level - target.CurrentLevel(player);
             attribute.StartingValue += (uint)levelChange;   //Tested to work with negatives
         }
         else

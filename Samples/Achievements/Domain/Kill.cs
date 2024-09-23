@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Domain;
+﻿namespace Achievements.Domain;
 
 public class Kill
 {

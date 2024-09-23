@@ -1,7 +1,6 @@
-﻿using ACE.Server.Managers;
-using System.Net;
+﻿using System.Net;
 
-namespace Tinkering
+namespace ConnectionLimit
 {
     [HarmonyPatch]
     public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)

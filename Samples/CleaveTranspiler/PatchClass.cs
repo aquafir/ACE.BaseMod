@@ -1,6 +1,6 @@
 ﻿using System.Reflection.Emit;
 
-namespace Tinkering
+namespace CleaveTranspiler
 {
     [HarmonyPatch]
     public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)

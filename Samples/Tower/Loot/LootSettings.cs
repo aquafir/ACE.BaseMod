@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Loot;
+﻿namespace Tower;
 
 public class LootSettings
 {

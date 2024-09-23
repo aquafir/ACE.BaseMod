@@ -1,10 +1,4 @@
-﻿using ACE.Entity.Enum.Properties;
-using ACE.Server.Managers;
-using ACE.Server.Network.GameMessages.Messages;
-using ACE.Server.WorldObjects;
-using ACE.Shared.Helpers;
-
-namespace Tinkering;
+﻿namespace EasyEnlightenment;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)

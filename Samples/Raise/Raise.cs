@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace Raise;
 
 [HarmonyPatchCategory(nameof(Raise))]
 [CommandCategory(nameof(Raise))]
@@ -13,10 +13,10 @@ public static class Raise
         RaiseTarget target;
 
         #region Validate
-        if (parameters.Length < 1 || !Enum.TryParse<RaiseTarget>(parameters[0], true, out target))
+        if (parameters.Length < 1 || !Enum.TryParse(parameters[0], true, out target))
         {
             //If a bad target was selected quit and list the valid commands
-            session.Network.EnqueueSend(new GameMessageSystemChat($"You must specify what you wish to raise: /raise <{String.Join("|", Enum.GetNames(typeof(RaiseTarget)))}> [amount]", ChatMessageType.Broadcast));
+            session.Network.EnqueueSend(new GameMessageSystemChat($"You must specify what you wish to raise: /raise <{string.Join("|", Enum.GetNames(typeof(RaiseTarget)))}> [amount]", ChatMessageType.Broadcast));
             return;
         }
 
@@ -25,14 +25,14 @@ public static class Raise
         {
             if (!int.TryParse(parameters[1], out amt))
             {
-                session.Network.EnqueueSend(new GameMessageSystemChat($"You must specify or omit the amount to raise: /raise <{String.Join("|", Enum.GetNames(typeof(RaiseTarget)))}> [amount]", ChatMessageType.Broadcast));
+                session.Network.EnqueueSend(new GameMessageSystemChat($"You must specify or omit the amount to raise: /raise <{string.Join("|", Enum.GetNames(typeof(RaiseTarget)))}> [amount]", ChatMessageType.Broadcast));
                 return;
             }
         }
         //Check for bad amounts to level
         if (amt < 1 || amt > Settings.RaiseMax)
         {
-            session.Network.EnqueueSend(new GameMessageSystemChat($"Provide an amount from 1-{Settings.RaiseMax}: /raise <{String.Join("|", Enum.GetNames(typeof(RaiseTarget)))}> [amount]", ChatMessageType.Broadcast));
+            session.Network.EnqueueSend(new GameMessageSystemChat($"Provide an amount from 1-{Settings.RaiseMax}: /raise <{string.Join("|", Enum.GetNames(typeof(RaiseTarget)))}> [amount]", ChatMessageType.Broadcast));
             return;
         }
         #endregion
@@ -87,7 +87,7 @@ public static class Raise
 
         //Otherwise go ahead raising the attribute
         player.AvailableExperience -= cost;
-        target.SetLevel(player, currentLevel + (int)amt);
+        target.SetLevel(player, currentLevel + amt);
 
         //Update the player
         UpdatePlayer(session, player, target, amt, cost);
@@ -99,7 +99,7 @@ public static class Raise
         //Handle luminance
         if (cost > player.AvailableLuminance || !player.SpendLuminance(cost))
         {
-            var lumMult = (target == RaiseTarget.World ? Settings.WorldMult : Settings.RatingMulti);
+            var lumMult = target == RaiseTarget.World ? Settings.WorldMult : Settings.RatingMulti;
             ChatPacket.SendServerMessage(session, $"Not enough Luminance, you require {lumMult} Luminance per point of {target}.", ChatMessageType.Broadcast);
             return;
         }
@@ -107,7 +107,7 @@ public static class Raise
         //session.Network.EnqueueSend(new GameMessagePrivateUpdatePropertyInt64(player, PropertyInt64.AvailableLuminance, player.AvailableLuminance ?? 0));
 
         //If successful in spending luminance level the target
-        target.SetLevel(player, currentLevel + (int)amt);
+        target.SetLevel(player, currentLevel + amt);
 
         //...and update player
         UpdatePlayer(session, player, target, amt, cost);
@@ -157,7 +157,7 @@ public static class Raise
 
         //Refund player and set last use
         //TODO: Check if the player has anything to refund before setting a cooldown
-        Raise.RaiseRefundToPlayer(player);
+        RaiseRefundToPlayer(player);
         //player.LastRaisedRefundTimestamp = DateTime.Now.Ticks;
     }
 

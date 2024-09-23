@@ -1,6 +1,6 @@
 ﻿using ACE.Server.Command.Handlers;
 
-namespace Tinkering.Features;
+namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.FakePropertyCache))]
 [HarmonyPatchCategory(nameof(Feature.FakePropertyCache))]
@@ -136,14 +136,14 @@ public static class FakePropertyCache
         {
             //value = player.EquipmentBonus(prop);
             //Update and try again
-            UpdateEquipmentCache(player);
+            player.UpdateEquipmentCache();
             value = cache.TryGetValue(prop, out value) ? value : 0;
         }
 
         //Watch property
         if (watchedFloats.Add(prop))
         { }
-            //player.SendMessage($"Added {prop} to cache: {value}");
+        //player.SendMessage($"Added {prop} to cache: {value}");
 
         //watch.Stop();
         //player.SendMessage($"Fetched in {watch.ElapsedTicks} ticks / {watch.ElapsedMilliseconds} ms.");
@@ -175,7 +175,7 @@ public static class FakePropertyCache
         {
             //value = player.EquipmentBonus(prop);
             //Update and try again
-            UpdateEquipmentCache(player);
+            player.UpdateEquipmentCache();
             value = cache.TryGetValue(prop, out value) ? value : 0;
         }
 
@@ -202,29 +202,29 @@ public static class FakePropertyCache
 
     #region Commands / Dumps -- /ecXX
     [CommandHandler("ecdw", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-public static void WatchedDump(Session session, params string[] parameters)
+    public static void WatchedDump(Session session, params string[] parameters)
     {
         var player = session.Player;
 
-        var dump = $"\nFloats: {String.Join(", ", watchedFloats)}\nInts: {String.Join(", ", watchedInts)}";
+        var dump = $"\nFloats: {string.Join(", ", watchedFloats)}\nInts: {string.Join(", ", watchedInts)}";
 
         player.SendMessage(dump);
     }
     [CommandHandler("ecdc", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-public static void PlayerCacheDump(Session session, params string[] parameters)
+    public static void PlayerCacheDump(Session session, params string[] parameters)
     {
         var player = session.Player;
         player.SendMessage(player.DumpPlayerCache());
     }
     [CommandHandler("ecde", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-public static void PlayerEquipmentDump(Session session, params string[] parameters)
+    public static void PlayerEquipmentDump(Session session, params string[] parameters)
     {
         var player = session.Player;
         var dump = player.DumpPlayerItems();
         player.SendMessage(dump);
     }
     [CommandHandler("ecdi", AccessLevel.Admin, CommandHandlerFlag.RequiresWorld, 0)]
-public static void ItemDump(Session session, params string[] parameters)
+    public static void ItemDump(Session session, params string[] parameters)
     {
         var player = session.Player;
         var target = CommandHandlerHelper.GetLastAppraisedObject(session);

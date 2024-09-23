@@ -1,8 +1,6 @@
-﻿using ACE.Entity.Enum.Properties;
-using ACE.Server.Entity.Actions;
-using ACE.Server.Network.GameMessages.Messages;
+﻿using ACE.Server.Entity.Actions;
 
-namespace Tinkering;
+namespace Ironman;
 
 [HarmonyPatch]
 public static class FakeIronman
@@ -84,7 +82,7 @@ public static class FakeIronman
 
         //Train MC if magic was rolled or spec a different skill if not
         HashSet<Skill> trained = new();
-        var second = (primary == Skill.WarMagic || primary == Skill.VoidMagic || primary == Skill.LifeMagic) ?
+        var second = primary == Skill.WarMagic || primary == Skill.VoidMagic || primary == Skill.LifeMagic ?
             Skill.ManaConversion : pool.Where(x => !Settings.AugmentSpecializations.Contains(x)).ToArray().Random();
 
         player.TrainSkill(second);

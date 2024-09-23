@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace Bank;
 
 public class Settings
 {

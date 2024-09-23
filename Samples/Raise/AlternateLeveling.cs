@@ -1,8 +1,4 @@
-﻿
-using ACE.Shared.Helpers;
-using System.Diagnostics;
-
-[HarmonyPatchCategory(nameof(AlternateLeveling))]
+﻿[HarmonyPatchCategory(nameof(AlternateLeveling))]
 public class AlternateLeveling
 {
     #region Intercept Raise / Leveling

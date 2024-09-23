@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace EasyEnlightenment;
 
 [HarmonyPatchCategory(nameof(WieldRequirements))]
 public class WieldRequirements

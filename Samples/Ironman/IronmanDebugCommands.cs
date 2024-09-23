@@ -1,6 +1,6 @@
 ﻿using ACE.Server.Command.Handlers;
 
-namespace Tinkering;
+namespace Ironman;
 
 public static class IronmanDebugCommands
 {

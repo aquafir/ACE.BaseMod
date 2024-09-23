@@ -1,4 +1,4 @@
-﻿namespace Tinkering.MeleeMagic;
+﻿namespace Tower;
 
 public static class MeleeMagicExtensions
 {

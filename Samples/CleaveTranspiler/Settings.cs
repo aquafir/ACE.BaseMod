@@ -1,4 +1,4 @@
-﻿namespace Tinkering
+﻿namespace CleaveTranspiler
 {
     public class Settings
     {

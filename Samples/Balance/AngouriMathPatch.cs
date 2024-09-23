@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace Balance;
 
 [HarmonyPatch]
 [HarmonyPatchCategory(nameof(AngouriMathPatch))]

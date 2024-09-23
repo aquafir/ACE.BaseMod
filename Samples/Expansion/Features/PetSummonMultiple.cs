@@ -1,4 +1,6 @@
-﻿namespace Tinkering.Features;
+﻿using Expansion.Features;
+
+namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.PetSummonMultiple))]
 [HarmonyPatchCategory(nameof(Feature.PetSummonMultiple))]
@@ -159,7 +161,7 @@ public static class PetSummonMultiple
             //    pets.Clear();
             //}
             //else
-            msg.Append($"\n  ={excessWeight:F2} excess - {removedWeight:F2} removed -> {(pets.TotalPetWeight() + weight):F2}/{max:F2} current weight");
+            msg.Append($"\n  ={excessWeight:F2} excess - {removedWeight:F2} removed -> {pets.TotalPetWeight() + weight:F2}/{max:F2} current weight");
 
             player.SendMessage($"{msg}");
         }

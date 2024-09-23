@@ -28,12 +28,12 @@
 //  THE SOFTWARE.
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace VTClassic
+namespace AutoLoot.Lib.VTClassic
 {
     internal interface IUTLFileBlockHandler
     {
         string BlockTypeID { get; }
-        void Read(System.IO.StreamReader inf, int len);
+        void Read(StreamReader inf, int len);
         void Write(CountedStreamWriter inf);
     }
 
@@ -61,7 +61,7 @@ namespace VTClassic
             }
             catch (Exception exx)
             {
-                Console.WriteLine("Exception in static constructor(" + System.Reflection.Assembly.GetExecutingAssembly().FullName + "): " + exx.ToString());
+                Console.WriteLine("Exception in static constructor(" + Assembly.GetExecutingAssembly().FullName + "): " + exx.ToString());
             }
         }
 
@@ -87,7 +87,7 @@ namespace VTClassic
             return null;
         }
 
-        public void Read(System.IO.StreamReader inf)
+        public void Read(StreamReader inf)
         {
             FileBlocks.Clear();
 
@@ -119,16 +119,16 @@ namespace VTClassic
         {
             foreach (IUTLFileBlockHandler h in FileBlocks)
             {
-                System.IO.MemoryStream ms = new System.IO.MemoryStream();
+                MemoryStream ms = new MemoryStream();
                 CountedStreamWriter sw = new CountedStreamWriter(ms);
                 h.Write(sw);
                 sw.Flush();
 
                 inf.WriteLine(h.BlockTypeID);
-                inf.WriteLine(((int)sw.Count).ToString(System.Globalization.CultureInfo.InvariantCulture));
+                inf.WriteLine(sw.Count.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
                 ms.Position = 0;
-                System.IO.StreamReader sr = new System.IO.StreamReader(ms);
+                StreamReader sr = new StreamReader(ms);
                 inf.Write(sr.ReadToEnd());
             }
         }

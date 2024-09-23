@@ -1,4 +1,4 @@
-﻿namespace uTank2.LootPlugins
+﻿namespace AutoLoot.Lib.VTClassic
 {
     [Flags]
     public enum eLootPluginExtraOption

@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.FakeMissileSplitSplash))]
 [HarmonyPatchCategory(nameof(Feature.FakeMissileSplitSplash))]
@@ -57,7 +57,7 @@ internal class FakeMissileSplitSplash
         foreach (var t in targets)
         {
             var aimVelocity = player.GetAimVelocity(t, projectileSpeed);
-            var aimLevel = Player.GetAimLevel(aimVelocity);
+            var aimLevel = Creature.GetAimLevel(aimVelocity);
             var localOrigin = player.GetProjectileSpawnOrigin(ammo.WeenieClassId, aimLevel);
             var velocity = player.CalculateProjectileVelocity(localOrigin, t, projectileSpeed, out Vector3 origin, out Quaternion orientation);
 
@@ -108,7 +108,7 @@ internal class FakeMissileSplitSplash
         {
             // target procs don't happen for cleaving
             var aimVelocity = player.GetAimVelocity(t, projectileSpeed);
-            var aimLevel = Player.GetAimLevel(aimVelocity);
+            var aimLevel = Creature.GetAimLevel(aimVelocity);
             var localOrigin = player.GetProjectileSpawnOrigin(ammo.WeenieClassId, aimLevel);
             var velocity = player.CalculateProjectileVelocity(localOrigin, t, projectileSpeed, out Vector3 origin, out Quaternion orientation);
 

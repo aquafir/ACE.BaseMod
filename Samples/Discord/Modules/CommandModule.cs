@@ -1,4 +1,6 @@
-namespace Tinkering.Modules;
+using Discord;
+
+namespace Discord.Modules;
 
 // Interaction modules must be public and inherit from an IInteractionModuleBase
 public class CommandModule : InteractionModuleBase<SocketInteractionContext>
@@ -24,7 +26,7 @@ public class CommandModule : InteractionModuleBase<SocketInteractionContext>
     {
         if (PatchClass.Settings.DevIds.Contains(Context.User.Id))
         {
-            if (!String.IsNullOrEmpty(args))
+            if (!string.IsNullOrEmpty(args))
                 command += " " + args;
 
             if (!await CommandHelpers.TryIssueACECommand(command, player))
@@ -44,7 +46,7 @@ public class CommandModule : InteractionModuleBase<SocketInteractionContext>
     {
         if (PatchClass.Settings.DevIds.Contains(Context.User.Id))
         {
-            if (!String.IsNullOrEmpty(args))
+            if (!string.IsNullOrEmpty(args))
                 command += " " + args;
 
             if (!await CommandHelpers.TryIssueACECommand(command))

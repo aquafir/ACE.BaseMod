@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Patches;
+﻿namespace Balance.Patches;
 
 [HarmonyPatch]
 [HarmonyPatchCategory(nameof(ArmorMod))]
@@ -19,7 +19,7 @@ public class ArmorMod : AngouriMathPatch
     public override void Start()
     {
         //If you can parse the formulas patch the corresponding category
-        if (Formula.TryGetFunction<float, float>(out func, Variables.TypesAndNames()))
+        if (Formula.TryGetFunction(out func, Variables.TypesAndNames()))
             Mod.Harmony.PatchCategory(nameof(ArmorMod));
         else
             throw new Exception($"Failure parsing formula: {Formula}");

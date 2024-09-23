@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace Expansion;
 
 public static class Range
 {

@@ -1,5 +1,4 @@
-﻿
-namespace uTank2.LootPlugins
+﻿namespace AutoLoot.Lib.VTClassic
 {
     public interface ILootPluginCapability_SalvageCombineDecision
     {

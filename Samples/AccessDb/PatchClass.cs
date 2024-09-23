@@ -1,11 +1,8 @@
 ﻿using ACE.Database;
 using ACE.Database.Entity;
-using ACE.Database.Models.Shard;
 using ACE.Database.Models.World;
-using ACE.Entity.Enum.Properties;
-using ACE.Server.Managers;
 
-namespace Tinkering;
+namespace AccessDb;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
@@ -38,7 +35,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         if (teleportPOI == null)
             return;
         var weenie = DatabaseManager.World.GetCachedWeenie(teleportPOI.WeenieClassId);
-        var portalDest = new ACE.Entity.Position(weenie.GetPosition(PositionType.Destination));
+        var portalDest = new Position(weenie.GetPosition(PositionType.Destination));
         WorldObject.AdjustDungeon(portalDest);
 
         //Negatives for switching between ns/ew, or you can construct with /loc data
@@ -58,7 +55,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     public static void HandleSearch(Session session, params string[] parameters)
     {
         //Dictionary<PropertyType, List<object>> query = new Dictionary<PropertyType, List<object>>();
-        var query = String.Join(" ", parameters);
+        var query = string.Join(" ", parameters);
         Search(query);
     }
     #endregion
@@ -190,9 +187,9 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         {
             // Group creatures by type
             var query = from creature in ctx.Weenie
-                        where creature.Type == (int)(WeenieType.Creature)
+                        where creature.Type == (int)WeenieType.Creature
                         join cType in ctx.WeeniePropertiesInt on creature.ClassId equals cType.ObjectId
-                        where cType.Type == (ushort)(PropertyInt.CreatureType)
+                        where cType.Type == (ushort)PropertyInt.CreatureType
                         select new
                         {
                             Name = creature.ClassName,

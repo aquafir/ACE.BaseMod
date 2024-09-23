@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using static ACE.Server.Physics.Common.LandDefs;
+﻿using CustomSpells;
+using System.Globalization;
 
-namespace Tinkering;
+namespace CustomSpells;
 
 public static class SpreadsheetExtensions
 {
@@ -38,7 +38,7 @@ public static class SpreadsheetExtensions
             .SetPropertyUsing(cellValue => TryParseCellEnum<DamageType>(cellValue, out var parsed, true) ? parsed : null);
         //DamageType? DamageType
         excel.AddMapping<SpellCustomization>(nameof(b.DamageType), p => p.DamageType)
-            .SetCellUsing<DamageType?>((c, o) => { if (o is not null && o != default)  c.SetCellValue(o.ToString()); })
+            .SetCellUsing<DamageType?>((c, o) => { if (o is not null && o != default) c.SetCellValue(o.ToString()); })
             .SetPropertyUsing(cellValue => TryParseCellEnum<DamageType>(cellValue, out var parsed, true) ? parsed : null);
         //PlayScript? CasterEffect
         excel.AddMapping<SpellCustomization>(nameof(b.CasterEffect), p => p.CasterEffect)
@@ -72,7 +72,7 @@ public static class SpreadsheetExtensions
         excel.AddMapping<SpellCustomization>(nameof(b.CreateOffset), p => p.CreateOffset)
             .SetCellUsing<Vector3>((c, o) =>
             {
-                if (o == default) c.SetCellValue(""); 
+                if (o == default) c.SetCellValue("");
                 else c.SetCellValue(o.Serialize());
             })
             .SetPropertyUsing(cellValue => TryParseVector3(cellValue, out var parsed) ? parsed : null);
@@ -80,7 +80,7 @@ public static class SpreadsheetExtensions
         excel.AddMapping<SpellCustomization>(nameof(b.Padding), p => p.Padding)
             .SetCellUsing<Vector3>((c, o) =>
             {
-                if (o == default) c.SetCellValue(""); 
+                if (o == default) c.SetCellValue("");
                 else c.SetCellValue(o.Serialize());
             })
             .SetPropertyUsing(cellValue => TryParseVector3(cellValue, out var parsed) ? parsed : null);
@@ -88,7 +88,7 @@ public static class SpreadsheetExtensions
         excel.AddMapping<SpellCustomization>(nameof(b.Peturbation), p => p.Peturbation)
             .SetCellUsing<Vector3>((c, o) =>
             {
-                if (o == default) c.SetCellValue(""); 
+                if (o == default) c.SetCellValue("");
                 else c.SetCellValue(o.Serialize());
             })
             .SetPropertyUsing(cellValue => TryParseVector3(cellValue, out var parsed) ? parsed : null);
@@ -98,7 +98,7 @@ public static class SpreadsheetExtensions
             .SetCellUsing<List<uint>>((c, o) =>
             {
                 if (o == null || o.Count == 0) c.SetCellValue("");
-                else c.SetCellValue(String.Join(',', o));
+                else c.SetCellValue(string.Join(',', o));
             })
             .SetPropertyUsing(cellValue => TryParseList<uint>(cellValue, out var parsed) ? parsed : null);
 
@@ -215,7 +215,7 @@ public static class SpreadsheetExtensions
         result = null;
 
         if (value is not string input || string.IsNullOrEmpty(input))
-            return false; 
+            return false;
 
         return input.TryParsePosition(out result);
     }

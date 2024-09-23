@@ -1,13 +1,7 @@
 ﻿using ACE.Database;
-using ACE.Entity;
-using ACE.Entity.Enum.Properties;
-using ACE.Entity.Models;
-using ACE.Server.Managers;
-using ACE.Server.Network.GameMessages.Messages;
-using ACE.Shared.Helpers;
 using static ACE.Server.WorldObjects.Player;
 
-namespace Tinkering;
+namespace Bank;
 
 /// <summary>
 /// Overrides purchase w/pyreals and alt currency
@@ -136,7 +130,7 @@ public class Debit
 
 
         //Take from bank first
-        if (currentWcid == Player.coinStackWcid)
+        if (currentWcid == coinStackWcid)
         {
             var cash = __instance.GetCash();
 
@@ -203,7 +197,7 @@ public class Debit
     {
         // transaction has been validated by this point
 
-        var currencyWcid = vendor.AlternateCurrency ?? Player.coinStackWcid;
+        var currencyWcid = vendor.AlternateCurrency ?? coinStackWcid;
 
         __instance.SpendCurrency(currencyWcid, cost, true);
 

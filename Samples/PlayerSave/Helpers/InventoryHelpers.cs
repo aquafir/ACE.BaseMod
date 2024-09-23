@@ -1,9 +1,6 @@
-﻿using ACE.Database.Models.Shard;
-using ACE.Entity.Enum.Properties;
-using ACE.Server.Managers;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 
-namespace Tinkering.Helpers;
+namespace PlayerSave.Helpers;
 
 public static class InventoryHelpers
 {

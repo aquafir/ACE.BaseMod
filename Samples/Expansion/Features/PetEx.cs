@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.PetEx))]
 [HarmonyPatchCategory(nameof(Feature.PetEx))]
@@ -21,7 +21,7 @@ public static class PetEx
 #if REALM
         __result = new CombatPetEx(weenie, guid, ruleset);
 #else
-            __result = new CombatPetEx(weenie, guid);
+        __result = new CombatPetEx(weenie, guid);
 #endif
 
         return false;
@@ -81,8 +81,8 @@ public class CombatPetEx : CombatPet
 
     public override uint TakeDamage(WorldObject source, DamageType damageType, float amount, bool crit = false)
     {
-        if(source is not null)
-            P_PetOwner.SendMessage($"{Name} has been {(crit ? "critically " : "")}hit for {(int)amount} by {(source.Name)} {damageType} damage.", ChatMessageType.CombatEnemy);
+        if (source is not null)
+            P_PetOwner.SendMessage($"{Name} has been {(crit ? "critically " : "")}hit for {(int)amount} by {source.Name} {damageType} damage.", ChatMessageType.CombatEnemy);
 
         return base.TakeDamage(source, damageType, amount, crit);
     }

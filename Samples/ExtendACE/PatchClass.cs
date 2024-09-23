@@ -1,9 +1,6 @@
-﻿using ACE.Server.Command;
-using ACE.Server.Command.Handlers;
-using ACE.Server.Managers;
-using ACE.Server.Network;
+﻿using ACE.Server.Command.Handlers;
 
-namespace Tinkering;
+namespace ExtendACE;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
@@ -140,8 +137,8 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     //    }
     //}
 
-    static Tinkering.Creatures.CreatureType[] types = Enum.GetValues<Tinkering.Creatures.CreatureType>();
-    static string availableTypes = String.Join('\n', types.Select(x => $"  {x.ToString()} - {(int)x}"));
+    static Creatures.CreatureType[] types = Enum.GetValues<Creatures.CreatureType>();
+    static string availableTypes = string.Join('\n', types.Select(x => $"  {x.ToString()} - {(int)x}"));
     [CommandHandler("cex", AccessLevel.Sentinel, CommandHandlerFlag.RequiresWorld)]
     public static void HandleCreateEx(Session session, params string[] parameters)
     {

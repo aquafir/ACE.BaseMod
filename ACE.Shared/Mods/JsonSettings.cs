@@ -1,7 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System.IO;
-
-namespace ACE.Shared.Mods;
+﻿namespace ACE.Shared.Mods;
 public class JsonSettings<T>(string filePath = "Settings.json") : SettingsContainer<T>(filePath) where T : class?, new()
 {
     static private JsonSerializerOptions _serializeOptions = new()

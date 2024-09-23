@@ -1,6 +1,6 @@
 ﻿using static ACE.Server.WorldObjects.WorldObject;
 
-namespace Tinkering.Patches
+namespace Balance.Patches
 {
     [HarmonyPatch]
     [HarmonyPatchCategory(nameof(ElementalRendingImbue))]
@@ -22,7 +22,7 @@ namespace Tinkering.Patches
         public override void Start()
         {
             //If you can parse the formulas patch the corresponding category
-            if (Formula.TryGetFunction<int, int, float>(out func, Variables.TypesAndNames()))
+            if (Formula.TryGetFunction(out func, Variables.TypesAndNames()))
                 Mod.Harmony.PatchCategory(nameof(ElementalRendingImbue));
             else
                 throw new Exception($"Failure parsing formula: {Formula}");
@@ -31,7 +31,7 @@ namespace Tinkering.Patches
 
         #region Patches
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.GetRendingMod), new Type[] { typeof(CreatureSkill) })]
+        [HarmonyPatch(typeof(WorldObject), nameof(GetRendingMod), new Type[] { typeof(CreatureSkill) })]
         public static bool PreGetRendingMod(CreatureSkill skill, ref WorldObject __instance, ref float __result)
         {
             // elemental rending cap, equivalent to level 6 vuln

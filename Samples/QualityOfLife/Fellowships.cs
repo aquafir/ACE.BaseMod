@@ -1,7 +1,4 @@
-﻿using ACE.Server.Managers;
-using ACE.Server.Network.GameMessages.Messages;
-
-namespace Tinkering;
+﻿namespace QualityOfLife;
 
 [HarmonyPatchCategory(nameof(Fellowships))]
 public class Fellowships

@@ -1,6 +1,6 @@
 ﻿using static ACE.Server.WorldObjects.WorldObject;
 
-namespace Tinkering.Patches
+namespace Balance.Patches
 {
     [HarmonyPatch]
     [HarmonyPatchCategory(nameof(CriticalStrikeImbueMod))]
@@ -22,7 +22,7 @@ namespace Tinkering.Patches
         public override void Start()
         {
             //If you can parse the formulas patch the corresponding category
-            if (Formula.TryGetFunction<int, int, float>(out func, Variables.TypesAndNames()))
+            if (Formula.TryGetFunction(out func, Variables.TypesAndNames()))
                 Mod.Harmony.PatchCategory(nameof(CriticalStrikeImbueMod));
             else
                 throw new Exception($"Failure parsing formula: {Formula}");
@@ -31,7 +31,7 @@ namespace Tinkering.Patches
 
         #region Patches
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.GetCriticalStrikeMod), new Type[] { typeof(CreatureSkill), typeof(bool) })]
+        [HarmonyPatch(typeof(WorldObject), nameof(GetCriticalStrikeMod), new Type[] { typeof(CreatureSkill), typeof(bool) })]
         public static bool PreGetCriticalStrikeMod(CreatureSkill skill, bool isPvP, ref WorldObject __instance, ref float __result)
         {
             //Don't apply to pvp

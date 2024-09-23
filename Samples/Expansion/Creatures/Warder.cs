@@ -1,6 +1,6 @@
 ﻿using static ACE.Server.WorldObjects.Player;
 
-namespace Tinkering.Creatures;
+namespace Expansion.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.Warder))]
 public class Warder : CreatureEx
@@ -11,7 +11,7 @@ public class Warder : CreatureEx
 #else
     public Warder(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
 #endif
- { }
+    { }
 
     //Mutate from the original weenie
     protected override void Initialize()

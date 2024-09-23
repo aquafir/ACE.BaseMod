@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace QualityOfLife;
 
 [HarmonyPatchCategory(nameof(PermanentObjects))]
 public class PermanentObjects
@@ -15,7 +15,7 @@ public class PermanentObjects
         var perm = __instance.worldObjects.Values.Where(x => x.GetProperty(FakeBool.Permanent) == true).Select(x => x.Name);
         var p = __instance.players.FirstOrDefault();
         if (p is not null && perm.Count() > 0)
-            p.SendMessage($"Permanent items: {String.Join("\n", perm)}");
+            p.SendMessage($"Permanent items: {string.Join("\n", perm)}");
 
         foreach (var wo in __instance.worldObjects.Where(i => !(i.Value is Player) && i.Value.GetProperty(FakeBool.Permanent) != true).ToList())
         {

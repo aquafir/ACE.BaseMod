@@ -1,14 +1,8 @@
 ﻿using ACE.Database;
-using ACE.Entity;
-using ACE.Entity.Enum.Properties;
-using ACE.Entity.Models;
-using ACE.Server.Managers;
 using ACE.Server.Network.GameEvent;
-using ACE.Server.Network.GameMessages.Messages;
-using ACE.Shared.Helpers;
 using static ACE.Server.WorldObjects.Player;
 
-namespace Tinkering.Bank;
+namespace Tower;
 
 /// <summary>
 /// Overrides purchase w/pyreals and alt currency

@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Creatures;
+﻿namespace Expansion.Creatures;
 
 //[HarmonyPatchCategory(nameof(CreatureExType.Splitter))]
 public class Splitter : CreatureEx
@@ -9,7 +9,7 @@ public class Splitter : CreatureEx
 #else
     public Splitter(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
 #endif
- { }
+    { }
 
     //Mutate from the original weenie
     protected override void Initialize()

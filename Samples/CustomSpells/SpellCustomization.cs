@@ -1,8 +1,4 @@
-﻿
-using NPOI.SS.Formula;
-using JsonAttribute = Ganss.Excel.JsonAttribute;
-
-namespace Tinkering;
+﻿namespace CustomSpells;
 
 public class SpellCustomization
 {
@@ -222,7 +218,7 @@ public class SpellCustomization
     /// <summary>
     /// Creates a spell customization from a SpellBase and Database Spell
     /// </summary>
-    public SpellCustomization(ACE.Server.Entity.Spell spell)
+    public SpellCustomization(Spell spell)
     {
         var sb = spell._spellBase;
         var db = spell._spell; ;
@@ -373,7 +369,7 @@ public class SpellCustomization
 
         sb.Formula = Formula ?? sb.Formula;
 
-        if(Position is not null && Position.LandblockId != default)
+        if (Position is not null && Position.LandblockId != default)
         {
             //new LocalPosition(_spell.PositionObjCellId ?? 0, new Vector3(_spell.PositionOriginX ?? 0.0f, _spell.PositionOriginY ?? 0.0f, _spell.PositionOriginZ ?? 0.0f), new Quaternion(_spell.PositionAnglesX ?? 0.0f, _spell.PositionAnglesY ?? 0.0f, _spell.PositionAnglesZ ?? 0.0f, _spell.PositionAnglesW ?? 0.0f))
             db.PositionObjCellId = Position.LandblockId.Raw;

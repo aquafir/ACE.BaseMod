@@ -1,5 +1,4 @@
-﻿
-namespace Tinkering.Mutators;
+﻿namespace Expansion.Mutators;
 
 internal class RandomColor : Mutator
 {

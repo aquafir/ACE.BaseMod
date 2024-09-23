@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace ACE.Shared.Helpers;
+﻿namespace ACE.Shared.Helpers;
 
 public static class BiotaExtensions
 {

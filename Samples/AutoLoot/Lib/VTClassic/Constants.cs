@@ -31,7 +31,7 @@
 #if VTC_PLUGIN
 #endif
 
-namespace VTClassic
+namespace AutoLoot.Lib.VTClassic
 {
 #if VTC_EDITOR
     public enum PropertyString
@@ -344,12 +344,12 @@ namespace VTClassic
 
         public static List<string> FriendlyNames()
         {
-            List<String> r = new List<String>();
+            List<string> r = new List<string>();
 
             foreach (eLootAction e in Enum.GetValues(typeof(eLootAction)))
             {
-                String s = eLootActionTool.FriendlyName(e);
-                if (!String.Empty.Equals(s))
+                string s = FriendlyName(e);
+                if (!string.Empty.Equals(s))
                 {
                     r.Add(s);
                 }
@@ -362,7 +362,7 @@ namespace VTClassic
         {
             foreach (eLootAction e in Enum.GetValues(typeof(eLootAction)))
             {
-                String n = eLootActionTool.FriendlyName(e);
+                string n = FriendlyName(e);
                 if (s.Equals(n))
                 {
                     return e;
@@ -374,7 +374,7 @@ namespace VTClassic
 
     internal interface iSettingsCollection
     {
-        void Read(System.IO.StreamReader inf, int fileversion);
+        void Read(StreamReader inf, int fileversion);
         void Write(CountedStreamWriter inf);
     }
 
@@ -681,7 +681,7 @@ namespace VTClassic
             if (matNames.ContainsKey(materialId))
                 return matNames[materialId];
             else
-                return String.Empty;
+                return string.Empty;
         }
 
         public static int GetMaterialID(string matname)

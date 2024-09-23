@@ -1,8 +1,8 @@
 ﻿using ACE.Database;
 using ACE.DatLoader.FileTypes;
-using System.IO;
+using CustomSpells;
 
-namespace Tinkering;
+namespace CustomSpells;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)

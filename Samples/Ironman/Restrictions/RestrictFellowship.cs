@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Restrictions;
+﻿namespace Ironman.Restrictions;
 
 [HarmonyPatchCategory(nameof(RestrictFellowship))]
 public static class RestrictFellowship

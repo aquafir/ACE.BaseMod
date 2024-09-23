@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace Balance;
 
 public class Settings
 {

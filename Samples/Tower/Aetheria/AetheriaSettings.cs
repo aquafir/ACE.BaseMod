@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tinkering.Aetheria;
+﻿namespace Tower;
 public class AetheriaSettings
 {
     public PropertyDataId AetheriaLootGroupProperty { get; set; } = (PropertyDataId)49999;

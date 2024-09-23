@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace Raise;
 
 public class AlternateLevelingSettings
 {

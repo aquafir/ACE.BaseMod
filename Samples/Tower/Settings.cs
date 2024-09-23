@@ -1,13 +1,4 @@
-﻿using Tinkering.Aetheria;
-using Tinkering.Bank;
-using Tinkering.Floor;
-using Tinkering.Hardcore;
-using Tinkering.Loot;
-using Tinkering.MeleeMagic;
-using Tinkering.Offline;
-using Tinkering.Speedrun;
-
-namespace Tinkering;
+﻿namespace Tower;
 
 public class Settings
 {

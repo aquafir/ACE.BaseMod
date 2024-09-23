@@ -1,7 +1,6 @@
 ﻿using ACE.Server.Entity.Actions;
-using System.Numerics;
 
-namespace Tinkering.Creatures;
+namespace ExtendACE.Creatures;
 
 [HarmonyPatch]
 public class Boss : CreatureEx
@@ -69,7 +68,7 @@ public class Boss : CreatureEx
         if (lapsed < weaknessInterval) return;
         lastWeakness = time;
 
-        var nextWeakness = DamageTypeValues.GetRandom<DamageType>();
+        var nextWeakness = DamageTypeValues.GetRandom();
 
         if (nextWeakness != weakTo)
         {
@@ -127,7 +126,7 @@ public class Boss : CreatureEx
             actionChain.AddDelaySeconds(spamDelay);
             actionChain.AddAction(this, () =>
             {
-                var spellIds = spellPool.GetRandomElements<int>(spamVariety).ToArray();
+                var spellIds = spellPool.GetRandomElements(spamVariety).ToArray();
                 int count = 0;
                 foreach (var nearbyPlayer in CurrentLandblock.players.Where(x => x.GetDistance(this) < spamDistance))
                     TryCastSpell(new Spell(spellIds[count++ % spellIds.Length]), nearbyPlayer);
@@ -168,7 +167,7 @@ public class Boss : CreatureEx
         var actionChain = new ActionChain();
         for (var i = 0; i < bulletCount; i++)
         {
-            var spell = new Spell(bulletPool.GetRandom<int>());
+            var spell = new Spell(bulletPool.GetRandom());
             var spellType = ProjectileSpellType.Bolt;
             var origins = CalculateProjectileOrigins(spell, spellType, target);
             var velocity = CalculateProjectileVelocity(spell, target, spellType, origins[0]);
@@ -193,7 +192,7 @@ public class Boss : CreatureEx
     #region Resist/Evade
     //Unresistable?
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.TryResistSpell), new Type[] { typeof(WorldObject), typeof(Spell), typeof(WorldObject), typeof(bool) })]
+    [HarmonyPatch(typeof(WorldObject), nameof(TryResistSpell), new Type[] { typeof(WorldObject), typeof(Spell), typeof(WorldObject), typeof(bool) })]
     public static bool PreTryResistSpell(WorldObject target, Spell spell, WorldObject itemCaster, bool projectileHit, ref WorldObject __instance, ref bool __result)
     {
         if (__instance is Boss b)

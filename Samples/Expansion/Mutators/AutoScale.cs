@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Mutators;
+﻿namespace Expansion.Mutators;
 
 #if REALM
 
@@ -25,7 +25,7 @@ public class AutoScale : Mutator
         int tier = (int)(distance / TIER_INTERVAL);
         creature.XpOverride *= (int)Math.Pow(2, tier);
         creature.ScaleAttributeBase(1 + .5f * tier, attributesToScale);
-        creature.ObjScale *= (tier / 3);
+        creature.ObjScale *= tier / 3;
         creature.SetMaxVitals();
         creature.Name = $"Tier {tier} {creature.Name}";
 

@@ -1,7 +1,4 @@
-﻿
-using System.IO;
-
-namespace ACE.Shared.Mods;
+﻿namespace ACE.Shared.Mods;
 public class BasicMod : IHarmonyMod
 {
     #region Members

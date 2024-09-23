@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Creatures;
+﻿namespace Expansion.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.Drainer))]
 public class Drainer : CreatureEx
@@ -9,7 +9,7 @@ public class Drainer : CreatureEx
 #else
     public Drainer(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
 #endif
- { }
+    { }
 
     //Mutate from the original weenie
     DamageType drainType = DamageType.Stamina;

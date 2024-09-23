@@ -1,7 +1,6 @@
-using Tinkering.WebSocket;
 using Microsoft.Extensions.Configuration;
 
-namespace Tinkering;
+namespace Discord;
 
 public class InteractionHandler
 {

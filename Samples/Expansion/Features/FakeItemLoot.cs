@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.FakeItemLoot))]
 [HarmonyPatchCategory(nameof(Feature.FakeItemLoot))]

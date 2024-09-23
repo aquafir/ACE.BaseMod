@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace Tinkering.Autocomplete;
+﻿namespace Discord.Autocomplete;
 
 
 /// <summary>

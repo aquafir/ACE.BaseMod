@@ -1,16 +1,6 @@
 ﻿using ACE.Adapter.Lifestoned;
 using ACE.Database;
 using ACE.Database.Adapter;
-using ACE.DatLoader.FileTypes;
-using ACE.Server;
-using ACE.Server.Command.Handlers;
-using ACE.Server.Command.Handlers.Processors;
-using ACE.Server.Network;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ACE.Shared.Helpers;
 public static class ContentHelpers

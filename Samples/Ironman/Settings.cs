@@ -1,7 +1,7 @@
-﻿using Tinkering.FlagEvents;
-using Tinkering.Restrictions;
+﻿using Ironman.FlagEvents;
+using Ironman.Restrictions;
 
-namespace Tinkering;
+namespace Ironman;
 
 public class Settings
 {

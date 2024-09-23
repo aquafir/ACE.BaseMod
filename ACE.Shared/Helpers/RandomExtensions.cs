@@ -1,6 +1,4 @@
-﻿using Microsoft.Cci.Pdb;
-
-namespace ACE.Shared.Helpers;
+﻿namespace ACE.Shared.Helpers;
 
 public static class RandomExtensions
 {

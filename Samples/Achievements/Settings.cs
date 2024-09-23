@@ -1,4 +1,4 @@
-﻿namespace Tinkering
+﻿namespace Achievements
 {
     public class Settings
     {

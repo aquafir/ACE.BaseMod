@@ -1,9 +1,7 @@
-﻿using ACE.Server.Command;
-using ACE.Server.Network;
+﻿using AutoLoot.Lib.VTClassic;
 using System.Collections.Concurrent;
-using VTClassic;
 
-namespace Tinkering;
+namespace AutoLoot;
 
 [HarmonyPatch]
 public class AutoLoot
@@ -14,7 +12,7 @@ public class AutoLoot
 #if REALM
 public static void HandleLoadProfile(ISession session, params string[] parameters)
 #else
-public static void HandleLoadProfile(Session session, params string[] parameters)
+    public static void HandleLoadProfile(Session session, params string[] parameters)
 #endif
     {
         var player = session.Player;
@@ -47,11 +45,11 @@ public static void HandleLoadProfile(Session session, params string[] parameters
             }
             else
             {
-                var joined = String.Join(' ', parameters);
+                var joined = string.Join(' ', parameters);
                 selected = profiles.Where(x => x.Contains(joined, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
             }
 
-            if (String.IsNullOrEmpty(selected) || !File.Exists(selected))
+            if (string.IsNullOrEmpty(selected) || !File.Exists(selected))
             {
                 player.SendMessage($"No loot profile selected.");
 

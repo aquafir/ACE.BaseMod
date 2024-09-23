@@ -32,7 +32,7 @@
 #if VTC_PLUGIN
 #endif
 
-namespace VTClassic
+namespace AutoLoot.Lib.VTClassic
 {
     internal enum eUTLFileFeature
     {

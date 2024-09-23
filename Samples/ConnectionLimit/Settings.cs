@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace ConnectionLimit;
 
 public class Settings
 {

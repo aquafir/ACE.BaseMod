@@ -1,6 +1,4 @@
-using Tinkering.WebSocket;
-
-namespace Tinkering.Attributes;
+namespace Discord.Attributes;
 
 internal class DoUserCheck : PreconditionAttribute
 {
@@ -21,7 +19,7 @@ internal class DoUserCheck : PreconditionAttribute
             // here we determine that we should always check for the first ',' present.
             // This will deal with additional wildcards by always selecting the first wildcard present.
             if (param.Length > 1 && ulong.TryParse(param[1].Split(',')[0], out ulong id))
-                return (context.User.Id == id)
+                return context.User.Id == id
                     // If the user ID
                     ? Task.FromResult(PreconditionResult.FromSuccess())
                     : Task.FromResult(PreconditionResult.FromError("User ID does not match component ID!"));

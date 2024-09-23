@@ -1,9 +1,7 @@
 ﻿using ACE.DatLoader.Entity;
-using ACE.Entity;
-using System.Diagnostics;
 using static ACE.Server.WorldObjects.Player;
 
-namespace Tinkering;
+namespace Spells;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)

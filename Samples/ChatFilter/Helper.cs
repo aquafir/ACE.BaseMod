@@ -1,7 +1,7 @@
 ﻿using ACE.Database;
 using ACE.Server.Network.Enum;
 
-namespace Tinkering;
+namespace ChatFilter;
 
 public static class Helper
 {

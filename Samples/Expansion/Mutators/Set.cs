@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Mutators;
+﻿namespace Expansion.Mutators;
 
 public class Set : Mutator
 {

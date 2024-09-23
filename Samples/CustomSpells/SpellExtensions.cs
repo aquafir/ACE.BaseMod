@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace CustomSpells;
 public static class SpellExtensions
 {
     /// <summary>

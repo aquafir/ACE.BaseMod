@@ -1,6 +1,4 @@
-﻿using ACE.Server.Managers;
-
-namespace Tinkering
+﻿namespace Respawn
 {
     [HarmonyPatch]
     public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
@@ -72,7 +70,7 @@ namespace Tinkering
             {
                 //Manually patch GetDeathMessage only if a reward is given in Start
                 var original = typeof(Creature).GetMethod(nameof(Creature.GetDeathMessage));
-                var prefix = typeof(PatchClass).GetMethod(nameof(PatchClass.CountKills));
+                var prefix = typeof(PatchClass).GetMethod(nameof(CountKills));
                 Mod.Harmony.Patch(original, new HarmonyMethod(prefix));
                 ModManager.Log("Rewarding respawn kills...");
             }

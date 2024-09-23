@@ -1,15 +1,11 @@
 ﻿using ACE.Database;
 using ACE.Database.Entity;
 using ACE.Database.Models.Auth;
-using ACE.Database.Models.Shard;
-using ACE.DatLoader;
-using ACE.Server.Managers;
-using Tinkering.Helpers;
+using PlayerSave.Helpers;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
 
-namespace Tinkering;
+namespace PlayerSave;
 
 internal class SaveCommand
 {
@@ -31,7 +27,7 @@ internal class SaveCommand
         var saves = GetSaves();
         var savePath = saves.Where(s => Path.GetFileNameWithoutExtension(s).Contains(saveParam, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 
-        if (String.IsNullOrEmpty(savePath))
+        if (string.IsNullOrEmpty(savePath))
         {
             ModManager.Log($"Failed to find any \"{Settings.Extension}\" save of {saves.Count} found matching \"{saveParam}\"");
             return;
@@ -181,7 +177,7 @@ internal class SaveCommand
                 var playerBiota = DatabaseManager.Shard.BaseDatabase.GetBiota(character.Id);
 
                 var saveName = match.Groups["save"].Value;
-                if (String.IsNullOrEmpty(saveName))
+                if (string.IsNullOrEmpty(saveName))
                     DoSave(character, playerBiota, possessions);
                 else
                     DoSave(character, playerBiota, possessions, saveName);
@@ -210,7 +206,7 @@ internal class SaveCommand
             Inventory = possessions.Inventory,
         };
 
-        if (String.IsNullOrEmpty(savePath))
+        if (string.IsNullOrEmpty(savePath))
             savePath = Path.Combine(Mod.ModPath, "Saves", $"{character.Name} - {DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")}");
         else
             savePath = Path.Combine(Mod.ModPath, "Saves", savePath);

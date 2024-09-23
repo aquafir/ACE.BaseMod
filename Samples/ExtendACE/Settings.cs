@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace ExtendACE;
 
 public class Settings
 {

@@ -1,12 +1,7 @@
-﻿using ACE.Entity;
-using ACE.Entity.Enum.Properties;
-using ACE.Server.Entity.Actions;
-using ACE.Server.Managers;
-using ACE.Server.Network.GameMessages.Messages;
-using System.Diagnostics;
+﻿using ACE.Server.Entity.Actions;
 using MotionTable = ACE.DatLoader.FileTypes.MotionTable;
 
-namespace Tinkering;
+namespace QualityOfLife;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
@@ -147,7 +142,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
             __instance.Session.Network.EnqueueSend(updateCombatMode);
         }
 
-        __instance.EnqueueBroadcast(new GameMessageSystemChat($"{__instance.Name} is recalling to the marketplace.", ChatMessageType.Recall), Player.LocalBroadcastRange, ChatMessageType.Recall);
+        __instance.EnqueueBroadcast(new GameMessageSystemChat($"{__instance.Name} is recalling to the marketplace.", ChatMessageType.Recall), WorldObject.LocalBroadcastRange, ChatMessageType.Recall);
 
         __instance.SendMotionAsCommands(MotionCommand.MarketplaceRecall, MotionStance.NonCombat);
 
@@ -189,7 +184,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     [HarmonyPostfix]
     [HarmonyPatch(typeof(SkillAlterationDevice), "GetTotalSpecializedCredits", new Type[] { typeof(Player) })]
     public static void PostGetTotalSpecializedCredits(Player player, ref SkillAlterationDevice __instance, ref int __result)
-        => __result = Math.Max(0, __result + (70 - PatchClass.Settings.MaxSpecCredits));
+        => __result = Math.Max(0, __result + (70 - Settings.MaxSpecCredits));
 
     [CommandHandler("setlum", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 0, "Sets luminance to the max if unlocked")]
     public static void HandleSetProperty(Session session, params string[] parameters)

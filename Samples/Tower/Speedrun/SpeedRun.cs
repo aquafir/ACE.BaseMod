@@ -1,6 +1,4 @@
-﻿using Tinkering.Floor;
-
-namespace Tinkering.Speedrun;
+﻿namespace Tower;
 
 [CommandCategory(nameof(Feature.Speedrun))]
 [HarmonyPatchCategory(nameof(Feature.Speedrun))]
@@ -117,8 +115,8 @@ public static class Speedrun
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(Player), nameof(Player.Teleport), new Type[] { typeof(ACE.Server.Realms.InstancedPosition), typeof(bool), typeof(bool) })]
-    public static void PostTeleport(ACE.Server.Realms.InstancedPosition newPosition, bool teleportingFromInstance, bool fromPortal, ref Player __instance)
+    [HarmonyPatch(typeof(Player), nameof(Player.Teleport), new Type[] { typeof(Position), typeof(bool), typeof(bool) })]
+    public static void PostTeleport(Position newPosition, bool teleportingFromInstance, bool fromPortal, ref Player __instance)
     {
         //Ignore logging back in
         //if (!fromPortal)

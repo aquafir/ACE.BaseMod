@@ -1,7 +1,6 @@
-﻿using ACE.Server.Entity;
-using ClickableTransparentOverlay;
+﻿using ClickableTransparentOverlay;
 
-namespace Tinkering;
+namespace ImGuiHud;
 
 public class SimpleOverlay : Overlay
 {
@@ -14,7 +13,7 @@ public class SimpleOverlay : Overlay
 
     protected override Task PostInitialized()
     {
-        this.VSync = false;
+        VSync = false;
         return Task.CompletedTask;
     }
 
@@ -41,7 +40,7 @@ public class SimpleOverlay : Overlay
             ModManager.Log($"Selected {Flags.Selection}!");
         }
 
-        if(SpellPicker.Check())
+        if (SpellPicker.Check())
             ModManager.Log($"Selected {SpellPicker.Selection.Name}!");
 
         ImGui.End();

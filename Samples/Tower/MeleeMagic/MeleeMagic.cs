@@ -1,6 +1,4 @@
-﻿using ACE.Entity.Enum;
-
-namespace Tinkering.MeleeMagic;
+﻿namespace Tower;
 
 [CommandCategory(nameof(Feature.MeleeMagic))]
 [HarmonyPatchCategory(nameof(Feature.MeleeMagic))]
@@ -25,7 +23,7 @@ public class MeleeMagic
         if (!__instance.TryGetMeleeMagicSpell(__result, out var spellId))
             return;
 
-        var spell = new ACE.Server.Entity.Spell(spellId);
+        var spell = new Spell(spellId);
         var weapon = __instance.GetEquippedWeapon();
         __instance.TryCastSpell_Inner(spell, target, weapon, weapon, fromProc: true);
     }
@@ -82,14 +80,14 @@ public class MeleeMagic
 
         var sb = new StringBuilder();
 
-        foreach(var height in group.Pools)
+        foreach (var height in group.Pools)
         {
             sb.Append($"\n{height.Key}");
 
-            foreach(var pool in height.Value)
+            foreach (var pool in height.Value)
             {
                 sb.Append($"\n  {pool.LimitingSkill} @ {pool.MinimumSlider:P2} power");
-                foreach(var spell in pool.Spells)
+                foreach (var spell in pool.Spells)
                 {
                     sb.Append($"\n    {spell.Key,-5}{spell.Value}");
                 }

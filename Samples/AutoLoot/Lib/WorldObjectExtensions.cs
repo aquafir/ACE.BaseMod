@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Lib
+﻿namespace AutoLoot.Lib
 {
     public static class WorldObjectExtensions
     {
@@ -71,13 +71,13 @@
                 case IntValueKey.Landblock:
                     return (int)wo.CurrentLandblock.Id.Raw;
                 case IntValueKey.ItemSlots:
-                    return wo.ItemCapacity.HasValue ? (int)wo.ItemCapacity.Value : defaultValue;
+                    return wo.ItemCapacity.HasValue ? wo.ItemCapacity.Value : defaultValue;
                 case IntValueKey.PackSlots:
-                    return wo.ContainerCapacity.HasValue ? (int)wo.ContainerCapacity.Value : defaultValue;
+                    return wo.ContainerCapacity.HasValue ? wo.ContainerCapacity.Value : defaultValue;
                 case IntValueKey.StackCount:
-                    return wo.StackSize.HasValue ? (int)wo.StackSize.Value : defaultValue;
+                    return wo.StackSize.HasValue ? wo.StackSize.Value : defaultValue;
                 case IntValueKey.StackMax:
-                    return wo.MaxStackSize.HasValue ? (int)wo.MaxStackSize.Value : defaultValue;
+                    return wo.MaxStackSize.HasValue ? wo.MaxStackSize.Value : defaultValue;
                 case IntValueKey.AssociatedSpell:
                     return wo.SpellDID.HasValue ? (int)wo.SpellDID.Value : defaultValue;
                 case IntValueKey.Wielder:
@@ -97,9 +97,9 @@
                 case IntValueKey.HouseOwner:
                     return wo.HouseOwner.HasValue ? (int)wo.HouseOwner.Value : defaultValue;
                 case IntValueKey.HookMask:
-                    return wo.HookItemType.HasValue ? (int)wo.HookItemType.Value : defaultValue;
+                    return wo.HookItemType.HasValue ? wo.HookItemType.Value : defaultValue;
                 case IntValueKey.HookType:
-                    return wo.HookType.HasValue ? (int)wo.HookType.Value : defaultValue;
+                    return wo.HookType.HasValue ? wo.HookType.Value : defaultValue;
                 case IntValueKey.Model:
                     return (int)wo.SetupTableId;
                 case IntValueKey.Flags:
@@ -117,13 +117,13 @@
                 case IntValueKey.SpellCount:
                     return wo.Biota.PropertiesSpellBook.Count;
                 case IntValueKey.WeapSpeed:
-                    return wo.WeaponTime.HasValue ? (int)wo.WeaponTime.Value : defaultValue;
+                    return wo.WeaponTime.HasValue ? wo.WeaponTime.Value : defaultValue;
                 case IntValueKey.EquipSkill:
-                    return wo.UseRequiresSkillLevel.HasValue ? (int)wo.UseRequiresSkillLevel.Value : defaultValue;
+                    return wo.UseRequiresSkillLevel.HasValue ? wo.UseRequiresSkillLevel.Value : defaultValue;
                 case IntValueKey.DamageType:
                     return (int)wo.W_DamageType;
                 case IntValueKey.MaxDamage:
-                    return wo.Damage.HasValue ? (int)wo.Damage.Value : defaultValue;
+                    return wo.Damage.HasValue ? wo.Damage.Value : defaultValue;
                 case IntValueKey.ItemUsabilityFlags:
                     return wo.ItemUseable.HasValue ? (int)wo.ItemUseable.Value : defaultValue;
                 case IntValueKey.PhysicsDataFlags:

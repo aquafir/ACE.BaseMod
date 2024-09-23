@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Autocomplete;
+﻿namespace Discord.Autocomplete;
 
 /// <summary>
 /// Autocomplete for full property

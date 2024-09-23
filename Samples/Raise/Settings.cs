@@ -1,7 +1,4 @@
-﻿using ACE.Server.Entity.Chess;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Tinkering;
+﻿namespace Raise;
 
 public class Settings
 {
@@ -12,7 +9,7 @@ public class Settings
 
     public LevelCost LevelCost { get; set; } = new(1_000_000_000u, 1_000_000_000u, 0, -276, GrowthType: GrowthType.Linear);
 
-    public RaiseSettings Raise {get;set;} = new();
+    public RaiseSettings Raise { get; set; } = new();
     public AlternateLevelingSettings AlternateLeveling { get; set; } = new();
 }
 

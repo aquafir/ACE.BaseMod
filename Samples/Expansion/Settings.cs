@@ -1,11 +1,12 @@
-﻿namespace Tinkering;
+﻿namespace Expansion;
 
 public class Settings
 {
     public bool Verbose { get; set; } = false;
 
     #region Features / Mutators
-    public List<Feature> Features { get; set; } = new() {
+    public List<Feature> Features { get; set; } = new()
+    {
         //Feature.FakePropertyCache,
         //Feature.OverrideSpellProjectiles,
         //Feature.FakeAttributes,

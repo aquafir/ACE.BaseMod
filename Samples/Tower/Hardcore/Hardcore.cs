@@ -1,6 +1,4 @@
-﻿using ACE.Entity.Enum;
-
-namespace Tinkering.Hardcore;
+﻿namespace Tower;
 
 [CommandCategory(nameof(Feature.Hardcore))]
 [HarmonyPatchCategory(nameof(Feature.Hardcore))]
@@ -29,7 +27,7 @@ public static class Hardcore
                 player.SendMessage($"You have been forced to NPK status.");
             }
 
-            if(Settings.IgnorePK)
+            if (Settings.IgnorePK)
             {
                 player.SendMessage($"PK deaths not counted against hardcore players.");
                 return;

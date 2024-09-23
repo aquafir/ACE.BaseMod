@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace ImGuiHud;
 
 public class Settings
 {

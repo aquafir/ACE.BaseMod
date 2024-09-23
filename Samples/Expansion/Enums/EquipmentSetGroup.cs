@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Enums;
+﻿namespace Expansion.Enums;
 
 
 public enum EquipmentSetGroup

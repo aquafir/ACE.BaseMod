@@ -1,6 +1,6 @@
 ﻿using ACE.Database;
 
-namespace Tinkering.Mutators;
+namespace Expansion.Mutators;
 
 public class ShinyPet : Mutator
 {

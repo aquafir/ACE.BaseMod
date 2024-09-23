@@ -31,7 +31,7 @@
 #if VTC_PLUGIN
 #endif
 
-namespace VTClassic.UTLBlockHandlers
+namespace AutoLoot.Lib.VTClassic
 {
     internal class UTLBlock_SalvageCombine : IUTLFileBlockHandler
     {
@@ -97,7 +97,7 @@ namespace VTClassic.UTLBlockHandlers
                     return i - 1;
 
                 //If we fall into this range, choose it
-                if ((Ranges[i].a <= val) && (Ranges[i].b >= val))
+                if (Ranges[i].a <= val && Ranges[i].b >= val)
                     return i;
             }
             return Ranges.Count;
@@ -111,7 +111,7 @@ namespace VTClassic.UTLBlockHandlers
             string combinestring = pcombinestring;
             for (int i = combinestring.Length - 1; i >= 0; --i)
             {
-                if (Char.IsDigit(combinestring[i])) continue;
+                if (char.IsDigit(combinestring[i])) continue;
                 if (combinestring[i] == ',') continue;
                 if (combinestring[i] == ';') continue;
                 if (combinestring[i] == '-') continue;
@@ -177,7 +177,7 @@ namespace VTClassic.UTLBlockHandlers
         {
             if (availablebags.Count == 0) return new List<int>();
 
-            var material = (int)((availablebags[0].MaterialType) ?? 0);
+            var material = (int)(availablebags[0].MaterialType ?? 0);
             List<sDoublePair> ranges = ParseCombineSting(GetCombineString(material));
 
             //Bin the available bags by which part of the combine string they fit in.
@@ -227,7 +227,7 @@ namespace VTClassic.UTLBlockHandlers
                         int ind2 = rand.Next(kp.Value.Count);
                         if (ind1 == ind2) continue;
 
-                        if (((kp.Value[ind1].Structure ?? 0) + (kp.Value[ind2].Structure ?? 0)) < 100)
+                        if ((kp.Value[ind1].Structure ?? 0) + (kp.Value[ind2].Structure ?? 0) < 100)
                         {
                             //This pair is good.
                             ret.Clear();
@@ -263,7 +263,7 @@ namespace VTClassic.UTLBlockHandlers
             get { return "SalvageCombine"; }
         }
 
-        public void Read(System.IO.StreamReader inf, int len)
+        public void Read(StreamReader inf, int len)
         {
             MaterialValueModeValues.Clear();
 

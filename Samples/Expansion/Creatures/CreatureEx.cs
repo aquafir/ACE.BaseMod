@@ -1,6 +1,6 @@
 ﻿using ACE.Server.Command.Handlers;
 
-namespace Tinkering.Creatures;
+namespace Expansion.Creatures;
 
 //[HarmonyPatchCategory(nameof(CreatureEx))]
 public class CreatureEx : Creature
@@ -24,8 +24,8 @@ public class CreatureEx : Creature
     protected virtual void Initialize() { }
 
     #region Commands
-    static Tinkering.Creatures.CreatureExType[] types = Enum.GetValues<Tinkering.Creatures.CreatureExType>();
-    static string availableTypes = String.Join('\n', types.Select(x => $"  {x.ToString()} - {(int)x}"));
+    static CreatureExType[] types = Enum.GetValues<CreatureExType>();
+    static string availableTypes = string.Join('\n', types.Select(x => $"  {x.ToString()} - {(int)x}"));
     [CommandHandler("cex", AccessLevel.Developer, CommandHandlerFlag.RequiresWorld)]
     public static void HandleCreateEx(Session session, params string[] parameters)
     {

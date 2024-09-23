@@ -1,9 +1,6 @@
-﻿using ACE.Common.Extensions;
-using ACE.Server.Network.GameAction.Actions;
-using ACE.Server.Network.GameMessages.Messages;
-using System.Text.Encodings.Web;
+﻿using ACE.Server.Network.GameAction.Actions;
 
-namespace Tinkering;
+namespace Discord;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)

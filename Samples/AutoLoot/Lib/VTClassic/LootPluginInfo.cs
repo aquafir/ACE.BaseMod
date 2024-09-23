@@ -1,4 +1,4 @@
-﻿namespace uTank2.LootPlugins
+﻿namespace AutoLoot.Lib.VTClassic
 {
     public class LootPluginInfo
     {
@@ -7,11 +7,11 @@
 
         public LootPluginInfo(string ProfileFileExtension, params string[] ExtraDirectories)
         {
-            this.a = ProfileFileExtension.TrimStart('.').ToLowerInvariant();
+            a = ProfileFileExtension.TrimStart('.').ToLowerInvariant();
             if (ExtraDirectories == null)
-                this.b = new string[0];
+                b = new string[0];
             else
-                this.b = ExtraDirectories;
+                b = ExtraDirectories;
         }
     }
 }

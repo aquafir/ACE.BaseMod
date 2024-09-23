@@ -1,4 +1,4 @@
-﻿namespace Tinkering
+﻿namespace PlayerSave
 {
     [HarmonyPatch]
     public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
@@ -67,10 +67,10 @@
             LoadSettings();
 
             //Create save dir
-            if (!Directory.Exists(PatchClass.Settings.SaveDirectory))
+            if (!Directory.Exists(Settings.SaveDirectory))
             {
-                Directory.CreateDirectory(PatchClass.Settings.SaveDirectory);
-                ModManager.Log($"Created directory for saves: {PatchClass.Settings.SaveDirectory}");
+                Directory.CreateDirectory(Settings.SaveDirectory);
+                ModManager.Log($"Created directory for saves: {Settings.SaveDirectory}");
             }
 
             if (Mod.State == ModState.Error)

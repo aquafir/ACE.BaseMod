@@ -1,6 +1,4 @@
-﻿using ACE.Database.Models.Shard;
-
-namespace Tinkering;
+﻿namespace QuestBonus;
 public static class QuestBonusExtensions
 {
     /// <summary>

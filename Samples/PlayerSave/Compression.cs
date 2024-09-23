@@ -1,6 +1,6 @@
 ﻿using System.IO.Compression;
 
-namespace Tinkering;
+namespace PlayerSave;
 
 //https://www.infoworld.com/article/3660629/how-to-compress-and-decompress-strings-in-c-sharp.html
 public static class Compression

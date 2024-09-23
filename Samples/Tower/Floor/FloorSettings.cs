@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Floor;
+﻿namespace Tower;
 public class FloorSettings
 {
     public float MaxXpBonus { get; set; } = 5;

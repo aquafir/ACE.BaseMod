@@ -27,9 +27,9 @@
 //  THE SOFTWARE.
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace VTClassic
+namespace AutoLoot.Lib.VTClassic
 {
-    public class LootCore : uTank2.LootPlugins.LootPluginBase, uTank2.LootPlugins.ILootPluginCapability_SalvageCombineDecision2, uTank2.LootPlugins.ILootPluginCapability_GetExtraOptions
+    public class LootCore : LootPluginBase, ILootPluginCapability_SalvageCombineDecision2, ILootPluginCapability_GetExtraOptions
     {
         internal static LootCore Instance;
 
@@ -58,11 +58,11 @@ namespace VTClassic
             return false;
         }
 
-        public override uTank2.LootPlugins.LootAction GetLootDecision(WorldObject item, Player player)
+        public override LootAction GetLootDecision(WorldObject item, Player player)
         {
             try
             {
-                if (LootRules == null) return uTank2.LootPlugins.LootAction.NoLoot;
+                if (LootRules == null) return LootAction.NoLoot;
 
                 string matchedrulename;
                 int data1;
@@ -94,7 +94,7 @@ namespace VTClassic
                 ExceptionHandler(ex);
             }
 
-            return uTank2.LootPlugins.LootAction.NoLoot;
+            return LootAction.NoLoot;
         }
 
         public override void LoadProfile(string filename, bool newprofile)
@@ -109,7 +109,7 @@ namespace VTClassic
                 if (newprofile)
                 {
                     LootRules = new cLootRules();
-                    using (System.IO.FileStream fs = new System.IO.FileStream(filename, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None))
+                    using (FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
                         using (CountedStreamWriter sr = new CountedStreamWriter(fs))
                         {
@@ -121,12 +121,12 @@ namespace VTClassic
                 }
                 else
                 {
-                    if (!System.IO.File.Exists(filename)) return;
+                    if (!File.Exists(filename)) return;
 
                     LootRules = new cLootRules();
-                    using (System.IO.FileStream fs = new System.IO.FileStream(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read))
+                    using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
-                        using (System.IO.StreamReader sr = new System.IO.StreamReader(fs))
+                        using (StreamReader sr = new StreamReader(fs))
                         {
                             if (LootRules.Read(sr, -1))
                                 WriteToChat("Load profile " + filename + " successful (file version " + LootRules.UTLFileVersion.ToString() + ").");
@@ -182,7 +182,7 @@ namespace VTClassic
             }
         }
 
-        public override uTank2.LootPlugins.LootPluginInfo Startup()
+        public override LootPluginInfo Startup()
         {
             try
             {
@@ -225,7 +225,7 @@ namespace VTClassic
 
         public List<int> ChooseBagsToCombine(List<WorldObject> availablebags)
         {
-            UTLBlockHandlers.UTLBlock_SalvageCombine CombineBlock = LootRules.ExtraBlockManager.GetFirstBlock("SalvageCombine") as UTLBlockHandlers.UTLBlock_SalvageCombine;
+            UTLBlock_SalvageCombine CombineBlock = LootRules.ExtraBlockManager.GetFirstBlock("SalvageCombine") as UTLBlock_SalvageCombine;
 
             return CombineBlock.TryCombineMultiple(availablebags);
         }

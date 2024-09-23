@@ -1,123 +1,35 @@
 ﻿using ACE.Database.Models.World;
-using ACE.Entity.Enum.Properties;
-using System.Numerics;
 
 namespace Tinkering;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
-    #region Settings
-    //private static readonly TimeSpan TIMEOUT = TimeSpan.FromSeconds(2);
-    const int RETRIES = 10;
-
-    public static Settings Settings = new();
-    private static string settingsPath = Path.Combine(Mod.ModPath, "Settings.json");
-    private static FileInfo settingsInfo = new(settingsPath);
-
-    private static JsonSerializerOptions _serializeOptions = new()
+    public override async Task OnWorldOpen()
     {
-        WriteIndented = true,
-        AllowTrailingCommas = true,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-    };
-
-    private static void SaveSettings()
-    {
-        string jsonString = JsonSerializer.Serialize(Settings, _serializeOptions);
-
-        if (!settingsInfo.RetryWrite(jsonString, RETRIES))
-        {
-            ModManager.Log($"Failed to save settings to {settingsPath}...", ModManager.LogLevel.Warn);
-            Mod.State = ModState.Error;
-        }
-    }
-
-    private static void LoadSettings()
-    {
-        if (!settingsInfo.Exists)
-        {
-            ModManager.Log($"Creating {settingsInfo}...");
-            SaveSettings();
-        }
-        else
-            ModManager.Log($"Loading settings from {settingsPath}...");
-
-        if (!settingsInfo.RetryRead(out string jsonString, RETRIES))
-        {
-            Mod.State = ModState.Error;
-            return;
-        }
-
-        try
-        {
-            Settings = JsonSerializer.Deserialize<Settings>(jsonString, _serializeOptions);
-        }
-        catch (Exception)
-        {
-            ModManager.Log($"Failed to deserialize Settings: {settingsPath}", ModManager.LogLevel.Warn);
-            Mod.State = ModState.Error;
-            return;
-        }
-    }
-    #endregion
-
-    #region Start/Shutdown
-    public static void Start()
-    {
-        //Need to decide on async use
-        Mod.State = ModState.Loading;
-        LoadSettings();
-
-        if (Mod.State == ModState.Error)
-        {
-            ModManager.DisableModByPath(Mod.ModPath);
-            return;
-        }
-
-        //Add difficulties
         ModifyTinkering();
 
-        PatchCategories();
-
-        Mod.State = ModState.Running;
-    }
-
-    private static void PatchCategories()
-    {
         if (Settings.EnableRecipeManagerPatch)
             Mod.Harmony.PatchCategory(Settings.RecipeManagerCategory);
     }
 
-    public static void Shutdown()
-    {
-        //Restore difficulties
-        if (Mod.State == ModState.Running)
-            RestoreTinkering();
-
-        if (Mod.State == ModState.Error)
-            ModManager.Log($"Improper shutdown: {Mod.ModPath}", ModManager.LogLevel.Error);
-    }
-    #endregion
-
     //Preserve/restore tinkering difficulties on start/shutdown
     static readonly List<float> difficulty = RecipeManager.TinkeringDifficulty.ToList();
-    private static void RestoreTinkering()
+    private void RestoreTinkering()
     {
         RecipeManager.TinkeringDifficulty = difficulty.ToList();
     }
 
-    private static void ModifyTinkering()
+    private void ModifyTinkering()
     {
         var diffs = RecipeManager.TinkeringDifficulty.Count;
         var last = RecipeManager.TinkeringDifficulty.Last();
         var toAdd = Math.Max(0, Settings.MaxTries - diffs);
         var steps = Enumerable.Range(diffs, toAdd)
-            .Select((x, i) => last + (i + 1) * PatchClass.Settings.Scale);
+            .Select((x, i) => last + (i + 1) * Settings.Scale);
 
         RecipeManager.TinkeringDifficulty.AddRange(steps);
-        ModManager.Log($"Tink diffs ({RecipeManager.TinkeringDifficulty.Count}): {String.Join(", ", RecipeManager.TinkeringDifficulty)}");
+        ModManager.Log($"Tink diffs ({RecipeManager.TinkeringDifficulty.Count}): {string.Join(", ", RecipeManager.TinkeringDifficulty)}");
     }
 
     //Full override of VerifyRequirements
@@ -149,7 +61,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         foreach (var requirement in intReqs)
         {
             int? value = obj.GetProperty((PropertyInt)requirement.Stat);
-            double? normalized = value != null ? (double?)Convert.ToDouble(value.Value) : null;
+            double? normalized = value != null ? Convert.ToDouble(value.Value) : null;
 
             //Customize NumTink reqs
             var propInt = (PropertyInt)requirement.Stat;
@@ -164,8 +76,8 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
             //Todo: think about nulls
             __result = propInt switch
             {
-                PropertyInt.NumTimesTinkered => comp.Compare((PatchClass.Settings.MaxTries - 1), value ?? 0, player, requirement.Message) ? __result : false, //Only set false
-                PropertyInt.ImbuedEffect => comp.Compare((PatchClass.Settings.MaxImbueEffects - 1), BitOperations.PopCount((uint)(value ?? 0)), player, requirement.Message) ? __result : false,
+                PropertyInt.NumTimesTinkered => comp.Compare(Settings.MaxTries - 1, value ?? 0, player, requirement.Message) ? __result : false, //Only set false
+                PropertyInt.ImbuedEffect => comp.Compare(Settings.MaxImbueEffects - 1, BitOperations.PopCount((uint)(value ?? 0)), player, requirement.Message) ? __result : false,
                 _ => RecipeManager.VerifyRequirement(player, (CompareType)requirement.Enum, normalized, Convert.ToDouble(requirement.Value), requirement.Message),
             };
             //BitOperations.PopCount()
@@ -193,7 +105,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         foreach (var requirement in boolReqs)
         {
             bool? value = obj.GetProperty((PropertyBool)requirement.Stat);
-            double? normalized = value != null ? (double?)Convert.ToDouble(value.Value) : null;
+            double? normalized = value != null ? Convert.ToDouble(value.Value) : null;
 
             if (RecipeManager.Debug)
                 Console.WriteLine($"PropertyBool.{(PropertyBool)requirement.Stat} {(CompareType)requirement.Enum} {requirement.Value}, current: {value}");
@@ -228,7 +140,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         foreach (var requirement in iidReqs)
         {
             uint? value = obj.GetProperty((PropertyInstanceId)requirement.Stat);
-            double? normalized = value != null ? (double?)Convert.ToDouble(value.Value) : null;
+            double? normalized = value != null ? Convert.ToDouble(value.Value) : null;
 
             if (RecipeManager.Debug)
                 Console.WriteLine($"PropertyInstanceId.{(PropertyInstanceId)requirement.Stat} {(CompareType)requirement.Enum} {requirement.Value}, current: {value}");
@@ -240,7 +152,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         foreach (var requirement in didReqs)
         {
             uint? value = obj.GetProperty((PropertyDataId)requirement.Stat);
-            double? normalized = value != null ? (double?)Convert.ToDouble(value.Value) : null;
+            double? normalized = value != null ? Convert.ToDouble(value.Value) : null;
 
             if (RecipeManager.Debug)
                 Console.WriteLine($"PropertyDataId.{(PropertyDataId)requirement.Stat} {(CompareType)requirement.Enum} {requirement.Value}, current: {value}");
@@ -296,7 +208,4 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         [0x38000040] = ImbuedEffectType.SlashRending,
         [0x38000041] = ImbuedEffectType.Spellbook,
     };
-
-    //RecipeManager.UseObjectOnTarget
-    //WorldObject.HandleActionUseOnTarget
 }

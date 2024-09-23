@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace QualityOfLife;
 
 [HarmonyPatchCategory(nameof(Recklessness))]
 public class Recklessness

@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Patches;
+﻿namespace Balance.Patches;
 
 [HarmonyPatch]
 [HarmonyPatchCategory(nameof(LevelCost))]
@@ -24,7 +24,7 @@ public class LevelCost : AngouriMathPatch
     public override void Start()
     {
         //If you can parse the formulas patch the corresponding category
-        if (Formula.TryGetFunction<long, int>(out func, Variables.TypesAndNames()))
+        if (Formula.TryGetFunction(out func, Variables.TypesAndNames()))
         {
             Mod.Harmony.PatchCategory(nameof(LevelCost));
         }

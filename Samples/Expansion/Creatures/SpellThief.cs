@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Creatures;
+﻿namespace Expansion.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.SpellThief))]
 public class SpellThief : CreatureEx
@@ -9,7 +9,7 @@ public class SpellThief : CreatureEx
 #else
     public SpellThief(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
 #endif
- { }
+    { }
 
     //Mutate from the original weenie
     protected override void Initialize()

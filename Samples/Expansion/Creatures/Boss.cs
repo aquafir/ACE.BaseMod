@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Creatures;
+﻿namespace Expansion.Creatures;
 
 [HarmonyPatchCategory(nameof(CreatureExType.Boss))]
 public class Boss : CreatureEx
@@ -9,7 +9,7 @@ public class Boss : CreatureEx
 #else
     public Boss(Weenie weenie, ObjectGuid guid) : base(weenie, guid)
 #endif
- { }
+    { }
 
     //Mutate from the original weenie
     protected override void Initialize()
@@ -71,7 +71,7 @@ public class Boss : CreatureEx
         if (lapsed < weaknessInterval) return;
         lastWeakness = time;
 
-        var nextWeakness = DamageTypeValues.GetRandom<DamageType>();
+        var nextWeakness = DamageTypeValues.GetRandom();
 
         if (nextWeakness != weakTo)
         {
@@ -129,7 +129,7 @@ public class Boss : CreatureEx
             actionChain.AddDelaySeconds(spamDelay);
             actionChain.AddAction(this, () =>
             {
-                var spellIds = spellPool.GetRandomElements<int>(spamVariety).ToArray();
+                var spellIds = spellPool.GetRandomElements(spamVariety).ToArray();
                 int count = 0;
                 foreach (var nearbyPlayer in CurrentLandblock.players.Where(x => x.GetDistance(this) < spamDistance))
                     TryCastSpell(new Spell(spellIds[count++ % spellIds.Length]), nearbyPlayer);
@@ -170,7 +170,7 @@ public class Boss : CreatureEx
         var actionChain = new ActionChain();
         for (var i = 0; i < bulletCount; i++)
         {
-            var spell = new Spell(bulletPool.GetRandom<int>());
+            var spell = new Spell(bulletPool.GetRandom());
             var spellType = ProjectileSpellType.Bolt;
             var origins = CalculateProjectileOrigins(spell, spellType, target);
             var velocity = CalculateProjectileVelocity(spell, target, spellType, origins[0]);

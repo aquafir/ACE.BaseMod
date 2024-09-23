@@ -1,9 +1,7 @@
 ﻿using ACE.Database;
-using ACE.Entity.Enum.Properties;
-using ACE.Server.Network.GameMessages.Messages;
-using Tinkering.Helpers;
+using PlayerSave.Helpers;
 
-namespace Tinkering;
+namespace PlayerSave;
 
 internal class SnapshotCommand
 {
@@ -172,7 +170,7 @@ internal class SnapshotCommand
             playerVital.Ranks = 196u;
             playerVital.ExperienceSpent = 4285430197u;
             // my OCD will not let health/stam not be equal due to the endurance calc
-            playerVital.StartingValue = (v.Key == PropertyAttribute2nd.MaxHealth) ? 94803u : 89804u;
+            playerVital.StartingValue = v.Key == PropertyAttribute2nd.MaxHealth ? 94803u : 89804u;
             currentPlayer.Session.Network.EnqueueSend(new GameMessagePrivateUpdateVital(currentPlayer, playerVital));
         }
 
@@ -213,15 +211,15 @@ internal class SnapshotCommand
                 {
                     switch (i)
                     {
-                        case int n when (n <= 5):
+                        case int n when n <= 5:
                             currentPlayer.SetProperty((PropertyInt)uint.Parse(returnStringArr[i]), int.Parse(returnStringArr[i + 1]));
                             i += 2;
                             break;
-                        case int n when (n <= 9):
+                        case int n when n <= 9:
                             currentPlayer.SetProperty((PropertyInt64)uint.Parse(returnStringArr[i]), long.Parse(returnStringArr[i + 1]));
                             i += 2;
                             break;
-                        case int n when (n <= 33):
+                        case int n when n <= 33:
                             var playerAttr = currentPlayer.Attributes[(PropertyAttribute)uint.Parse(returnStringArr[i])];
                             playerAttr.StartingValue = uint.Parse(returnStringArr[i + 1]);
                             playerAttr.Ranks = uint.Parse(returnStringArr[i + 2]);
@@ -229,7 +227,7 @@ internal class SnapshotCommand
                             currentPlayer.Session.Network.EnqueueSend(new GameMessagePrivateUpdateAttribute(currentPlayer, playerAttr));
                             i += 4;
                             break;
-                        case int n when (n <= 48):
+                        case int n when n <= 48:
                             var playerVital = currentPlayer.Vitals[(PropertyAttribute2nd)int.Parse(returnStringArr[i])];
                             playerVital.StartingValue = uint.Parse(returnStringArr[i + 1]);
                             playerVital.Ranks = uint.Parse(returnStringArr[i + 2]);
@@ -238,7 +236,7 @@ internal class SnapshotCommand
                             currentPlayer.Session.Network.EnqueueSend(new GameMessagePrivateUpdateVital(currentPlayer, playerVital));
                             i += 5;
                             break;
-                        case int n when (n <= 238):
+                        case int n when n <= 238:
                             var playerSkill = currentPlayer.Skills[(Skill)int.Parse(returnStringArr[i])];
                             playerSkill.Ranks = ushort.Parse(returnStringArr[i + 1]);
 

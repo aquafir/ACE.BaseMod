@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Tinkering.Modules;
+﻿namespace Discord.Modules;
 public class ChatCommandModule : InteractionModuleBase<SocketInteractionContext>
 {
     public InteractionService Commands { get; set; }
@@ -16,7 +14,7 @@ public class ChatCommandModule : InteractionModuleBase<SocketInteractionContext>
     {
         var user = this.Context?.User?.Username;
 
-        if (String.IsNullOrEmpty(user))
+        if (string.IsNullOrEmpty(user))
             await RespondAsync("Unable to find the user of this command.");
         else
         {
@@ -32,7 +30,7 @@ public class ChatCommandModule : InteractionModuleBase<SocketInteractionContext>
     {
         Debugger.Break();
         var user = this.Context?.User?.Username;
-        if (String.IsNullOrEmpty(user))
+        if (string.IsNullOrEmpty(user))
             await RespondAsync("Unable to find the user of this command.");
         else
         {

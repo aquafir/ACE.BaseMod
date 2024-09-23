@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Entitled;
+﻿namespace Tower;
 
 //[CommandCategory(nameof(Feature.))]
 //[HarmonyPatchCategory(nameof(Feature.))]

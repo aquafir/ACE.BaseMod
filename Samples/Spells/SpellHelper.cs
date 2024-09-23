@@ -1,10 +1,9 @@
 ﻿//using ACE.Adapter.GDLE.Models;
-using ACE.Common.Extensions;
 using ACE.DatLoader.Entity;
 using Newtonsoft.Json;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Tinkering;
+namespace Spells;
 
 public static class SpellHelper
 {

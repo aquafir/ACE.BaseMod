@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace AccessDb;
 
 public class Settings
 {

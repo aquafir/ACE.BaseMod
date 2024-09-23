@@ -1,4 +1,4 @@
-﻿namespace Tinkering
+﻿namespace Spells
 {
     public class Settings
     {

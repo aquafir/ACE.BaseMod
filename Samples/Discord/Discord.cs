@@ -1,13 +1,10 @@
-﻿using ACE.Server.Network.GameEvent.Events;
-using ACE.Server.Network.GameMessages.Messages;
-using Tinkering.WebSocket;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
-using System.Text.RegularExpressions;
 using System.Timers;
+using Discord;
 
-namespace Tinkering;
+namespace Discord;
 public class Discord
 {
     private DiscordSocketClient _client;
@@ -218,7 +215,7 @@ public class Discord
                         using (var fileStream = File.Create(filePath))
                         {
                             await stream.CopyToAsync(fileStream);
-                            await this._channel.SendMessageAsync($"Downloaded loot profile: {attachment.Filename}");
+                            await _channel.SendMessageAsync($"Downloaded loot profile: {attachment.Filename}");
                         }
                     }
                 }
@@ -264,8 +261,8 @@ public class Discord
 
         //Message with a name/clickable response
         var tellEvent = new GameEventTell(
-            targetPlayer.Session, 
-            message, 
+            targetPlayer.Session,
+            message,
             fakeSender.Name,
 #if REALM
             fakeSender.Guid.ClientGUID,

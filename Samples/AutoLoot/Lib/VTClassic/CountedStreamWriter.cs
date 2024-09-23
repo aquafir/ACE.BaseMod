@@ -28,7 +28,7 @@
 //  THE SOFTWARE.
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace VTClassic
+namespace AutoLoot.Lib.VTClassic
 {
     internal class CountedStreamWriter : StreamWriter
     {
@@ -125,19 +125,19 @@ namespace VTClassic
         }
         public override void Write(string format, params object[] arg)
         {
-            Write(String.Format(format, arg));
+            Write(string.Format(format, arg));
         }
         public override void Write(string format, object arg0)
         {
-            Write(String.Format(format, arg0));
+            Write(string.Format(format, arg0));
         }
         public override void Write(string format, object arg0, object arg1)
         {
-            Write(String.Format(format, arg0, arg1));
+            Write(string.Format(format, arg0, arg1));
         }
         public override void Write(string format, object arg0, object arg1, object arg2)
         {
-            Write(String.Format(format, arg0, arg1, arg2));
+            Write(string.Format(format, arg0, arg1, arg2));
         }
 
         public override void WriteLine(bool value)

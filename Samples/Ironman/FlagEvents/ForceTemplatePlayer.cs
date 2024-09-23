@@ -1,19 +1,15 @@
 ﻿using ACE.Database.Entity;
-using ACE.Entity;
-using ACE.Entity.Enum.Properties;
-using ACE.Entity.Models;
 using ACE.Server.Entity.Actions;
-using ACE.Server.Factories;
 using static ACE.Server.Factories.PlayerFactory;
 using Biota = ACE.Entity.Models.Biota;
 
-namespace Tinkering.FlagEvents;
+namespace Ironman.FlagEvents;
 
 [HarmonyPatchCategory(nameof(ForceTemplatePlayer))]
 public class ForceTemplatePlayer
 {
     [HarmonyPrefix]
-    [HarmonyPatch(typeof(PlayerFactory), nameof(PlayerFactory.Create), new Type[] { typeof(CharacterCreateInfo), typeof(Weenie), typeof(ObjectGuid), typeof(uint), typeof(WeenieType), typeof(Player) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Out })]
+    [HarmonyPatch(typeof(PlayerFactory), nameof(Create), new Type[] { typeof(CharacterCreateInfo), typeof(Weenie), typeof(ObjectGuid), typeof(uint), typeof(WeenieType), typeof(Player) }, new ArgumentType[] { ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Normal, ArgumentType.Out })]
     public static void PreCreate(CharacterCreateInfo characterCreateInfo, Weenie weenie, ObjectGuid guid, uint accountId, WeenieType weenieType, Player player, ref CreateResult __result)
     {
         //Only apply to templated players

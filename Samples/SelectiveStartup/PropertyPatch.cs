@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace SelectiveStartup;
 
 [HarmonyPatchCategory(nameof(ServerTask.PropertyManager))]
 public static class PropertyPatch

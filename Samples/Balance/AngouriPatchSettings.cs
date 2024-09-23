@@ -1,4 +1,4 @@
-﻿namespace Tinkering;
+﻿namespace Balance;
 
 public partial class AngouriPatchSettings
 {
@@ -24,7 +24,7 @@ public partial class AngouriPatchSettings
 
     public AngouriMathPatch CreatePatch()
     {
-        var type = System.Type.GetType($"Balance.Patches.{PatchType}");
+        var type = Type.GetType($"Balance.Patches.{PatchType}");
 
         if (type is null)
         {

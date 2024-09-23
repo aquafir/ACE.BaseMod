@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Bank;
+﻿namespace Tower;
 
 public class BankSettings
 {

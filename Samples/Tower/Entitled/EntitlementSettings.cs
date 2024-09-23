@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Entitled;
+﻿namespace Tower;
 public class EntitlementSettings
 {
     //Just placeholder atm

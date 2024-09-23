@@ -1,6 +1,4 @@
-﻿using ACE.Entity.Enum.Properties;
-
-namespace Tinkering;
+﻿namespace EasyEnlightenment;
 
 public class Settings
 {

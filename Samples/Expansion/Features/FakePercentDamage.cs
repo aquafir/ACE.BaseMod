@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Features;
+﻿namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.FakePercentDamage))]
 [HarmonyPatchCategory(nameof(Feature.FakePercentDamage))]

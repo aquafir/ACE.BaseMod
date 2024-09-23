@@ -1,4 +1,4 @@
-﻿namespace Tinkering.MeleeMagic;
+﻿namespace Tower;
 
 /// <summary>
 /// MeleeMagic groups handle MeleeMagic for the weapons whose FakeDID.MeleeMagicGroup point to them

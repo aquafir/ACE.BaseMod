@@ -1,4 +1,4 @@
-﻿namespace Tinkering.Creatures;
+﻿namespace ExtendACE.Creatures;
 
 [HarmonyPatch]
 public class Stunner : CreatureEx

@@ -1,7 +1,7 @@
 ﻿using ACE.Server.Network.Handlers;
 using ACE.Server.Network.Enum;
 
-namespace Tinkering.Features;
+namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.EquipPostCreation))]
 [HarmonyPatchCategory(nameof(Feature.EquipPostCreation))]

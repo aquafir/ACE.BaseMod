@@ -1,4 +1,6 @@
-﻿namespace Tinkering;
+﻿using ACE.Server.Entity.Actions;
+
+namespace Tower;
 
 [CommandCategory(nameof(Feature.AutoBattle))]
 [HarmonyPatchCategory(nameof(Feature.AutoBattle))]

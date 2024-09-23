@@ -1,4 +1,4 @@
-﻿namespace Tinkering
+﻿namespace Respawn
 {
     public class Settings
     {

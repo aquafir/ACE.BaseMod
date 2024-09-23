@@ -1,9 +1,7 @@
 ﻿using ACE.DatLoader.FileTypes;
 using ACE.Server.Entity.Actions;
-using ACE.Server.Managers;
-using ACE.Server.Network.GameMessages.Messages;
 
-namespace Tinkering;
+namespace QualityOfLife;
 
 [HarmonyPatchCategory(nameof(Animations))]
 internal static class Animations
@@ -35,7 +33,7 @@ internal static class Animations
             if (PlayerManager.GetOnlinePlayer(__instance.Guid) is not Player p)
                 return true;
 
-            p.EnqueueBroadcast(new GameMessageHearSpeech(Player.SuicideMessages[step], p.GetNameWithSuffix(), p.Guid.Full, ChatMessageType.Speech), Player.LocalBroadcastRange);
+            p.EnqueueBroadcast(new GameMessageHearSpeech(Player.SuicideMessages[step], p.GetNameWithSuffix(), p.Guid.Full, ChatMessageType.Speech), WorldObject.LocalBroadcastRange);
 
             var suicideChain = new ActionChain();
             suicideChain.AddDelaySeconds(S.Settings.Animations.DieSeconds);

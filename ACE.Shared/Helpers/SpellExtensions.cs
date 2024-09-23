@@ -1,7 +1,4 @@
-﻿using ACE.DatLoader.Entity;
-using System.Runtime.Serialization.Formatters.Binary;
-
-namespace ACE.Shared.Helpers;
+﻿namespace ACE.Shared.Helpers;
 
 public static class SpellExtensions
 {

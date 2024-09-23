@@ -1,8 +1,7 @@
 ﻿using ACE.Database;
-using ACE.DatLoader;
 using ACE.Server.Network.Managers;
 
-namespace Tinkering;
+namespace SelectiveStartup;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
@@ -155,7 +154,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     [HarmonyPatch(typeof(PropertyManager), nameof(PropertyManager.Initialize))]
     public static bool PreInitialize10()
     {
-        if(Settings.Skip.Contains(ServerTask.PropertyManager) && !propManagerPatched)
+        if (Settings.Skip.Contains(ServerTask.PropertyManager) && !propManagerPatched)
         {
             propManagerPatched = true;
             Mod.Harmony.PatchCategory(nameof(ServerTask.PropertyManager));
