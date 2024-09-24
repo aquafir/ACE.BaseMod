@@ -8,10 +8,7 @@ namespace CustomSpells;
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
-    public override async Task OnWorldOpen()
-    {
-        SetupSpells();
-    }
+    public override async Task OnWorldOpen() => SetupSpells();
 
     private static void SetupSpells()
     {
@@ -125,7 +122,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 
         ModManager.Log($"Replaced {Settings.Sets.Count} EquipmentSets with a combined {Settings.Sets.Sum(x => x.Value.Count())} tiers and {Settings.Sets.Sum(x => x.Value.Sum(s => s.Spells.Count))} set spells");
     }
-
+ 
 
     [CommandHandler("loadspells", AccessLevel.Developer, CommandHandlerFlag.None)]
     public static void HandleLoadSpellSpreadsheet(Session session, params string[] parameters)

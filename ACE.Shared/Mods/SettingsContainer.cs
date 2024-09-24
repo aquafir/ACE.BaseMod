@@ -11,6 +11,9 @@ public abstract class SettingsContainer<T> where T : class?, new()
 
     public T Settings { get; set; }
 
+    private DateTime _lastChange = DateTime.MinValue;
+    private readonly TimeSpan DEBOUNCE_INTERVAL = TimeSpan.FromMilliseconds(500);
+
     public SettingsContainer(string filePath)
     {
         this.SettingsPath = filePath;
@@ -23,17 +26,24 @@ public abstract class SettingsContainer<T> where T : class?, new()
             NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName,
             EnableRaisingEvents = true,
         };
-
+        
         _fileWatcher.Changed += OnSettingsChanged;
         _fileWatcher.EnableRaisingEvents = true;
     }
 
     protected virtual async void OnSettingsChanged(object sender, FileSystemEventArgs e)
     {
+        //Gate reload events, was getting doubled
+        var lapsed = DateTime.Now - _lastChange;
+        if (lapsed < DEBOUNCE_INTERVAL)
+            return;
+
+        _lastChange = DateTime.Now;
+
         //Todo: think about better ways of doing this
         //When the settings file is changed reload and raise the event
         var result = await LoadOrCreateAsync();
-
+        
         if(result)
             Console.WriteLine($"Reloaded settings: {SettingsPath}");
 
