@@ -45,9 +45,9 @@ public static class PlayerExtensions
 
         //Set home?
 #if REALM
-        player.LinkedLifestone = newPos;
-        player.Sanctuary = newPos;
-        player.Home = newPos.AsInstancedPosition(player, Entity.Enum.RealmProperties.PlayerInstanceSelectMode.HomeRealm);
+        player.LinkedLifestone = newPos.AsLocalPosition();
+        player.Sanctuary = newPos.AsLocalPosition();
+        player.Home = newPos; //.AsInstancedPosition(player, Entity.Enum.RealmProperties.PlayerInstanceSelectMode.HomeRealm);
 #else
         player.SetPosition(PositionType.LinkedLifestone, newPos);
         player.SetPosition(PositionType.Sanctuary, newPos);
@@ -59,12 +59,9 @@ public static class PlayerExtensions
         //Set flag used to prevent tele/other stuff?
         player.SetProperty(FakeBool.Quarantined, true);
 
-#if REALM
         //Todo: determine how to see if player is 
-        player.TeleportThreadSafe(newPos.AsInstancedPosition(player, Entity.Enum.RealmProperties.PlayerInstanceSelectMode.HomeRealm));
-#else
+        //player.TeleportThreadSafe(newPos.AsInstancedPosition(player, Entity.Enum.RealmProperties.PlayerInstanceSelectMode.HomeRealm));
         player.TeleportThreadSafe(newPos);
-#endif
     }
 
     /// <summary>

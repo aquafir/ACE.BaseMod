@@ -37,7 +37,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.3.3" />
-		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.3" />
+		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.*" />
 	</ItemGroup>
 
 	<ItemGroup>

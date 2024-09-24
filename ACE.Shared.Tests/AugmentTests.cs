@@ -26,7 +26,6 @@ public class AugmentTests
         Assert.NotNull(wo); 
     }
 
-
     [Test]
     public void SetPropertyString()
     {

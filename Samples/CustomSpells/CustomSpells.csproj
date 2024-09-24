@@ -21,12 +21,14 @@
 	<PropertyGroup>
 		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
 	</PropertyGroup>
-	<PropertyGroup>
+	<!--<PropertyGroup>
 		<PublicizeAll>true</PublicizeAll>
-	</PropertyGroup>
-	<!--<ItemGroup>
+	</PropertyGroup>-->
+	<ItemGroup>
 		<Publicize Include="ACE.Server" />
-	</ItemGroup>-->
+		<Publicize Include="ACE.DatLoader"/>
+		<Publicize Include="ACE.Database" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="ExcelMapper" Version="5.2.592" />

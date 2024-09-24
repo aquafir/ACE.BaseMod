@@ -1,6 +1,9 @@
 ﻿using ACE.DatLoader.Entity;
 using Ganss.Excel;
+
+#if !REALM
 using Position = ACE.Entity.Position;
+#endif
 
 namespace CustomSpells;
 
@@ -107,7 +110,7 @@ public class SpellCustomization
     [FormulaResult]
     public List<uint>? Formula { get; set; }
     [FormulaResult]
-    public Position? Position { get; set; }
+    public ACE.Entity.Position? Position { get; set; }
 
     static Settings Settings => PatchClass.Settings;
 
@@ -163,7 +166,7 @@ public class SpellCustomization
             int? Number = null,
             float? NumberVariance = null,
             List<uint>? Formula = null,
-            Position? Position = null
+            ACE.Entity.Position? Position = null
     )
     {
         this.Template = Template;
@@ -288,7 +291,11 @@ public class SpellCustomization
         Peturbation = spell.Peturbation;
         Formula = sb.Formula;
 
+#if REALM
+        Position = spell.Position.Position;
+#else
         Position = spell.Position;
+#endif
     }
 
     /// <summary>

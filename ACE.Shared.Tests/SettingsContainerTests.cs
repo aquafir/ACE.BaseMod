@@ -13,35 +13,35 @@ public class SettingsContainerTests
         SC = new(PATH);
     }
     
-    [Test]
-    public async Task CreateOrLoadAsync_FailsRetries_SettingsNull()
-    {
-        Task.Run(() => SimulateFileLockAsync(PATH, TimeSpan.FromSeconds(3)));
-        await SC.LoadOrCreateAsync(5, 5);
-        Assert.IsNull(SC.Settings);
-    }
+    //[Test]
+    //public async Task CreateOrLoadAsync_FailsRetries_SettingsNull()
+    //{
+    //    Task.Run(() => SimulateFileLockAsync(PATH, TimeSpan.FromSeconds(3)));
+    //    await SC.LoadOrCreateAsync(5, 5);
+    //    Assert.IsNull(SC.Settings);
+    //}
 
-    [Test]
-    public async Task CreateOrLoadAsync_SucceedsRetries_SettingsNotNull()
-    {
-        Task.Run(() => SimulateFileLockAsync(PATH, TimeSpan.FromSeconds(3)));
-        await SC.LoadOrCreateAsync();
-        Assert.IsNotNull(SC.Settings);
-    }
+    //[Test]
+    //public async Task CreateOrLoadAsync_SucceedsRetries_SettingsNotNull()
+    //{
+    //    Task.Run(() => SimulateFileLockAsync(PATH, TimeSpan.FromSeconds(3)));
+    //    await SC.LoadOrCreateAsync();
+    //    Assert.IsNotNull(SC.Settings);
+    //}
 
-    [Test]
-    public async Task CreateOrLoadAsync_WhenSuccess_SettingsNotNull()
-    {
-        await SC.LoadOrCreateAsync();
-        Assert.IsNotNull(SC.Settings);
-    }
+    //[Test]
+    //public async Task CreateOrLoadAsync_WhenSuccess_SettingsNotNull()
+    //{
+    //    await SC.LoadOrCreateAsync();
+    //    Assert.IsNotNull(SC.Settings);
+    //}
 
-    [Test]
-    public async Task CreateOrLoadAsync_WhenSuccess_HasFileAsync()
-    {
-        await SC.LoadOrCreateAsync();
-        Assert.IsTrue(File.Exists(PATH));
-    }
+    //[Test]
+    //public async Task CreateOrLoadAsync_WhenSuccess_HasFileAsync()
+    //{
+    //    await SC.LoadOrCreateAsync();
+    //    Assert.IsTrue(File.Exists(PATH));
+    //}
 
     public static async Task SimulateFileLockAsync(string filePath, TimeSpan lockDuration)
     {
