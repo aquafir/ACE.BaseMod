@@ -24,6 +24,8 @@
 	</PropertyGroup>-->
 	<!--<ItemGroup>
 		<Publicize Include="ACE.Server" />
+		<Publicize Include="ACE.DatLoader"/>
+		<Publicize Include="ACE.Database" />		
 	</ItemGroup>-->
 	<!--<PropertyGroup>
 		<PublicizeAll>true</PublicizeAll>
@@ -38,6 +40,7 @@
 	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.3.3" />
 		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.*" />
+		<!--<ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />-->
 	</ItemGroup>
 
 	<ItemGroup>

@@ -13,7 +13,7 @@ public class BasicMod : IHarmonyMod
     //Global access to mod
     public static BasicMod Instance { get; set; }
 
-    public IPatch Patch { get; set; }
+    public List<IPatch> Patches { get; set; }
 
     //IDs are used by Harmony to separate multiple patches
     public string ID { get; set; }
@@ -23,17 +23,17 @@ public class BasicMod : IHarmonyMod
     private bool disposedValue;
 
     public BasicMod() { }
-    public BasicMod(string name, IPatch patch) => Setup(name, patch);
+    public BasicMod(string name, params IPatch[] patch) => Setup(name, patch);
     #endregion
 
-    protected virtual void Setup(string name, IPatch patch)
+    protected virtual void Setup(string name, params IPatch[] patches)
     {
         Name = name;
         ID = $"com.ACE.ACEmulator.{Name}";
         ModPath = Path.Combine(ModManager.ModPath, Name);
         Harmony = new(ID);
         Instance = this;
-        Patch = patch;
+        Patches = patches.ToList();
     }
 
     #region Initialize / Dispose (called by ACE)
@@ -76,7 +76,8 @@ public class BasicMod : IHarmonyMod
         try
         {
             Harmony.PatchAll(Container.ModAssembly);
-            Patch.Init();
+            foreach(var patch in Patches)
+                patch.Init();
         }
         catch (Exception ex)
         {
@@ -89,7 +90,8 @@ public class BasicMod : IHarmonyMod
     {
         try
         {
-            Patch?.Dispose();
+            foreach (var patch in Patches)
+                patch?.Dispose();
             Harmony.UnpatchAll(ID);
         }
         catch (Exception ex)
