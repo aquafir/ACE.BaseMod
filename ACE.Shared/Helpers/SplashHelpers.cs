@@ -177,6 +177,8 @@ public static class SplashHelper
             TargetExclusionFilter.NPC => (origin, target) => (!target.Attackable && target.TargetingTactic == TargetingTactic.None),
             TargetExclusionFilter.LineOfSight => (origin, target) => origin.IsDirectVisible(target),
             TargetExclusionFilter.OutOfSight => (origin, target) => !origin.IsDirectVisible(target),
+            //Player_Combat.CanDamage
+            TargetExclusionFilter.Undamageable => (origin, target) => !(target.Attackable && !target.Teleporting && !(target is CombatPet)),
             _ => (origin, target) => target is null,
         };
 
@@ -247,6 +249,10 @@ public enum TargetExclusionFilter
     /// Ignores WorldObjects out of line-of-sight
     /// </summary>
     OutOfSight = 0x2000,
+    /// <summary>
+    /// Ignores undamageable WorldObjects
+    /// </summary>
+    Undamageable = 0x4000,
 
 
     /// <summary>
@@ -262,6 +268,15 @@ public enum TargetExclusionFilter
     /// </summary>
     OnlyVisibleCreature = OnlyCreature | OutOfSight,
     /// <summary>
+    /// Excludes all but damageable creatures
+    /// </summary>
+    OnlyDamageableCreature = Standard | Player | Undamageable,
+    /// <summary>
+    /// Excludes all but visible and damageable creatures
+    /// </summary>
+    OnlyVisibleDamageableCreature = OnlyCreature | Undamageable | OutOfSight,
+
+    /// <summary>
     /// Excludes all but players
     /// </summary>
     OnlyPlayer = Standard | Creature,
@@ -269,4 +284,12 @@ public enum TargetExclusionFilter
     /// Excludes all but visible players
     /// </summary>
     OnlyVisiblePlayer = OnlyPlayer | OutOfSight,
+    /// <summary>
+    /// Excludes all but damageable players
+    /// </summary>
+    OnlyDamageablePlayer = OnlyCreature | Undamageable,
+    /// <summary>
+    /// Excludes all but visible and damageable players
+    /// </summary>
+    OnlyVisibleDamageablePlayer = OnlyPlayer | OutOfSight | Undamageable,
 }

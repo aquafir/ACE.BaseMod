@@ -26,6 +26,7 @@ public class FakeSpellSplitSplash
             return;
 
         //Check split projectiles
+        //Debugger.Break();
         if (spell.IsProjectile)
         {
             //Todo: use something like this?
@@ -58,7 +59,7 @@ public class FakeSpellSplitSplash
 
             for (var i = 0; i < targets.Count; i++)
             {
-                if (player.IsInvalidTarget(spell, targets[i]))
+                if (!player.IsInvalidTarget(spell, targets[i]))
                     __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
             }
         }
@@ -91,7 +92,7 @@ public class FakeSpellSplitSplash
 
             for (var i = 0; i < targets.Count; i++)
             {
-                if (player.IsInvalidTarget(spell, targets[i]))
+                if (!player.IsInvalidTarget(spell, targets[i]))
                     __instance.TryCastSpell_WithRedirects(spell, targets[i], itemCaster, weapon, isWeaponSpell, fromProc);
             }
         }
