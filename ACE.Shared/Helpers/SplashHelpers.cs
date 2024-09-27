@@ -87,7 +87,7 @@ public static class SplashHelper
     public static IEnumerable<Creature> GetSplitTargets(this Player player, WorldObject target, TargetExclusionFilter filter, float maxRange = 5.0f, float splitAngle = 360)
     {
         if (player is null) return new List<Creature>();
-
+        
         //Try to get a cached predicate and build one if not created (should only happen with novel combinations of filters
         if (!predicates.TryGetValue(filter, out var predicate))
             predicate = filter.GetExclusionFilterPredicate();
@@ -287,7 +287,7 @@ public enum TargetExclusionFilter
     /// <summary>
     /// Excludes all but damageable players
     /// </summary>
-    OnlyDamageablePlayer = OnlyCreature | Undamageable,
+    OnlyDamageablePlayer = OnlyPlayer | Undamageable,
     /// <summary>
     /// Excludes all but visible and damageable players
     /// </summary>

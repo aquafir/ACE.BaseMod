@@ -48,7 +48,7 @@ public class FakeSpellSplitSplash
 
             var rangeScale = PatchClass.Settings.SpellSettings.SplitRange; //(1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplitRangeScale)) * S.Settings.SpellSettings.SplitRange;
             //var targets = player.GetSplashTargets(target, rangeScale).Where(x => x is not Player).Take(splitCount).ToList();
-            var targets = player.GetSplashTargets(target, TargetExclusionFilter.OnlyVisibleCreature, rangeScale).Take(splitCount).ToList();
+            var targets = player.GetSplashTargets(target, TargetExclusionFilter.OnlyVisibleDamageableCreature, rangeScale).Take(splitCount).ToList();
 
 
             if (targets.Count < 1)
@@ -81,7 +81,7 @@ public class FakeSpellSplitSplash
 
             var rangeScale = PatchClass.Settings.SpellSettings.SplitRange;//(1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplashRangeScale)) * S.Settings.SpellSettings.SplitRange;
             var targets = spell.IsHarmful ?
-                player.GetSplashTargets(target, TargetExclusionFilter.OnlyCreature, rangeScale).Take(splashCount).ToList() :
+                player.GetSplashTargets(target, TargetExclusionFilter.OnlyDamageableCreature, rangeScale).Take(splashCount).ToList() :
                 player.GetSplashTargets(target, TargetExclusionFilter.OnlyPlayer, rangeScale).Take(splashCount).ToList();
 
             if (targets.Count < 1)
