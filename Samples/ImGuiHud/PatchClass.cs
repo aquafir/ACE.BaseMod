@@ -5,6 +5,8 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 {
     public override async Task OnStartSuccess()
     {
+        Settings = SettingsContainer.Settings;
+
         if (Settings.AutostartGui)
             StartGui();
     }

@@ -1,9 +1,15 @@
-﻿namespace EasyEnlightenment;
+﻿
+namespace EasyEnlightenment;
 
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
     private const int ENLIGHTENMENT_WCID = 53412;
+
+    public override async Task OnStartSuccess()
+    {
+        Settings = SettingsContainer.Settings;
+    }
 
     [CommandHandler("newlum", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 0)]
     public static void HandleMeta(Session session, params string[] parameters)

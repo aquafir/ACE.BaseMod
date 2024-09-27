@@ -172,12 +172,19 @@ internal class MutatorHooks
     }
 
     #region WeenieFactory Methods
+#if REALM
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(Weenie), typeof(ObjectGuid), typeof(AppliedRuleset) })]
+    public static void PostCreateWorldObject(Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset, ref WorldObject __result)
+        => MutateFactory(__result);
+#else
     [HarmonyPostfix]
     [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(Weenie), typeof(ObjectGuid) })]
     public static void PostCreateWorldObject(Weenie weenie, ObjectGuid guid, ref WorldObject __result)
         => MutateFactory(__result);
+#endif
     [HarmonyPostfix]
-    [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(ACE.Entity.Models.Biota) })]
+    [HarmonyPatch(typeof(WorldObjectFactory), nameof(WorldObjectFactory.CreateWorldObject), new Type[] { typeof(Biota) })]
     public static void PreCreateWorldObject(ACE.Entity.Models.Biota biota, ref WorldObject __result)
         => MutateFactory(__result);
     [HarmonyPostfix]
@@ -189,7 +196,6 @@ internal class MutatorHooks
     //[HarmonyPatch(typeof(WorldObject), nameof(WorldObject.EnterWorld))]
     //public static void PostEnterWorld(ref WorldObject __instance, ref bool __result)
     //    => MutateFactory(__instance);
-
 
     private static void MutateFactory(WorldObject __result)
     {

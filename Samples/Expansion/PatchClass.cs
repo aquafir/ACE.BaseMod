@@ -5,9 +5,19 @@ namespace Expansion;
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
+    public static Settings Settings { get; set; }
+
+    public override Task OnStartSuccess()
+    {
+        //Give access to other things access to Settings
+        Settings = SettingsContainer.Settings;
+
+        MutatorHooks.SetupMutators();
+        return Task.CompletedTask;
+    }
+
     public override async Task OnWorldOpen()
     {
-        MutatorHooks.SetupMutators();
         SetupFeatures();
     }
 

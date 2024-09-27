@@ -1,8 +1,10 @@
-﻿namespace Expansion.Features;
+﻿using System.Collections.Concurrent;
+
+namespace Expansion.Features;
 
 [CommandCategory(nameof(Feature.FakeSpellSplitSplash))]
 [HarmonyPatchCategory(nameof(Feature.FakeSpellSplitSplash))]
-internal class FakeSpellSplitSplash
+public class FakeSpellSplitSplash
 {
     /// <summary>
     /// Splits or splashes a spell
@@ -23,7 +25,6 @@ internal class FakeSpellSplitSplash
         if (spell.IsSelfTargeted)
             return;
 
-        //Debugger.Break();
         //Check split projectiles
         if (spell.IsProjectile)
         {
@@ -31,7 +32,7 @@ internal class FakeSpellSplitSplash
             //if (player.GetProperty(FakeBool.CurrentlySpellSplit) ?? false)  return;
 
             //Check any split
-            var splitCount = S.Settings.SpellSettings.SplitCount;// player.GetCachedFake(FakeInt.ItemSpellSplitCount);
+            var splitCount =  Math.Max(PatchClass.Settings.SpellSettings.SplitCount, player.GetCachedFake(FakeInt.ItemSpellSplitCount)); 
             if (splitCount < 1) return;
 
             //Gate by cooldown
@@ -40,11 +41,11 @@ internal class FakeSpellSplitSplash
             var delta = current - time;
 
             //scale?
-            var scaledInterval = S.Settings.SpellSettings.SplitCooldown; //(1 - player.GetCachedFake(FakeFloat.ItemSpellSplitCooldownScale)) * S.Settings.SpellSettings.SplitCooldown;
+            var scaledInterval = PatchClass.Settings.SpellSettings.SplitCooldown; //(1 - player.GetCachedFake(FakeFloat.ItemSpellSplitCooldownScale)) * S.Settings.SpellSettings.SplitCooldown;
             if (delta < scaledInterval)
                 return;
 
-            var rangeScale = S.Settings.SpellSettings.SplitRange; //(1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplitRangeScale)) * S.Settings.SpellSettings.SplitRange;
+            var rangeScale = PatchClass.Settings.SpellSettings.SplitRange; //(1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplitRangeScale)) * S.Settings.SpellSettings.SplitRange;
             //var targets = player.GetSplashTargets(target, rangeScale).Where(x => x is not Player).Take(splitCount).ToList();
             var targets = player.GetSplashTargets(target, TargetExclusionFilter.OnlyVisibleCreature, rangeScale).Take(splitCount).ToList();
 
@@ -65,7 +66,7 @@ internal class FakeSpellSplitSplash
         else
         {
             //Check any splash
-            var splashCount = S.Settings.SpellSettings.SplashCount; //player.GetCachedFake(FakeInt.ItemSpellSplashCount);
+            var splashCount = Math.Max(PatchClass.Settings.SpellSettings.SplashCount, player.GetCachedFake(FakeInt.ItemSpellSplashCount));  
             if (splashCount < 1) return;
 
             //Gate by cooldown
@@ -73,11 +74,11 @@ internal class FakeSpellSplitSplash
             var current = Time.GetUnixTime();
             var delta = current - time;
 
-            var scaledInterval = S.Settings.SpellSettings.SplitCooldown;//(1 - player.GetCachedFake(FakeFloat.ItemSpellSplashCooldownScale)) * S.Settings.SpellSettings.SplitCooldown;
+            var scaledInterval = PatchClass.Settings.SpellSettings.SplitCooldown;//(1 - player.GetCachedFake(FakeFloat.ItemSpellSplashCooldownScale)) * S.Settings.SpellSettings.SplitCooldown;
             if (delta < scaledInterval)
                 return;
 
-            var rangeScale = S.Settings.SpellSettings.SplitRange;//(1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplashRangeScale)) * S.Settings.SpellSettings.SplitRange;
+            var rangeScale = PatchClass.Settings.SpellSettings.SplitRange;//(1 + (float)player.GetCachedFake(FakeFloat.ItemSpellSplashRangeScale)) * S.Settings.SpellSettings.SplitRange;
             var targets = spell.IsHarmful ?
                 player.GetSplashTargets(target, TargetExclusionFilter.OnlyCreature, rangeScale).Take(splashCount).ToList() :
                 player.GetSplashTargets(target, TargetExclusionFilter.OnlyPlayer, rangeScale).Take(splashCount).ToList();

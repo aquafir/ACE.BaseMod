@@ -3,7 +3,9 @@
 /// <summary>
 /// PatchClasses are entry points for logic of a loaded Mod responsible for loading settings, applying patches, registering commands, initializing needed plugin state, and shutting down if disabled.
 /// </summary>
-public class BasicPatch<T> : IPatch where T : class?, new()
+public class BasicPatch<T> : IPatch 
+    where T : class?, new()
+    //where C : BasicPatch<C,T> //Todo: look at generic approach for exposing Settings
 {
     private bool disposedValue;
     protected BasicMod ModC;
@@ -11,7 +13,6 @@ public class BasicPatch<T> : IPatch where T : class?, new()
     public static T Settings { get; set; }
     protected string SettingsName;
     protected string SettingsPath => Path.Combine(ModC.ModPath, SettingsName);
-
 
     //public BasicPatch() { }
     public BasicPatch(BasicMod mod, string settingsName = "Settings.json")
@@ -35,7 +36,7 @@ public class BasicPatch<T> : IPatch where T : class?, new()
             return;
         }
 
-        Settings = SettingsContainer.Settings;
+        //Settings = SettingsContainer.Settings;
         ModC.State = ModState.Running;
 
         await OnStartSuccess();
@@ -72,7 +73,7 @@ public class BasicPatch<T> : IPatch where T : class?, new()
 
         Task.Run(Stop).Wait();
 
-        if (Settings is not null)
+        if (SettingsContainer.Settings is not null)
         {
             Task.Run(Start).Wait();
             ModManager.Log($"Settings reloaded.");

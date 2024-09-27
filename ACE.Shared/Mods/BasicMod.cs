@@ -75,8 +75,8 @@ public class BasicMod : IHarmonyMod
     {
         try
         {
-            Harmony.PatchAll(Container.ModAssembly);
-            foreach(var patch in Patches)
+            Harmony.PatchAllUncategorized(Container.ModAssembly);
+            foreach (var patch in Patches)
                 patch.Init();
         }
         catch (Exception ex)

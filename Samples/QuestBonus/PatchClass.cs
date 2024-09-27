@@ -6,6 +6,8 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 {
     public override async Task OnWorldOpen()
     {
+        Settings = SettingsContainer.Settings;
+
         //On reload recalculate QB
         UpdateIngamePlayers();
     }

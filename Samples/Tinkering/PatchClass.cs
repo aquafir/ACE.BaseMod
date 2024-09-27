@@ -7,6 +7,8 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 {
     public override async Task OnWorldOpen()
     {
+        Settings = SettingsContainer.Settings;
+
         ModifyTinkering();
 
         if (Settings.EnableRecipeManagerPatch)
@@ -139,7 +141,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 
         foreach (var requirement in iidReqs)
         {
-            uint? value = obj.GetProperty((PropertyInstanceId)requirement.Stat);
+            var value = obj.GetProperty((PropertyInstanceId)requirement.Stat);
             double? normalized = value != null ? Convert.ToDouble(value.Value) : null;
 
             if (RecipeManager.Debug)

@@ -1,4 +1,5 @@
-﻿using ACE.Server.Entity.Actions;
+﻿using ACE.Entity.Enum.RealmProperties;
+using ACE.Server.Entity.Actions;
 using MotionTable = ACE.DatLoader.FileTypes.MotionTable;
 
 namespace QualityOfLife;
@@ -8,6 +9,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 {
     public override async Task OnWorldOpen()
     {
+        Settings = SettingsContainer.Settings;
         ModC.RegisterPatchCategories(Settings.Patches);
 
         if (Settings.Patches.Contains(Patches.Fellowships))
@@ -90,7 +92,11 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
                 return;
             }
 
+#if REALM
+            player.Teleport(Player.MarketplaceDrop.AsInstancedPosition(player.Location.Instance));
+#else
             player.Teleport(Player.MarketplaceDrop);
+#endif
         });
 
         // Set the chain to run

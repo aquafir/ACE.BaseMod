@@ -8,7 +8,10 @@ namespace CustomSpells;
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
-    public override async Task OnWorldOpen() => SetupSpells();
+    public override async Task OnWorldOpen() {
+        Settings = SettingsContainer.Settings;
+        SetupSpells(); 
+    }
 
     private static void SetupSpells()
     {
