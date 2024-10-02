@@ -17,7 +17,7 @@
 		<EmbeddedResource Remove=".template.config\**" />
 		<None Remove=".template.config\**" />
 	</ItemGroup>
-
+	
 	<!--Krafs Publicizer for access to private members of ACE-->
 	<!--<PropertyGroup>
 		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
