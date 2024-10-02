@@ -13,7 +13,7 @@
 	<!--https://learn.microsoft.com/en-us/nuget/create-packages/package-authoring-best-practices#create-a-nuget-package-->
 	<PropertyGroup>
 		<PackageId>ACEmulator.$(AssemblyName)</PackageId>
-		<Version>1.0.4</Version>
+		<Version>1.0.5</Version>
 		<Authors>Aquafir</Authors>
 		<Description>Shared utility code and enums for the ACEmulator modding framework.</Description>
 		<RepositoryUrl>https://github.com/aquafir/ACE.BaseMod/</RepositoryUrl>

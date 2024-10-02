@@ -44,7 +44,7 @@ public class AugmentTests
     [Test]
     public void SetPropertyAugment()
     {
-        Assert.True(wo.TryAugment(AugmentType.Int, Operation.Assign, (int)PropertyInt.EncumbranceVal, 5000));
+        Assert.True(wo.TryAugment(AugmentType.Int, (int)PropertyInt.EncumbranceVal, Operation.Assign, 5000));
         Assert.AreEqual(wo.EncumbranceVal, 5000);
     }
 

@@ -1,6 +1,5 @@
 ﻿namespace ACE.Shared.Helpers;
 
-#if REALM
 public static class SpellProjectileExtensions
 {
     public static ProjectileSpellType Nova = (ProjectileSpellType)9;
@@ -451,13 +450,8 @@ public static class SpellProjectileExtensions
         return finalDamage;
     }
 
-
-
-#if REALM
-    private static Server.Realms.InstancedPosition? GetSpellCasterPosition(this WorldObject source, Spell spell, ProjectileSpellType spellType, WorldObject target, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage)
-#else
     private static Position? GetSpellCasterPosition(this WorldObject source, Spell spell, ProjectileSpellType spellType, WorldObject target, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage)
-#endif
+
     {
         //Ring spells center on the selected target of the player if available
         if (spellType == ProjectileSpellType.Ring)
@@ -474,11 +468,8 @@ public static class SpellProjectileExtensions
 
         return source?.PhysicsObj.Position.ACEPosition(source.Location.Instance);
     }
-#if REALM
-    private static Server.Realms.InstancedPosition? GetSpellTargetPosition(this WorldObject source, Spell spell, ProjectileSpellType spellType, WorldObject target, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage)
-#else
+
     private static Position? GetSpellTargetPosition(this WorldObject source, Spell spell, ProjectileSpellType spellType, WorldObject target, WorldObject weapon, bool isWeaponSpell, bool fromProc, List<Vector3> origins, Vector3 velocity, uint lifeProjectileDamage)
-#endif
     {
         return target?.PhysicsObj.Position.ACEPosition(source.Location.Instance);
     }
@@ -519,7 +510,3 @@ public static class SpellProjectileExtensions
         return rotate;
     }
 }
-
-#else
-
-#endif

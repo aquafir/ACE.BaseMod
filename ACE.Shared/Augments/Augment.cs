@@ -1,7 +1,7 @@
 ﻿namespace ACE.Shared.Augments;
 public static class Augment
 {
-    public static bool TryAugmentBit(this WorldObject wo, AugmentType type, Operation op, int key, double value)
+    public static bool TryAugmentBit(this WorldObject wo, AugmentType type, int key, Operation op, double value)
     {
 
         return true;
@@ -9,16 +9,16 @@ public static class Augment
 
 
     //Todo: random values?  Handle higher up
-    public static bool TryAugment(this WorldObject wo, AugmentType type, Operation op, int key, double value)
+    public static bool TryAugment(this WorldObject wo, AugmentType type, int key, Operation op, double value)
     {
         if (wo is null) return false;
 
         //Get the current normalized property
-        if (!wo.TryGetAugmentTarget(type, key, out var current))
+        if (!wo.TryGetAugmentTargetValue(type, key, out var current))
             return false;
 
 
-
+        double d;
         //If value was missing set a default based on the operation
         if (current is null)
         {
@@ -29,7 +29,7 @@ public static class Augment
             };
         }
 
-
+        
 
         //Hold the 
         double result = 0;
@@ -76,10 +76,11 @@ public static class Augment
         return true;
     }
 
+
     /// <summary>
-    /// Returns a normalized or null value of an Augment target
+    /// Returns a value or null of an Augment target
     /// </summary>
-    private static bool TryGetAugmentTarget(this WorldObject wo, AugmentType type, int key, out double? value)
+    private static bool TryGetAugmentTargetValue(this WorldObject wo, AugmentType type, int key, out object? value)
     {
         value = null;
 
@@ -91,11 +92,11 @@ public static class Augment
         {
             value = type switch
             {
-                AugmentType.Int => wo.GetProperty((PropertyInt)key)?.Normalize(),
-                AugmentType.Int64 => wo.GetProperty((PropertyInt64)key)?.Normalize(),
-                AugmentType.Float => wo.GetProperty((PropertyFloat)key)?.Normalize(),
-                AugmentType.Bool => wo.GetProperty((PropertyBool)key)?.Normalize(),
-                AugmentType.DataID => wo.GetProperty((PropertyDataId)key)?.Normalize(),
+                AugmentType.Int => wo.GetProperty((PropertyInt)key),
+                AugmentType.Int64 => wo.GetProperty((PropertyInt64)key),
+                AugmentType.Float => wo.GetProperty((PropertyFloat)key),
+                AugmentType.Bool => wo.GetProperty((PropertyBool)key),
+                AugmentType.DataID => wo.GetProperty((PropertyDataId)key),
                 _ => null,
             };
         }
@@ -173,7 +174,9 @@ public enum Operation
 {
     Assign,
     Add,
+    Subtract,
     Multiply,
+    Divide,
     BitSet,
     BitClear,
 

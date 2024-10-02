@@ -7,27 +7,28 @@
 
     public TextSpellPicker() : base()
     {
-        Choices = Enum.GetValues<SpellId>().Take(6).Select(x => new Spell(x)).ToArray();
+        Choices = Enum.GetValues<SpellId>().Skip(1).Where(x => !x.ToString().StartsWith("UNK")).Select(x => new Spell(x)).ToArray();
     }
 
-    public override void DrawBody()
-    {
-        //Todo: Generic combobox picker ?
-        DrawPageControls();
-        //base.DrawBody();
-        //Don't think arrays are LINQ optimized so not using those methods
-        //https://stackoverflow.com/questions/26685234/are-linqs-skip-and-take-optimized-for-arrays-4-0-edition#26685395
-        for (var i = 0; i < PerPage; i++)
-        {
-            var current = i + offset;
-            if (current >= ChoiceArray.Length)
-                break;
+    //public override void DrawBody()
+    //{
+    //    //Todo: Generic combobox picker ?
+    //    DrawPageControls();
+    //    //base.DrawBody();
+    //    //Don't think arrays are LINQ optimized so not using those methods
+    //    //https://stackoverflow.com/questions/26685234/are-linqs-skip-and-take-optimized-for-arrays-4-0-edition#26685395
 
-            var choice = ChoiceArray[current];
+    //    for (var i = 0; i < PerPage; i++)
+    //    {
+    //        var current = i + offset;
+    //        if (current >= ChoiceArray.Length)
+    //            break;
 
-            DrawItem(choice, i);
-        }
-    }
+    //        var choice = ChoiceArray[current];
+
+    //        DrawItem(choice, i);
+    //    }
+    //}
 
     public override void DrawItem(Spell item, int index)
     {
@@ -36,10 +37,10 @@
         if (item is null)
             return;
 
-        if (index % columns != 0)
-            ImGui.SameLine();
+        //if (index % columns != 0)
+        //    ImGui.SameLine();
 
-        if (ImGui.Button($"{item.Name}##{index}", size))
+        if (ImGui.Button($"{item?.Name}##{index}", size))
             SelectItem(item, index);
 
         //var icon = textureMap(item);

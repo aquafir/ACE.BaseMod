@@ -3,10 +3,9 @@
 [HarmonyPatch]
 public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : BasicPatch<Settings>(mod, settingsName)
 {
-    public override async Task OnStartSuccess()
+    public override async Task OnWorldOpen()
     {
         Settings = SettingsContainer.Settings;
-
         if (Settings.AutostartGui)
             StartGui();
     }

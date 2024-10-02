@@ -7,9 +7,12 @@ public class SimpleOverlay : Overlay
     bool isRunning = true;
 
     FlagsPicker<SpellFlags> Flags = new();
-    TextSpellPicker SpellPicker = new();
+    TextSpellPicker SpellPicker;
 
-    public SimpleOverlay() : base(1920, 1080) { }
+    public SimpleOverlay() : base(1920, 1080) {
+        Flags = new();
+        SpellPicker = new();
+    }
 
     protected override Task PostInitialized()
     {
@@ -35,11 +38,9 @@ public class SimpleOverlay : Overlay
 
         ImGui.Text("Hello!");
 
-        if (Flags.Check())
-        {
-            ModManager.Log($"Selected {Flags.Selection}!");
-        }
-
+        //if (Flags.Check())
+        //    ModManager.Log($"Selected {Flags.Selection}!");
+        
         if (SpellPicker.Check())
             ModManager.Log($"Selected {SpellPicker.Selection.Name}!");
 

@@ -1,24 +1,33 @@
 
 
-### Affixes and Augments
+### Augments
 
-An `Augment` describes a reversible change to a `WorldObject`:
+An `Augment` describes a reversible, scalable change to a `WorldObject`:
 
-* `TryAugment(this WorldObject wo, AugmentType type, AugmentOperation op, int key, double value, bool recordAugment = true)`
+* `TryAugment(this WorldObject wo, AugmentType type, int key, Operation op, double value)`
 * `AugmentType`
   * Determines what sort of property is changed
   * Has an int `key` to determine which specific property of a category is changed
+    * The value is gotten with `TryGetAugmentTargetValue(this WorldObject wo, AugmentType type, int key, out object? value)` 
   * Related to `StatType` of Recipes
   * Can be anything but a `PropertyString` amongst properties
     * *Todo: Skill / SAC / player-related properties*
-* [`Operation`](#Operation) on the operands
-* `Value`
-  * Normalized value used with the `Operation` to try to change the target property
-* When applied it 
+* [`Operation`](#Operation) and `value`  are used to try to change the target property
 
 
 
 
+
+
+
+* Get the value
+  * If missing, short circuit depending on the operation.  Otherwise assume 0?
+  * Some AugmentTypes like vitals require the `WorldObject` be something like a `Creature`
+* 
+
+
+
+### Affixes 
 
 An `Affix` is a collection of `Augment` which may apply to some eligible WorldObject, [randomly selected](https://github.com/cdanek/KaimiraWeightedList) based on its weight.
 
@@ -60,6 +69,10 @@ An `Affix` is a collection of `Augment` which may apply to some eligible WorldOb
 
 
 ## Reference
+
+* `double` can store up to `2^53` , 1024 times less than `long.MaxValue`
+
+
 
 Possible Operations:
 
