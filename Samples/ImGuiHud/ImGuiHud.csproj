@@ -19,11 +19,20 @@
 		<None Remove=".template.config\**" />
 	</ItemGroup>
 
-	<!--<PropertyGroup>
-		<PublicizeAll>true</PublicizeAll>
-	</PropertyGroup>-->
+	<PropertyGroup>
+		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
+	</PropertyGroup>
+	<ItemGroup>
+		<Publicize Include="ACE.Server" />
+		<Publicize Include="ACE.Database" />
+	</ItemGroup>
+
 
 	<ItemGroup>
+		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="ClickableTransparentOverlay" Version="11.0.1" />
 		<PackageReference Include="Lib.Harmony" Version="2.3.3" />
 		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.*" />

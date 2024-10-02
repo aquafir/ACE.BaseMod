@@ -17,14 +17,14 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         StopGui();
     }
 
-    static SimpleOverlay Overlay;
+    static SampleOverlay Overlay;
     static async void StartGui()
     {
         try
         {
             StopGui();
             Overlay = new();
-            Overlay.Run();
+            await Overlay.Run();
         }
         catch (Exception ex)
         {
@@ -43,7 +43,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
             ModManager.Log(ex.Message, ModManager.LogLevel.Error);
         }
     }
-    private static async Task<SimpleOverlay> StartOverlay()
+    private static async Task<SampleOverlay> StartOverlay()
     {
         Overlay = new();
         await Overlay.Run();

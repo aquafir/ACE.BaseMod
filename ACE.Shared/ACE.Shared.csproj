@@ -13,13 +13,17 @@
 	<!--https://learn.microsoft.com/en-us/nuget/create-packages/package-authoring-best-practices#create-a-nuget-package-->
 	<PropertyGroup>
 		<PackageId>ACEmulator.$(AssemblyName)</PackageId>
-		<Version>1.0.5</Version>
+		<Version>1.0.6</Version>
 		<Authors>Aquafir</Authors>
 		<Description>Shared utility code and enums for the ACEmulator modding framework.</Description>
 		<RepositoryUrl>https://github.com/aquafir/ACE.BaseMod/</RepositoryUrl>
 		<PackageReleaseNotes>Fixes settings container</PackageReleaseNotes>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
+
+	<Target Name="PublishNugetPackageOnBuild" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+		<Exec Command="dotnet nuget push $(OutputPath)..\$(PackageId).$(Version).nupkg  -k $(NUGET_DEPLOY_KEY) -s https://api.nuget.org/v3/index.json --skip-duplicate" />
+	</Target>
 
 	<PropertyGroup>
 		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
