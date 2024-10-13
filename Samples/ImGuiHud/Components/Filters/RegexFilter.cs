@@ -1,8 +1,4 @@
-﻿
-
-using ImGuiNET;
-
-/// <summary>
+﻿/// <summary>
 /// Draws a text field that builds a Regex
 /// </summary>
 public class RegexFilter<T> : IOptionalFilter<T>

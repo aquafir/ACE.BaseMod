@@ -3,7 +3,7 @@ using ACE.Server.Entity.Actions;
 
 namespace QualityOfLife;
 
-[HarmonyPatchCategory(nameof(Animations))]
+[HarmonyPatchCategory(nameof(Features.Animations))]
 internal static class Animations
 {
     [HarmonyPrefix]
@@ -33,7 +33,11 @@ internal static class Animations
             if (PlayerManager.GetOnlinePlayer(__instance.Guid) is not Player p)
                 return true;
 
-            p.EnqueueBroadcast(new GameMessageHearSpeech(Player.SuicideMessages[step], p.GetNameWithSuffix(), p.Guid.Full, ChatMessageType.Speech), WorldObject.LocalBroadcastRange);
+#if REALM
+        p.EnqueueBroadcast(new GameMessageHearSpeech(Player.SuicideMessages[step], p.GetNameWithSuffix(), p.Guid.ClientGUID, ChatMessageType.Speech), WorldObject.LocalBroadcastRange);
+#else
+        p.EnqueueBroadcast(new GameMessageHearSpeech(Player.SuicideMessages[step], p.GetNameWithSuffix(), p.Guid.Full, ChatMessageType.Speech), WorldObject.LocalBroadcastRange);
+#endif
 
             var suicideChain = new ActionChain();
             suicideChain.AddDelaySeconds(S.Settings.Animations.DieSeconds);

@@ -7,7 +7,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     {
         Settings = SettingsContainer.Settings;
         if (Settings.AutostartGui)
-            StartGui();
+            await StartGui();
     }
 
     public override void Stop()
@@ -18,7 +18,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     }
 
     static SampleOverlay Overlay;
-    static async void StartGui()
+    static async Task StartGui()
     {
         try
         {
@@ -42,12 +42,6 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         {
             ModManager.Log(ex.Message, ModManager.LogLevel.Error);
         }
-    }
-    private static async Task<SampleOverlay> StartOverlay()
-    {
-        Overlay = new();
-        await Overlay.Run();
-        return Overlay;
     }
 
     [CommandHandler("gui", AccessLevel.Admin, CommandHandlerFlag.None, 0)]

@@ -1,6 +1,6 @@
 ﻿namespace QualityOfLife;
 
-[HarmonyPatchCategory(nameof(Fellowships))]
+[HarmonyPatchCategory(nameof(Features.Fellowships))]
 public class Fellowships
 {
     //private static long evenShare;

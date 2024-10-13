@@ -45,3 +45,10 @@ global using ACE.Shared.Helpers;
 global using ACE.Shared.Mods;
 
 global using ImGuiNET;
+
+
+global using System.Runtime.CompilerServices;
+global using OtterGui;
+global using OtterGui.Raii;
+global using OtterGui.Table;
+global using ImGuiHud.OtterGui;

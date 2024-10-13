@@ -62,6 +62,15 @@ Whenever an [animation](https://github.com/ACEmulator/ACE/blob/fdfdec9f0a16bbcbb
 
 
 
+
+
+### Augmentations
+
+* `IgnoreSharedAttribute` and `IgnoreSharedResist` ignored group total restrictions for augmenting attributes or resists.
+* `MaxAugs` overrides any existing max augmentation value.
+
+
+
 ### Property Defaults
 
 Whenever a property is set to something from a `null` value, if a default is in the corresponding property dictionary it will instead be set to that.

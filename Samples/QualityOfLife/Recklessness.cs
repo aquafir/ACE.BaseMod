@@ -1,6 +1,6 @@
 ﻿namespace QualityOfLife;
 
-[HarmonyPatchCategory(nameof(Recklessness))]
+[HarmonyPatchCategory(nameof(Features.Recklessness))]
 public class Recklessness
 {
     //Rewrites Recklessness handling

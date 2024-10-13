@@ -23,7 +23,8 @@ An `Augment` describes a reversible, scalable change to a `WorldObject`:
 * Get the value
   * If missing, short circuit depending on the operation.  Otherwise assume 0?
   * Some AugmentTypes like vitals require the `WorldObject` be something like a `Creature`
-* 
+* Apply the operation to the values
+* Convert the value to 
 
 
 

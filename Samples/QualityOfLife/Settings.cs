@@ -2,7 +2,7 @@
 
 public class Settings
 {
-    public Patches[] Patches { get; set; } = Enum.GetValues<Patches>();
+    public Features[] Patches { get; set; } = Enum.GetValues<Features>();
 
 
     //Sum of specialization credits
@@ -12,11 +12,13 @@ public class Settings
     public DefaultsSettings Defaults { get; set; } = new();
     public FellowshipSettings Fellowship { get; set; } = new();
     public RecklessnessSettings Recklessness { get; set; } = new();
+    public AugmentationSettings Augmentation { get; set; } = new();
 }
 
-public enum Patches
+public enum Features
 {
     Animations,
+    Augmentations,
     Defaults,
     Fellowships,
     PermanentObjects,

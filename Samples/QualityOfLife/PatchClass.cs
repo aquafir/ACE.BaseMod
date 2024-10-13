@@ -10,9 +10,13 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     public override async Task OnWorldOpen()
     {
         Settings = SettingsContainer.Settings;
+
         ModC.RegisterPatchCategories(Settings.Patches);
 
-        if (Settings.Patches.Contains(Patches.Fellowships))
+        if (Settings.Patches.Contains(Features.Augmentations))
+            Augmentations.OverrideCaps();
+
+        if (Settings.Patches.Contains(Features.Fellowships))
             Fellowships.SetFellowshipSettings();
     }
 
@@ -22,7 +26,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 
         if (ModC.State == ModState.Running)
         {
-            if (Settings.Patches.Contains(Patches.Fellowships))
+            if (Settings.Patches.Contains(Features.Fellowships))
                 Fellowships.RestoreFellowSettings();
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace QualityOfLife;
 
-[HarmonyPatchCategory(nameof(Defaults))]
+[HarmonyPatchCategory(nameof(Features.Defaults))]
 internal static class Defaults
 {
     [HarmonyPrefix]

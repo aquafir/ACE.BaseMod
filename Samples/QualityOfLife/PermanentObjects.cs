@@ -1,6 +1,6 @@
 ﻿namespace QualityOfLife;
 
-[HarmonyPatchCategory(nameof(PermanentObjects))]
+[HarmonyPatchCategory(nameof(Features.PermanentObjects))]
 public class PermanentObjects
 {
     [HarmonyPrefix]
