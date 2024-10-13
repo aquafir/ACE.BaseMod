@@ -9,7 +9,7 @@ public class JsonSettings<T>(string filePath = "Settings.json") : SettingsContai
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         IncludeFields = true,
         UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,         
     };
 
     protected override async Task<T> LoadSettingsAsync()

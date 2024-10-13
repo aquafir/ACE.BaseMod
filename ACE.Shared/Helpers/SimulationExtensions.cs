@@ -1,6 +1,10 @@
-﻿namespace ACE.Shared.Helpers;
+﻿using ACE.Server.WorldObjects;
+
+namespace ACE.Shared.Helpers;
 public static class SimulationExtensions
 {
+    const uint PLAYER_MOTION_TABLE = 0x09000001;
+
     //public static DamageEvent SimulateDamage(this Creature attacker, uint defenderWcid, WorldObject damageSource, MotionCommand? attackMotion = null, AttackHook attackHook = null)
     //{
 
@@ -28,6 +32,34 @@ public static class SimulationExtensions
 
 
 
+    /// <summary>
+    /// Gets the time needed for an attack animation
+    /// </summary>
+    /// <param name="swingAnimation">Based on weapon, current stance, power bar, and attack height</param>
+    /// <param name="speed">Based on weapon speed and player quickness</param>
+    /// <param name="dualWield">Adds 1.2 multiplier to animation speed</param>
+    /// <param name="stance"></param>
+    /// <returns></returns>
+    public static float GetSimulatedMeleeDelay(MotionCommand swingAnimation = MotionCommand.ThrustLow, MotionStance stance = MotionStance.SwordCombat, uint motionTableId = PLAYER_MOTION_TABLE, float speed = 1, bool dualWield = false)
+    {
+        //From GetAnimSpeed
+        speed = Math.Clamp(speed, .5f, 2);
+
+        if (dualWield)
+            speed *= 1.2f;
+        
+        return Server.Physics.Animation.MotionTable.GetAnimationLength(motionTableId, stance, swingAnimation, speed);
+    }
+
+    public static float GetSimulatedMeleeDelay(this Creature creature)
+    {
+        MotionCommand command = creature is Player player ?
+            player.GetSwingAnimation() : 
+            creature.GetCombatManeuver().GetValueOrDefault();
+        var stance = creature.CurrentMotionState.Stance;
+
+        return GetSimulatedMeleeDelay(command, stance, creature.MotionTableId, 1, creature.IsDualWieldAttack);
+    }
 
     public static float SimulateSwingMotion(this Player player, WorldObject target, out List<(float time, ACE.DatLoader.Entity.AnimationHooks.AttackHook attackHook)> attackFrames)
     {
@@ -59,7 +91,6 @@ public static class SimulationExtensions
 
         return animLength;
     }
-
 }
 
 public class SimulatedDamageEvent : DamageEvent

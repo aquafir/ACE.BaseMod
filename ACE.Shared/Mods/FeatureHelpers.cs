@@ -24,16 +24,20 @@ public static class FeatureHelpers
     /// </summary>
     public static void RegisterPatchCategories<T>(this BasicMod mod, IEnumerable<T> features) //where T : Enum
     {
+        var assembly = mod.Container.ModAssembly;
+
         foreach (var feature in features)
-            mod.Harmony.PatchCategory(feature.ToString());
+            mod.Harmony.PatchCategory(assembly, feature.ToString());
     }
     /// <summary>
     /// Unpatches all categories contained in a collection
     /// </summary>
     public static void UnregisterPatchCategories<T>(this BasicMod mod, IEnumerable<T> features) //where T : Enum
     {
+        var assembly = mod.Container.ModAssembly;
+
         foreach (var feature in features)
-            mod.Harmony.UnpatchCategory(feature.ToString());
+            mod.Harmony.UnpatchCategory(assembly, feature.ToString());
     }
 
     ///// <summary>
