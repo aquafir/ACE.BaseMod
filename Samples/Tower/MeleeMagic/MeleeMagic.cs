@@ -20,6 +20,9 @@ public class MeleeMagic
         if (Settings.RequireDamage && !__result.HasDamage)
             return;
 
+        if (!Settings.EnabledForPvP && target is not Player)
+            return;
+
         if (!__instance.TryGetMeleeMagicSpell(__result, out var spellId))
             return;
 
@@ -32,6 +35,9 @@ public class MeleeMagic
     [HarmonyPatch(typeof(WorldObject), nameof(WorldObject.GetCasterElementalDamageModifier), new Type[] { typeof(WorldObject), typeof(Creature), typeof(Creature), typeof(DamageType) })]
     public static bool PreGetCasterElementalDamageModifier(WorldObject weapon, Creature wielder, Creature target, DamageType damageType, ref float __result)
     {
+        if (!Settings.EnabledForPvP && target is not Player)
+            return true;
+
         //Skip original method when checks redundant
         if (wielder is null || weapon is null || weapon.W_DamageType != damageType)
         {

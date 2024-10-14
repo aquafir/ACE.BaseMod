@@ -7,6 +7,8 @@ public class MeleeMagicSettings
     /// </summary>
     //public int SliderDivions { get; set; } = 2;
 
+    public bool EnabledForPvP { get; set; } = false;
+
     public bool RequireDamage { get; set; } = true;
 
     //Todo, rethink
