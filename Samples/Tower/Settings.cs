@@ -24,6 +24,7 @@ public class Settings
     public OfflineProgressSettings OfflineProgress { get; set; } = new();
     public SpeedrunSettings Speedrun { get; set; } = new();
     public FloorSettings Tower { get; set; } = new();
+    public PVPSettings PVP { get; set; } = new();
 }
 
 
@@ -40,4 +41,5 @@ public enum Feature
     AutoBattle,
     AetheriaLoot,
     Chaos,
+    PVP,
 }

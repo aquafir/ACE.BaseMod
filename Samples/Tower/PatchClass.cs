@@ -18,6 +18,9 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
     {
         base.Stop();
 
+        if (Settings is null)
+            return;
+
         ModC.UnregisterCommands(Settings.Features);
         ModC.UnregisterPatchCategories(Settings.Features);
     }

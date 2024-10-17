@@ -11,14 +11,13 @@ public static class AutoLoot
     [HarmonyPatch(typeof(Creature), nameof(Creature.CreateCorpse), new Type[] { typeof(DamageHistoryInfo), typeof(bool) })]
     public static bool PreCreateCorpse(DamageHistoryInfo killer, bool hadVitae, ref Creature __instance)
     {
-        //Don't apply to players
-        if (__instance is Player p)
-            return true;
-
         //If you can't find the killer handle the corpse in the regular fashion
         if (killer.TryGetPetOwnerOrAttacker() is not Player player)
             return true;
 
+        //Don't apply to players
+        //if (__instance is Player p)
+        //    return true;
 
 
 
