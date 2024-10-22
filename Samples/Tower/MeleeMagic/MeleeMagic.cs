@@ -20,7 +20,7 @@ public class MeleeMagic
         if (Settings.RequireDamage && !__result.HasDamage)
             return;
 
-        if (!Settings.EnabledForPvP && target is not Player)
+        if (!Settings.EnabledForPvP && target is Player)
             return;
 
         if (!__instance.TryGetMeleeMagicSpell(__result, out var spellId))
