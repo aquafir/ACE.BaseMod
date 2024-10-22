@@ -12,7 +12,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 
         BankExtensions.Init();
         FloorExtensions.Init();
-    }
+    } 
 
     public override void Stop()
     {

@@ -7,7 +7,7 @@ public static class FeatureHelpers
     /// </summary>
     public static void RegisterCommands<T>(this BasicMod mod, IEnumerable<T> features) //where T : Enum
     {
-        var commandRegex = String.Join("|", features.ToString());
+        var commandRegex = String.Join("|", features.Select(x => x.ToString()));
         mod.Container.RegisterCommandCategory(commandRegex);
     }
     /// <summary>
@@ -15,7 +15,7 @@ public static class FeatureHelpers
     /// </summary>
     public static void UnregisterCommands<T>(this BasicMod mod, IEnumerable<T> features) //where T : Enum
     {
-        var commandRegex = String.Join("|", features);
+        var commandRegex = String.Join("|", features.Select(x => x.ToString()));
         mod.Container.UnregisterCommandCategory(commandRegex);
     }
 
