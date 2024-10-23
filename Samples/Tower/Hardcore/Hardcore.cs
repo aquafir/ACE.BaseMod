@@ -20,12 +20,12 @@ public static class Hardcore
         //Check for PK deaths
         if (__instance.IsPKDeath(lastDamager) || __instance.IsPKLiteDeath(lastDamager))
         {
-            if (Settings.StayWhite)
-            {
-                player.PlayerKillerStatus = PlayerKillerStatus.NPK;
-                player.PkLevel = PKLevel.NPK;
-                player.SendMessage($"You have been forced to NPK status.");
-            }
+            //if (Settings.StayWhite)
+            //{
+            //    player.PlayerKillerStatus = PlayerKillerStatus.NPK;
+            //    player.PkLevel = PKLevel.NPK;
+            //    player.SendMessage($"You have been forced to NPK status.");
+            //}
 
             if (Settings.IgnorePK)
             {

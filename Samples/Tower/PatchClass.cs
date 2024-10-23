@@ -22,7 +22,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
             return;
 
         ModC.UnregisterCommands(Settings.Features);
-        ModC.UnregisterPatchCategories(Settings.Features);
+        Mod.Instance.Harmony.UnpatchAll();
     }
 
     /// <summary>
