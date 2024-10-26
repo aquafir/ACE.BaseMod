@@ -208,5 +208,50 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         }
         return target;
     }
+
+
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Creature), nameof(Creature.GetCreatureSkill), new Type[] { typeof(MagicSchool) })]
+    public static bool PreGetCreatureSkill(MagicSchool skill, ref Creature __instance, ref CreatureSkill __result)
+    {
+        if (__instance is Player player) 
+            player.SendMessage($"Casting {player?.CurrentSpell?.Name} - {player.LastSuccessCast_School}");
+
+        __result = skill switch
+        {
+            MagicSchool.CreatureEnchantment => __instance.GetCreatureSkill(Skill.CreatureEnchantment),
+            MagicSchool.WarMagic => __instance.GetCreatureSkill(Skill.WarMagic),
+            MagicSchool.ItemEnchantment => __instance.GetCreatureSkill(Skill.ItemEnchantment),
+            MagicSchool.LifeMagic => __instance.GetCreatureSkill(Skill.LifeMagic),
+            MagicSchool.VoidMagic => __instance.GetCreatureSkill(Skill.VoidMagic),
+            MagicSchool x when x <= (MagicSchool)Skill.Summoning => __instance.GetCreatureSkill((Skill)x),
+            _ => null,
+        };
+
+        return false;
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Player), nameof(Player.HasFoci), new Type[] { typeof(MagicSchool) })]
+    public static bool PreHasFoci(MagicSchool school, ref Player __instance, ref bool __result)
+    {
+        __result = school switch
+        {
+            MagicSchool.WarMagic => __instance.AugmentationInfusedWarMagic > 0,
+            MagicSchool.LifeMagic => __instance.AugmentationInfusedLifeMagic > 0,
+            MagicSchool.ItemEnchantment => __instance.AugmentationInfusedItemMagic > 0,
+            MagicSchool.CreatureEnchantment => __instance.AugmentationInfusedCreatureMagic > 0,
+            MagicSchool.VoidMagic => __instance.AugmentationInfusedVoidMagic > 0,
+            _ => false
+        };
+
+        if (Player.FociWCIDs.TryGetValue(school, out var wcid))
+            __result = __instance.Inventory.Values.FirstOrDefault(i => i.WeenieClassId == wcid) != null;
+        else __result = true;
+        
+        return false;
+    }
+
 }
 

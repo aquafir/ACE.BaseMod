@@ -19,7 +19,9 @@ public static class SpreadsheetExtensions
             .SetPropertyUsing(cellValue => TryParseCellEnum<SpellId>(cellValue, out var parsed) ? parsed : null);
         //MagicSchool School
         excel.AddMapping<SpellCustomization>(nameof(b.School), p => p.School)
-            .SetPropertyUsing(cellValue => TryParseCellEnum<MagicSchool>(cellValue, out var parsed, true) ? parsed : null);
+            .SetPropertyUsing(cellValue => TryParseCellEnum<MagicSchool>(cellValue, out var parsed, false) ? parsed : null);
+            //Allows other schools for patch
+            //.SetPropertyUsing(cellValue => TryParseCellEnum<MagicSchool>(cellValue, out var parsed, true) ? parsed : null);
         //SpellCategory Category
         excel.AddMapping<SpellCustomization>(nameof(b.Category), p => p.Category)
             .SetPropertyUsing(cellValue => TryParseCellEnum<SpellCategory>(cellValue, out var parsed) ? parsed : null);
