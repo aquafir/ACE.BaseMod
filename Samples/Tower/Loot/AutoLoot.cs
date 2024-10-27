@@ -12,7 +12,7 @@ public static class AutoLoot
     public static bool PreCreateCorpse(DamageHistoryInfo killer, bool hadVitae, ref Creature __instance)
     {
         //If you can't find the killer handle the corpse in the regular fashion
-        if (killer.TryGetPetOwnerOrAttacker() is not Player player)
+        if (killer?.TryGetPetOwnerOrAttacker() is not Player player)
             return true;
 
         //Don't apply to players
