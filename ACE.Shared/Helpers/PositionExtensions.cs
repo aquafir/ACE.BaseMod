@@ -139,7 +139,7 @@ public static class PositionExtensions
     /// <summary>
     /// Try to parse a location string as a Position
     /// </summary>
-    public static bool TryParsePosition(this string position, out Position p)
+    public static bool TryParsePosition(this string position, out Position p, uint instance = 0)
     {
         p = null;
         var parameters = position.Split(' ');
@@ -175,7 +175,8 @@ public static class PositionExtensions
             }
 
 #if REALM
-            p = new(cell, positionData[0], positionData[1], positionData[2], positionData[4], positionData[5], positionData[6], positionData[3], p.Instance);
+            //TODO: Better way of defaulting this.  Currently meant to override
+            p = new(cell, positionData[0], positionData[1], positionData[2], positionData[4], positionData[5], positionData[6], positionData[3],  instance);
 #else
             p = new(cell, positionData[0], positionData[1], positionData[2], positionData[4], positionData[5], positionData[6], positionData[3]);
 #endif

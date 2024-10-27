@@ -101,4 +101,15 @@ public static class Hardcore
         else
             player.SendMessage($"Only players before level {Settings.MaxLevel} may become hardcore.");
     }
+
+
+    [CommandHandler("t1", AccessLevel.Player, CommandHandlerFlag.RequiresWorld, 0)]
+    public static void HP2(Session session, params string[] parameters)
+    {
+        var player = session.Player;
+
+        Debugger.Break();
+        var r = "0x02FA0100 -2.282979 0.158116 0.517504 -0.900291 0.000000 0.000000 0.435289".TryParsePosition(out var pos);
+    }
+
 }

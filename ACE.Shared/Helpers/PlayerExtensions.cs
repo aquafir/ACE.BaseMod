@@ -33,7 +33,11 @@ public static class PlayerExtensions
     public static void QuarantinePlayer(this Player player, string coords = "0x010D0100 -1.705717 2.126705 0.005000 0.577563 0.000000 0.000000 -0.816346")
     {
         //if (!CommandParameterHelpers.TryParsePosition(coords.Split(' '), out var error, out var newPos))
+#if REALM
+        if (!coords.TryParsePosition(out var newPos, player.Location.Instance))
+#else
         if (!coords.TryParsePosition(out var newPos))
+#endif
         {
             player.SendMessage($"Bad coordinates to quarantine to: {coords}");
             return;
