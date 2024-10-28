@@ -38,6 +38,10 @@ global using Biota = ACE.Entity.Models.Biota;
 global using Spell = ACE.Server.Entity.Spell;
 global using Weenie = ACE.Entity.Models.Weenie;
 
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Infrastructure;
+global using Microsoft.Extensions.DependencyInjection;
+
 #if REALM
 global using ACE.Server.Realms;
 global using Session = ACE.Server.Network.ISession;

@@ -73,10 +73,84 @@
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
-		  <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
+			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.EntityFrameworkCore.Design">
+			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Design.dll</HintPath>
+			<Private>False</Private>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore.Relational">
-		  <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.Caching.Abstractions">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.Caching.Memory">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.Caching.Memory.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.Configuration">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.Configuration.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.Configuration.Abstractions">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.Configuration.Binder">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.Configuration.Binder.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.Configuration.CommandLine">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.Configuration.CommandLine.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.Configuration.EnvironmentVariables">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.Configuration.EnvironmentVariables.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.Configuration.FileExtensions">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.Configuration.FileExtensions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.Configuration.Json">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.Configuration.Json.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.Configuration.UserSecrets">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.Configuration.UserSecrets.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.DependencyInjection">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.DependencyModel">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.DependencyModel.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.Hosting">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.Hosting.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.Hosting.Abstractions">
+			<HintPath>C:\ACE\Server\Microsoft.Extensions.Hosting.Abstractions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="MySqlConnector">
+			<HintPath>C:\ACE\Server\MySqlConnector.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Pomelo.EntityFrameworkCore.MySql">
+			<HintPath>C:\ACE\Server\Pomelo.EntityFrameworkCore.MySql.dll</HintPath>
+			<Private>False</Private>
 		</Reference>
 	</ItemGroup>
 

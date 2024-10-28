@@ -10,6 +10,9 @@
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<PlatformTarget>x64</PlatformTarget>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<Configurations>Debug;Release</Configurations>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -40,6 +43,8 @@
 	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.3.3" />
 		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.*" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="8.0.10" />
 		<!--<ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />-->
 	</ItemGroup>
 
@@ -72,12 +77,12 @@
 			<HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
+		<!--<Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
 		  <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore.Relational">
 		  <HintPath>C:\ACE\Server\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
-		</Reference>
+		</Reference>-->
 	</ItemGroup>
 
 	<ItemGroup>
