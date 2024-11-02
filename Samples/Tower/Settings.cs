@@ -14,6 +14,7 @@ public class Settings
             Feature.MeleeMagic,
             //Feature.OfflineProgress,
             Feature.Speedrun,
+            Feature.CustomRecipe,
         };
 
     public AetheriaSettings Aetheria { get; set; } = new();
@@ -25,6 +26,7 @@ public class Settings
     public SpeedrunSettings Speedrun { get; set; } = new();
     public FloorSettings Tower { get; set; } = new();
     public PVPSettings PVP { get; set; } = new();
+    public CustomRecipeSettings OnUse { get; set; } = new();
 }
 
 
@@ -42,4 +44,5 @@ public enum Feature
     AetheriaLoot,
     Chaos,
     PVP,
+    CustomRecipe,
 }
