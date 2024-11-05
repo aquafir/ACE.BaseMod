@@ -45,4 +45,5 @@ public enum Feature
     Chaos,
     PVP,
     CustomRecipe,
+    MarketplaceOverride,
 }
