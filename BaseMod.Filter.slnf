@@ -4,6 +4,7 @@
     "projects": [
       "ACE.Shared.Tests\\ACE.Shared.Tests.csproj",
       "ACE.Shared\\ACE.Shared.csproj",
+      "Samples\\CustomSpells\\CustomSpells.csproj",
       "Samples\\Expansion\\Expansion.csproj",
       "Samples\\Tower\\Tower.csproj"
     ]

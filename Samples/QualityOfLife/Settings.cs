@@ -23,5 +23,5 @@ public enum Features
     Fellowships,
     PermanentObjects,
     Recklessness,
-    SpellDefault,
+    Tailoring,
 }
