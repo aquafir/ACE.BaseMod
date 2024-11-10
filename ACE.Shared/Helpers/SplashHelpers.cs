@@ -28,8 +28,15 @@ public static class SplashHelper
             o.WeenieObj.WorldObject.WeenieType == WeenieType.Creature &&    //Restrict to creature weenies here for speed?
             o.WeenieObj.WorldObject != null);
 
-        visible.Sort((x, y) => origin.Location.SquaredDistanceTo(x.WeenieObj.WorldObject.Location)
-                    .CompareTo(origin.Location.SquaredDistanceTo(y.WeenieObj.WorldObject.Location)));
+        try
+        {
+            visible.Sort((x, y) => origin.Location.SquaredDistanceTo(x.WeenieObj.WorldObject.Location)
+                        .CompareTo(origin.Location.SquaredDistanceTo(y.WeenieObj.WorldObject.Location)));
+        }catch(Exception ex)
+        {
+            ModManager.Log($"Failed to sort using reference Player {reference?.Name} at {reference?.Location} around {origin?.Name}");
+            return new();
+        }
 
         return visible;
     }
