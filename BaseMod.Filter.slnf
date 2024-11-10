@@ -4,8 +4,11 @@
     "projects": [
       "ACE.Shared.Tests\\ACE.Shared.Tests.csproj",
       "ACE.Shared\\ACE.Shared.csproj",
+      "Samples\\Achievements\\Achievements.csproj",
       "Samples\\Expansion\\Expansion.csproj",
-      "Samples\\Tower\\Tower.csproj"
+      "Samples\\Tower\\Tower.csproj",
+      "Templates\\ACE.MySql\\ACE.MySql.csproj",
+      "Templates\\ACE.SQLite\\ACE.SQLite.csproj"
     ]
   }
 }

@@ -31,13 +31,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConnectionLimit", "Samples\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccessDb", "Samples\AccessDb\AccessDb.csproj", "{06445B7F-2DF7-4AC9-B7AE-C71E5B23CE1D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACE.Web", "Templates\ACE.Web\ACE.Web.csproj", "{5F24F52F-AEBB-488E-B65D-56F9A50CE886}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACE.Web", "Templates\ACE.Web\ACE.Web.csproj", "{5F24F52F-AEBB-488E-B65D-56F9A50CE886}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QualityOfLife", "Samples\QualityOfLife\QualityOfLife.csproj", "{0DBF9FDE-0899-4B14-8FDC-0E43BAA77198}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QualityOfLife", "Samples\QualityOfLife\QualityOfLife.csproj", "{0DBF9FDE-0899-4B14-8FDC-0E43BAA77198}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuestBonus", "Samples\QuestBonus\QuestBonus.csproj", "{B6BEF746-5327-42A6-AC5A-AF64840511CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuestBonus", "Samples\QuestBonus\QuestBonus.csproj", "{B6BEF746-5327-42A6-AC5A-AF64840511CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tinkering", "Samples\Tinkering\Tinkering.csproj", "{9DCC1E63-AB17-447E-ABBE-C739094C3285}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tinkering", "Samples\Tinkering\Tinkering.csproj", "{9DCC1E63-AB17-447E-ABBE-C739094C3285}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatFilter", "Samples\ChatFilter\ChatFilter.csproj", "{628E565B-9F4C-4E46-AAF9-C94F584F0E50}"
 EndProject

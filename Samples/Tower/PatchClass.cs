@@ -9,7 +9,7 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
         Settings = SettingsContainer.Settings;
         ModC.RegisterCommands(Settings.Features);
         ModC.RegisterPatchCategories(Settings.Features);
-
+        
         BankExtensions.Init();
         FloorExtensions.Init();
     } 

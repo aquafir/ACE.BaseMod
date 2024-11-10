@@ -211,12 +211,32 @@ public class PatchClass(BasicMod mod, string settingsName = "Settings.json") : B
 
 
 
+    //[HarmonyPrefix]
+    //[HarmonyPatch(typeof(Spell), nameof(Spell.GetMagicSkill))]
+    //public static bool PreGetMagicSkill(ref Spell __instance, ref Skill __result)
+    //{
+    //    Debugger.Break();
+    //    __result = __instance.School switch
+    //    {
+    //        MagicSchool.CreatureEnchantment => Skill.CreatureEnchantment,
+    //        MagicSchool.WarMagic => Skill.WarMagic,
+    //        MagicSchool.ItemEnchantment => Skill.ItemEnchantment,
+    //        MagicSchool.LifeMagic => Skill.LifeMagic,
+    //        MagicSchool.VoidMagic => Skill.VoidMagic,
+    //        MagicSchool x when x <= (MagicSchool)Skill.Summoning => (Skill)x,
+    //        _ => default,
+    //    };
+
+    //    return false;
+    //}
+
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Creature), nameof(Creature.GetCreatureSkill), new Type[] { typeof(MagicSchool) })]
     public static bool PreGetCreatureSkill(MagicSchool skill, ref Creature __instance, ref CreatureSkill __result)
     {
-        if (__instance is Player player) 
-            player.SendMessage($"Casting {player?.CurrentSpell?.Name} - {player.LastSuccessCast_School}");
+        //if (__instance is Player player) 
+        //    player.SendMessage($"Casting {player?.CurrentSpell?.Name} - {player.LastSuccessCast_School}");
+        //Debugger.Break();
 
         __result = skill switch
         {

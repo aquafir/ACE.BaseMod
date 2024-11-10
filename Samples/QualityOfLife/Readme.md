@@ -13,7 +13,8 @@ Each patch category must be present in `Patches` to be enabled, otherwise they w
     "animations",
     "defaults",
     "fellowship",
-    "recklessness"
+    "recklessness",
+    "tailoring"
   ],
 ```
 
@@ -82,6 +83,12 @@ Whenever a property is set to something from a `null` value, if a default is in 
 * `MaxSpecCredits` sets the number of specialization credits
   * Fakes having more spec credits by `70 - max`
   * Rewrite of `SkillAlterationDevice` might work?
+
+
+
+### Tailoring
+
+Enables the use of Society Armor for tailoring.
 
 
 
