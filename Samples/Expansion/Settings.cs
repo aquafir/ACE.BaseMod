@@ -38,10 +38,14 @@ public class Settings
         //Select items
         new()
         {
-            new MutatorSettings(Mutation.Enlightened) {
+            new MutatorSettings(Mutation.SampleMutator) {
             Odds = nameof(OddsGroup.Always),
-            Events = MutationEvent.Containers | MutationEvent.EnterWorld
+            Events = MutationEvent.Containers | MutationEvent.EmoteGive
             },
+            //new MutatorSettings(Mutation.Enlightened) {
+            //Odds = nameof(OddsGroup.Always),
+            //Events = MutationEvent.Containers | MutationEvent.EnterWorld
+            //},
             //new MutatorSettings(Mutation.IronmanLocked)
             //{
             //    Events = MutationEvent.Containers,

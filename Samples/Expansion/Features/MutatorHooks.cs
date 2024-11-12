@@ -1,4 +1,6 @@
 ﻿using Expansion;
+using ACE.Shared.Helpers;
+using ACE.Server.WorldObjects;
 
 namespace Expansion.Features;
 [CommandCategory(nameof(Feature.MutatorHooks))]
@@ -11,12 +13,20 @@ internal class MutatorHooks
     {
         //enabledPatches.Clear();
         mutators.Clear();
-        mutators[MutationEvent.Loot] = new();
-        mutators[MutationEvent.Corpse] = new();
-        mutators[MutationEvent.Generator] = new();
-        mutators[MutationEvent.Factory] = new();
-        mutators[MutationEvent.EnterWorld] = new();
-        mutators[MutationEvent.Inventory] = new();
+
+        //Get atomic MutationEvents
+        var basicMutators = FlagExtensions.GetIndividualFlags<MutationEvent>();
+
+        foreach (var mutator in basicMutators)
+            mutators[mutator] = new();
+
+        //mutators[MutationEvent.Loot] = new();
+        //mutators[MutationEvent.Corpse] = new();
+        //mutators[MutationEvent.Generator] = new();
+        //mutators[MutationEvent.Factory] = new();
+        //mutators[MutationEvent.EnterWorld] = new();
+        //mutators[MutationEvent.Inventory] = new();
+        //mutators[MutationEvent.EmoteGive] = new();
 
         foreach (var mutatorOptions in S.Settings.Mutators)
         {
@@ -29,18 +39,23 @@ internal class MutatorHooks
                 mutator.Start();
 
                 //enabledPatches.Add(mutator);
-                if (mutator.Event.HasFlag(MutationEvent.Loot))
-                    mutators[MutationEvent.Loot].Add(mutator);
-                if (mutator.Event.HasFlag(MutationEvent.Corpse))
-                    mutators[MutationEvent.Corpse].Add(mutator);
-                if (mutator.Event.HasFlag(MutationEvent.Generator))
-                    mutators[MutationEvent.Generator].Add(mutator);
-                if (mutator.Event.HasFlag(MutationEvent.Factory))
-                    mutators[MutationEvent.Factory].Add(mutator);
-                if (mutator.Event.HasFlag(MutationEvent.EnterWorld))
-                    mutators[MutationEvent.EnterWorld].Add(mutator);
-                if (mutator.Event.HasFlag(MutationEvent.Inventory))
-                    mutators[MutationEvent.Inventory].Add(mutator);
+                foreach (var basicFlag in mutator.Event.GetIndividualFlags())
+                    mutators[basicFlag].Add(mutator);
+
+                //if (mutator.Event.HasFlag(MutationEvent.Loot))
+                //    mutators[MutationEvent.Loot].Add(mutator);
+                //if (mutator.Event.HasFlag(MutationEvent.Corpse))
+                //    mutators[MutationEvent.Corpse].Add(mutator);
+                //if (mutator.Event.HasFlag(MutationEvent.Generator))
+                //    mutators[MutationEvent.Generator].Add(mutator);
+                //if (mutator.Event.HasFlag(MutationEvent.Factory))
+                //    mutators[MutationEvent.Factory].Add(mutator);
+                //if (mutator.Event.HasFlag(MutationEvent.EnterWorld))
+                //    mutators[MutationEvent.EnterWorld].Add(mutator);
+                //if (mutator.Event.HasFlag(MutationEvent.Inventory))
+                //    mutators[MutationEvent.Inventory].Add(mutator);
+                //if (mutator.Event.HasFlag(MutationEvent.EmoteGive))
+                //    mutators[MutationEvent.EmoteGive].Add(mutator);
 
                 if (PatchClass.Settings.Verbose)
                     ModManager.Log($"Enabled mutator: {mutatorOptions.PatchType}");
@@ -103,7 +118,6 @@ internal class MutatorHooks
 
         if (PatchClass.Settings.Verbose && mutations.Count > 0)
             ModManager.Log($"{__result.Name} was mutated with: {string.Join(", ", mutations)}");
-
     }
 
     /// <summary>
@@ -131,6 +145,37 @@ internal class MutatorHooks
 
                 //If an item was mutated add the type
                 if (mutator.TryMutateCorpse(mutations, __instance, killer, corpse, item))
+                    mutations.Add(mutator.MutationType);
+
+                if (PatchClass.Settings.Verbose && mutations.Count > 0)
+                    ModManager.Log($"{item.Name} was mutated with: {string.Join(", ", mutations)}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Vendor has validated the transactions and sent a list of items for processing.
+    /// </summary>
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Player), nameof(Player.FinalizeBuyTransaction), new Type[] { typeof(Vendor), typeof(List<WorldObject>), typeof(List<WorldObject>), typeof(uint) })]
+    public static void PreFinalizeBuyTransaction(Vendor vendor, List<WorldObject> genericItems, List<WorldObject> uniqueItems, uint cost, ref Player __instance)
+    {
+        var validMutators = mutators[MutationEvent.VendorBuy].Where(x => x.CanMutateVendor(vendor));
+        if (validMutators.Count() == 0) return;
+
+        foreach (var item in genericItems)
+        {
+            //Keeps track of what mutations have been applied
+            HashSet<Mutation> mutations = new();
+
+            foreach (var mutator in validMutators)
+            {
+                //Standard checks
+                if (!mutator.CheckMutates(item))
+                    continue;
+
+                //If an item was mutated add the type
+                if (mutator.TryMutateVendorBuy(mutations, item, vendor, __instance))
                     mutations.Add(mutator.MutationType);
 
                 if (PatchClass.Settings.Verbose && mutations.Count > 0)
@@ -270,13 +315,73 @@ internal class MutatorHooks
 
             //If an item was mutated add the type
             //Todo: create a separate handler for entering inventory?
-            if (mutator.TryMutateEnterInventory(mutations, item))
+            if (mutator.TryMutateEnterInventory(mutations, item, __instance))
                 mutations.Add(mutator.MutationType);
         }
 
         if (PatchClass.Settings.Verbose && mutations.Count > 0)
             ModManager.Log($"{item.Name} was mutated with: {string.Join(", ", mutations)}");
     }
+
+    /// <summary>
+    /// Replaces the standard
+    /// </summary>
+    //[HarmonyPostfix]
+    //[HarmonyPatch(typeof(Player), nameof(Player.TryCreateForGive), new Type[] { typeof(WorldObject), typeof(WorldObject) })]
+    //public static void PostTryCreateForGive(WorldObject giver, WorldObject itemBeingGiven, ref Player __instance, ref bool __result)
+    //{
+    //    if (!__result)
+    //        return;
+
+    //    //if (__instance is null || item is null) return;
+
+    //    //Keeps track of what mutations have been applied
+    //    HashSet<Mutation> mutations = new();
+    //    foreach (var mutator in mutators[MutationEvent.EmoteGive])
+    //    {
+    //        //Check for elligible item type along with standard check
+    //        if (!mutator.CheckMutates(itemBeingGiven))
+    //            continue;
+
+    //        //If an item was mutated add the type
+    //        //Todo: create a separate handler for entering inventory?
+    //        if (mutator.TryMutateEnterInventory(mutations, itemBeingGiven))
+    //            mutations.Add(mutator.MutationType);
+    //    }
+
+    //    if (PatchClass.Settings.Verbose && mutations.Count > 0)
+    //        ModManager.Log($"{itemBeingGiven.Name} was mutated with: {string.Join(", ", mutations)}");
+    //}
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(Player), nameof(Player.TryCreateForGive), new Type[] { typeof(WorldObject), typeof(WorldObject) })]
+    public static void PreTryCreateForGive(WorldObject giver, WorldObject itemBeingGiven, ref Player __instance, ref bool __result)
+    {
+        //if (!__result)
+        //    return;
+
+        if (__instance is null || itemBeingGiven is null) return;
+
+        //Keeps track of what mutations have been applied
+        HashSet<Mutation> mutations = new();
+        foreach (var mutator in mutators[MutationEvent.EmoteGive])
+        {
+            //Check for elligible item type along with standard check
+            if (!mutator.CheckMutates(itemBeingGiven))
+                continue;
+
+            //If an item was mutated add the type
+            //Todo: create a separate handler for entering inventory?
+            if (mutator.TryMutateEmoteGive(mutations, itemBeingGiven, giver, __instance))
+                mutations.Add(mutator.MutationType);
+        }
+
+        if (PatchClass.Settings.Verbose && mutations.Count > 0)
+            ModManager.Log($"{itemBeingGiven.Name} was mutated with: {string.Join(", ", mutations)}");
+    }
+
+
+
 
     /// <summary>
     /// Container-level inventory?

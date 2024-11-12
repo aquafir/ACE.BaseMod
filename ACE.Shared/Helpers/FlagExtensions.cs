@@ -22,7 +22,7 @@ public static class FlagExtensions
     /// <summary>
     /// Finds the flags of an Enum by checking if they're powers of two and non-zero
     /// </summary>
-    private static TEnum[] GetIndividualFlags<TEnum>() where TEnum : Enum
+    public static TEnum[] GetIndividualFlags<TEnum>() where TEnum : Enum
     {
         //Todo: make this an extension that works on generic Enum?  Couldn't figure out how
         // Get all the values of the enum type

@@ -81,6 +81,10 @@ public abstract class Mutator
     /// Stops evaluating Generator if fails
     /// </summary>
     public virtual bool CanMutateGenerator(GeneratorProfile profile = null) => true;
+    /// <summary>
+    /// Stops evaluating Vendor if fails
+    /// </summary>
+    public virtual bool CanMutateVendor(Vendor vendor = null) => true;
     #endregion
 
     //Todo: decide on throwing an error on fail?
@@ -89,7 +93,9 @@ public abstract class Mutator
     public virtual bool TryMutateGenerator(HashSet<Mutation> mutations, GeneratorProfile generator, WorldObject item) => false;
     public virtual bool TryMutateFactory(HashSet<Mutation> mutations, WorldObject item) => false;
     public virtual bool TryMutateEnterWorld(HashSet<Mutation> mutations, WorldObject item) => false;
-    public virtual bool TryMutateEnterInventory(HashSet<Mutation> mutations, WorldObject item) => false;
+    public virtual bool TryMutateEnterInventory(HashSet<Mutation> mutations, WorldObject item, Player player) => false;
+    public virtual bool TryMutateEmoteGive(HashSet<Mutation> mutations, WorldObject item, WorldObject giver, Player player) => TryMutateEnterInventory(mutations, item, player);
+    public virtual bool TryMutateVendorBuy(HashSet<Mutation> mutations, WorldObject item, Vendor vendor, Player player) => false;
 
     #region Start/Stop - Placeholders for now
     public virtual void Start()

@@ -20,7 +20,7 @@ public class TowerLocked : Mutator
         };
     }
 
-    public override bool TryMutateEnterInventory(HashSet<Mutation> mutations, WorldObject item)
+    public override bool TryMutateEnterInventory(HashSet<Mutation> mutations, WorldObject item, Player player)
     {
         item.Bonded = BondedStatus.Bonded;
         item.Attuned = AttunedStatus.Attuned;
