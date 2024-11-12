@@ -20,14 +20,6 @@ internal class MutatorHooks
         foreach (var mutator in basicMutators)
             mutators[mutator] = new();
 
-        //mutators[MutationEvent.Loot] = new();
-        //mutators[MutationEvent.Corpse] = new();
-        //mutators[MutationEvent.Generator] = new();
-        //mutators[MutationEvent.Factory] = new();
-        //mutators[MutationEvent.EnterWorld] = new();
-        //mutators[MutationEvent.Inventory] = new();
-        //mutators[MutationEvent.EmoteGive] = new();
-
         foreach (var mutatorOptions in S.Settings.Mutators)
         {
             if (!mutatorOptions.Enabled)
@@ -41,21 +33,6 @@ internal class MutatorHooks
                 //enabledPatches.Add(mutator);
                 foreach (var basicFlag in mutator.Event.GetIndividualFlags())
                     mutators[basicFlag].Add(mutator);
-
-                //if (mutator.Event.HasFlag(MutationEvent.Loot))
-                //    mutators[MutationEvent.Loot].Add(mutator);
-                //if (mutator.Event.HasFlag(MutationEvent.Corpse))
-                //    mutators[MutationEvent.Corpse].Add(mutator);
-                //if (mutator.Event.HasFlag(MutationEvent.Generator))
-                //    mutators[MutationEvent.Generator].Add(mutator);
-                //if (mutator.Event.HasFlag(MutationEvent.Factory))
-                //    mutators[MutationEvent.Factory].Add(mutator);
-                //if (mutator.Event.HasFlag(MutationEvent.EnterWorld))
-                //    mutators[MutationEvent.EnterWorld].Add(mutator);
-                //if (mutator.Event.HasFlag(MutationEvent.Inventory))
-                //    mutators[MutationEvent.Inventory].Add(mutator);
-                //if (mutator.Event.HasFlag(MutationEvent.EmoteGive))
-                //    mutators[MutationEvent.EmoteGive].Add(mutator);
 
                 if (PatchClass.Settings.Verbose)
                     ModManager.Log($"Enabled mutator: {mutatorOptions.PatchType}");
@@ -324,42 +301,12 @@ internal class MutatorHooks
     }
 
     /// <summary>
-    /// Replaces the standard
+    /// On successful Give or CreateTreasure emote
     /// </summary>
-    //[HarmonyPostfix]
-    //[HarmonyPatch(typeof(Player), nameof(Player.TryCreateForGive), new Type[] { typeof(WorldObject), typeof(WorldObject) })]
-    //public static void PostTryCreateForGive(WorldObject giver, WorldObject itemBeingGiven, ref Player __instance, ref bool __result)
-    //{
-    //    if (!__result)
-    //        return;
-
-    //    //if (__instance is null || item is null) return;
-
-    //    //Keeps track of what mutations have been applied
-    //    HashSet<Mutation> mutations = new();
-    //    foreach (var mutator in mutators[MutationEvent.EmoteGive])
-    //    {
-    //        //Check for elligible item type along with standard check
-    //        if (!mutator.CheckMutates(itemBeingGiven))
-    //            continue;
-
-    //        //If an item was mutated add the type
-    //        //Todo: create a separate handler for entering inventory?
-    //        if (mutator.TryMutateEnterInventory(mutations, itemBeingGiven))
-    //            mutations.Add(mutator.MutationType);
-    //    }
-
-    //    if (PatchClass.Settings.Verbose && mutations.Count > 0)
-    //        ModManager.Log($"{itemBeingGiven.Name} was mutated with: {string.Join(", ", mutations)}");
-    //}
-
     [HarmonyPrefix]
     [HarmonyPatch(typeof(Player), nameof(Player.TryCreateForGive), new Type[] { typeof(WorldObject), typeof(WorldObject) })]
     public static void PreTryCreateForGive(WorldObject giver, WorldObject itemBeingGiven, ref Player __instance, ref bool __result)
     {
-        //if (!__result)
-        //    return;
-
         if (__instance is null || itemBeingGiven is null) return;
 
         //Keeps track of what mutations have been applied
@@ -379,9 +326,6 @@ internal class MutatorHooks
         if (PatchClass.Settings.Verbose && mutations.Count > 0)
             ModManager.Log($"{itemBeingGiven.Name} was mutated with: {string.Join(", ", mutations)}");
     }
-
-
-
 
     /// <summary>
     /// Container-level inventory?
