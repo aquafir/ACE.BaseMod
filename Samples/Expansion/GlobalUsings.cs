@@ -28,6 +28,10 @@ global using Position = ACE.Server.Realms.InstancedPosition;
 
 global using HarmonyLib;
 
+global using Microsoft.CodeAnalysis;
+global using Microsoft.CodeAnalysis.CSharp;
+global using Microsoft.CodeAnalysis.Emit;
+
 global using System.Diagnostics;
 global using System.Numerics;
 global using System.Reflection;

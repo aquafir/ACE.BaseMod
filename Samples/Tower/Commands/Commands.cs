@@ -13,11 +13,11 @@ public class Commands
         return false;
     }
 
-    [CommandHandler("mp", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
-    public static void Handle(Session session, params string[] parameters)
-    {
-        Debugger.Break();
-    }
+    //[CommandHandler("mp", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
+    //public static void Handle(Session session, params string[] parameters)
+    //{
+    //    Debugger.Break();
+    //}
 
     //internal static void Init()
     //{

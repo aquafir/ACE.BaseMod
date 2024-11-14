@@ -1,16 +1,17 @@
-﻿using Expansion;
-using ACE.Shared.Helpers;
-using ACE.Server.WorldObjects;
-
-namespace Expansion.Features;
+﻿namespace Expansion.Features;
 [CommandCategory(nameof(Feature.MutatorHooks))]
 [HarmonyPatchCategory(nameof(Feature.MutatorHooks))]
 internal class MutatorHooks
 {
     public static readonly Dictionary<MutationEvent, List<Mutator>> mutators = new();
+    static Settings Settings => PatchClass.Settings;
 
     public static void SetupMutators()
     {
+        //Make the Mutator directory if needed and load from there
+        Directory.CreateDirectory(Settings.MutatorPath);
+        MutatorHelpers.LoadMutators(Settings.MutatorPath);
+
         //enabledPatches.Clear();
         mutators.Clear();
 
@@ -27,7 +28,7 @@ internal class MutatorHooks
 
             try
             {
-                var mutator = mutatorOptions.CreateMutator();
+                var mutator = mutatorOptions.GetMutator();
                 mutator.Start();
 
                 //enabledPatches.Add(mutator);
@@ -35,12 +36,12 @@ internal class MutatorHooks
                     mutators[basicFlag].Add(mutator);
 
                 if (PatchClass.Settings.Verbose)
-                    ModManager.Log($"Enabled mutator: {mutatorOptions.PatchType}");
+                    ModManager.Log($"Enabled mutator: {mutatorOptions.Mutation}");
             }
             catch (Exception ex)
             {
                 if (PatchClass.Settings.Verbose)
-                    ModManager.Log($"Failed to patch {mutatorOptions.PatchType}: {ex.Message}", ModManager.LogLevel.Error);
+                    ModManager.Log($"Failed to patch {mutatorOptions.Mutation}: {ex.Message}", ModManager.LogLevel.Error);
             }
         }
     }

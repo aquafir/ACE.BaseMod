@@ -8,12 +8,7 @@ public class Settings
     public List<Feature> Features { get; set; } = new()
     {
         //Feature.FakePropertyCache,
-        //Feature.OverrideSpellProjectiles,
-        //Feature.FakeAttributes,
-        //Feature.MutatorHooks, 
-        //Feature.Hardcore,
-        //Feature.Ironman,
-        //Feature.CreatureEx
+        Feature.MutatorHooks, 
     };
 
     public List<CreatureExType> CreatureFeatures { get; set; } = new()
@@ -33,12 +28,12 @@ public class Settings
     };
 
     //Full set
-    //Enum.GetValues<Feature>().ToList();
+    public string MutatorPath => Path.Combine(Mod.Instance.ModPath, "Mutators");
     public List<MutatorSettings> Mutators { get; set; } =
         //Select items
         new()
         {
-            new MutatorSettings(Mutation.SampleMutator) {
+            new MutatorSettings(Mutation.SampleMutator.ToString()) {
             Odds = nameof(OddsGroup.Always),
             Events = MutationEvent.Containers | MutationEvent.EmoteGive
             },
