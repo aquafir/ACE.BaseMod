@@ -591,3 +591,18 @@
   * Either empty or for a player
 * `AppraiseInfo` handles calculating and sending all object appraisal info
 * 
+
+
+
+
+
+
+
+
+
+## Creatures
+
+* `Attack` in `Monster_Combat` routes based on `CombatType`
+  * `MeleeAttack`
+  * `MissileAttack`
+  * `MagicAttack`

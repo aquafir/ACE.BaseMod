@@ -65,4 +65,16 @@ public static class CreatureExtensions
                 wo.Vitals[property].StartingValue = (uint)(wo.Vitals[property].StartingValue * amount);
         });
 
+    public static void ScaleVital(this Creature wo, float value, PropertyAttribute2nd prop, bool broadcast = true)
+    {
+        wo.Vitals[prop].StartingValue = (uint)(wo.Vitals[prop].StartingValue * value);
+    }
+    public static void SetVital(this Creature wo, float value, PropertyAttribute2nd prop, bool broadcast = true)
+    {
+        wo.Vitals[prop].StartingValue = (uint)value;
+
+        //if(broadcast)
+        //todo
+    }
+
 }

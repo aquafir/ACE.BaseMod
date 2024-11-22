@@ -1,4 +1,14 @@
-﻿using ACE.Server.WorldObjects;
+﻿using ACE.Adapter.GDLE.Models;
+using ACE.DatLoader.Entity;
+using ACE.DatLoader.FileTypes;
+using ACE.Entity.Enum;
+using ACE.Server.Entity;
+using ACE.Server.Physics.Animation;
+using ACE.Server.WorldObjects;
+using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
+using MotionTable = ACE.Server.Physics.Animation.MotionTable;
+using Skill = ACE.Entity.Enum.Skill;
 
 namespace ACE.Shared.Helpers;
 public static class SimulationExtensions
@@ -10,6 +20,95 @@ public static class SimulationExtensions
 
     //}
 
+    /// <summary>
+    /// Attempts to do simulate a creature's melee attack
+    /// </summary>
+    public static bool TrySimulateMeleeDamage(this Creature attacker, out List<SimulatedDamageEvent> damageEvents)
+    {
+        damageEvents = new();
+        if (attacker is null || attacker.AttackTarget is not Creature defender)
+            return false;
+
+        var motionCommand = attacker.GetCombatManeuver();
+        if (motionCommand is null)
+            return false;
+
+        attacker.SimulateSwingMotion(motionCommand.Value, out var animLength, out var attackFrames);
+        var numStrikes = attackFrames.Count;
+
+        var weapon = attacker.GetEquippedWeapon();
+
+        // handle self-procs
+        //TryProcEquippedItems(this, this, true, weapon);
+
+        for (var i = 0; i < attackFrames.Count; i++)
+            damageEvents.Add(attacker.SimulateDamage(defender, weapon, motionCommand.Value, attackFrames[i].attackHook));
+
+        return true;
+    }
+
+    public static bool TrySimulateMissileCollisionDamage(this Creature attacker, out SimulatedDamageEvent damageEvent)
+    {
+        //ProjectileCollisionHelper.OnCollideObject
+        damageEvent = default;
+
+        if (attacker is null || attacker.AttackTarget is not Creature defender)
+            return false;
+
+        //Get ammo
+        //var weapon = attacker.GetEquippedMissileWeapon();
+        //if (weapon == null) 
+        //    return false;
+
+        //var ammo = weapon.IsAmmoLauncher ? attacker.GetEquippedAmmo() : weapon;
+        //if (ammo == null) 
+        //    return false;
+
+        //var launcher = attacker.GetEquippedMissileLauncher();
+
+        if (!attacker.TryGetProjectile(out var projectile))
+            return false;
+
+        damageEvent = attacker.SimulateDamage(defender, projectile);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Simulates a swing for a MotionCommand from a Creature
+    /// </summary>
+    public static void SimulateSwingMotion(this Creature attacker, MotionCommand motionCommand, out float animLength, out List<(float time, AttackHook attackHook)> attackFrames)
+    {
+        var baseSpeed = attacker.GetAnimSpeed();
+        var animSpeedMod = attacker.IsDualWieldAttack ? 1.2f : 1.0f;     // dual wield swing animation 20% faster
+        var animSpeed = baseSpeed * animSpeedMod;
+
+        //var motionTableId = attacker.MotionTableId;
+        //var stance = attacker.CurrentMotionState.Stance;
+
+        SimulateSwingMotion(animSpeed, motionCommand, attacker.MotionTableId, attacker.CurrentMotionState.Stance, out animLength, out attackFrames);
+    }
+
+    /// <summary>
+    /// Simulates a swing for a MotionCommand
+    /// </summary>
+    public static void SimulateSwingMotion(float animSpeed, MotionCommand motionCommand, uint motionTableId, MotionStance stance, out float animLength, out List<(float time, AttackHook attackHook)> attackFrames)
+    {
+        animLength = MotionTable.GetAnimationLength(motionTableId, stance, motionCommand, animSpeed);
+
+        attackFrames = MotionTable.GetAttackFrames(motionTableId, stance, motionCommand);
+
+        //Handle missing attack frames?
+        if (attackFrames.Count == 0)
+        {
+            var attackFrameParams = new AttackFrameParams(motionTableId, stance, motionCommand);
+
+            if (!Creature.missingAttackFrames.ContainsKey(attackFrameParams))
+                Creature.missingAttackFrames.TryAdd(attackFrameParams, true);
+
+            attackFrames = Creature.defaultAttackFrames;
+        }
+    }
 
     /// <summary>
     /// Creates a 
@@ -17,6 +116,7 @@ public static class SimulationExtensions
     public static SimulatedDamageEvent SimulateDamage(this Creature attacker, Creature defender, WorldObject damageSource, MotionCommand? attackMotion = null, AttackHook attackHook = null)
     {
         var damageEvent = new SimulatedDamageEvent();
+
         damageEvent.AttackMotion = attackMotion;
         damageEvent.AttackHook = attackHook;
         if (damageSource == null)
@@ -28,9 +128,6 @@ public static class SimulationExtensions
 
         return damageEvent;
     }
-
-
-
 
     /// <summary>
     /// Gets the time needed for an attack animation
@@ -47,18 +144,18 @@ public static class SimulationExtensions
 
         if (dualWield)
             speed *= 1.2f;
-        
+
         return Server.Physics.Animation.MotionTable.GetAnimationLength(motionTableId, stance, swingAnimation, speed);
     }
 
-    public static float GetSimulatedMeleeDelay(this Creature creature)
+    public static float GetSimulatedMeleeDelay(this Creature attacker)
     {
-        MotionCommand command = creature is Player player ?
-            player.GetSwingAnimation() : 
-            creature.GetCombatManeuver().GetValueOrDefault();
-        var stance = creature.CurrentMotionState.Stance;
+        MotionCommand command = attacker is Player player ?
+            player.GetSwingAnimation() :
+            attacker.GetCombatManeuver().GetValueOrDefault();
+        var stance = attacker.CurrentMotionState.Stance;
 
-        return GetSimulatedMeleeDelay(command, stance, creature.MotionTableId, 1, creature.IsDualWieldAttack);
+        return GetSimulatedMeleeDelay(command, stance, attacker.MotionTableId, 1, attacker.IsDualWieldAttack);
     }
 
     public static float SimulateSwingMotion(this Player player, WorldObject target, out List<(float time, ACE.DatLoader.Entity.AnimationHooks.AttackHook attackHook)> attackFrames)
@@ -91,6 +188,71 @@ public static class SimulationExtensions
 
         return animLength;
     }
+
+
+
+
+    //Actualization takes simulated events and makes them real
+    /// <summary>
+    /// Handles multiple DamageEvents caused by one action like a melee attack which may only proc up to one time
+    /// </summary>
+    public static void ActualizeDamageEvents(this Creature attacker, Creature defender, List<SimulatedDamageEvent> damageEvents)
+    {
+        bool rollProc = true;
+
+        //todo: think about this
+        //Multiple DamageEvents are created by multi-hit melee attacks, but only the first should proc
+        foreach (var dmgEvent in damageEvents)
+            attacker.ActualizeDamageEvent(defender, dmgEvent, ref rollProc);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static void ActualizeDamageEvent(this Creature attacker, Creature defender, SimulatedDamageEvent damageEvent, ref bool rollProc)
+    {
+        if (!damageEvent.HasDamage) //|| defender is null
+            //target.OnEvade(this, CombatType.Melee);
+            return;
+
+        //Based on MeleeAttack
+
+        //if (defender != null)
+        if (defender is Player player)
+        {
+            // this is a player taking damage
+            player.TakeDamage(attacker, damageEvent);
+
+            //Skip proficiency?
+            //if (damageEvent.ShieldMod != 1.0f)
+            //{
+            //    var shieldSkill = defender.GetCreatureSkill(Skill.Shield);
+            //    Proficiency.OnSuccessUse(defender, shieldSkill, shieldSkill.Current); // ?
+            //}
+
+            // handle Dirty Fighting
+            if (attacker.GetCreatureSkill(Skill.DirtyFighting).AdvancementClass >= SkillAdvancementClass.Trained)
+                attacker.FightDirty(defender, damageEvent.Weapon);
+        }
+        else //if (combatPet != null || targetPet != null || Faction1Bits != null || target.Faction1Bits != null || PotentialFoe(target))
+        {
+            // combat pet inflicting or receiving damage?
+            defender.TakeDamage(attacker, damageEvent.DamageType, damageEvent.Damage);
+
+            //EmitSplatter(target, damageEvent.Damage);
+
+            // handle Dirty Fighting
+            if (attacker.GetCreatureSkill(Skill.DirtyFighting).AdvancementClass >= SkillAdvancementClass.Trained)
+                attacker.FightDirty(defender, damageEvent.Weapon);
+        }
+
+        // handle target procs
+        if (rollProc)
+        {
+            attacker.TryProcEquippedItems(attacker, defender, false, damageEvent.Weapon);
+            rollProc = false;
+        }
+    }
 }
 
 public class SimulatedDamageEvent : DamageEvent
@@ -111,7 +273,7 @@ public class SimulatedDamageEvent : DamageEvent
             return;
 
         CheckEvasion(attacker, defender);
-        if(Evaded)
+        if (Evaded)
             return;
 
         SetBaseDamage(attacker, playerAttacker);
