@@ -32,6 +32,16 @@ public static class Hardcore
                 player.SendMessage($"PK deaths not counted against hardcore players.");
                 return;
             }
+
+            if (lastDamager.TryGetPetOwnerOrAttacker() is Player killer)
+            {
+                var levelDiff = Math.Abs((__instance.Level ?? 0) - (killer.Level ?? 0));
+                if (levelDiff > Settings.PkMaxLevelDifference)
+                {
+                    player.SendMessage($"PK deaths only count against hardcore players if under {Settings.PkMaxLevelDifference}, your death had a level difference of {levelDiff}.");
+                    return;
+                }
+            }
         }
 
         //Check death interval

@@ -1,4 +1,5 @@
 ﻿using ACE.DatLoader.Entity;
+using ACE.Server.Command.Handlers;
 
 namespace Tower;
 
@@ -42,7 +43,7 @@ public static class PVP
 
         //Make an ear
         var wo = WorldObjectFactory.CreateNewWorldObject(Settings.EarId);
-        if (wo is null) 
+        if (wo is null)
             return;
 
         //Set values
@@ -52,5 +53,46 @@ public static class PVP
         killedPlayer.SetProperty(Settings.LastEarDropProp, current);
 
         __result.Add(wo);
+    }
+
+
+
+    [CommandHandler("tpk", AccessLevel.Player, CommandHandlerFlag.RequiresWorld)]
+    public static void HandlePk(Session session, params string[] parameters)
+    {
+        if (session.Player is not Player p)
+            return;
+
+        //Tries to set pk status
+        if (p.PlayerKillerStatus != PlayerKillerStatus.NPK)
+        {
+            if (p.PKTimerActive)
+            {
+                p.SendMessage($"Unable to become NPK in combat.");
+                return;
+            }
+
+            p.PlayerKillerStatus = PlayerKillerStatus.NPK;
+            p.PkLevel = PKLevel.NPK;
+            p.SendMessage($"You are now NPK");
+        }
+        else
+        {
+            //var lastPk = p.GetProperty(Settings.LastPkTimestamp) ?? 0;
+            var current = Time.GetUnixTime();
+            var lapsed = current - p.LastPkAttackTimestamp; 
+
+            if(lapsed < Settings.SecondsBetweenPk)
+            {
+                p.SendMessage($"You last attacked someone {lapsed:N0} seconds ago.  {Settings.SecondsBetweenPk} seconds must pass before you can become a PK again.");
+                return;
+            }
+
+            p.PlayerKillerStatus = PlayerKillerStatus.PK;
+            p.PkLevel = PKLevel.PK;
+            p.SendMessage($"You are now PK");
+        }
+
+        session.Player.EnqueueBroadcast(new GameMessagePublicUpdatePropertyInt(session.Player, PropertyInt.PlayerKillerStatus, (int)session.Player.PlayerKillerStatus));
     }
 }

@@ -9,5 +9,8 @@ public class PVPSettings
 
     public PropertyFloat LastEarDropProp { get; set; } = (PropertyFloat)44997;
     public double SecondsBetweenDrops { get; set; } = TimeSpan.FromMinutes(15).TotalSeconds;
+
+    public double SecondsBetweenPk { get; set; } = TimeSpan.FromMinutes(5).TotalSeconds;
+    //public PropertyInt64 LastPkTimestamp { get; set; } = (PropertyInt64)44996;
 }
 
