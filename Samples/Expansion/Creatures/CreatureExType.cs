@@ -32,4 +32,5 @@ public enum CreatureExType
     Tank,
     Vampire,
     Warder,
+    Horde,
 }

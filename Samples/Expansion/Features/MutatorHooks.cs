@@ -9,8 +9,8 @@ internal class MutatorHooks
     public static void SetupMutators()
     {
         //Make the Mutator directory if needed and load from there
-        Directory.CreateDirectory(Settings.MutatorPath);
-        MutatorHelpers.LoadMutators(Settings.MutatorPath);
+        //Directory.CreateDirectory(Settings.MutatorPath);
+        //MutatorHelpers.LoadMutators(Settings.MutatorPath);
 
         //enabledPatches.Clear();
         mutators.Clear();

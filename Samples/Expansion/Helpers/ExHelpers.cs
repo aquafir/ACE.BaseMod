@@ -37,8 +37,9 @@ public static class CreatureExHelpers
     };
 
 #if REALM
-    public static CreatureEx Create(this Creatures.CreatureExType type, Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset = null) => type switch { 
-            CreatureExType.Accurate => new Accurate(weenie, guid, ruleset),
+    public static CreatureEx Create(this Creatures.CreatureExType type, Weenie weenie, ObjectGuid guid, AppliedRuleset ruleset = null) => type switch
+    {
+        CreatureExType.Accurate => new Accurate(weenie, guid, ruleset),
         //Creatures.CreatureType.Avenger => new Avenger(weenie, guid, ruleset),
         CreatureExType.Banisher => new Banisher(weenie, guid, ruleset),
         //Creatures.CreatureType.Bard => new Bard(weenie, guid, ruleset),
@@ -50,6 +51,7 @@ public static class CreatureExHelpers
         CreatureExType.Evader => new Evader(weenie, guid, ruleset),
         CreatureExType.Exploder => new Exploder(weenie, guid, ruleset),
         CreatureExType.Healer => new Creatures.Healer(weenie, guid, ruleset),
+        CreatureExType.Horde => new Horde(weenie, guid, ruleset),
         CreatureExType.Merger => new Merger(weenie, guid, ruleset),
         //Creatures.CreatureType.Necromancer => new Necromancer(weenie, guid, ruleset),
         //Creatures.CreatureType.Poisoner => new Poisoner(weenie, guid, ruleset),

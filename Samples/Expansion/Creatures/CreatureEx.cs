@@ -56,7 +56,11 @@ public class CreatureEx : Creature
             return;
         }
 
+#if REALM
+        var creature = type.Create(weenie, GuidManager.NewDynamicGuid(), session.Player.RealmRuleset);
+#else
         var creature = type.Create(weenie, GuidManager.NewDynamicGuid());
+#endif
         creature.MoveInFrontOf(session.Player);
         creature.EnterWorld();
 

@@ -8,23 +8,25 @@ public class Settings
     public List<Feature> Features { get; set; } = new()
     {
         //Feature.FakePropertyCache,
+        Feature.CreatureEx,
         Feature.MutatorHooks, 
     };
 
     public List<CreatureExType> CreatureFeatures { get; set; } = new()
     {
-        CreatureExType.Accurate,
-        CreatureExType.Boss,
-        CreatureExType.Comboer,
-        CreatureExType.Drainer,
-        CreatureExType.Evader,
-        CreatureExType.Rogue,
-        CreatureExType.SpellBreaker,
-        CreatureExType.SpellThief,
-        CreatureExType.Stomper,
-        CreatureExType.Tank,
-        CreatureExType.Vampire,
-        CreatureExType.Warder,
+        CreatureExType.Horde,
+        //CreatureExType.Accurate,
+        //CreatureExType.Boss,
+        //CreatureExType.Comboer,
+        //CreatureExType.Drainer,
+        //CreatureExType.Evader,
+        //CreatureExType.Rogue,
+        //CreatureExType.SpellBreaker,
+        //CreatureExType.SpellThief,
+        //CreatureExType.Stomper,
+        //CreatureExType.Tank,
+        //CreatureExType.Vampire,
+        //CreatureExType.Warder,
     };
 
     //Full set
