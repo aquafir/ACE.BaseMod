@@ -69,7 +69,7 @@
 		  <HintPath>C:\ACE\Mods\Discord\Discord.dll</HintPath>
 		</Reference>
 		<Reference Include="McMaster.NETCore.Plugins">
-		  <HintPath>C:\ACE\Server\McMaster.NETCore.Plugins.dll</HintPath>
+		  <HintPath>$(ACEPath)$(ACEPath)\McMaster.NETCore.Plugins.dll</HintPath>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore">
 			<HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.dll</HintPath>

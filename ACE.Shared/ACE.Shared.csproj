@@ -8,22 +8,37 @@
 		<AllowUnsafeBlocks>False</AllowUnsafeBlocks>
 		<PlatformTarget>x64</PlatformTarget>
 		<Title>ACE.Shared</Title>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 	</PropertyGroup>
+
+	<!--Conditional check of a defined constant 'REALM' that lets you check for $(Realms)-->
+	<PropertyGroup>
+		<!--<DefineConstants>$(DefineConstants);REALM</DefineConstants>-->
+		<Realms>$(DefineConstants.Contains('REALM'))</Realms>
+	</PropertyGroup>
+	<!--Set server path and other conditional things-->
+	<PropertyGroup Condition="!$(Realms)">
+		<ACEPath>C:\ACE\Server</ACEPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Realms)">
+		<ACEPath>C:\ACE\RealmServer</ACEPath>
+	</PropertyGroup>
+
 
 	<!--https://learn.microsoft.com/en-us/nuget/create-packages/package-authoring-best-practices#create-a-nuget-package-->
 	<PropertyGroup>
-		<PackageId>ACEmulator.$(AssemblyName)</PackageId>
-		<Version>1.0.6</Version>
-		<Authors>Aquafir</Authors>
+		<Version>1.0.7</Version>
+		<PackageReleaseNotes>Adds simulation infrastructure, fixes, and separation of ACRealms</PackageReleaseNotes>
 		<Description>Shared utility code and enums for the ACEmulator modding framework.</Description>
+		<Authors>Aquafir</Authors>
 		<RepositoryUrl>https://github.com/aquafir/ACE.BaseMod/</RepositoryUrl>
-		<PackageReleaseNotes>Fixes settings container</PackageReleaseNotes>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<!--<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>-->
+		<PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageId Condition="!$(Realms)">ACEmulator.$(AssemblyName)</PackageId>
+		<PackageId Condition="$(Realms)">ACRealms.$(AssemblyName)</PackageId>
 	</PropertyGroup>
-
-	<Target Name="PublishNugetPackageOnBuild" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
-		<Exec Command="dotnet nuget push $(OutputPath)..\$(PackageId).$(Version).nupkg  -k $(NUGET_DEPLOY_KEY) -s https://api.nuget.org/v3/index.json --skip-duplicate" />
-	</Target>
 
 	<PropertyGroup>
 		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
@@ -31,7 +46,7 @@
 	<ItemGroup>
 		<Publicize Include="ACE.Server" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
 			<PrivateAssets>all</PrivateAssets>
@@ -66,16 +81,16 @@
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore">
-		  <HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.dll</HintPath>
+			<HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.dll</HintPath>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
-		  <HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
+			<HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore.Relational">
-		  <HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+			<HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
 		</Reference>
 		<Reference Include="Microsoft.Extensions.Caching.Abstractions">
-		  <HintPath>$(ACEPath)\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+			<HintPath>$(ACEPath)\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
@@ -85,6 +100,6 @@
 
 	<ItemGroup>
 		<None Include="M:\Projects\ACE.BaseMod\ACE.Shared\.editorconfig" />
+		<None Include="README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
-
 </Project>
