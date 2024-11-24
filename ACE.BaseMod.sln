@@ -71,8 +71,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACE.SQLite", "Templates\ACE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACE.MySql", "Templates\ACE.MySql\ACE.MySql.csproj", "{7E886C62-59C5-43EF-AD13-DC0A91344090}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Achievements", "Samples\Achievements\Achievements.csproj", "{6CDEA1CA-7DAA-47AA-818B-A82E7D164373}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -184,10 +182,6 @@ Global
 		{7E886C62-59C5-43EF-AD13-DC0A91344090}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E886C62-59C5-43EF-AD13-DC0A91344090}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E886C62-59C5-43EF-AD13-DC0A91344090}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6CDEA1CA-7DAA-47AA-818B-A82E7D164373}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CDEA1CA-7DAA-47AA-818B-A82E7D164373}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CDEA1CA-7DAA-47AA-818B-A82E7D164373}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CDEA1CA-7DAA-47AA-818B-A82E7D164373}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -219,7 +213,6 @@ Global
 		{206C24C0-5A5C-4676-920D-71CFEE479D62} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
 		{4C12363D-0A43-463D-B246-4FDBD0324E23} = {C2B15DDD-998C-4A7C-ADE1-A7F21B896D59}
 		{7E886C62-59C5-43EF-AD13-DC0A91344090} = {C2B15DDD-998C-4A7C-ADE1-A7F21B896D59}
-		{6CDEA1CA-7DAA-47AA-818B-A82E7D164373} = {B26E1345-5594-4F16-828C-C4994FD6AC02}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78F97B66-6E9E-4329-A0FE-1E02A2C50967}
