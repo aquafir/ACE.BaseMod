@@ -41,7 +41,6 @@
 	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.3.3" ExcludeAssets="runtime" />
 		<PackageReference Include="Profanity.Detector" Version="0.1.8" />
-		<!--<PackageReference Include="System.Text.Json" Version="7.0.0" Aliases="Json" />-->
 	</ItemGroup>
 
 	<ItemGroup>
