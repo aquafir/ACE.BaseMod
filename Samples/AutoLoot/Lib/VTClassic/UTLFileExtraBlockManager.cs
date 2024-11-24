@@ -57,7 +57,8 @@ namespace AutoLoot.Lib.VTClassic
             try
             {
                 //Add the current handler types
-                AddHandlerType(typeof(UTLBlockHandlers.UTLBlock_SalvageCombine));
+                //Todo: fix uTank ref
+                //AddHandlerType(typeof(UTLBlockHandlers.UTLBlock_SalvageCombine));
             }
             catch (Exception exx)
             {
@@ -75,7 +76,8 @@ namespace AutoLoot.Lib.VTClassic
         public void CreateDefaultBlocks()
         {
             //Create the blocks that aren't here
-            TryAddDefaultBlock(new UTLBlockHandlers.UTLBlock_SalvageCombine());
+            //Todo: fix uTank ref
+            //TryAddDefaultBlock(new UTLBlockHandlers.UTLBlock_SalvageCombine());
         }
 
         public IUTLFileBlockHandler GetFirstBlock(string HandlerName)

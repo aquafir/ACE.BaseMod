@@ -1,4 +1,5 @@
 ﻿using AutoLoot.Loot;
+using Action = AutoLoot.Loot.Action;
 
 namespace AutoLoot.Helpers;
 
@@ -95,7 +96,7 @@ public static class RandomHelper
     {
         get
         {
-            if (_words is null) _words = File.ReadAllLines(Path.Combine(Mod.ModPath, "words.txt"));
+            if (_words is null) _words = File.ReadAllLines(Path.Combine(Mod.Instance.ModPath, "words.txt"));
             return _words;
         }
     }

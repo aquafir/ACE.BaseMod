@@ -193,7 +193,9 @@ namespace AutoLoot.Lib.VTClassic
                 ExceptionHandler(ex);
             }
 
-            return new uTank2.LootPlugins.LootPluginInfo("utl");
+            //Todo: fix uTank ref
+            return null;
+            //return new uTank2.LootPlugins.LootPluginInfo("utl");
         }
 
         public override void Shutdown()
