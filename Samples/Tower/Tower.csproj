@@ -73,30 +73,44 @@
 		<Reference Include="ACE.Adapter">
 			<HintPath>$(ACEPath)\ACE.Adapter.dll</HintPath>
 			<Private>False</Private>
+			<CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+			<ExcludeAssets>all</ExcludeAssets>
 		</Reference>
 		<Reference Include="ACE.Common">
 			<HintPath>$(ACEPath)\ACE.Common.dll</HintPath>
 			<Private>False</Private>
+			<CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+			<ExcludeAssets>all</ExcludeAssets>
 		</Reference>
 		<Reference Include="ACE.Database">
 			<HintPath>$(ACEPath)\ACE.Database.dll</HintPath>
 			<Private>False</Private>
+			<CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+			<ExcludeAssets>all</ExcludeAssets>
 		</Reference>
 		<Reference Include="ACE.DatLoader">
 			<HintPath>$(ACEPath)\ACE.DatLoader.dll</HintPath>
 			<Private>False</Private>
+			<CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+			<ExcludeAssets>all</ExcludeAssets>
 		</Reference>
 		<Reference Include="ACE.Entity">
 			<HintPath>$(ACEPath)\ACE.Entity.dll</HintPath>
 			<Private>False</Private>
+			<CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+			<ExcludeAssets>all</ExcludeAssets>
 		</Reference>
 		<Reference Include="ACE.Server">
 			<HintPath>$(ACEPath)\ACE.Server.dll</HintPath>
 			<Private>False</Private>
+			<CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+			<ExcludeAssets>all</ExcludeAssets>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore">
 			<HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.dll</HintPath>
 			<Private>False</Private>
+			<CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+			<ExcludeAssets>all</ExcludeAssets>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
 		  <HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
