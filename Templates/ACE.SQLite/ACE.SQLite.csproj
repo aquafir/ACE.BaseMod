@@ -41,7 +41,7 @@
 	</ItemGroup>-->
 
 	<ItemGroup>
-		<PackageReference Include="Lib.Harmony" Version="2.3.3" />
+		<PackageReference Include="Lib.Harmony" Version="2.3.3" ExcludeAssets="runtime" />
 		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.*" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="8.0.10" />

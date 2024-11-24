@@ -24,7 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Lib.Harmony" Version="2.3.3" />
+		<PackageReference Include="Lib.Harmony" Version="2.3.3" ExcludeAssets="runtime" />
 		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.*" />
 		<!--<PackageReference Include="System.Text.Json" Version="7.0.0" Aliases="Json" />-->
 	</ItemGroup>

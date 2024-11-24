@@ -38,7 +38,7 @@
 	</ItemGroup>-->
 
 	<ItemGroup>
-		<PackageReference Include="Lib.Harmony" Version="2.3.3" />
+		<PackageReference Include="Lib.Harmony" Version="2.3.3" ExcludeAssets="runtime" />
 		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.*" />
 		<!--<ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />-->
 	</ItemGroup>
