@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<NoWarn>0436;1073;8509</NoWarn>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+		<OutputPath>C:\ACE\Mods\$(AssemblyName)</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<PlatformTarget>x64</PlatformTarget>
-		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-		<Title>ACE.Shared</Title>
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 	</PropertyGroup>
 
@@ -17,39 +17,32 @@
 		<!--<DefineConstants>$(DefineConstants);REALM</DefineConstants>-->
 		<Realms>$(DefineConstants.Contains('REALM'))</Realms>
 	</PropertyGroup>
-	<!--Set server path and other conditional things-->
+	<!--ACE References-->
 	<PropertyGroup Condition="!$(Realms)">
 		<ACEPath>C:\ACE\Server</ACEPath>
 	</PropertyGroup>
+	<ItemGroup Condition="!$(Realms)">
+		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.*" />
+	</ItemGroup>
+	<!--Realms References-->
 	<PropertyGroup Condition="$(Realms)">
 		<ACEPath>C:\ACE\RealmServer</ACEPath>
 	</PropertyGroup>
+	<ItemGroup Condition="$(Realms)">
+		<PackageReference Include="ACRealms.ACE.Shared" Version="1.*" />
+	</ItemGroup>
 
-
-	<!--https://learn.microsoft.com/en-us/nuget/create-packages/package-authoring-best-practices#create-a-nuget-package-->
-	<PropertyGroup>
-		<Version>1.0.8</Version>
-		<PackageReleaseNotes>Compiled against ACE 1.64.4610</PackageReleaseNotes>
-		<Description>Shared utility code and enums for the ACEmulator modding framework.</Description>
-		<Authors>Aquafir</Authors>
-		<RepositoryUrl>https://github.com/aquafir/ACE.BaseMod/</RepositoryUrl>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<!--<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>-->
-		<PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageId Condition="!$(Realms)">ACEmulator.$(AssemblyName)</PackageId>
-		<PackageId Condition="$(Realms)">ACRealms.$(AssemblyName)</PackageId>
-	</PropertyGroup>
-	<!--Publish-->
-	<Target Name="PublishNugetPackageOnBuild" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
-		<Exec Command="dotnet nuget push $(OutputPath)..\$(PackageId).$(Version).nupkg  -k $(NUGET_DEPLOY_KEY) -s https://api.nuget.org/v3/index.json --skip-duplicate" />
-	</Target>
-	
-	<PropertyGroup>
-		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
-	</PropertyGroup>
+	<!--<PropertyGroup>
+		<PublicizeAll>true</PublicizeAll>
+	</PropertyGroup>-->
 	<ItemGroup>
 		<Publicize Include="ACE.Server" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove=".template.config\**" />
+		<EmbeddedResource Remove=".template.config\**" />
+		<None Remove=".template.config\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -58,6 +51,10 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Lib.Harmony" Version="2.3.3" ExcludeAssets="runtime" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\ACE.Shared\ACE.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -99,24 +96,36 @@
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore">
 			<HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.dll</HintPath>
-		</Reference>
-		<Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
-			<HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
-		</Reference>
-		<Reference Include="Microsoft.EntityFrameworkCore.Relational">
-			<HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
-		</Reference>
-		<Reference Include="Microsoft.Extensions.Caching.Abstractions">
-			<HintPath>$(ACEPath)\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+			<Private>False</Private>
+			<CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+			<ExcludeAssets>all</ExcludeAssets>
 		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>
-		<EditorConfigFiles Remove="M:\Projects\ACE.BaseMod\ACE.Shared\.editorconfig" />
+		<None Update="Meta.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
-	<ItemGroup>
-		<None Include="M:\Projects\ACE.BaseMod\ACE.Shared\.editorconfig" />
-		<None Include="README.md" Pack="true" PackagePath="" />
-	</ItemGroup>
+	<!--More cleanup in Release mode?-->
+	<Target Name="CleanupFilesRelease" AfterTargets="PostBuildEvent" Condition="$(ConfigurationName) == Release">
+		<ItemGroup>
+			<FilesToDelete Include="$(OutDir)*.deps.json" />
+			<FilesToDelete Include="$(OutDir)*runtimeconfig.json" />
+			<FilesToDelete Include="$(OutDir)*.pdb" />
+			<FilesToDelete Include="$(OutDir)runtimes\**\*.*" />
+			<FoldersToDelete Include="$(OutDir)runtimes" />
+		</ItemGroup>
+		<Message Text="Deleting Files @(FilesToDelete)" />
+		<Delete Files="@(FilesToDelete)">
+			<Output TaskParameter="DeletedFiles" ItemName="FilesDeleted" />
+		</Delete>
+		<Message Text="Files deleted: @(FilesDeleted)" />
+		<RemoveDir Directories="@(FoldersToDelete)" />
+	</Target>
+	<!--Zip if in Release mod-->
+	<Target Name="ZipOutputPath" AfterTargets="PostBuildEvent" Condition="$(ConfigurationName) == Release">
+		<ZipDirectory SourceDirectory="$(OutputPath)" DestinationFile="$(OutputPath)..\$(ProjectName).zip" Overwrite="true" />
+	</Target>
 </Project>
