@@ -12,6 +12,19 @@
 		<PlatformTarget>x64</PlatformTarget>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<!--Conditional check of a defined constant 'REALM'-->
+		<!--<DefineConstants>REALM</DefineConstants>-->
+		<Realms>$(DefineConstants.Contains('REALM'))</Realms>
+	</PropertyGroup>
+	<PropertyGroup Condition="!$(Realms)">
+		<ACEPath>C:\ACE\Server</ACEPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Realms)">
+		<ACEPath>C:\ACE\RealmServer</ACEPath>
+	</PropertyGroup>
+
+
 	<ItemGroup>
 		<Compile Remove=".template.config\**" />
 		<EmbeddedResource Remove=".template.config\**" />
@@ -21,7 +34,20 @@
 	<!--Krafs Publicizer for access to private members of ACE-->
 	<!--<PropertyGroup>
 		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
-	</PropertyGroup>-->
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<!--Conditional check of a defined constant 'REALM'-->
+		<!--<DefineConstants>REALM</DefineConstants>-->
+		<Realms>$(DefineConstants.Contains('REALM'))</Realms>
+	</PropertyGroup>
+	<PropertyGroup Condition="!$(Realms)">
+		<ACEPath>C:\ACE\Server</ACEPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Realms)">
+		<ACEPath>C:\ACE\RealmServer</ACEPath>
+	</PropertyGroup>
+-->
 	<!--<ItemGroup>
 		<Publicize Include="ACE.Server" />
 		<Publicize Include="ACE.DatLoader"/>
@@ -29,7 +55,20 @@
 	</ItemGroup>-->
 	<!--<PropertyGroup>
 		<PublicizeAll>true</PublicizeAll>
-	</PropertyGroup>-->
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<!--Conditional check of a defined constant 'REALM'-->
+		<!--<DefineConstants>REALM</DefineConstants>-->
+		<Realms>$(DefineConstants.Contains('REALM'))</Realms>
+	</PropertyGroup>
+	<PropertyGroup Condition="!$(Realms)">
+		<ACEPath>C:\ACE\Server</ACEPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Realms)">
+		<ACEPath>C:\ACE\RealmServer</ACEPath>
+	</PropertyGroup>
+-->
 	<!--<ItemGroup>
 		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
 			<PrivateAssets>all</PrivateAssets>

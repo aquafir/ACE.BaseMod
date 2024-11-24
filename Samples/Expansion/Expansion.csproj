@@ -14,8 +14,33 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
+		<!--Conditional check of a defined constant 'REALM'-->
+		<!--<DefineConstants>REALM</DefineConstants>-->
+		<Realms>$(DefineConstants.Contains('REALM'))</Realms>
+	</PropertyGroup>
+	<PropertyGroup Condition="!$(Realms)">
+		<ACEPath>C:\ACE\Server</ACEPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Realms)">
+		<ACEPath>C:\ACE\RealmServer</ACEPath>
+	</PropertyGroup>
+
+	<PropertyGroup>
 		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
 	</PropertyGroup>
+
+	<PropertyGroup>
+		<!--Conditional check of a defined constant 'REALM'-->
+		<!--<DefineConstants>REALM</DefineConstants>-->
+		<Realms>$(DefineConstants.Contains('REALM'))</Realms>
+	</PropertyGroup>
+	<PropertyGroup Condition="!$(Realms)">
+		<ACEPath>C:\ACE\Server</ACEPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Realms)">
+		<ACEPath>C:\ACE\RealmServer</ACEPath>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<Publicize Include="ACE.Server" />
 	</ItemGroup>
