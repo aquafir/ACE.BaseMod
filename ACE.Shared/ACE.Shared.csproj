@@ -40,7 +40,11 @@
 		<PackageId Condition="!$(Realms)">ACEmulator.$(AssemblyName)</PackageId>
 		<PackageId Condition="$(Realms)">ACRealms.$(AssemblyName)</PackageId>
 	</PropertyGroup>
-
+	<!--Publish-->
+	<Target Name="PublishNugetPackageOnBuild" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+		<Exec Command="dotnet nuget push $(OutputPath)..\$(PackageId).$(Version).nupkg  -k $(NUGET_DEPLOY_KEY) -s https://api.nuget.org/v3/index.json --skip-duplicate" />
+	</Target>
+	
 	<PropertyGroup>
 		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
 	</PropertyGroup>
