@@ -28,8 +28,8 @@
 
 	<!--https://learn.microsoft.com/en-us/nuget/create-packages/package-authoring-best-practices#create-a-nuget-package-->
 	<PropertyGroup>
-		<Version>1.0.7</Version>
-		<PackageReleaseNotes>Adds simulation infrastructure, fixes, and separation of ACRealms</PackageReleaseNotes>
+		<Version>1.0.8</Version>
+		<PackageReleaseNotes>Compiled against ACE 1.64.4610</PackageReleaseNotes>
 		<Description>Shared utility code and enums for the ACEmulator modding framework.</Description>
 		<Authors>Aquafir</Authors>
 		<RepositoryUrl>https://github.com/aquafir/ACE.BaseMod/</RepositoryUrl>

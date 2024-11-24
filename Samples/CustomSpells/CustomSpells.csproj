@@ -22,7 +22,7 @@
 		<ACEPath>C:\ACE\Server</ACEPath>
 	</PropertyGroup>
 	<ItemGroup Condition="!$(Realms)">
-		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.6" />
+		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.*" />
 	</ItemGroup>
 	<!--Realms References-->
 	<PropertyGroup Condition="$(Realms)">
