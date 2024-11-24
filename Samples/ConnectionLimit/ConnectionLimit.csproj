@@ -11,17 +11,26 @@
 		<PlatformTarget>x64</PlatformTarget>
 	</PropertyGroup>
 
+	<!--Conditional check of a defined constant 'REALM' that lets you check for $(Realms)-->
 	<PropertyGroup>
-		<!--Conditional check of a defined constant 'REALM'-->
-		<!--<DefineConstants>REALM</DefineConstants>-->
+		<!--<DefineConstants>$(DefineConstants);REALM</DefineConstants>-->
 		<Realms>$(DefineConstants.Contains('REALM'))</Realms>
 	</PropertyGroup>
+	<!--ACE References-->
 	<PropertyGroup Condition="!$(Realms)">
 		<ACEPath>C:\ACE\Server</ACEPath>
 	</PropertyGroup>
+	<ItemGroup Condition="!$(Realms)">
+		<PackageReference Include="ACEmulator.ACE.Shared" Version="1.0.6" />
+	</ItemGroup>
+	<!--Realms References-->
 	<PropertyGroup Condition="$(Realms)">
 		<ACEPath>C:\ACE\RealmServer</ACEPath>
 	</PropertyGroup>
+	<ItemGroup Condition="$(Realms)">
+		<PackageReference Include="ACRealms.ACE.Shared" Version="1.*" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<Compile Remove=".template.config\**" />

@@ -1,6 +1,4 @@
 ﻿using ACE.Common.Extensions;
-using McMaster.NETCore.Plugins;
-using McMaster.NETCore.Plugins.Loader;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 using System.Reflection.Emit;

@@ -1,17 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);REALM</DefineConstants>
+		<!--<DefineConstants>$(DefineConstants);REALM</DefineConstants>-->
+		<ACEPath>C:\ACE\Server</ACEPath>
 	</PropertyGroup>
-	<Choose>
-		<When Condition="$(DefineConstants.Contains('REALM'))">
-			<PropertyGroup>
-				<ACEPath>C:\ACE\RealmServer</ACEPath>
-			</PropertyGroup>
-		</When>
-		<Otherwise>
-			<PropertyGroup>
-				<ACEPath>C:\ACE\Server</ACEPath>
-			</PropertyGroup>
-		</Otherwise>
-	</Choose>
 </Project>
