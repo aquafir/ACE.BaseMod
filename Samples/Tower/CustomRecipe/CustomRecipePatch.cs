@@ -17,7 +17,11 @@ public static class CustomRecipePatch
     {
         //Find items
         var source = __instance.FindObject(sourceObjectGuid, SearchLocations.MyInventory | SearchLocations.MyEquippedItems, out _, out _, out var sourceItemIsEquipped);
-        var target = __instance.FindObject(targetObjectGuid, SearchLocations.MyInventory | SearchLocations.MyEquippedItems | SearchLocations.Landblock);
+#if REALM
+var target = __instance.FindObject(targetObjectGuid, SearchLocations.MyInventory | SearchLocations.MyEquippedItems | SearchLocations.Landblock);
+#else
+        var target = __instance.FindObject(targetObjectGuid.Full, SearchLocations.MyInventory | SearchLocations.MyEquippedItems | SearchLocations.Landblock);
+# endif
 
         if (source is null || target is null)
             return true;

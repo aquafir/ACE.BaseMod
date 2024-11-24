@@ -1,6 +1,4 @@
-﻿using ACE.Entity.Enum.RealmProperties;
-using ACE.Server.Entity.Actions;
-using MotionTable = ACE.DatLoader.FileTypes.MotionTable;
+﻿using MotionTable = ACE.DatLoader.FileTypes.MotionTable;
 
 namespace QualityOfLife;
 

@@ -49,7 +49,11 @@ public static class PVP
         //Set values
         wo.Name = $"{killedPlayer.Name}'s Ear";
         wo.LongDesc = $"PK trophy from when {player.Name} ({player.Level}) killed {killedPlayer.Name} ({killedPlayer.Level})";
+#if REALM
         wo.SetProperty(Settings.EarSourcePlayerProp, killedPlayer.Guid.ClientGUID);
+#else
+        wo.SetProperty(Settings.EarSourcePlayerProp, killedPlayer.Guid.Full);
+# endif
         killedPlayer.SetProperty(Settings.LastEarDropProp, current);
 
         __result.Add(wo);

@@ -77,38 +77,28 @@
 
 	<ItemGroup>
 		<Reference Include="ACE.Adapter">
-			<HintPath>$(ACEPath)$(ACEPath)\ACE.Adapter.dll</HintPath>
+			<HintPath>$(ACEPath)\ACE.Adapter.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="ACE.Common">
-			<HintPath>$(ACEPath)$(ACEPath)\ACE.Common.dll</HintPath>
+			<HintPath>$(ACEPath)\ACE.Common.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="ACE.Database">
-			<HintPath>$(ACEPath)$(ACEPath)\ACE.Database.dll</HintPath>
+			<HintPath>$(ACEPath)\ACE.Database.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="ACE.DatLoader">
-			<HintPath>$(ACEPath)$(ACEPath)\ACE.DatLoader.dll</HintPath>
+			<HintPath>$(ACEPath)\ACE.DatLoader.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="ACE.Entity">
-			<HintPath>$(ACEPath)ACE.Entity.dll</HintPath>
+			<HintPath>$(ACEPath)\ACE.Entity.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="ACE.Server">
-			<HintPath>$(ACEPath).Server.dll</HintPath>
+			<HintPath>$(ACEPath)\ACE.Server.dll</HintPath>
 			<Private>False</Private>
-		</Reference>
-		<Reference Include="Microsoft.EntityFrameworkCore">
-			<HintPath>$(ACEPath)Microsoft.EntityFrameworkCore.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
-		  <HintPath>$(ACEPath)Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
-		</Reference>
-		<Reference Include="Microsoft.EntityFrameworkCore.Relational">
-		  <HintPath>$(ACEPath)Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
