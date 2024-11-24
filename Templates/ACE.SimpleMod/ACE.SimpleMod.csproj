@@ -69,26 +69,8 @@
 		</None>
 	</ItemGroup>
 
-	<!--Get rid of assemblies that should be present in ACE-->
-	<Target Name="CleanupFiles" AfterTargets="PostBuildEvent">
-		<ItemGroup>
-			<FilesToDelete Include="$(OutDir)0Harmony.dll" />
-			<FilesToDelete Include="$(OutDir)Humanizer.dll" />
-			<FilesToDelete Include="$(OutDir)ACE.*.dll" Exclude="$(OutDir)ACE.Shared.dll" />
-			<FilesToDelete Include="$(OutDir)Microsoft.*.dll" />
-			<FilesToDelete Include="$(OutDir)Mono.*.dll" />
-			<FilesToDelete Include="$(OutDir)MonoMod.*.dll" />
-			<FilesToDelete Include="$(OutDir)System.*.dll" Exclude="$(OutDir)System.Text.*.dll" />
-		</ItemGroup>
-		<Message Text="Deleting Files @(FilesToDelete)" />
-		<Delete Files="@(FilesToDelete)">
-			<Output TaskParameter="DeletedFiles" ItemName="FilesDeleted" />
-		</Delete>
-		<Message Text="Files deleted: @(FilesDeleted)" />
-	</Target>
-
-	<!--More cleanup in Release mode?-->
-	<Target Name="CleanupFilesRelease" AfterTargets="CleanupFiles" Condition="$(ConfigurationName) == Release">
+		<!--More cleanup in Release mode?-->
+	<Target Name="CleanupFilesRelease" AfterTargets="PostBuildEvent" Condition="$(ConfigurationName) == Release">
 		<ItemGroup>
 			<FilesToDelete Include="$(OutDir)*.deps.json" />
 			<FilesToDelete Include="$(OutDir)*runtimeconfig.json" />
@@ -104,7 +86,7 @@
 		<RemoveDir Directories="@(FoldersToDelete)" />
 	</Target>
 	<!--Zip if in Release mod-->
-	<Target Name="ZipOutputPath" AfterTargets="CleanupFiles" Condition="$(ConfigurationName) == Release">
+	<Target Name="ZipOutputPath" AfterTargets="PostBuildEvent" Condition="$(ConfigurationName) == Release">
 		<ZipDirectory SourceDirectory="$(OutputPath)" DestinationFile="$(OutputPath)..\$(ProjectName).zip" Overwrite="true" />
 	</Target>
 </Project>

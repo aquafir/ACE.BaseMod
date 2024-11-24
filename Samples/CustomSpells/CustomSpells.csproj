@@ -37,7 +37,7 @@
 		<EmbeddedResource Remove=".template.config\**" />
 		<None Remove=".template.config\**" />
 	</ItemGroup>
-	
+
 	<PropertyGroup>
 		<PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
 	</PropertyGroup>
@@ -53,8 +53,8 @@
 	<ItemGroup>
 		<PackageReference Include="ExcelMapper" Version="5.2.592" />
 		<PackageReference Include="Krafs.Publicizer" Version="2.2.1">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Lib.Harmony" Version="2.3.3" ExcludeAssets="runtime" />
 	</ItemGroup>
@@ -107,10 +107,10 @@
 			<ExcludeAssets>all</ExcludeAssets>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
-		  <HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
+			<HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
 		</Reference>
 		<Reference Include="Microsoft.EntityFrameworkCore.Relational">
-		  <HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+			<HintPath>$(ACEPath)\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
@@ -120,37 +120,8 @@
 		</None>
 	</ItemGroup>
 
-	<!--Get rid of assemblies that should be present in ACE-->
-	<Target Name="CleanupFiles" AfterTargets="PostBuildEvent">
-		<ItemGroup>
-			<FilesToDelete Include="$(OutDir)0Harmony.dll" />
-			<FilesToDelete Include="$(OutDir)Humanizer.dll" />
-			<FilesToDelete Include="$(OutDir)ACE.*.dll" Exclude="$(OutDir)ACE.Shared.dll" />
-			<FilesToDelete Include="$(OutDir)Microsoft.*.dll" />
-			<FilesToDelete Include="$(OutDir)Mono.*.dll" />
-			<FilesToDelete Include="$(OutDir)MonoMod.*.dll" />
-			<FilesToDelete Include="$(OutDir)System.Security.*.dll" />
-			<FilesToDelete Include="$(OutDir)System.Drawing.*.dll" />
-
-			<!--Not positive about the cleanup list-->
-			<FilesToDelete Include="$(OutDir)BouncyCastle.Cryptography.dll" />
-			<FilesToDelete Include="$(OutDir)ExtendedNumerics.BigDecimal.dll" />
-			<FilesToDelete Include="$(OutDir)MathNet.Numerics.dll" />
-			<FilesToDelete Include="$(OutDir)SixLabors.Fonts.dll" />
-			<FilesToDelete Include="$(OutDir)SixLabors.ImageSharp.dll" />
-			<FilesToDelete Include="$(OutDir)System.Text.Json.dll" />
-			<FilesToDelete Include="$(OutDir)Enums.NET.dll" />
-			<FilesToDelete Include="$(OutDir)System.Windows.Extensions.dll" />
-		</ItemGroup>
-		<Message Text="Deleting Files @(FilesToDelete)" />
-		<Delete Files="@(FilesToDelete)">
-			<Output TaskParameter="DeletedFiles" ItemName="FilesDeleted" />
-		</Delete>
-		<Message Text="Files deleted: @(FilesDeleted)" />
-	</Target>
-
 	<!--More cleanup in Release mode?-->
-	<Target Name="CleanupFilesRelease" AfterTargets="CleanupFiles" Condition="$(ConfigurationName) == Release">
+	<Target Name="CleanupFilesRelease" AfterTargets="PostBuildEvent" Condition="$(ConfigurationName) == Release">
 		<ItemGroup>
 			<FilesToDelete Include="$(OutDir)*.deps.json" />
 			<FilesToDelete Include="$(OutDir)*runtimeconfig.json" />
@@ -166,7 +137,7 @@
 		<RemoveDir Directories="@(FoldersToDelete)" />
 	</Target>
 	<!--Zip if in Release mod-->
-	<Target Name="ZipOutputPath" AfterTargets="CleanupFiles" Condition="$(ConfigurationName) == Release">
+	<Target Name="ZipOutputPath" AfterTargets="PostBuildEvent" Condition="$(ConfigurationName) == Release">
 		<ZipDirectory SourceDirectory="$(OutputPath)" DestinationFile="$(OutputPath)..\$(ProjectName).zip" Overwrite="true" />
 	</Target>
 </Project>
