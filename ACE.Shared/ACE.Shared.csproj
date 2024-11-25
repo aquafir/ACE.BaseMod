@@ -23,8 +23,7 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="$(Realms)">
 		<ACEPath>C:\ACE\RealmServer</ACEPath>
-	</PropertyGroup>
-
+	</PropertyGroup>	
 
 	<!--https://learn.microsoft.com/en-us/nuget/create-packages/package-authoring-best-practices#create-a-nuget-package-->
 	<PropertyGroup>
@@ -50,6 +49,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<Publicize Include="ACE.Server" />
+		<Publicize Include="ACE.DatLoader" />
 	</ItemGroup>
 
 	<ItemGroup>
