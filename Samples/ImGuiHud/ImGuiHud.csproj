@@ -10,6 +10,7 @@
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<PlatformTarget>x64</PlatformTarget>
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
@@ -35,8 +36,11 @@
 
 	<ItemGroup>
 		<Compile Remove=".template.config\**" />
+		<Compile Remove="OtterGui\**" />
 		<EmbeddedResource Remove=".template.config\**" />
+		<EmbeddedResource Remove="OtterGui\**" />
 		<None Remove=".template.config\**" />
+		<None Remove="OtterGui\**" />
 	</ItemGroup>
 
 	<PropertyGroup>
@@ -126,8 +130,8 @@
 			<FilesToDelete Include="$(OutDir)*.deps.json" />
 			<FilesToDelete Include="$(OutDir)*runtimeconfig.json" />
 			<FilesToDelete Include="$(OutDir)*.pdb" />
-			<FilesToDelete Include="$(OutDir)runtimes\**\*.*" />
-			<FoldersToDelete Include="$(OutDir)runtimes" />
+			<!--<FilesToDelete Include="$(OutDir)runtimes\**\*.*" />-->
+			<!--<FoldersToDelete Include="$(OutDir)runtimes" />-->
 		</ItemGroup>
 		<Message Text="Deleting Files @(FilesToDelete)" />
 		<Delete Files="@(FilesToDelete)">

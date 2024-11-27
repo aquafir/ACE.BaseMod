@@ -2,5 +2,5 @@
 
 public class Settings
 {
-    public bool AutostartGui { get; set; } = true;
+    public bool AutostartGui { get; set; } = false;
 }
